@@ -3,8 +3,19 @@ import 'package:flutter/material.dart';
 class Welcome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var welcomeImg = new AssetImage('lib/src/screens/welcome/images/welcomeImg.png');
-    var image = new Image(image: welcomeImg, fit: BoxFit.contain);
+    var _welcomeImg = new AssetImage('lib/src/screens/welcome/images/welcomeImg.png');
+    var _image = new Image(image: _welcomeImg, fit: BoxFit.contain);
+
+    double _firstTextFontSize = 40.0;
+    double _secondTextFontSize = 30.0;
+    double _thirdTextFontSize = 18.5;
+    double _buttonTextFontSize = 20.0;
+
+    double _buttonHeight = 50.0;
+
+    Color _textColor = Colors.indigo[300];
+    Color _buttonCreateColor = Colors.purple[50];
+    Color _buttonRestoreColor = Colors.indigo[50];
 
     return Scaffold(
       body: Container(
@@ -12,24 +23,24 @@ class Welcome extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Center(
-              child: image,
+              child: _image,
             ),
             Text('WELCOME\n TO CAKE WALLET',
-              style: TextStyle(fontSize: 40.0),
+              style: TextStyle(fontSize: _firstTextFontSize),
               textAlign: TextAlign.center,
             ),
             SizedBox(
               height: 15.0,
             ),
             Text('Awesome wallet\nfor Monero',
-              style: TextStyle(fontSize: 30.0, color: Colors.indigoAccent),
+              style: TextStyle(fontSize: _secondTextFontSize, color: _textColor),
               textAlign: TextAlign.center,
             ),
             SizedBox(
               height: 25.0,
             ),
             Text('Please make a selection below to either create a new wallet or restore a wallet',
-              style: TextStyle(fontSize: 18.5, color: Colors.indigoAccent),
+              style: TextStyle(fontSize: _thirdTextFontSize, color: _textColor),
               textAlign: TextAlign.center,
             ),
             SizedBox(
@@ -37,14 +48,14 @@ class Welcome extends StatelessWidget {
             ),
             ButtonTheme(
               minWidth: double.infinity,
-              height: 50.0,
-              buttonColor: Colors.deepPurpleAccent,
+              height: _buttonHeight,
+              buttonColor: _buttonCreateColor,
               child: RaisedButton(
                 onPressed: (){},
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                 child: Text('Create new',
                   style: TextStyle(
-                      fontSize: 20.0
+                      fontSize: _buttonTextFontSize
                   ),
                 ),
               ),
@@ -54,18 +65,18 @@ class Welcome extends StatelessWidget {
             ),
             ButtonTheme(
               minWidth: double.infinity,
-              height: 50.0,
-              buttonColor: Colors.cyan,
+              height: _buttonHeight,
+              buttonColor: _buttonRestoreColor,
               child: RaisedButton(
                 onPressed: (){},
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                 child: Text('Restore',
                   style: TextStyle(
-                      fontSize: 20.0
+                      fontSize: _buttonTextFontSize
                   ),
                 ),
               ),
-            )
+            ),
           ],
         )
       )
