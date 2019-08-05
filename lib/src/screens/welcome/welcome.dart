@@ -3,15 +3,41 @@ import 'package:flutter/material.dart';
 class Welcome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var _welcomeImg = new AssetImage('lib/src/screens/welcome/images/welcomeImg.png');
-    var _image = new Image(image: _welcomeImg, fit: BoxFit.contain);
 
-    double _firstTextFontSize = 40.0;
-    double _secondTextFontSize = 30.0;
-    double _thirdTextFontSize = 18.5;
-    double _buttonTextFontSize = 20.0;
+    // Welcome image
 
-    double _buttonHeight = 50.0;
+    var _image = new Image(image: AssetImage('lib/src/screens/welcome/images/welcomeImg.png'));
+
+    // Scales of widgets
+
+    const double _imageScale = 0.4;
+    const double _firstTextScale = 0.13;
+    const double _secondTextScale = 0.1;
+    const double _thirdTextScale = 0.07;
+    const double _buttonScale = 0.07;
+    const double _buttonTextScale = 0.03;
+    const double _marginScale = 0.02;
+
+    // Values of insets and radius
+
+    const double _insets = 10.0;
+    const double _radius = 10.0;
+
+    // Defining of screen height
+
+    double _screenHeight = MediaQuery.of(context).size.height - 2*_insets;
+
+    // Heights of widgets
+
+    double _imageHeight = _imageScale*_screenHeight;
+    double _firstTextHeight = _firstTextScale*_screenHeight;
+    double _secondTextHeight = _secondTextScale*_screenHeight;
+    double _thirdTextHeight = _thirdTextScale*_screenHeight;
+    double _buttonHeight = _buttonScale*_screenHeight;
+    double _buttonTextFontSize = _buttonTextScale*_screenHeight;
+    double _marginHeight = _marginScale*_screenHeight;
+
+    // Colors of widgets
 
     Color _textColor = Colors.indigo[300];
     Color _buttonCreateColor = Colors.purple[50];
@@ -19,32 +45,29 @@ class Welcome extends StatelessWidget {
 
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(_insets),
         child: Column(
           children: <Widget>[
-            Center(
-              child: _image,
+            Container(
+              width: double.infinity,
+              height: _imageHeight,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: _image,
+              ),
             ),
-            Text('WELCOME\n TO CAKE WALLET',
-              style: TextStyle(fontSize: _firstTextFontSize),
-              textAlign: TextAlign.center,
+            SizedText('WELCOME\n TO CAKE WALLET', _firstTextHeight,
+              marginTop: _marginHeight,
+              marginBottom: _marginHeight,
             ),
-            SizedBox(
-              height: 15.0,
+            SizedText('Awesome wallet\n for Monero', _secondTextHeight,
+              textColor: _textColor,
+              marginBottom: _marginHeight,
             ),
-            Text('Awesome wallet\nfor Monero',
-              style: TextStyle(fontSize: _secondTextFontSize, color: _textColor),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(
-              height: 25.0,
-            ),
-            Text('Please make a selection below to either create a new wallet or restore a wallet',
-              style: TextStyle(fontSize: _thirdTextFontSize, color: _textColor),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(
-              height: 25.0,
+            SizedText('Please make a selection below to either create \n a new wallet or restore a wallet', _thirdTextHeight,
+              textColor: _textColor,
+              marginTop: _marginHeight,
+              marginBottom: _marginHeight,
             ),
             ButtonTheme(
               minWidth: double.infinity,
@@ -52,16 +75,16 @@ class Welcome extends StatelessWidget {
               buttonColor: _buttonCreateColor,
               child: RaisedButton(
                 onPressed: (){},
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(_radius)),
                 child: Text('Create new',
                   style: TextStyle(
-                      fontSize: _buttonTextFontSize
+                    fontSize: _buttonTextFontSize
                   ),
                 ),
               ),
             ),
             SizedBox(
-              height: 10.0,
+              height: _marginHeight,
             ),
             ButtonTheme(
               minWidth: double.infinity,
@@ -69,10 +92,10 @@ class Welcome extends StatelessWidget {
               buttonColor: _buttonRestoreColor,
               child: RaisedButton(
                 onPressed: (){},
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(_radius)),
                 child: Text('Restore',
                   style: TextStyle(
-                      fontSize: _buttonTextFontSize
+                    fontSize: _buttonTextFontSize
                   ),
                 ),
               ),
@@ -82,4 +105,38 @@ class Welcome extends StatelessWidget {
       )
     );
   }
+}
+
+class SizedText extends StatelessWidget{
+
+  final String _text;
+  final double _heightContainer;
+  Color _textColor;
+  double _marginTop, _marginBottom;
+
+  SizedText(this._text, this._heightContainer, {Color textColor = Colors.black,
+    double marginTop = 0.0, double marginBottom = 0.0}){
+
+    _textColor = textColor;
+    _marginTop = marginTop;
+    _marginBottom = marginBottom;
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: _heightContainer,
+      margin: EdgeInsets.only(top: _marginTop, bottom: _marginBottom),
+      child: FittedBox(
+        fit: BoxFit.contain,
+        child: Text(_text,
+          style: TextStyle(color: _textColor),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+
 }
