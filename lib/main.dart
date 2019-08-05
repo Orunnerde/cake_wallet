@@ -8,6 +8,7 @@ class CakeWalletApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       onGenerateRoute: Router.generateRoute,
       initialRoute: welcomeRoute,
     );
