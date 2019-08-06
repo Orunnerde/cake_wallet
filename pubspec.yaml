@@ -41,7 +41,15 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/
+    - assets/images/
+
+  fonts:
+    - family: Lato
+      fonts:
+        - asset: assets/fonts/Lato-Regular.ttf
+        - asset: assets/fonts/Lato-Bold.ttf
+        - asset: assets/fonts/Lato-Semibold.ttf
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -6,7 +6,7 @@ class Welcome extends StatelessWidget {
 
     // Welcome image
 
-    var _image = new Image(image: AssetImage('assets/welcomeImg.png'));
+    var _image = new Image(image: AssetImage('assets/images/welcomeImg.png'));
 
     // Scales of widgets
 
@@ -14,8 +14,6 @@ class Welcome extends StatelessWidget {
     const double _firstTextScale = 0.12;
     const double _secondTextScale = 0.1;
     const double _thirdTextScale = 0.07;
-    //const double _buttonScale = 0.1;
-    //const double _buttonTextScale = 0.03;
     const double _marginScale = 0.025;
 
     // Values of insets and radius
@@ -90,7 +88,8 @@ class Welcome extends StatelessWidget {
                   child: Text('Create new',
                     style: TextStyle(
                       fontSize: _buttonTextFontSize,
-                      fontWeight: FontWeight.normal
+                      fontWeight: FontWeight.normal,
+                      fontFamily: 'Lato'
                     ),
                   ),
                 ),
@@ -109,7 +108,7 @@ class Welcome extends StatelessWidget {
                     style: TextStyle(
                       fontSize: _buttonTextFontSize,
                       fontWeight: FontWeight.normal,
-                      fontFamily: ''
+                      fontFamily: 'Lato'
                     ),
                   ),
                 ),
@@ -150,7 +149,7 @@ class SizedText extends StatelessWidget{
       child: FittedBox(
         fit: BoxFit.contain,
         child: Text(_text,
-          style: TextStyle(color: _textColor, fontWeight: _fontWeight),
+          style: TextStyle(color: _textColor, fontWeight: _fontWeight, fontFamily: 'Lato'),
           textAlign: TextAlign.center,
         ),
       ),
