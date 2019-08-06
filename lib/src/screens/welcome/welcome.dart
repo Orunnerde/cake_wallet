@@ -10,13 +10,13 @@ class Welcome extends StatelessWidget {
 
     // Scales of widgets
 
-    const double _imageScale = 0.38;
+    const double _imageScale = 0.4;
     const double _firstTextScale = 0.12;
     const double _secondTextScale = 0.1;
     const double _thirdTextScale = 0.07;
-    const double _buttonScale = 0.1;
-    const double _buttonTextScale = 0.03;
-    const double _marginScale = 0.02;
+    //const double _buttonScale = 0.1;
+    //const double _buttonTextScale = 0.03;
+    const double _marginScale = 0.025;
 
     // Values of insets and radius
 
@@ -26,7 +26,7 @@ class Welcome extends StatelessWidget {
 
     // Defining of screen height
 
-    double _screenHeight = MediaQuery.of(context).size.height - 2*_verticalInsets;
+    double _screenHeight = MediaQuery.of(context).size.height;
 
     // Heights of widgets
 
@@ -34,8 +34,8 @@ class Welcome extends StatelessWidget {
     double _firstTextHeight = _firstTextScale*_screenHeight;
     double _secondTextHeight = _secondTextScale*_screenHeight;
     double _thirdTextHeight = _thirdTextScale*_screenHeight;
-    double _buttonHeight = _buttonScale*_screenHeight;
-    double _buttonTextFontSize = _buttonTextScale*_screenHeight;
+    double _buttonHeight = 56.0;
+    double _buttonTextFontSize = 18.0;
     double _marginHeight = _marginScale*_screenHeight;
 
     // Colors of widgets
@@ -47,73 +47,77 @@ class Welcome extends StatelessWidget {
     Color _borderButtonRestoreColor = Colors.indigo[100];
 
     return Scaffold(
-      body: Container(
-        padding: EdgeInsets.only(
-          left: _horizontalInsets,
-          top: _verticalInsets,
-          right: _horizontalInsets,
-          bottom: _verticalInsets
+      body: Column(children: <Widget>[
+        Container(
+          padding: EdgeInsets.only(
+            top: _verticalInsets
+          ),
+          width: double.infinity,
+          height: _imageHeight,
+          child: FittedBox(
+            fit: BoxFit.cover,
+            child: _image,
+          ),
         ),
-        child: Column(
-          children: <Widget>[
-            Container(
-              width: double.infinity,
-              height: _imageHeight,
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: _image,
+        Container(
+          padding: EdgeInsets.only(
+            left: _horizontalInsets,
+            right: _horizontalInsets,
+          ),
+          child: Column(
+            children: <Widget>[
+              SizedText('WELCOME\nTO CAKE WALLET', _firstTextHeight,
+                fontWeight: FontWeight.bold,
+                marginTop: _marginHeight,
+                marginBottom: _marginHeight,
               ),
-            ),
-            SizedText('WELCOME\nTO CAKE WALLET', _firstTextHeight,
-              fontWeight: FontWeight.bold,
-              marginTop: _marginHeight,
-              marginBottom: _marginHeight,
-            ),
-            SizedText('Awesome wallet\nfor Monero', _secondTextHeight,
-              textColor: _textColor,
-              fontWeight: FontWeight.bold,
-            ),
-            SizedText('Please make a selection below to either create\na new wallet or restore a wallet', _thirdTextHeight,
-              textColor: _textColor,
-              marginTop: _marginHeight,
-              marginBottom: _marginHeight,
-            ),
-            ButtonTheme(
-              minWidth: double.infinity,
-              height: _buttonHeight,
-              child: FlatButton(
-                onPressed: (){},
-                color: _buttonCreateColor,
-                shape: RoundedRectangleBorder(side: BorderSide(color: _borderButtonCreateColor), borderRadius: BorderRadius.circular(_radius)),
-                child: Text('Create new',
-                  style: TextStyle(
-                    fontSize: _buttonTextFontSize,
-                    fontWeight: FontWeight.normal
+              SizedText('Awesome wallet\nfor Monero', _secondTextHeight,
+                textColor: _textColor,
+                fontWeight: FontWeight.bold,
+              ),
+              SizedText('Please make a selection below to either create\na new wallet or restore a wallet', _thirdTextHeight,
+                textColor: _textColor,
+                marginTop: _marginHeight,
+                marginBottom: _marginHeight,
+              ),
+              ButtonTheme(
+                minWidth: double.infinity,
+                height: _buttonHeight,
+                child: FlatButton(
+                  onPressed: (){},
+                  color: _buttonCreateColor,
+                  shape: RoundedRectangleBorder(side: BorderSide(color: _borderButtonCreateColor), borderRadius: BorderRadius.circular(_radius)),
+                  child: Text('Create new',
+                    style: TextStyle(
+                      fontSize: _buttonTextFontSize,
+                      fontWeight: FontWeight.normal
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: _marginHeight,
-            ),
-            ButtonTheme(
-              minWidth: double.infinity,
-              height: _buttonHeight,
-              child: FlatButton(
-                onPressed: (){},
-                color: _buttonRestoreColor,
-                shape: RoundedRectangleBorder(side: BorderSide(color: _borderButtonRestoreColor), borderRadius: BorderRadius.circular(_radius)),
-                child: Text('Restore',
-                  style: TextStyle(
-                    fontSize: _buttonTextFontSize,
-                    fontWeight: FontWeight.normal
+              SizedBox(
+                height: _verticalInsets,
+              ),
+              ButtonTheme(
+                minWidth: double.infinity,
+                height: _buttonHeight,
+                child: FlatButton(
+                  onPressed: (){},
+                  color: _buttonRestoreColor,
+                  shape: RoundedRectangleBorder(side: BorderSide(color: _borderButtonRestoreColor), borderRadius: BorderRadius.circular(_radius)),
+                  child: Text('Restore',
+                    style: TextStyle(
+                      fontSize: _buttonTextFontSize,
+                      fontWeight: FontWeight.normal,
+                      fontFamily: ''
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          )
         )
-      )
+      ],)
     );
   }
 }
