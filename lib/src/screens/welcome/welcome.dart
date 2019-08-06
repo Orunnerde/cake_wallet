@@ -10,7 +10,7 @@ class Welcome extends StatelessWidget {
 
     // Scales of widgets
 
-    const double _imageScale = 0.4;
+    const double _imageScale = 0.38;
     const double _firstTextScale = 0.12;
     const double _secondTextScale = 0.1;
     const double _thirdTextScale = 0.07;
@@ -42,7 +42,7 @@ class Welcome extends StatelessWidget {
 
     Color _textColor = Color.fromARGB(255, 126, 147, 177);
     Color _buttonCreateColor = Colors.purple[50];
-    Color _borderButtonCreateColor = Colors.purple[100];
+    Color _borderButtonCreateColor = Colors.deepPurple[100];
     Color _buttonRestoreColor = Colors.indigo[50];
     Color _borderButtonRestoreColor = Colors.indigo[100];
 
