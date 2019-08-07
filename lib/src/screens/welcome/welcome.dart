@@ -8,33 +8,54 @@ class Welcome extends StatelessWidget {
 
     var _image = new Image(image: AssetImage('assets/images/welcomeImg.png'));
 
-    // Scales of widgets
+    // Default screen parameters for Pixel 2
 
-    const double _imageScale = 0.4;
-    const double _firstTextScale = 0.12;
-    const double _secondTextScale = 0.1;
-    const double _thirdTextScale = 0.07;
-    const double _marginScale = 0.025;
+    const double _defaultHeight = 683.43;
+    const double _defaultWidth = 411.43;
 
-    // Values of insets and radius
+    // Default font sizes
 
-    const double _verticalInsets = 10.0;
+    const double _defaultFontText1 = 30.0;
+    const double _defaultFontText2 = 25.0;
+    const double _defaultFontText3 = 16.0;
+
+    // Insets and radius
+
     const double _horizontalInsets = 30.0;
+    const double _verticalInsets = 10.0;
     const double _radius = 10.0;
 
-    // Defining of screen height
+    // Defining of screen height and width
 
     double _screenHeight = MediaQuery.of(context).size.height;
+    double _screenWidth = MediaQuery.of(context).size.width;
+
+    // Aspects of image
+
+    double _aspectRatioImage = 375.0/297.0;
+
+    // Weights
+
+    double _weightOfInset1 = 0.1;
+    double _weightOfInset2 = 0.2;
+    double _weightOfInset3 = 0.4;
+
+    // Defining scale factor
+
+    double _scaleFactor = _screenWidth/_defaultWidth;
+    _scaleFactor = (_scaleFactor < (_screenHeight/_defaultHeight))? _scaleFactor:(_screenHeight/_defaultHeight);
 
     // Heights of widgets
 
-    double _imageHeight = _imageScale*_screenHeight;
-    double _firstTextHeight = _firstTextScale*_screenHeight;
-    double _secondTextHeight = _secondTextScale*_screenHeight;
-    double _thirdTextHeight = _thirdTextScale*_screenHeight;
     double _buttonHeight = 56.0;
     double _buttonTextFontSize = 18.0;
-    double _marginHeight = _marginScale*_screenHeight;
+
+    _screenHeight = _screenHeight - (_screenWidth/_aspectRatioImage + 2*_buttonHeight + _verticalInsets +
+    _scaleFactor*2.5*(_defaultFontText1 + _defaultFontText2 + _defaultFontText3));
+
+    double _sizedBox1Height = _weightOfInset1*_screenHeight;
+    double _sizedBox2Height = _weightOfInset2*_screenHeight;
+    double _sizedBox3Height = _weightOfInset3*_screenHeight;
 
     // Colors of widgets
 
@@ -46,15 +67,14 @@ class Welcome extends StatelessWidget {
 
     return Scaffold(
       body: Column(children: <Widget>[
-        Container(
-          padding: EdgeInsets.only(
-            top: _verticalInsets
-          ),
-          width: double.infinity,
-          height: _imageHeight,
-          child: FittedBox(
-            fit: BoxFit.cover,
-            child: _image,
+        AspectRatio(
+          aspectRatio: _aspectRatioImage,
+          child: Container(
+            width: double.infinity,
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: _image,
+            ),
           ),
         ),
         Container(
@@ -64,19 +84,42 @@ class Welcome extends StatelessWidget {
           ),
           child: Column(
             children: <Widget>[
-              SizedText('WELCOME\nTO CAKE WALLET', _firstTextHeight,
-                fontWeight: FontWeight.bold,
-                marginTop: _marginHeight,
-                marginBottom: _marginHeight,
+              Text('WELCOME\nTO CAKE WALLET',
+                style: TextStyle(
+                  fontSize: _defaultFontText1,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Lato'
+                ),
+                textAlign: TextAlign.center,
+                textScaleFactor: _scaleFactor,
               ),
-              SizedText('Awesome wallet\nfor Monero', _secondTextHeight,
-                textColor: _textColor,
-                fontWeight: FontWeight.bold,
+              SizedBox(
+                height: _sizedBox1Height,
               ),
-              SizedText('Please make a selection below to either create\na new wallet or restore a wallet', _thirdTextHeight,
-                textColor: _textColor,
-                marginTop: _marginHeight,
-                marginBottom: _marginHeight,
+              Text('Awesome wallet\nfor Monero',
+                style: TextStyle(
+                    fontSize: _defaultFontText2,
+                    fontWeight: FontWeight.bold,
+                    color: _textColor,
+                    fontFamily: 'Lato'
+                ),
+                textAlign: TextAlign.center,
+                textScaleFactor: _scaleFactor,
+              ),
+              SizedBox(
+                height: _sizedBox2Height,
+              ),
+              Text('Please make a selection below to either create\na new wallet or restore a wallet',
+                style: TextStyle(
+                    fontSize: _defaultFontText3,
+                    color: _textColor,
+                    fontFamily: 'Lato'
+                ),
+                textAlign: TextAlign.center,
+                textScaleFactor: _scaleFactor,
+              ),
+              SizedBox(
+                height: _sizedBox3Height,
               ),
               ButtonTheme(
                 minWidth: double.infinity,
@@ -119,41 +162,4 @@ class Welcome extends StatelessWidget {
       ],)
     );
   }
-}
-
-class SizedText extends StatelessWidget{
-
-  final String _text;
-  final double _heightContainer;
-  Color _textColor;
-  FontWeight _fontWeight;
-  double _marginTop, _marginBottom;
-
-  SizedText(this._text, this._heightContainer, {Color textColor = Colors.black,
-    FontWeight fontWeight = FontWeight.normal,
-    double marginTop = 0.0, double marginBottom = 0.0}){
-
-    _textColor = textColor;
-    _fontWeight = fontWeight;
-    _marginTop = marginTop;
-    _marginBottom = marginBottom;
-
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: _heightContainer,
-      margin: EdgeInsets.only(top: _marginTop, bottom: _marginBottom),
-      child: FittedBox(
-        fit: BoxFit.contain,
-        child: Text(_text,
-          style: TextStyle(color: _textColor, fontWeight: _fontWeight, fontFamily: 'Lato'),
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
-  }
-
 }
