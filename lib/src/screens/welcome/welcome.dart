@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cake_wallet/routes.dart';
 
 class Welcome extends StatelessWidget {
   @override
@@ -66,6 +67,7 @@ class Welcome extends StatelessWidget {
     Color _borderButtonRestoreColor = Colors.indigo[100];
 
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       body: Column(children: <Widget>[
         AspectRatio(
           aspectRatio: _aspectRatioImage,
@@ -125,7 +127,9 @@ class Welcome extends StatelessWidget {
                 minWidth: double.infinity,
                 height: _buttonHeight,
                 child: FlatButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.pushNamed(context, newWalletRoute);
+                  },
                   color: _buttonCreateColor,
                   shape: RoundedRectangleBorder(side: BorderSide(color: _borderButtonCreateColor), borderRadius: BorderRadius.circular(_radius)),
                   child: Text('Create new',
