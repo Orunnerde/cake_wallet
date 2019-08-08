@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class NewWallet extends StatelessWidget{
 
@@ -16,7 +17,7 @@ class NewWallet extends StatelessWidget{
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         leading: IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: (){
-          FocusScope.of(context).requestFocus(new FocusNode());
+          SystemChannels.textInput.invokeMethod('TextInput.hide');
           Navigator.pop(context);
         }),
         centerTitle: true,
@@ -25,21 +26,26 @@ class NewWallet extends StatelessWidget{
         backgroundColor: Colors.transparent,
         elevation: 0.0
       ),
-      body: Column(children: <Widget>[
-        AspectRatio(
-          aspectRatio: _aspectRatioImage,
-          child: Container(
-            width: double.infinity,
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: _image,
+      body: GestureDetector(
+        onTap: (){
+          SystemChannels.textInput.invokeMethod('TextInput.hide');
+        },
+        child: Column(children: <Widget>[
+          AspectRatio(
+            aspectRatio: _aspectRatioImage,
+            child: Container(
+              width: double.infinity,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: _image,
+              ),
             ),
           ),
-        ),
-        Expanded(
-          child: WalletNameForm(),
-        )
-      ],),
+          Expanded(
+            child: WalletNameForm(),
+          )
+        ],),
+      )
     );
   }
 
@@ -59,12 +65,12 @@ class _WalletNameFormState extends State<WalletNameForm>{
   // Insets and radius
 
   final double _insets = 30.0;
-  final double _insetsTop = 10.0;
   final double _radius = 10.0;
 
   // Colors of widgets
 
   final Color _hintTextColor = Color.fromARGB(255, 126, 147, 177);
+  final Color _borderTextFormFieldColor = Color.fromARGB(255, 224, 233, 246);
   final Color _buttonColor = Colors.purple[50];
   final Color _buttonBorderColor = Colors.deepPurple[100];
 
@@ -81,7 +87,6 @@ class _WalletNameFormState extends State<WalletNameForm>{
     return Container(
       padding: EdgeInsets.only(
         left: _insets,
-        top: _insetsTop,
         right: _insets,
         bottom: _insets
       ),
@@ -92,7 +97,19 @@ class _WalletNameFormState extends State<WalletNameForm>{
             TextFormField(
               decoration: InputDecoration(
                 hintStyle: TextStyle(color: _hintTextColor),
-                hintText: 'Wallet name'
+                hintText: 'Wallet name',
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: _borderTextFormFieldColor,
+                      width: 2.0
+                    )
+                ),
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: _borderTextFormFieldColor,
+                      width: 2.0
+                    )
+                )
               ),
               validator: (value){
                 if (value.isEmpty) return 'Please enter a wallet name';
