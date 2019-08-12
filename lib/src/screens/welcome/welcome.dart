@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/src/widgets/primary_button.dart';
 
 class Welcome extends StatelessWidget {
   @override
