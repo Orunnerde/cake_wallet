@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/src/widgets/primary_button.dart';
 
 class NewWallet extends StatelessWidget{
-
-  // New wallet image
-
-  var _image = new Image(image: AssetImage('assets/images/bitmap.png'));
-
-  // Aspects of image
-
-  double _aspectRatioImage = 375.0/243.0;
+  static const _aspectRatioImage = 1.54;
+  final _image = Image.asset('assets/images/bitmap.png');
 
   @override
   Widget build(BuildContext context) {
@@ -59,82 +55,57 @@ class WalletNameForm extends StatefulWidget{
 }
 
 class _WalletNameFormState extends State<WalletNameForm>{
-
   final _formKey = GlobalKey<FormState>();
-
-  // Insets and radius
-
-  final double _insets = 30.0;
-  final double _radius = 10.0;
-
-  // Colors of widgets
-
-  final Color _hintTextColor = Color.fromARGB(255, 126, 147, 177);
-  final Color _borderTextFormFieldColor = Color.fromARGB(255, 224, 233, 246);
-  final Color _buttonColor = Colors.purple[50];
-  final Color _buttonBorderColor = Colors.deepPurple[100];
-
-  // Font size
-
-  final double _buttonTextFontSize = 18.0;
-
-  // Height of button
-
-  final double _buttonHeight = 56.0;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
-        left: _insets,
-        right: _insets,
-        bottom: _insets
+        left: 20.0,
+        right: 20.0,
+        bottom: 20.0
       ),
       child: Form(
         key: _formKey,
         child: Column(
           children: <Widget>[
-            TextFormField(
-              decoration: InputDecoration(
-                hintStyle: TextStyle(color: _hintTextColor),
-                hintText: 'Wallet name',
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: _borderTextFormFieldColor,
-                      width: 2.0
-                    )
-                ),
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: _borderTextFormFieldColor,
-                      width: 2.0
-                    )
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                        hintStyle: TextStyle(color: Palette.lightBlue),
+                        hintText: 'Wallet name',
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Palette.lightGrey,
+                                width: 2.0
+                            )
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Palette.lightGrey,
+                                width: 2.0
+                            )
+                        )
+                    ),
+                    validator: (value){
+                      if (value.isEmpty) return 'Please enter a wallet name';
+                      return null;
+                    },
+                  ),
                 )
-              ),
-              validator: (value){
-                if (value.isEmpty) return 'Please enter a wallet name';
-              },
+              ],
             ),
             Expanded(
               child: Container(
                 alignment: Alignment.bottomCenter,
-                child: ButtonTheme(
-                  minWidth: double.infinity,
-                  height: _buttonHeight,
-                  child: FlatButton(
-                    onPressed: (){
-                      if (_formKey.currentState.validate()) Navigator.pop(context);
-                    },
-                    color: _buttonColor,
-                    shape: RoundedRectangleBorder(side: BorderSide(color: _buttonBorderColor), borderRadius: BorderRadius.circular(_radius)),
-                    child: Text('Continue',
-                      style: TextStyle(
-                          fontSize: _buttonTextFontSize,
-                          fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                ),
+                child: PrimaryButton(
+                  onPressed: (){
+                    if (_formKey.currentState.validate()) Navigator.pop(context);
+                  },
+                  text: 'Continue',
+                )
               ),
             )
           ],
