@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
+import 'package:cake_wallet/routes.dart';
 
 class Welcome extends StatelessWidget {
   static const _aspectRatioImage = 1.26;
@@ -61,7 +62,9 @@ class Welcome extends StatelessWidget {
                         ),
                         SizedBox(height: 10),
                         PrimaryButton(
-                          onPressed: (){},
+                          onPressed: (){
+                            Navigator.pushNamed(context, restoreRoute);
+                          },
                           color: Palette.indigo,
                           borderColor: Palette.deepIndigo,
                           text: 'Restore',
