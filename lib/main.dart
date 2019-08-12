@@ -9,7 +9,9 @@ class CakeWalletApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(fontFamily: 'Lato'),
+      theme: ThemeData(
+        fontFamily: 'Lato',
+      ),
       onGenerateRoute: Router.generateRoute,
       initialRoute: welcomeRoute,
     );
