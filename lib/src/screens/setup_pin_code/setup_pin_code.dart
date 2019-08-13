@@ -4,12 +4,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/src/screens/pin_code/pin_code.dart';
 
 class SetupPinCode extends StatefulWidget {
+  final Function(BuildContext) onPinCodeSetup;
+  
+  SetupPinCode(this.onPinCodeSetup);
+
   @override
   _SetupPinCodeState createState() => _SetupPinCodeState();
 }
 
-class _SetupPinCodeState extends PinCodeState {
+class _SetupPinCodeState<WidgetType extends SetupPinCode> extends PinCodeState<WidgetType> {
   bool isEnteredOriginalPin() => !(_originalPin.length == 0);
+  Function(BuildContext) onPinCodeSetup;
   List<int> _originalPin = [];
   
   _SetupPinCodeState() {
@@ -35,6 +40,8 @@ class _SetupPinCodeState extends PinCodeState {
                   child: Text("OK"),
                   onPressed: () {
                     Navigator.of(context).pop();
+                    widget.onPinCodeSetup(context);
+                    reset();
                   },
                 ),
               ],
@@ -58,12 +65,16 @@ class _SetupPinCodeState extends PinCodeState {
             );
           }
         );
-        _originalPin = [];
-        state.title = 'Setup PIN';
-        state.clear();
-      }
 
+        reset();
+      }
     }
+  }
+
+  void reset() {
+    clear();
+    setTitle('Setup PIN');
+    _originalPin = [];
   }
 
   @override

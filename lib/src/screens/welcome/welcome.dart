@@ -60,7 +60,7 @@ class Welcome extends StatelessWidget {
                       children: <Widget>[
                         PrimaryButton(
                           onPressed: (){
-                            Navigator.pushNamed(context, newWalletRoute);
+                            Navigator.pushNamed(context, newWalletFromWelcomeRoute);
                           },
                           text: 'Create new',
                         ),

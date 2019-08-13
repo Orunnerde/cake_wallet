@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/src/screens/welcome/welcome.dart';
@@ -9,10 +10,12 @@ class Router {
     switch (settings.name) {
       case welcomeRoute:
         return MaterialPageRoute(builder: (_) => Welcome());
+      case newWalletFromWelcomeRoute:
+          return CupertinoPageRoute(builder: (_) => SetupPinCode((context) => Navigator.pushNamed(context, newWalletRoute)));
       case newWalletRoute:
-        return MaterialPageRoute(builder: (_) => NewWallet());
+        return CupertinoPageRoute(builder: (_) => NewWallet());
       case setupPinRoute:
-        return MaterialPageRoute(builder: (_) => SetupPinCode());
+        return CupertinoPageRoute(builder: (_) => SetupPinCode((context) {}));
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

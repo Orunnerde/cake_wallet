@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
@@ -10,17 +11,12 @@ class NewWallet extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       resizeToAvoidBottomPadding: false,
-      appBar: AppBar(
-        leading: IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: (){
-          SystemChannels.textInput.invokeMethod('TextInput.hide');
-          Navigator.pop(context);
-        }),
-        centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.black),
-        title: Text('New wallet', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0
+      appBar: CupertinoNavigationBar(
+          middle: Text('New wallet'),
+          backgroundColor: Colors.white,
+          border: null
       ),
       body: GestureDetector(
         onTap: (){
@@ -56,6 +52,13 @@ class WalletNameForm extends StatefulWidget{
 
 class _WalletNameFormState extends State<WalletNameForm>{
   final _formKey = GlobalKey<FormState>();
+  bool _isWalletCreating = false;
+
+  void createWallet() {
+    setState(() {
+      _isWalletCreating = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,11 +103,12 @@ class _WalletNameFormState extends State<WalletNameForm>{
             Expanded(
               child: Container(
                 alignment: Alignment.bottomCenter,
-                child: PrimaryButton(
+                child: LoadingPrimaryButton(
                   onPressed: (){
-                    if (_formKey.currentState.validate()) Navigator.pop(context);
+                    if (_formKey.currentState.validate()) createWallet();
                   },
                   text: 'Continue',
+                  isLoading: _isWalletCreating,
                 )
               ),
             )
