@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cake_wallet/src/widgets/secondary_button.dart';
+import 'package:cake_wallet/src/screens/restore/widgets/reset_button.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/routes.dart';
+import 'package:flutter/cupertino.dart';
 
 class Restore extends StatelessWidget{
 
@@ -14,15 +15,11 @@ class Restore extends StatelessWidget{
   Widget build(BuildContext context) {
 
     return Scaffold(
-        appBar: AppBar(
-            leading: IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: (){
-              Navigator.pop(context);
-            }),
-            centerTitle: true,
-            iconTheme: IconThemeData(color: Colors.black),
-            title: Text('Restore', style: TextStyle(color: Colors.black)),
-            backgroundColor: Colors.transparent,
-            elevation: 0.0
+        backgroundColor: Colors.white,
+        appBar: CupertinoNavigationBar(
+          middle: Text('Restore'),
+          backgroundColor: Colors.white,
+          border: null,
         ),
         body: Container(
           padding: EdgeInsets.only(
@@ -32,7 +29,7 @@ class Restore extends StatelessWidget{
           ),
           child: Column(
             children: <Widget>[
-              SecondaryButton(
+              ResetButton(
                 _imageSeedKeys, _aspectRatioImage,
                 onPressed: (){
                   Navigator.pushNamed(context, restoreSeedKeysRoute);
@@ -44,7 +41,7 @@ class Restore extends StatelessWidget{
               SizedBox(
                 height: 20.0,
               ),
-              SecondaryButton(
+              ResetButton(
                 _imageRestoreSeed, _aspectRatioImage,
                 onPressed: (){},
                 color: Palette.lightGreen,

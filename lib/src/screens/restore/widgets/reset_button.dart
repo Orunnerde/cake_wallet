@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/palette.dart';
 
-class SecondaryButton extends StatefulWidget{
+class ResetButton extends StatefulWidget{
 
   @required VoidCallback _onPressed;
   Image _image;
@@ -11,7 +11,7 @@ class SecondaryButton extends StatefulWidget{
   String _description;
   String _textButton;
 
-  SecondaryButton(this._image, this._aspectRatioImage,
+  ResetButton(this._image, this._aspectRatioImage,
   {@required VoidCallback onPressed,
   Color color = Palette.darkPurple, String title = '',
   String description = '', String textButton = ''}){
@@ -23,10 +23,10 @@ class SecondaryButton extends StatefulWidget{
   }
 
   @override
-  createState() => _SecondaryButtonState();
+  createState() => _ResetButtonState();
 }
 
-class _SecondaryButtonState extends State<SecondaryButton>{
+class _ResetButtonState extends State<ResetButton>{
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -97,7 +97,7 @@ class _SecondaryButtonState extends State<SecondaryButton>{
                               child: Center(
                                 child: Text(widget._textButton,
                                   style: TextStyle(
-                                      color: Palette.white,
+                                      color: Colors.white,
                                       fontSize: 18.0
                                   ),
                                 ),
