@@ -13,11 +13,12 @@ class Welcome extends StatelessWidget {
     double textScaleFactor = _screenWidth < _baseWidth ? 0.76 : 1;
     
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Column(
         children: <Widget>[
           AspectRatio(
             aspectRatio: _aspectRatioImage,
-            child: _image
+            child: FittedBox(child: _image, fit: BoxFit.fill)
           ),
           Expanded(
             child: Column(
