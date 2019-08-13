@@ -14,11 +14,13 @@ class Welcome extends StatelessWidget {
     double textScaleFactor = _screenWidth < _baseWidth ? 0.76 : 1;
     
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
+      backgroundColor: Colors.white,
       body: Column(
         children: <Widget>[
           AspectRatio(
             aspectRatio: _aspectRatioImage,
-            child: _image
+            child: FittedBox(child: _image, fit: BoxFit.fill)
           ),
           Expanded(
             child: Column(
@@ -57,7 +59,9 @@ class Welcome extends StatelessWidget {
                     child: Column(
                       children: <Widget>[
                         PrimaryButton(
-                          onPressed: (){},
+                          onPressed: (){
+                            Navigator.pushNamed(context, newWalletFromWelcomeRoute);
+                          },
                           text: 'Create new',
                         ),
                         SizedBox(height: 10),

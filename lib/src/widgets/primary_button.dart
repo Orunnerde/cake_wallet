@@ -1,28 +1,19 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/palette.dart';
 
-class PrimaryButton extends StatefulWidget{
+class PrimaryButton extends StatelessWidget {
 
-  @required VoidCallback _onPressed;
+  final VoidCallback onPressed;
+  final Color color;
+  final Color borderColor;
+  final String text;
 
-  Color _color;
-  Color _borderColor;
-  String _text;
-
-  PrimaryButton({@required VoidCallback onPressed, Color color = Palette.purple,
-  Color borderColor = Palette.deepPurple, String text = ''}){
-    _onPressed = onPressed;
-    _color = color;
-    _borderColor = borderColor;
-    _text = text;
-  }
-
-  @override
-  createState() => _PrimaryButtonState();
-
-}
-
-class _PrimaryButtonState extends State<PrimaryButton>{
+  const PrimaryButton({
+    @required this.onPressed,
+    @required this.text,
+    this.color = Palette.purple,
+    this.borderColor = Palette.deepPink});
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +21,41 @@ class _PrimaryButtonState extends State<PrimaryButton>{
       minWidth: double.infinity,
       height: 56.0,
       child: FlatButton(
-        onPressed: widget._onPressed,
-        color: widget._color,
-        shape: RoundedRectangleBorder(side: BorderSide(color: widget._borderColor), borderRadius: BorderRadius.circular(10.0)),
-        child: Text(widget._text, style: TextStyle(fontSize: 18.0)),
-      ),
+        onPressed: onPressed,
+        color:color,
+        shape: RoundedRectangleBorder(side: BorderSide(color: borderColor), borderRadius: BorderRadius.circular(10.0)),
+        child: Text(text, style: TextStyle(fontSize: 18.0)),
+      )
     );
   }
+}
 
+class LoadingPrimaryButton extends StatelessWidget {
+
+  final VoidCallback onPressed;
+  final Color color;
+  final Color borderColor;
+  final bool isLoading;
+  final String text;
+
+  const LoadingPrimaryButton({
+    @required this.onPressed,
+    @required this.text,
+    this.color = Palette.purple,
+    this.borderColor = Palette.deepPink,
+    this.isLoading = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return ButtonTheme(
+      minWidth: double.infinity,
+      height: 56.0,
+      child: FlatButton(
+        onPressed: onPressed,
+        color: color,
+        shape: RoundedRectangleBorder(side: BorderSide(color: borderColor), borderRadius: BorderRadius.circular(10.0)),
+        child: isLoading ? CupertinoActivityIndicator(animating: true) : Text(text, style: TextStyle(fontSize: 18.0)),
+      )
+    );
+  }
 }
