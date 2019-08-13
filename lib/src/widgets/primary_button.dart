@@ -10,7 +10,7 @@ class PrimaryButton extends StatefulWidget{
   String _text;
 
   PrimaryButton({@required VoidCallback onPressed, Color color = Palette.purple,
-  Color borderColor = Palette.deepPurple, String text = ''}){
+  Color borderColor = Palette.deepPink, String text = ''}){
     _onPressed = onPressed;
     _color = color;
     _borderColor = borderColor;
