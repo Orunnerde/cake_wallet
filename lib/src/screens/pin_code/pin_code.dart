@@ -19,7 +19,7 @@ class PinCodeState<T extends StatefulWidget> extends State<T> {
   String title = 'Create PIN';
 
   void setTitle(String title) {
-    setState(() => title = title);
+    setState(() => this.title = title);
   }
 
   void clear() {

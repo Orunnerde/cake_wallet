@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
+import 'package:cake_wallet/routes.dart';
 
 class Welcome extends StatelessWidget {
   static const _aspectRatioImage = 1.26;
@@ -13,6 +14,7 @@ class Welcome extends StatelessWidget {
     double textScaleFactor = _screenWidth < _baseWidth ? 0.76 : 1;
     
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.white,
       body: Column(
         children: <Widget>[
@@ -57,7 +59,9 @@ class Welcome extends StatelessWidget {
                     child: Column(
                       children: <Widget>[
                         PrimaryButton(
-                          onPressed: (){},
+                          onPressed: (){
+                            Navigator.pushNamed(context, newWalletFromWelcomeRoute);
+                          },
                           text: 'Create new',
                         ),
                         SizedBox(height: 10),
