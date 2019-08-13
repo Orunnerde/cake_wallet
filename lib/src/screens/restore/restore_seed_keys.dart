@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/src/widgets/secondary_button.dart';
 import 'package:cake_wallet/palette.dart';
-import 'package:cake_wallet/routes.dart';
 
-class Restore extends StatelessWidget{
+class RestoreSeedKeys extends StatelessWidget{
 
   static const _aspectRatioImage = 2.086;
 
-  final _imageSeedKeys = Image.asset('assets/images/seedKeys.png');
-  final _imageRestoreSeed = Image.asset('assets/images/restoreSeed.png');
+  final _imageSeed = Image.asset('assets/images/seedIco.png');
+  final _imageKeys = Image.asset('assets/images/keysIco.png');
 
   @override
   Widget build(BuildContext context) {
@@ -26,30 +25,28 @@ class Restore extends StatelessWidget{
         ),
         body: Container(
           padding: EdgeInsets.only(
-            left: 30.0,
-            right: 30.0,
-            bottom: 20.0
+              left: 30.0,
+              right: 30.0,
+              bottom: 20.0
           ),
           child: Column(
             children: <Widget>[
               SecondaryButton(
-                _imageSeedKeys, _aspectRatioImage,
-                onPressed: (){
-                  Navigator.pushNamed(context, restoreSeedKeysRoute);
-                },
-                title: 'Restore from seed/keys',
-                description: 'Restore your wallet from your seed or keys',
+                _imageSeed, _aspectRatioImage,
+                onPressed: (){},
+                title: 'Restore from seed',
+                description: 'Restore your wallet from either the 25 word\nor 13 word seed',
                 textButton: 'Next',
               ),
               SizedBox(
                 height: 20.0,
               ),
               SecondaryButton(
-                _imageRestoreSeed, _aspectRatioImage,
+                _imageKeys, _aspectRatioImage,
                 onPressed: (){},
                 color: Palette.lightGreen,
-                title: 'Restore from a back-up file',
-                description: 'Restore the whole Cake Wallet app from\nyour back-up file',
+                title: 'Restore from keys',
+                description: 'Restore your wallet from your private keys',
                 textButton: 'Next',
               )
             ],
