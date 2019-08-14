@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cake_wallet/src/screens/restore/widgets/reset_button.dart';
+import 'package:cake_wallet/src/screens/restore/widgets/restore_button.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/routes.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,31 +23,33 @@ class Restore extends StatelessWidget{
         ),
         body: Container(
           padding: EdgeInsets.only(
-            left: 30.0,
-            right: 30.0,
-            bottom: 20.0
+            left: 20.0,
+            right: 20.0,
           ),
           child: Column(
             children: <Widget>[
-              ResetButton(
-                _imageSeedKeys, _aspectRatioImage,
-                onPressed: (){
-                  Navigator.pushNamed(context, restoreSeedKeysRoute);
-                },
-                title: 'Restore from seed/keys',
-                description: 'Restore your wallet from your seed or keys',
-                textButton: 'Next',
+              Flexible(
+                child:RestoreButton(
+                  onPressed: (){
+                    Navigator.pushNamed(context, restoreSeedKeysRoute);
+                  },
+                  image: _imageSeedKeys,
+                  aspectRatioImage: _aspectRatioImage,
+                  title: 'Restore from seed/keys',
+                  description: 'Restore your wallet from your seed or keys',
+                  textButton: 'Next',
+                ),
               ),
-              SizedBox(
-                height: 20.0,
-              ),
-              ResetButton(
-                _imageRestoreSeed, _aspectRatioImage,
-                onPressed: (){},
-                color: Palette.lightGreen,
-                title: 'Restore from a back-up file',
-                description: 'Restore the whole Cake Wallet app from\nyour back-up file',
-                textButton: 'Next',
+              Flexible(
+                child: RestoreButton(
+                  onPressed: (){},
+                  image: _imageRestoreSeed,
+                  aspectRatioImage: _aspectRatioImage,
+                  color: Palette.lightGreen,
+                  title: 'Restore from a back-up file',
+                  description: 'Restore the whole Cake Wallet app from\nyour back-up file',
+                  textButton: 'Next',
+                )
               )
             ],
           ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cake_wallet/src/screens/restore/widgets/reset_button.dart';
+import 'package:cake_wallet/src/screens/restore/widgets/restore_button.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -14,6 +14,7 @@ class RestoreSeedKeys extends StatelessWidget{
   Widget build(BuildContext context) {
 
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: CupertinoNavigationBar(
           middle: Text('Restore'),
           backgroundColor: Colors.white,
@@ -21,29 +22,31 @@ class RestoreSeedKeys extends StatelessWidget{
         ),
         body: Container(
           padding: EdgeInsets.only(
-              left: 30.0,
-              right: 30.0,
-              bottom: 20.0
+              left: 20.0,
+              right: 20.0,
           ),
           child: Column(
             children: <Widget>[
-              ResetButton(
-                _imageSeed, _aspectRatioImage,
-                onPressed: (){},
-                title: 'Restore from seed',
-                description: 'Restore your wallet from either the 25 word\nor 13 word seed',
-                textButton: 'Next',
+              Flexible(
+                child: RestoreButton(
+                  onPressed: (){},
+                  image: _imageSeed,
+                  aspectRatioImage: _aspectRatioImage,
+                  title: 'Restore from seed',
+                  description: 'Restore your wallet from either the 25 word\nor 13 word seed',
+                  textButton: 'Next',
+                )
               ),
-              SizedBox(
-                height: 20.0,
-              ),
-              ResetButton(
-                _imageKeys, _aspectRatioImage,
-                onPressed: (){},
-                color: Palette.lightGreen,
-                title: 'Restore from keys',
-                description: 'Restore your wallet from your private keys',
-                textButton: 'Next',
+              Flexible(
+                child: RestoreButton(
+                  onPressed: (){},
+                  image: _imageKeys,
+                  aspectRatioImage: _aspectRatioImage,
+                  color: Palette.lightGreen,
+                  title: 'Restore from keys',
+                  description: 'Restore your wallet from your private keys',
+                  textButton: 'Next',
+                )
               )
             ],
           ),
