@@ -39,7 +39,6 @@ class RestoreButton extends StatelessWidget{
         child: Column(
           children: <Widget>[
             Flexible(
-              flex: 1,
               child: Container(
                 child: AspectRatio(
                   aspectRatio: aspectRatioImage,
@@ -50,28 +49,27 @@ class RestoreButton extends StatelessWidget{
                 ),
               ),
             ),
-            Flexible(
-              flex: 1,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Text(title,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
+            Column(
+              children: <Widget>[
+                Text(title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
                       color: color,
                       fontSize: 22.0,
                       fontWeight: FontWeight.bold
-                    ),
                   ),
-                  Text(description,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
+                ),
+                Text(description,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
                       color: Palette.lightBlue,
                       fontSize: 16.0
-                    ),
-                  )
-                ],
-              )
+                  ),
+                )
+              ],
+            ),
+            SizedBox(
+              height: 20.0,
             ),
             Container(
               height: 56.0,
