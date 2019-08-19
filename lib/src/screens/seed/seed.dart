@@ -23,15 +23,15 @@ class _SeedState extends State<Seed>{
           middle: Text('Seed', style: TextStyle(fontWeight: FontWeight.normal),),
           backgroundColor: Colors.white,
           border: null,
-          trailing: FlatButton(
-              onPressed: (){},
-              child: Text('Done',
-                style: TextStyle(
+          trailing: InkWell(
+            onTap: (){},
+            child: Text('Done',
+              style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 20.0
-                ),
-              )
-          ),
+                  fontSize: 18.0
+              ),
+            ),
+          )
       ),
       body: Form(
         key: _formKey,
@@ -92,9 +92,9 @@ class _SeedState extends State<Seed>{
                         ),
                         Text(
                           'umbrella hire boat adopt sieve money business '
-                              'royal zones repent inflamed eavesdrop cube '
-                              'umpire javelin pulp dash bikini major aloof '
-                              'hippo shocking lopped merger money',
+                          'royal zones repent inflamed eavesdrop cube '
+                          'umpire javelin pulp dash bikini major aloof '
+                          'hippo shocking lopped merger money',
                           textAlign: TextAlign.center,
                         )
                       ],
