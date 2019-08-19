@@ -66,7 +66,9 @@ class Welcome extends StatelessWidget {
                         ),
                         SizedBox(height: 10),
                         PrimaryButton(
-                          onPressed: (){},
+                          onPressed: (){
+                            Navigator.pushNamed(context, restoreRoute);
+                          },
                           color: Palette.indigo,
                           borderColor: Palette.deepIndigo,
                           text: 'Restore',
