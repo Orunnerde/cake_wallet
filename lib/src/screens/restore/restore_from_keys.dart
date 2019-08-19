@@ -55,17 +55,12 @@ class _RestoreFromKeys extends State<RestoreFromKeys>{
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Flexible(
-                        flex: 5,
-                        child: Container(
-                          padding: EdgeInsets.only(
-                              top: 20.0,
-                              bottom: 20.0
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              TextFormField(
+                    Row(
+                      children: <Widget>[
+                        Flexible(
+                            child: Container(
+                              padding: EdgeInsets.only(top: 20.0),
+                              child: TextFormField(
                                 decoration: InputDecoration(
                                     hintStyle: TextStyle(color: Palette.lightBlue),
                                     hintText: 'Wallet name',
@@ -86,7 +81,16 @@ class _RestoreFromKeys extends State<RestoreFromKeys>{
                                   return null;
                                 },
                               ),
-                              TextFormField(
+                            )
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Flexible(
+                            child: Container(
+                              padding: EdgeInsets.only(top: 20.0),
+                              child: TextFormField(
                                 decoration: InputDecoration(
                                     hintStyle: TextStyle(color: Palette.lightBlue),
                                     hintText: 'Address',
@@ -107,7 +111,16 @@ class _RestoreFromKeys extends State<RestoreFromKeys>{
                                   return null;
                                 },
                               ),
-                              TextFormField(
+                            )
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Flexible(
+                            child: Container(
+                              padding: EdgeInsets.only(top: 20.0),
+                              child: TextFormField(
                                 decoration: InputDecoration(
                                     hintStyle: TextStyle(color: Palette.lightBlue),
                                     hintText: 'View key (private)',
@@ -128,7 +141,16 @@ class _RestoreFromKeys extends State<RestoreFromKeys>{
                                   return null;
                                 },
                               ),
-                              TextFormField(
+                            )
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Flexible(
+                            child: Container(
+                              padding: EdgeInsets.only(top: 20.0),
+                              child: TextFormField(
                                 decoration: InputDecoration(
                                     hintStyle: TextStyle(color: Palette.lightBlue),
                                     hintText: 'Spend key (private)',
@@ -149,7 +171,20 @@ class _RestoreFromKeys extends State<RestoreFromKeys>{
                                   return null;
                                 },
                               ),
-                              TextFormField(
+                            )
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Flexible(
+                            child: Container(
+                              padding: EdgeInsets.only(top: 20.0, bottom: 10.0),
+                              child: TextFormField(
+                                keyboardType: TextInputType.numberWithOptions(
+                                    signed: false,
+                                    decimal: false
+                                ),
                                 decoration: InputDecoration(
                                     hintStyle: TextStyle(color: Palette.lightBlue),
                                     hintText: 'Restore from blockheight',
@@ -170,9 +205,9 @@ class _RestoreFromKeys extends State<RestoreFromKeys>{
                                   return null;
                                 },
                               ),
-                            ],
-                          ),
+                            )
                         )
+                      ],
                     ),
                     Text(
                       'or',
@@ -180,7 +215,7 @@ class _RestoreFromKeys extends State<RestoreFromKeys>{
                     ),
                     Row(
                       children: <Widget>[
-                        Expanded(
+                        Flexible(
                             child: Container(
                               child: InkWell(
                                 onTap: (){
@@ -216,7 +251,6 @@ class _RestoreFromKeys extends State<RestoreFromKeys>{
                       ],
                     ),
                     Flexible(
-                        flex: 3,
                         child: Container(
                           alignment: Alignment.bottomCenter,
                           child: PrimaryButton(
