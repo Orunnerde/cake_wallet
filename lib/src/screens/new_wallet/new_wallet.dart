@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
+import 'package:flutter/cupertino.dart';
 
 class NewWallet extends StatelessWidget{
   static const _aspectRatioImage = 1.54;
@@ -11,22 +12,20 @@ class NewWallet extends StatelessWidget{
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      appBar: AppBar(
-        leading: IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: (){
-          SystemChannels.textInput.invokeMethod('TextInput.hide');
-          Navigator.pop(context);
-        }),
-        centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.black),
-        title: Text('New wallet', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0
+      backgroundColor: Colors.white,
+      appBar: CupertinoNavigationBar(
+        middle: Text('New wallet', style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.white,
+        border: null,
       ),
       body: GestureDetector(
         onTap: (){
           SystemChannels.textInput.invokeMethod('TextInput.hide');
         },
         child: Column(children: <Widget>[
+          Spacer(
+            flex: 1,
+          ),
           AspectRatio(
             aspectRatio: _aspectRatioImage,
             child: Container(
@@ -37,7 +36,11 @@ class NewWallet extends StatelessWidget{
               ),
             ),
           ),
-          Expanded(
+          Spacer(
+            flex: 1,
+          ),
+          Flexible(
+            flex: 8,
             child: WalletNameForm(),
           )
         ],),
