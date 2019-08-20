@@ -44,22 +44,34 @@ class _DisclaimerState extends State<Disclaimer>{
                 ),
                 child: Column(
                   children: <Widget>[
-                    Text('Terms and conditions',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold
-                      ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                            child: Text('Terms and conditions',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold
+                              ),
+                            ),
+                        )
+                      ],
                     ),
                     SizedBox(
                       height: 20.0,
                     ),
-                    Text('Legal Disclaimer\nAnd\nTerms of Use',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.bold
-                      ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                            child: Text('Legal Disclaimer\nAnd\nTerms of Use',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.bold
+                              ),
+                            ),
+                        )
+                      ],
                     ),
                     SizedBox(
                       height: 16.0,
@@ -86,23 +98,32 @@ class _DisclaimerState extends State<Disclaimer>{
                     SizedBox(
                       height: 8.0,
                     ),
-                    Text('The Cake Wallet app (hereinafter, referred to as the "App") '
-                        'allows the use of accessing the Monero Blockchain/network. '
-                        'You are not authorized, and nor should you rely on the App '
-                        'for legal advice, business advice, or advice of any kind. '
-                        'You act at your own risk in reliance on the contents of the App. '
-                        'Should you make a decision to act or not act you should contact '
-                        'a licensed attorney in the relevant jurisdiction in which you '
-                        'want or need help. In no way are the owners of, or contributors to, '
-                        'the App responsible for the actions, decisions, or other behavior '
-                        'taken or not taken by you in reliance upon the App.',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(fontSize: 12.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                            child: Text('The Cake Wallet app (hereinafter, referred to as the "App") '
+                                'allows the use of accessing the Monero Blockchain/network. '
+                                'You are not authorized, and nor should you rely on the App '
+                                'for legal advice, business advice, or advice of any kind. '
+                                'You act at your own risk in reliance on the contents of the App. '
+                                'Should you make a decision to act or not act you should contact '
+                                'a licensed attorney in the relevant jurisdiction in which you '
+                                'want or need help. In no way are the owners of, or contributors to, '
+                                'the App responsible for the actions, decisions, or other behavior '
+                                'taken or not taken by you in reliance upon the App.',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(fontSize: 12.0),
+                            ),
+                        )
+                      ],
                     ),
                     SizedBox(
                       height: 16.0,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
@@ -123,19 +144,28 @@ class _DisclaimerState extends State<Disclaimer>{
                     SizedBox(
                       height: 8.0,
                     ),
-                    Text('The App may contain translations of the English version of '
-                        'the content available on the App. These translations are provided '
-                        'only as a convenience. In the event of any conflict between '
-                        'the English language version and the translated version, the '
-                        'English language version shall take precedence. If you notice '
-                        'any inconsistency, please report them on GitHub.',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(fontSize: 12.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                            child: Text('The App may contain translations of the English version of '
+                                'the content available on the App. These translations are provided '
+                                'only as a convenience. In the event of any conflict between '
+                                'the English language version and the translated version, the '
+                                'English language version shall take precedence. If you notice '
+                                'any inconsistency, please report them on GitHub.',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(fontSize: 12.0),
+                            ),
+                        )
+                      ],
                     ),
                     SizedBox(
                       height: 16.0,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
@@ -156,17 +186,26 @@ class _DisclaimerState extends State<Disclaimer>{
                     SizedBox(
                       height: 8.0,
                     ),
-                    Text('The App, the App’s owner Cake Technologies LLC and Cake Technologies '
-                        'owners, partners, employees, contributors, and any affiliates will not '
-                        'be responsible for any losses, damages or claims arising from events '
-                        'falling within the scope of the following five categories:',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(fontSize: 12.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                            child: Text('The App, the App’s owner Cake Technologies LLC and Cake Technologies '
+                                'owners, partners, employees, contributors, and any affiliates will not '
+                                'be responsible for any losses, damages or claims arising from events '
+                                'falling within the scope of the following five categories:',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(fontSize: 12.0),
+                            ),
+                        )
+                      ],
                     ),
                     SizedBox(
                       height: 4.0,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
@@ -190,6 +229,7 @@ class _DisclaimerState extends State<Disclaimer>{
                       height: 4.0,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
@@ -214,6 +254,7 @@ class _DisclaimerState extends State<Disclaimer>{
                       height: 4.0,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
@@ -237,6 +278,7 @@ class _DisclaimerState extends State<Disclaimer>{
                       height: 4.0,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
@@ -260,6 +302,7 @@ class _DisclaimerState extends State<Disclaimer>{
                       height: 4.0,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
@@ -284,6 +327,7 @@ class _DisclaimerState extends State<Disclaimer>{
                       height: 16.0,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
@@ -304,16 +348,25 @@ class _DisclaimerState extends State<Disclaimer>{
                     SizedBox(
                       height: 8.0,
                     ),
-                    Text('The investment in Monero can lead to loss of money over '
-                        'short or even long periods. The investors in Monero should '
-                        'expect prices to have large range fluctuations.',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(fontSize: 12.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                            child: Text('The investment in Monero can lead to loss of money over '
+                                'short or even long periods. The investors in Monero should '
+                                'expect prices to have large range fluctuations.',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(fontSize: 12.0),
+                            ),
+                        )
+                      ],
                     ),
                     SizedBox(
                       height: 16.0,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
@@ -334,17 +387,26 @@ class _DisclaimerState extends State<Disclaimer>{
                     SizedBox(
                       height: 8.0,
                     ),
-                    Text('The users of the App are solely responsible to determinate '
-                        'what, if any, taxes apply to their Monero transactions. The '
-                        'owners of, or contributors to, the App are NOT responsible '
-                        'for determining the taxes that apply to Monero transactions.',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(fontSize: 12.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                            child: Text('The users of the App are solely responsible to determinate '
+                                'what, if any, taxes apply to their Monero transactions. The '
+                                'owners of, or contributors to, the App are NOT responsible '
+                                'for determining the taxes that apply to Monero transactions.',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(fontSize: 12.0),
+                            ),
+                        )
+                      ],
                     ),
                     SizedBox(
                       height: 16.0,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
@@ -365,17 +427,26 @@ class _DisclaimerState extends State<Disclaimer>{
                     SizedBox(
                       height: 8.0,
                     ),
-                    Text('The App does not store, send or receive Monero. This is because '
-                        'Monero exists only by virtue of the ownership record maintained '
-                        'in the Monero network. Any transfer of title in Moneros occurs '
-                        'within a decentralized Monero network, and not on the App.',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(fontSize: 12.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                            child: Text('The App does not store, send or receive Monero. This is because '
+                                'Monero exists only by virtue of the ownership record maintained '
+                                'in the Monero network. Any transfer of title in Moneros occurs '
+                                'within a decentralized Monero network, and not on the App.',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(fontSize: 12.0),
+                            ),
+                        )
+                      ],
                     ),
                     SizedBox(
                       height: 16.0,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
@@ -396,16 +467,25 @@ class _DisclaimerState extends State<Disclaimer>{
                     SizedBox(
                       height: 8.0,
                     ),
-                    Text('The App is provided on an "as is" basis without any warranties '
-                        'of any kind regarding the App and/or any content, data, materials '
-                        'and/or services provided on the App.',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(fontSize: 12.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                            child: Text('The App is provided on an "as is" basis without any warranties '
+                                'of any kind regarding the App and/or any content, data, materials '
+                                'and/or services provided on the App.',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(fontSize: 12.0),
+                            ),
+                        )
+                      ],
                     ),
                     SizedBox(
                       height: 16.0,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
@@ -426,17 +506,26 @@ class _DisclaimerState extends State<Disclaimer>{
                     SizedBox(
                       height: 8.0,
                     ),
-                    Text('Unless otherwise required by law, in no event shall the owners of, '
-                        'or contributors to, the App be liable for any damages of any kind, '
-                        'including, but not limited to, loss of use, loss of profits, or loss '
-                        'of data arising out of or in any way connected with the use of the App.',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(fontSize: 12.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                            child: Text('Unless otherwise required by law, in no event shall the owners of, '
+                                'or contributors to, the App be liable for any damages of any kind, '
+                                'including, but not limited to, loss of use, loss of profits, or loss '
+                                'of data arising out of or in any way connected with the use of the App.',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(fontSize: 12.0),
+                            ),
+                        )
+                      ],
                     ),
                     SizedBox(
                       height: 16.0,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
@@ -457,16 +546,25 @@ class _DisclaimerState extends State<Disclaimer>{
                     SizedBox(
                       height: 8.0,
                     ),
-                    Text('The user of the App agrees to arbitrate any dispute arising from or in '
-                        'connection with the App or this disclaimer, except for disputes related '
-                        'to copyrights, logos, trademarks, trade names, trade secrets or patents.',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(fontSize: 12.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                            child: Text('The user of the App agrees to arbitrate any dispute arising from or in '
+                                'connection with the App or this disclaimer, except for disputes related '
+                                'to copyrights, logos, trademarks, trade names, trade secrets or patents.',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(fontSize: 12.0),
+                            ),
+                        )
+                      ],
                     ),
                     SizedBox(
                       height: 16.0,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
@@ -487,40 +585,15 @@ class _DisclaimerState extends State<Disclaimer>{
                     SizedBox(
                       height: 8.0,
                     ),
-                    Text('This disclaimer was amended for the last time on January 15, 2018',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                    SizedBox(
-                      height: 16.0,
-                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text('Other Terms and Conditions',
-                          style: TextStyle(
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.bold
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 16.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        GestureDetector(
-                          onTap: () => launch(url1),
-                          child: Text(url1,
-                            style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.normal,
-                                decoration: TextDecoration.underline
+                        Expanded(
+                            child: Text('This disclaimer was amended for the last time on January 15, 2018',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(fontSize: 12.0),
                             ),
-                          ),
                         )
                       ],
                     ),
@@ -530,16 +603,58 @@ class _DisclaimerState extends State<Disclaimer>{
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        GestureDetector(
-                          onTap: () => launch(url2),
-                          child: Text(url2,
-                            style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.normal,
-                                decoration: TextDecoration.underline
+                        Expanded(
+                            child: Text('Other Terms and Conditions',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.bold
+                              ),
                             ),
-                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 16.0,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                            child: GestureDetector(
+                              onTap: () => launch(url1),
+                              child: Text(url1,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.normal,
+                                    decoration: TextDecoration.underline
+                                ),
+                              ),
+                            )
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 16.0,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                            child: GestureDetector(
+                              onTap: () => launch(url2),
+                              child: Text(url2,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.normal,
+                                    decoration: TextDecoration.underline
+                                ),
+                              ),
+                            )
                         )
                       ],
                     ),

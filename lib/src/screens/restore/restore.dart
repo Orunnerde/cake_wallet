@@ -42,7 +42,7 @@ class Restore extends StatelessWidget{
               ),
               Flexible(
                 child: RestoreButton(
-                  onPressed: (){Navigator.pushNamed(context, disclaimerRoute);},
+                  onPressed: (){},
                   image: _imageRestoreSeed,
                   aspectRatioImage: _aspectRatioImage,
                   color: Palette.lightGreen,
