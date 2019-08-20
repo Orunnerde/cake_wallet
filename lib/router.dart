@@ -6,7 +6,8 @@ import 'package:cake_wallet/src/screens/new_wallet/new_wallet.dart';
 import 'package:cake_wallet/src/screens/setup_pin_code/setup_pin_code.dart';
 import 'package:cake_wallet/src/screens/restore/restore.dart';
 import 'package:cake_wallet/src/screens/restore/restore_seed_keys.dart';
-import 'package:cake_wallet/src/screens/restore/restore_from_seed.dart';
+import 'package:cake_wallet/src/screens/seed/seed.dart';
+
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -23,8 +24,8 @@ class Router {
         return CupertinoPageRoute(builder: (_) => Restore());
       case restoreSeedKeysRoute:
         return CupertinoPageRoute(builder: (_) => RestoreSeedKeys());
-      case restoreFromSeedRoute:
-        return CupertinoPageRoute(builder: (_) => RestoreFromSeed());
+      case seedRoute:
+        return CupertinoPageRoute(builder: (_) => Seed());
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

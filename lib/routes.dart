@@ -5,4 +5,4 @@ const String newWalletFromWelcomeRoute = '/new_wallet_from_welcome';
 const String restoreFromWelcomeRoute = '/restore_from_welcome';
 const String restoreRoute = '/restore';
 const String restoreSeedKeysRoute = '/restore_seed_keys';
-const String restoreFromSeedRoute = '/restore_from_seed';
+const String seedRoute = '/seed';
