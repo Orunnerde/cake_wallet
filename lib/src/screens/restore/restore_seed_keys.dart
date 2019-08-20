@@ -43,7 +43,9 @@ class RestoreSeedKeys extends StatelessWidget{
               ),
               Flexible(
                 child: RestoreButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.pushNamed(context, restoreFromKeysRoute);
+                  },
                   image: _imageKeys,
                   aspectRatioImage: _aspectRatioImage,
                   color: Palette.lightGreen,

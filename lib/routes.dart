@@ -7,3 +7,4 @@ const String restoreRoute = '/restore';
 const String restoreSeedKeysRoute = '/restore_seed_keys';
 const String seedRoute = '/seed';
 const String restoreFromSeedRoute = '/restore_from_seed';
+const String restoreFromKeysRoute = '/restore_from_keys';
