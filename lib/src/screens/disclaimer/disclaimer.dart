@@ -19,22 +19,11 @@ class _DisclaimerState extends State<Disclaimer>{
   Widget build(BuildContext context) {
     
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Column(
         children: <Widget>[
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: EdgeInsets.only(top: 25.0, bottom: 10.0),
-            child: InkWell(
-              onTap: (){},
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Icon(Icons.arrow_left),
-                  Text('Settings')
-                ],
-              ),
-            ),
+          SizedBox(
+            height: 30.0,
           ),
           Expanded(
               child: SingleChildScrollView(
@@ -665,21 +654,60 @@ class _DisclaimerState extends State<Disclaimer>{
                 ),
               )
           ),
-          CheckboxListTile(
-            value: _checked,
-            controlAffinity: ListTileControlAffinity.leading,
-            title: Text('I agree to Terms of Use', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),),
-            onChanged: (bool value) => setState(() => _checked = value),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: InkWell(
+                  onTap: (){
+                    setState(() {
+                      _checked = !_checked;
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.only(
+                        left: 25.0,
+                        top: 10.0,
+                        right: 25.0,
+                        bottom: 10.0
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          height: 25.0,
+                          width: 25.0,
+                          margin: EdgeInsets.only(
+                            right: 10.0,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey, width: 2.0),
+                            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                            color: Colors.white
+                          ),
+                          child: _checked ? Icon(Icons.check, color: Colors.blue, size: 20.0,): null,
+                        ),
+                        Text('I agree to Terms of Use',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14.0
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ),
+            ],
           ),
           Container(
             padding: EdgeInsets.only(
-                left: 25.0,
-                right: 25.0,
-                bottom: 25.0
+              left: 25.0,
+              right: 25.0,
+              bottom: 25.0
             ),
             child: PrimaryButton(
-                onPressed: _checked ? (){} : null,
-                text: 'Accept'
+              onPressed: _checked ? (){} : null,
+              text: 'Accept'
             ),
           ),
         ],
