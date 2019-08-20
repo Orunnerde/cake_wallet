@@ -657,19 +657,19 @@ class _DisclaimerState extends State<Disclaimer>{
           Row(
             children: <Widget>[
               Expanded(
-                child: InkWell(
-                  onTap: (){
-                    setState(() {
-                      _checked = !_checked;
-                    });
-                  },
-                  child: Container(
-                    padding: EdgeInsets.only(
-                        left: 25.0,
-                        top: 10.0,
-                        right: 25.0,
-                        bottom: 10.0
-                    ),
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: 25.0,
+                    top: 10.0,
+                    right: 25.0,
+                    bottom: 10.0
+                  ),
+                  child: InkWell(
+                    onTap: (){
+                      setState(() {
+                        _checked = !_checked;
+                      });
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
@@ -680,22 +680,22 @@ class _DisclaimerState extends State<Disclaimer>{
                             right: 10.0,
                           ),
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 2.0),
-                            borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                            color: Colors.white
+                              border: Border.all(color: Colors.grey, width: 2.0),
+                              borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                              color: Colors.white
                           ),
                           child: _checked ? Icon(Icons.check, color: Colors.blue, size: 20.0,): null,
                         ),
                         Text('I agree to Terms of Use',
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14.0
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.0
                           ),
                         )
                       ],
                     ),
-                  ),
-                )
+                  )
+                ),
               ),
             ],
           ),
