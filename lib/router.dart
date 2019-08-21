@@ -9,6 +9,7 @@ import 'package:cake_wallet/src/screens/restore/restore_seed_keys.dart';
 import 'package:cake_wallet/src/screens/seed/seed.dart';
 import 'package:cake_wallet/src/screens/restore/restore_from_seed.dart';
 import 'package:cake_wallet/src/screens/restore/restore_from_keys.dart';
+import 'package:cake_wallet/src/screens/wallets/wallets.dart';
 
 
 class Router {
@@ -32,6 +33,8 @@ class Router {
         return CupertinoPageRoute(builder: (_) => RestoreFromSeed());
       case restoreFromKeysRoute:
         return CupertinoPageRoute(builder: (_) => RestoreFromKeys());
+      case walletsRoute:
+        return CupertinoPageRoute(builder: (_) => Wallets());
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

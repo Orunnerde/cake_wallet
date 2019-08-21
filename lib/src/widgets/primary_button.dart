@@ -59,3 +59,39 @@ class LoadingPrimaryButton extends StatelessWidget {
     );
   }
 }
+
+class PrimaryIconButton extends StatelessWidget {
+
+  final VoidCallback onPressed;
+  final Widget widget;
+  final Color color;
+  final Color borderColor;
+  final String text;
+
+  const PrimaryIconButton({
+    @required this.onPressed,
+    @required this.widget,
+    @required this.text,
+    this.color = Palette.purple,
+    this.borderColor = Palette.deepPink});
+
+  @override
+  Widget build(BuildContext context) {
+    return ButtonTheme(
+        minWidth: double.infinity,
+        height: 56.0,
+        child: FlatButton(
+          onPressed: onPressed,
+          color:color,
+          shape: RoundedRectangleBorder(side: BorderSide(color: borderColor), borderRadius: BorderRadius.circular(10.0)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              widget,
+              Text(text, style: TextStyle(fontSize: 18.0))
+            ],
+          ),
+        )
+    );
+  }
+}
