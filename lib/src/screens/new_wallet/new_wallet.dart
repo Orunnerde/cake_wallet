@@ -23,6 +23,9 @@ class NewWallet extends StatelessWidget{
           SystemChannels.textInput.invokeMethod('TextInput.hide');
         },
         child: Column(children: <Widget>[
+          Spacer(
+            flex: 1,
+          ),
           AspectRatio(
             aspectRatio: _aspectRatioImage,
             child: Container(
@@ -33,7 +36,11 @@ class NewWallet extends StatelessWidget{
               ),
             ),
           ),
-          Expanded(
+          Spacer(
+            flex: 1,
+          ),
+          Flexible(
+            flex: 8,
             child: WalletNameForm(),
           )
         ],),

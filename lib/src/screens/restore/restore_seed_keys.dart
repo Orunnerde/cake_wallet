@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cake_wallet/src/screens/restore/widgets/restore_button.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:cake_wallet/routes.dart';
 
 class RestoreSeedKeys extends StatelessWidget{
 
@@ -14,6 +15,7 @@ class RestoreSeedKeys extends StatelessWidget{
   Widget build(BuildContext context) {
 
     return Scaffold(
+        resizeToAvoidBottomPadding: false,
         backgroundColor: Colors.white,
         appBar: CupertinoNavigationBar(
           middle: Text('Restore'),
@@ -29,7 +31,9 @@ class RestoreSeedKeys extends StatelessWidget{
             children: <Widget>[
               Flexible(
                 child: RestoreButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.pushNamed(context, restoreFromSeedRoute);
+                  },
                   image: _imageSeed,
                   aspectRatioImage: _aspectRatioImage,
                   title: 'Restore from seed',
@@ -39,7 +43,9 @@ class RestoreSeedKeys extends StatelessWidget{
               ),
               Flexible(
                 child: RestoreButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.pushNamed(context, restoreFromKeysRoute);
+                  },
                   image: _imageKeys,
                   aspectRatioImage: _aspectRatioImage,
                   color: Palette.lightGreen,
