@@ -7,8 +7,8 @@ import com.cakewallet.wallet.monero.WalletManager;
 import com.cakewallet.wallet.monero.Wallet;
 import com.cakewallet.wallet.MoneroWalletHandler;
 
-class MoneroWalletManagerHandler {
-    private static final WalletManager moneroWalletManager = new WalletManager();
+class MoneroWalletsManagerHandler {
+    private static final WalletManager MoneroWalletsManager = new WalletManager();
 
     public void handle(MethodCall call, MethodChannel.Result result, Context context) {
         switch (call.method) {
@@ -36,7 +36,7 @@ class MoneroWalletManagerHandler {
     public void createWallet(MethodCall call, MethodChannel.Result result, Context context) {
         String name = (String) call.argument("name");
         String password = (String) call.argument("password");
-        long id = moneroWalletManager.createWallet(context, name, password);
+        long id = MoneroWalletsManager.createWallet(context, name, password);
         MoneroWalletHandler.setCurrentWallet(new Wallet(id));
         result.success(id);
     }
@@ -44,7 +44,7 @@ class MoneroWalletManagerHandler {
     public void openWallet(MethodCall call, MethodChannel.Result result, Context context) {
         String name = (String) call.argument("name");
         String password = (String) call.argument("password");
-        long id = moneroWalletManager.openWallet(context, name, password);
+        long id = MoneroWalletsManager.openWallet(context, name, password);
         MoneroWalletHandler.setCurrentWallet(new Wallet(id));
         result.success(id);
     }
@@ -54,7 +54,7 @@ class MoneroWalletManagerHandler {
         String password = (String) call.argument("password");
         String seed = (String) call.argument("seed");
         long height = (long) call.argument("restoreHeight");
-        long id = moneroWalletManager.recoveryWalletFromSeed(context, name, password, seed, height);
+        long id = MoneroWalletsManager.recoveryWalletFromSeed(context, name, password, seed, height);
         MoneroWalletHandler.setCurrentWallet(new Wallet(id));
         result.success(id);
     }
@@ -66,14 +66,14 @@ class MoneroWalletManagerHandler {
         String viewKey = (String) call.argument("viewKey");
         String spendKey = (String) call.argument("spendKey");
         long height = (long) call.argument("restoreHeight");
-        long id = moneroWalletManager.recoveryWalletFromKeys(context, name, password, height, address, viewKey, spendKey);
+        long id = MoneroWalletsManager.recoveryWalletFromKeys(context, name, password, height, address, viewKey, spendKey);
         MoneroWalletHandler.setCurrentWallet(new Wallet(id));
         result.success(id);
     }
 
     public void isExist(MethodCall call, MethodChannel.Result result, Context context) {
         String name = (String) call.argument("name");
-        boolean isExist = moneroWalletManager.isExist(context, name);
+        boolean isExist = MoneroWalletsManager.isExist(context, name);
         result.success(isExist);
     }
 }

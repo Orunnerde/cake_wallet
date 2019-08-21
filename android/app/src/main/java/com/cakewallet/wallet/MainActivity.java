@@ -8,13 +8,13 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import com.cakewallet.wallet.MoneroWalletManagerHandler;
+import com.cakewallet.wallet.MoneroWalletsManagerHandler;
 import com.cakewallet.wallet.MoneroWalletHandler;
 
 public class MainActivity extends FlutterActivity {
   private static final String MONERO_WALLET_MANAGER_CHANNEL = "com.cakewallet.wallet/monero-wallet-manager";
     private static final String MONERO_WALLET_CHANNEL = "com.cakewallet.wallet/monero-wallet";
-    private static final MoneroWalletManagerHandler moneroWalletManagerHandler = new MoneroWalletManagerHandler();
+    private static final MoneroWalletsManagerHandler MoneroWalletsManagerHandler = new MoneroWalletsManagerHandler();
     private static final MoneroWalletHandler moneroWalletHandler = new MoneroWalletHandler();
 
   @Override
@@ -27,7 +27,7 @@ public class MainActivity extends FlutterActivity {
             new MethodCallHandler() {
               @Override
               public void onMethodCall(MethodCall call, Result result) {
-                  moneroWalletManagerHandler.handle(call, result, getApplicationContext());
+                  MoneroWalletsManagerHandler.handle(call, result, getApplicationContext());
               }
             });
 

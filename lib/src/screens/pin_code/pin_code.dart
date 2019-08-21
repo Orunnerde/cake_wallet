@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
 
+abstract class PinCodeWidget extends StatefulWidget {
+  Function(List<int> pin, PinCodeState state) onPinCodeEntered;
+}
 
-class PinCode extends StatefulWidget {
+class PinCode extends PinCodeWidget {
+  Function(List<int> pin, PinCodeState state) onPinCodeEntered;
+
+  PinCode(this.onPinCodeEntered);
+
   @override
   PinCodeState createState() => PinCodeState();
 }
 
-class PinCodeState<T extends StatefulWidget> extends State<T> {
+class PinCodeState<T extends PinCodeWidget> extends State<T> {
   static const defaultPinLength = 4;
   static const sixPinLength = 6;
   static const fourPinLength = 4;
@@ -26,7 +33,9 @@ class PinCodeState<T extends StatefulWidget> extends State<T> {
     setState(() => pin = List<int>.filled(pinLength, null));
   }
 
-  void onPinCodeEntered(PinCodeState state) {}
+  void onPinCodeEntered(PinCodeState state) {
+    widget.onPinCodeEntered(state.pin, this);
+  }
 
   void changePinLength(int length) {
     List<int> newPin = List<int>.filled(length, null);
