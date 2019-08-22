@@ -22,7 +22,7 @@ class PrimaryButton extends StatelessWidget {
       height: 56.0,
       child: FlatButton(
         onPressed: onPressed,
-        color:color,
+        color: color,
         shape: RoundedRectangleBorder(side: BorderSide(color: borderColor), borderRadius: BorderRadius.circular(10.0)),
         child: Text(text, style: TextStyle(fontSize: 18.0)),
       )
@@ -63,17 +63,20 @@ class LoadingPrimaryButton extends StatelessWidget {
 class PrimaryIconButton extends StatelessWidget {
 
   final VoidCallback onPressed;
-  final Widget widget;
+  final IconData iconData;
   final Color color;
   final Color borderColor;
+  final Color iconColor;
   final String text;
 
   const PrimaryIconButton({
     @required this.onPressed,
-    @required this.widget,
+    @required this.iconData,
     @required this.text,
     this.color = Palette.purple,
-    this.borderColor = Palette.deepPink});
+    this.borderColor = Palette.deepPink,
+    this.iconColor = Colors.black
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -82,12 +85,24 @@ class PrimaryIconButton extends StatelessWidget {
         height: 56.0,
         child: FlatButton(
           onPressed: onPressed,
-          color:color,
+          color: color,
           shape: RoundedRectangleBorder(side: BorderSide(color: borderColor), borderRadius: BorderRadius.circular(10.0)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              widget,
+              Container(
+                width: 26.0,
+                height: 26.0,
+                margin: EdgeInsets.only(
+                  left: 5.0,
+                  right: 10.0
+                ),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: borderColor
+                ),
+                child: Icon(iconData, color: iconColor, size: 20.0,),
+              ),
               Text(text, style: TextStyle(fontSize: 18.0))
             ],
           ),
