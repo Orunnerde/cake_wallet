@@ -5,30 +5,22 @@ import 'package:cake_wallet/palette.dart';
 
 class Wallets extends StatefulWidget{
 
+  final List<String> listWallets;
+
+  const Wallets(this.listWallets);
+
   @override
   createState() => _WalletsState();
 
 }
 
 class _WalletsState extends State<Wallets>{
-  List<String> _listWallets = ['Test we', 'Wallet', 'Main', '', 'Vchcjcucu'];
-  int _currentWalletIndex = 2;
-  String _appBarTitle;
-
-  @override
-  void initState() {
-    super.initState();
-    _appBarTitle = _listWallets[_currentWalletIndex];
-  }
+  int _currentWalletIndex = 0;
 
   void _setCheckedWallet(int index){
-
     _currentWalletIndex = index;
-    _appBarTitle = _listWallets[_currentWalletIndex];
-
     setState(() {
     });
-
   }
 
   @override
@@ -36,19 +28,16 @@ class _WalletsState extends State<Wallets>{
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CupertinoNavigationBar(
-        leading: FlatButton(
-          onPressed: (){},
-          child: SizedBox(
-            width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Icon(Icons.close, size: 20.0,),
-              ],
-            ),
-          )
+        leading: ButtonTheme(
+          minWidth: double.minPositive,
+          child: FlatButton(
+            onPressed: (){},
+            color: Palette.lightGrey2,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            child: Icon(Icons.close, size: 16.0,),
+          ),
         ),
-        middle: Text(_appBarTitle),
+        middle: Text('Monero Wallet', style: TextStyle(fontSize: 18.0),),
         backgroundColor: Colors.white,
         border: null,
       ),
@@ -58,23 +47,25 @@ class _WalletsState extends State<Wallets>{
           children: <Widget>[
             Expanded(
               child: ListView.builder(
-                itemCount: _listWallets.length,
+                itemCount: widget.listWallets.length,
                 itemBuilder: (BuildContext context, int index){
                   return Container(
                     child: Column(
                       children: <Widget>[
                         ListTile(
-                          title: Text(_listWallets[index],
+                          title: Text(widget.listWallets[index],
                             style: TextStyle(
-                              color: (_currentWalletIndex == index) ? Colors.blue : Colors.black
+                              color: (_currentWalletIndex == index) ? Palette.cakeGreen : Colors.black,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w600
                             ),
                           ),
-                          trailing: (_currentWalletIndex == index) ? Icon(Icons.check, color: Colors.blue, size: 20.0,) : null,
+                          trailing: (_currentWalletIndex == index) ? Icon(Icons.check, color: Palette.cakeGreen, size: 20.0,) : null,
                           onTap: (){
                             _setCheckedWallet(index);
                           },
                         ),
-                        (index < (_listWallets.length - 1)) ?
+                        (index < (widget.listWallets.length - 1)) ?
                         Divider(
                           color: Palette.lightGrey,
                           height: 3.0,
@@ -91,7 +82,7 @@ class _WalletsState extends State<Wallets>{
             PrimaryIconButton(
               onPressed: (){},
               iconData: Icons.add,
-              iconColor: Colors.deepPurpleAccent,
+              iconColor: Palette.violet,
               text: 'Create New Wallet'
             ),
             SizedBox(

@@ -34,7 +34,7 @@ class Router {
       case restoreFromKeysRoute:
         return CupertinoPageRoute(builder: (_) => RestoreFromKeys());
       case walletsRoute:
-        return CupertinoPageRoute(builder: (_) => Wallets());
+        return CupertinoPageRoute(builder: (_) => Wallets([]));
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

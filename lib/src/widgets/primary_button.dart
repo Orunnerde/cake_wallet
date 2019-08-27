@@ -87,23 +87,25 @@ class PrimaryIconButton extends StatelessWidget {
           onPressed: onPressed,
           color: color,
           shape: RoundedRectangleBorder(side: BorderSide(color: borderColor), borderRadius: BorderRadius.circular(10.0)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+          child: Stack(
             children: <Widget>[
-              Container(
-                width: 26.0,
-                height: 26.0,
-                margin: EdgeInsets.only(
-                  left: 5.0,
-                  right: 10.0
-                ),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: borderColor
-                ),
-                child: Icon(iconData, color: iconColor, size: 20.0,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    width: 28.0,
+                    height: 28.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white
+                    ),
+                    child: Icon(iconData, color: iconColor, size: 20.0),
+                  ),
+                ],
               ),
-              Text(text, style: TextStyle(fontSize: 18.0))
+              Center(
+                child: Text(text, style: TextStyle(fontSize: 18.0)),
+              )
             ],
           ),
         )
