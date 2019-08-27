@@ -94,7 +94,7 @@ class PrimaryIconButton extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     width: 28.0,
-                    height: 28.0,
+                    height: 56.0,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white
@@ -103,8 +103,11 @@ class PrimaryIconButton extends StatelessWidget {
                   ),
                 ],
               ),
-              Center(
-                child: Text(text, style: TextStyle(fontSize: 18.0)),
+              Container(
+                height: 56.0,
+                child: Center(
+                  child: Text(text, style: TextStyle(fontSize: 18.0)),
+                ),
               )
             ],
           ),
