@@ -3,6 +3,7 @@ import 'package:cake_wallet/src/screens/restore/widgets/restore_button.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/routes.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:cake_wallet/src/screens/receive/receive.dart';
 
 class Restore extends StatelessWidget{
 
@@ -42,7 +43,7 @@ class Restore extends StatelessWidget{
               ),
               Flexible(
                 child: RestoreButton(
-                  onPressed: (){},
+                  onPressed: (){Navigator.push(context, CupertinoPageRoute(builder: (context) => Receive({null:'Address 1', 'Name 2':'Address 2'})));},
                   image: _imageRestoreSeed,
                   aspectRatioImage: _aspectRatioImage,
                   color: Palette.lightGreen,
