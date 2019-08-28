@@ -19,9 +19,27 @@ class _ReceiveState extends State<Receive>{
   final _key = new GlobalKey<ScaffoldState>();
   int _currentWalletIndex = 0;
   String _address = 'Address';
+  String _qrText = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _qrText = 'monero:'+_address;
+  }
 
   void _setCheckedWallet(int index){
     _currentWalletIndex = index;
+    setState(() {
+    });
+  }
+
+  void _validateAmount(String amount){
+    String p = '^[0-9]{1,256}([.][0-9]{0,256})?\$';
+    RegExp regExp = new RegExp(p);
+    _qrText = 'monero:'+_address;
+    if (regExp.hasMatch(amount)){
+      _qrText += '?tx_amount='+amount;
+    }
     setState(() {
     });
   }
@@ -70,7 +88,7 @@ class _ReceiveState extends State<Receive>{
                       child: AspectRatio(
                         aspectRatio: 1.0,
                         child: QrImage(
-                          data: 'monero:'+_address,
+                          data: _qrText,
                           backgroundColor: Colors.white,
                         ),
                       )
@@ -113,6 +131,7 @@ class _ReceiveState extends State<Receive>{
                   children: <Widget>[
                     Expanded(
                       child: TextField(
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                           hintStyle: TextStyle(color: Palette.lightBlue),
                           hintText: 'Amount',
@@ -129,6 +148,9 @@ class _ReceiveState extends State<Receive>{
                             )
                           )
                         ),
+                        onSubmitted: (value){
+                          _validateAmount(value);
+                        },
                       )
                     )
                   ],
