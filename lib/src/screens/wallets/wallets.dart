@@ -15,6 +15,8 @@ class Wallets extends StatefulWidget{
 }
 
 class _WalletsState extends State<Wallets>{
+
+  final _image = Image.asset('assets/images/close_button.png');
   int _currentWalletIndex = 0;
 
   void _setCheckedWallet(int index){
@@ -32,72 +34,87 @@ class _WalletsState extends State<Wallets>{
           minWidth: double.minPositive,
           child: FlatButton(
             onPressed: (){},
-            color: Palette.lightGrey2,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-            child: Icon(Icons.close, size: 16.0,),
+            child: _image,
           ),
         ),
         middle: Text('Monero Wallet', style: TextStyle(fontSize: 18.0),),
         backgroundColor: Colors.white,
         border: null,
       ),
-      body: Container(
-        padding: EdgeInsets.all(20.0),
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: ListView.builder(
-                itemCount: widget.listWallets.length,
-                itemBuilder: (BuildContext context, int index){
-                  return Container(
-                    child: Column(
-                      children: <Widget>[
-                        ListTile(
-                          title: Text(widget.listWallets[index],
-                            style: TextStyle(
-                              color: (_currentWalletIndex == index) ? Palette.cakeGreen : Colors.black,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w600
-                            ),
-                          ),
-                          trailing: (_currentWalletIndex == index) ? Icon(Icons.check, color: Palette.cakeGreen, size: 20.0,) : null,
-                          onTap: (){
-                            _setCheckedWallet(index);
-                          },
-                        ),
-                        (index < (widget.listWallets.length - 1)) ?
-                        Divider(
-                          color: Palette.lightGrey,
-                          height: 3.0,
-                        ) : Offstage()
-                      ],
-                    ),
-                  );
-                }
+      body: Stack(
+        children: <Widget>[
+          Container(
+            height: 20.0,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.white,
+                  Palette.lightGrey2
+                ],
+                begin: FractionalOffset(0.0, 0.0),
+                end: FractionalOffset(0.0, 1.0),
               )
             ),
-            SizedBox(
-              height: 10.0,
+          ),
+          Container(
+            padding: EdgeInsets.all(20.0),
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: widget.listWallets.length,
+                    itemBuilder: (BuildContext context, int index){
+                      return Container(
+                        child: Column(
+                          children: <Widget>[
+                            ListTile(
+                              title: Text(widget.listWallets[index],
+                                style: TextStyle(
+                                  color: (_currentWalletIndex == index) ? Palette.cakeGreen : Colors.black,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w600
+                                ),
+                              ),
+                              trailing: (_currentWalletIndex == index) ? Icon(Icons.check, color: Palette.cakeGreen, size: 20.0,) : null,
+                              onTap: (){
+                                _setCheckedWallet(index);
+                              },
+                            ),
+                            (index < (widget.listWallets.length - 1)) ?
+                            Divider(
+                              color: Palette.lightGrey,
+                              height: 3.0,
+                            ) : Offstage()
+                          ],
+                        ),
+                      );
+                    }
+                  )
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                PrimaryIconButton(
+                  onPressed: (){},
+                  iconData: Icons.add,
+                  iconColor: Palette.violet,
+                  text: 'Create New Wallet'
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                PrimaryIconButton(
+                  onPressed: (){},
+                  iconData: Icons.refresh,
+                  text: 'Restore Wallet',
+                  color: Palette.indigo,
+                  borderColor: Palette.deepIndigo,
+                ),
+              ],
             ),
-            PrimaryIconButton(
-              onPressed: (){},
-              iconData: Icons.add,
-              iconColor: Palette.violet,
-              text: 'Create New Wallet'
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            PrimaryIconButton(
-              onPressed: (){},
-              iconData: Icons.refresh,
-              text: 'Restore Wallet',
-              color: Palette.indigo,
-              borderColor: Palette.deepIndigo,
-            ),
-          ],
-        ),
-      ),
+          ),
+        ],
+      )
     );
   }
 
