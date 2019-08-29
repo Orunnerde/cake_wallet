@@ -8,7 +8,7 @@ class QrImage extends StatelessWidget {
     this.size = 100.0,
     this.backgroundColor,
     Color foregroundColor = Colors.black,
-    int version = 4,
+    int version = 7,
     int errorCorrectionLevel = QrErrorCorrectLevel.L,
   }) : _painter = new QrPainter(data, foregroundColor, version, errorCorrectionLevel);
 
