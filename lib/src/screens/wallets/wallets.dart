@@ -16,7 +16,7 @@ class Wallets extends StatefulWidget{
 
 class _WalletsState extends State<Wallets>{
 
-  final _image = Image.asset('assets/images/close_button.png');
+  final _closeButtonImage = Image.asset('assets/images/close_button.png');
   int _currentWalletIndex = 0;
 
   void _setCheckedWallet(int index){
@@ -29,92 +29,119 @@ class _WalletsState extends State<Wallets>{
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CupertinoNavigationBar(
-        leading: ButtonTheme(
-          minWidth: double.minPositive,
-          child: FlatButton(
-            onPressed: (){},
-            child: _image,
-          ),
-        ),
-        middle: Text('Monero Wallet', style: TextStyle(fontSize: 18.0),),
-        backgroundColor: Colors.white,
-        border: null,
-      ),
-      body: Stack(
-        children: <Widget>[
-          Container(
-            height: 20.0,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.white,
-                  Palette.lightGrey2
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            Container(
+              height: 37.0,
+              margin: EdgeInsets.only(
+                top: 5.0,
+                bottom: 20.0
+              ),
+              padding: EdgeInsets.only(
+                left: 18.0,
+                right: 18.0
+              ),
+              child: Stack(
+                children: <Widget>[
+                  Positioned(
+                    left: 0.0,
+                    child: InkWell(
+                      onTap: (){},
+                      child: Container(
+                        width: 37.0,
+                        height: 37.0,
+                        child: _closeButtonImage,
+                      ),
+                    )
+                  ),
+                  Container(
+                    height: 37.0,
+                    alignment: Alignment.center,
+                    child: Text('Monero Wallet', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),),
+                  ),
                 ],
-                begin: FractionalOffset(0.0, 0.0),
-                end: FractionalOffset(0.0, 1.0),
-              )
+              ),
             ),
-          ),
-          Container(
-            padding: EdgeInsets.all(20.0),
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: widget.listWallets.length,
-                    itemBuilder: (BuildContext context, int index){
-                      return Container(
-                        child: Column(
-                          children: <Widget>[
-                            ListTile(
-                              title: Text(widget.listWallets[index],
-                                style: TextStyle(
-                                  color: (_currentWalletIndex == index) ? Palette.cakeGreen : Colors.black,
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.w600
+            Expanded(
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    height: 10.0,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Palette.lightGrey2,
+                          Colors.white
+                        ],
+                        begin: FractionalOffset(0.0, 0.0),
+                        end: FractionalOffset(0.0, 1.0),
+                      )
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(20.0),
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: widget.listWallets == null ? 0 : widget.listWallets.length,
+                            itemBuilder: (BuildContext context, int index){
+                              return Container(
+                                child: Column(
+                                  children: <Widget>[
+                                    ListTile(
+                                      title: Text(widget.listWallets[index],
+                                        style: TextStyle(
+                                          color: _currentWalletIndex == index ? Palette.cakeGreen : Colors.black,
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.w600
+                                        ),
+                                      ),
+                                      trailing: _currentWalletIndex == index ? Icon(Icons.check, color: Palette.cakeGreen, size: 20.0,) : null,
+                                      onTap: (){
+                                        _setCheckedWallet(index);
+                                      },
+                                    ),
+                                    (index < (widget.listWallets.length - 1)) ?
+                                    Divider(
+                                      color: Palette.lightGrey,
+                                      height: 3.0,
+                                    ) : Offstage()
+                                  ],
                                 ),
-                              ),
-                              trailing: (_currentWalletIndex == index) ? Icon(Icons.check, color: Palette.cakeGreen, size: 20.0,) : null,
-                              onTap: (){
-                                _setCheckedWallet(index);
-                              },
-                            ),
-                            (index < (widget.listWallets.length - 1)) ?
-                            Divider(
-                              color: Palette.lightGrey,
-                              height: 3.0,
-                            ) : Offstage()
-                          ],
+                              );
+                            }
+                          )
                         ),
-                      );
-                    }
-                  )
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                PrimaryIconButton(
-                  onPressed: (){},
-                  iconData: Icons.add,
-                  iconColor: Palette.violet,
-                  text: 'Create New Wallet'
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                PrimaryIconButton(
-                  onPressed: (){},
-                  iconData: Icons.refresh,
-                  text: 'Restore Wallet',
-                  color: Palette.indigo,
-                  borderColor: Palette.deepIndigo,
-                ),
-              ],
-            ),
-          ),
-        ],
-      )
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        PrimaryIconButton(
+                          onPressed: (){},
+                          iconData: Icons.add,
+                          iconColor: Palette.violet,
+                          text: 'Create New Wallet'
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        PrimaryIconButton(
+                          onPressed: (){},
+                          iconData: Icons.refresh,
+                          text: 'Restore Wallet',
+                          color: Palette.indigo,
+                          borderColor: Palette.deepIndigo,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            )
+          ],
+        )
+      ),
     );
   }
 
