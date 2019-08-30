@@ -18,20 +18,21 @@ class _SetupPinCodeState<WidgetType extends SetupPinCode> extends PinCodeState<W
   List<int> _originalPin = [];
   
   _SetupPinCodeState() {
-    title = "Setup PIN";
+    title = "Enter your pin";
   }
 
   @override
   void onPinCodeEntered(PinCodeState state) {
     if (!isEnteredOriginalPin()) {
       _originalPin = state.pin;
-      state.title = 'Enter your PIN again';
+      state.title = 'Enter your pin again';
       state.clear();
     } else {
 
       if (listEquals<int>(state.pin, _originalPin)) {
         showDialog(
           context: context,
+          barrierDismissible: false,
           builder: (BuildContext context) {
             return AlertDialog(
               content: Text("Your PIN has been set up successfully!"),
@@ -73,7 +74,7 @@ class _SetupPinCodeState<WidgetType extends SetupPinCode> extends PinCodeState<W
 
   void reset() {
     clear();
-    setTitle('Setup PIN');
+    setTitle('Enter your pin');
     _originalPin = [];
   }
 
@@ -81,7 +82,7 @@ class _SetupPinCodeState<WidgetType extends SetupPinCode> extends PinCodeState<W
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CupertinoNavigationBar(
-          middle: Text('Setup PIN'),
+          middle: Text('Setup Pin'),
           backgroundColor: Colors.white,
           border: null,
           trailing: FlatButton(
@@ -97,6 +98,6 @@ class _SetupPinCodeState<WidgetType extends SetupPinCode> extends PinCodeState<W
   String _changePinLengthText() {
     return 'Use '
       + (pinLength == PinCodeState.fourPinLength ? '${PinCodeState.sixPinLength}' : '${PinCodeState.fourPinLength}')
-      + '-digits PIN';
+      + '-digit Pin';
   }
 }
