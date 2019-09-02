@@ -33,61 +33,63 @@ class Welcome extends StatelessWidget {
                   )
                 ],
               ),
+              Container(
+                padding: EdgeInsets.only(top: 10.0),
+                child: Column(
+                    children: <Widget>[
+                      Text('WELCOME\nTO CAKE WALLET',
+                        style: TextStyle(
+                          fontSize: 30.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textScaleFactor: textScaleFactor,
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 10.0,),
+                      Text('The first iOS wallet\nfor Monero',
+                        style: TextStyle(
+                          fontSize: 22.0,
+                          color: Palette.lightBlue,
+                        ),
+                        textScaleFactor: textScaleFactor,
+                        textAlign: TextAlign.center,
+                      ),
+                    ]),
+              ),
               Expanded(
                   child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.only(top: 10.0),
-                          child: Column(
-                              children: <Widget>[
-                                Text('WELCOME\nTO CAKE WALLET',
-                                  style: TextStyle(
-                                    fontSize: 30.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textScaleFactor: textScaleFactor,
-                                  textAlign: TextAlign.center,
-                                ),
-                                Text('Awesome wallet\nfor Monero',
-                                  style: TextStyle(
-                                    fontSize: 22.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Palette.lightBlue,
-                                  ),
-                                  textScaleFactor: textScaleFactor,
-                                  textAlign: TextAlign.center,
-                                ),
-                                Text('Please make a selection below to either create\na new wallet or restore a wallet',
-                                  style: TextStyle(
-                                    fontSize: 18.0,
-                                    color: Palette.lightBlue,
-                                  ),
-                                  textScaleFactor: textScaleFactor,
-                                  textAlign: TextAlign.center,
-                                )
-                              ]),
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Text('Please make selection below to\ncreate or recover your wallet.',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: Palette.lightBlue,
                         ),
-                        Container(
-                            padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
-                            child: Column(
-                                children: <Widget>[
-                                  PrimaryButton(
-                                    onPressed: (){
-                                      Navigator.pushNamed(context, newWalletFromWelcomeRoute);
-                                    },
-                                    text: 'Create new',
-                                  ),
-                                  SizedBox(height: 10),
-                                  PrimaryButton(
-                                    onPressed: (){
-                                      Navigator.pushNamed(context, restoreRoute);
-                                    },
-                                    color: Palette.brightBlue,
-                                    borderColor: Palette.cloudySky,
-                                    text: 'Restore',
-                                  )
-                                ]))
+                        textScaleFactor: textScaleFactor,
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  )
+              ),
+              Container(
+                  padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                  child: Column(
+                      children: <Widget>[
+                        PrimaryButton(
+                          onPressed: (){
+                            Navigator.pushNamed(context, newWalletFromWelcomeRoute);
+                          },
+                          text: 'Create New',
+                        ),
+                        SizedBox(height: 10),
+                        PrimaryButton(
+                          onPressed: (){
+                            Navigator.pushNamed(context, restoreRoute);
+                          },
+                          color: Palette.brightBlue,
+                          borderColor: Palette.cloudySky,
+                          text: 'Restore wallet',
+                        )
                       ]))
             ])
       )
