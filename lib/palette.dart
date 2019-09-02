@@ -12,4 +12,5 @@ class Palette {
   static const Color wildDarkBlue = Color.fromRGBO(155, 172, 197, 1.0);
   static const Color lightGreen = Color.fromRGBO(52, 186, 204, 1.0);
   static const Color darkPurple = Color.fromRGBO(124, 83, 240, 1.0);
+  static const Color darkGrey = Color.fromRGBO(136, 155, 183, 0.21);
 }

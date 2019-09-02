@@ -81,23 +81,9 @@ class _SetupPinCodeState<WidgetType extends SetupPinCode> extends PinCodeState<W
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CupertinoNavigationBar(
-          middle: Text('Setup Pin'),
-          backgroundColor: Colors.white,
-          border: null,
-          trailing: FlatButton(
-            onPressed: () { changePinLength(pinLength == PinCodeState.fourPinLength ? PinCodeState.sixPinLength : PinCodeState.fourPinLength); },
-            child: Text(_changePinLengthText())
-          ),
-      ),
       backgroundColor: Colors.white,
       body: body(context)
     );
   }
 
-  String _changePinLengthText() {
-    return 'Use '
-      + (pinLength == PinCodeState.fourPinLength ? '${PinCodeState.sixPinLength}' : '${PinCodeState.fourPinLength}')
-      + '-digit Pin';
-  }
 }

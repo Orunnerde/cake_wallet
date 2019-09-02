@@ -9,17 +9,17 @@ class PinCode extends StatefulWidget {
 }
 
 class PinCodeState<T extends StatefulWidget> extends State<T> {
-  static const baseWidth = 411.43;
-  static const baseHeight = 683.43;
-  static const baseCrossAxisSpacing = 35;
+  static const defaultButtonWidth = 79.0;
   static const defaultPinLength = 4;
   static const sixPinLength = 6;
   static const fourPinLength = 4;
   static final deleteIconImage = Image.asset('assets/images/delete_icon.png');
+  static final backArrowImage = Image.asset('assets/images/back_arrow.png');
 
   int pinLength = defaultPinLength;
   List<int> pin = List<int>.filled(defaultPinLength, null);
   String title = 'Create PIN';
+  double crossAxisSpacing;
 
   void setTitle(String title) {
     setState(() => this.title = title);
@@ -41,17 +41,8 @@ class PinCodeState<T extends StatefulWidget> extends State<T> {
   }
 
   double getCurrentCrossAxisSpacing(BuildContext context){
-
     double _currentWidth = MediaQuery.of(context).size.width;
-    double _currentHeight = MediaQuery.of(context).size.height;
-
-    double _baseAspectRatio = baseWidth/baseHeight;
-    double _currentAspectRatio = _currentWidth/_currentHeight;
-
-    double _currentCrossAxisSpacing = _currentWidth*baseCrossAxisSpacing/baseWidth;
-
-    return _currentAspectRatio > _baseAspectRatio ? 2*_currentCrossAxisSpacing : _currentCrossAxisSpacing;
-
+    return (_currentWidth - 3*defaultButtonWidth)/4;
   }
 
   @override
@@ -60,96 +51,153 @@ class PinCodeState<T extends StatefulWidget> extends State<T> {
   }
 
   Widget body(BuildContext context) {
+    crossAxisSpacing = getCurrentCrossAxisSpacing(context);
     return SafeArea(
-      child: Container(
-        padding: EdgeInsets.only(left: 35, right: 35),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Spacer(flex: 1),
-              Text(
-                  title,
-                  style: TextStyle(
-                      fontSize: 24,
-                      color: Palette.wildDarkBlue
-                  )
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 30),
-                width: 180,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List.generate(pinLength, (index) {
-                    const size = 14.0;
-                    const radius = size / 2;
-                    final isFilled = pin[index] != null;
-
-                    return Container(
-                        width: size,
-                        height: size,
-                        decoration: BoxDecoration(
-                            color: isFilled ? Palette.deepPurple : Colors.transparent,
-                            border: Border.all(color: Palette.wildDarkBlue),
-                            borderRadius: BorderRadius.circular(radius)));
-                  }),
-                ),
-              ),
-              Spacer(flex: 2),
-              Flexible(
-                flex: 8,
-                child: GridView.count(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: getCurrentCrossAxisSpacing(context),
-                  mainAxisSpacing: 8.0,
-                  //childAspectRatio: 1.0,
-                  physics: const NeverScrollableScrollPhysics(),
-                  padding: const EdgeInsets.only(bottom: 40.0),
-                  children: List.generate(12, (index) {
-                    String buttonText = "";
-
-                    if (index == 9) {
-                      return Container();
-                    } else if (index == 10) {
-                      index = 0;
-                      buttonText = "0";
-                    } else if (index == 11) {
-                      return ButtonTheme(
-                        minWidth: 15.0,
-                        height: 15.0,
-                        child: FlatButton(
-                          onPressed: () { _pop(); },
-                          color: Colors.transparent,
-                          shape: CircleBorder(),
-                          child: deleteIconImage,
-                        ),
-                      );
-                    } else {
-                      int i = ++index;
-                      buttonText =  '$i';
-                    }
-
-                    return Container(
-                      padding: EdgeInsets.all(5),
-                      child: ButtonTheme(
-                        child: FlatButton(
-                          onPressed: () { _push(index); },
-                          color: Palette.creamyGrey,
-                          shape: CircleBorder(),
-                          child: Text(
-                              '$buttonText',
-                              style: TextStyle(
-                                  fontSize: 18.0,
-                                  color: Palette.wildDarkBlue
-                              )
-                          ),
-                        ),
+      child: Column(
+        children: <Widget>[
+          Container(
+            height: 37.0,
+            margin: EdgeInsets.only(
+              top: 5.0,
+            ),
+            padding: EdgeInsets.only(
+                left: 17.0,
+                right: 17.0
+            ),
+            child: Stack(
+              children: <Widget>[
+                Positioned(
+                    left: 0.0,
+                    child: Container(
+                      width: 19.0,
+                      height: 37.0,
+                      child: InkWell(
+                        onTap: (){ Navigator.pop(context); },
+                        child: backArrowImage,
                       ),
-                    );
-                  }),
+                    )
                 ),
-              )
-            ]
-        ),
+                Container(
+                  height: 37.0,
+                  alignment: Alignment.center,
+                  child: Text('Setup Pin', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.only(left: crossAxisSpacing, right: crossAxisSpacing),
+              child: Column(
+                  children: <Widget>[
+                    Spacer(flex: 2),
+                    Text(
+                        title,
+                        style: TextStyle(
+                            fontSize: 24,
+                            color: Palette.wildDarkBlue
+                        )
+                    ),
+                    Spacer(flex: 3),
+                    Container(
+                      width: 180,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: List.generate(pinLength, (index) {
+                          const size = 10.0;
+                          final isFilled = pin[index] != null;
+
+                          return Container(
+                              width: size,
+                              height: size,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: isFilled ? Palette.deepPurple : Colors.transparent,
+                                  border: Border.all(color: Palette.wildDarkBlue),
+                              ));
+                        }),
+                      ),
+                    ),
+                    Spacer(flex: 2),
+                    FlatButton(
+                      onPressed: (){ changePinLength(pinLength == PinCodeState.fourPinLength ? PinCodeState.sixPinLength : PinCodeState.fourPinLength); },
+                      child: Text(_changePinLengthText(),
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: Palette.wildDarkBlue
+                        ),
+                      )
+                    ),
+                    Spacer(flex: 1),
+                    Flexible(
+                      flex: 24,
+                      child: GridView.count(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: crossAxisSpacing,
+                        mainAxisSpacing: 8.0,
+                        childAspectRatio: 1,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.only(bottom: 40.0),
+                        children: List.generate(12, (index) {
+                          String buttonText = "";
+
+                          if (index == 9) {
+                            return Container(
+                              padding: EdgeInsets.all(5),
+                              child: ButtonTheme(
+                                child: FlatButton(
+                                  onPressed: () {},
+                                  color: Palette.darkGrey,
+                                  shape: CircleBorder(),
+                                  child: Offstage(),
+                                ),
+                              ),
+                            );
+                          } else if (index == 10) {
+                            index = 0;
+                            buttonText = "0";
+                          } else if (index == 11) {
+                            return Container(
+                              padding: EdgeInsets.all(5),
+                              child: ButtonTheme(
+                                child: FlatButton(
+                                  onPressed: () { _pop(); },
+                                  color: Palette.darkGrey,
+                                  shape: CircleBorder(),
+                                  child: deleteIconImage,
+                                ),
+                              ),
+                            );
+                          } else {
+                            int i = ++index;
+                            buttonText =  '$i';
+                          }
+
+                          return Container(
+                            padding: EdgeInsets.all(5),
+                            child: ButtonTheme(
+                              child: FlatButton(
+                                onPressed: () { _push(index); },
+                                color: Palette.creamyGrey,
+                                shape: CircleBorder(),
+                                child: Text(
+                                    '$buttonText',
+                                    style: TextStyle(
+                                        fontSize: 23.0,
+                                        color: Palette.wildDarkBlue
+                                    )
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    )
+                  ]
+              ),
+            )
+          )
+        ],
       )
     );
   }
@@ -192,5 +240,11 @@ class PinCodeState<T extends StatefulWidget> extends State<T> {
 
       return v;
     });
+  }
+
+  String _changePinLengthText() {
+    return 'Use '
+        + (pinLength == PinCodeState.fourPinLength ? '${PinCodeState.sixPinLength}' : '${PinCodeState.fourPinLength}')
+        + '-digit Pin';
   }
 }
