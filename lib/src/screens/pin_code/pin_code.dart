@@ -143,29 +143,21 @@ class PinCodeState<T extends StatefulWidget> extends State<T> {
 
                           if (index == 9) {
                             return Container(
-                              padding: EdgeInsets.all(5),
-                              child: ButtonTheme(
-                                child: FlatButton(
-                                  onPressed: () {},
-                                  color: Palette.darkGrey,
-                                  shape: CircleBorder(),
-                                  child: Offstage(),
-                                ),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Palette.darkGrey,
                               ),
                             );
                           } else if (index == 10) {
                             index = 0;
                             buttonText = "0";
                           } else if (index == 11) {
-                            return Container(
-                              padding: EdgeInsets.all(5),
-                              child: ButtonTheme(
-                                child: FlatButton(
-                                  onPressed: () { _pop(); },
-                                  color: Palette.darkGrey,
-                                  shape: CircleBorder(),
-                                  child: deleteIconImage,
-                                ),
+                            return ButtonTheme(
+                              child: FlatButton(
+                                onPressed: () { _pop(); },
+                                color: Palette.darkGrey,
+                                shape: CircleBorder(),
+                                child: deleteIconImage,
                               ),
                             );
                           } else {
@@ -173,20 +165,17 @@ class PinCodeState<T extends StatefulWidget> extends State<T> {
                             buttonText =  '$i';
                           }
 
-                          return Container(
-                            padding: EdgeInsets.all(5),
-                            child: ButtonTheme(
-                              child: FlatButton(
-                                onPressed: () { _push(index); },
-                                color: Palette.creamyGrey,
-                                shape: CircleBorder(),
-                                child: Text(
-                                    '$buttonText',
-                                    style: TextStyle(
-                                        fontSize: 23.0,
-                                        color: Palette.wildDarkBlue
-                                    )
-                                ),
+                          return ButtonTheme(
+                            child: FlatButton(
+                              onPressed: () { _push(index); },
+                              color: Palette.creamyGrey,
+                              shape: CircleBorder(),
+                              child: Text(
+                                  '$buttonText',
+                                  style: TextStyle(
+                                      fontSize: 23.0,
+                                      color: Palette.wildDarkBlue
+                                  )
                               ),
                             ),
                           );
