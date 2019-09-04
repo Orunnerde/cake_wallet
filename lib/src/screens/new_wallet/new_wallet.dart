@@ -121,7 +121,7 @@ class _WalletNameFormState extends State<WalletNameForm>{
                   child: TextFormField(
                     style: TextStyle(fontSize: 24.0),
                     decoration: InputDecoration(
-                        hintStyle: TextStyle(color: Palette.lightBlue),
+                        hintStyle: TextStyle(color: Palette.lightBlueWithOpacity),
                         hintText: 'Wallet name',
                         focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
