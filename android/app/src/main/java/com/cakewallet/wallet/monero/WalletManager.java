@@ -21,6 +21,12 @@ public class WalletManager {
 
     public static File getDirForWallet(Context context, String name) {
         File walletsRoot = getWalletRoot(context);
+//        File walletDir = new File(walletsRoot.getAbsolutePath() + "/" + name);
+//
+//        if (!walletDir.exists()) {
+//            walletDir.mkdirs();
+//        }
+
         File walletRoot = new File(walletsRoot, name);
         return walletRoot;
     }

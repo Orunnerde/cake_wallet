@@ -1,0 +1,1 @@
+enum WalletType { MONERO, NONE }

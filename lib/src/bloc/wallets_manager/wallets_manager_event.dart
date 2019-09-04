@@ -19,5 +19,18 @@ class RestoreFromSeedWallet extends WalletsManagerEvent {
 
   RestoreFromSeedWallet(
       {@required this.name, @required this.seed, @required this.restoreHeight})
-      : super([name]);
+      : super([name, seed, restoreHeight]);
+}
+
+
+class RestoreFromKeysWallet extends WalletsManagerEvent {
+  final String name;
+  final String address;
+  final String viewKey;
+  final String spendKey;
+  final int restoreHeight;
+
+  RestoreFromKeysWallet(
+      {@required this.name, @required this.address, @required this.viewKey, @required this.spendKey, @required this.restoreHeight})
+      : super([name, address, viewKey, spendKey, restoreHeight]);
 }

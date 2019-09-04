@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import '../../user_service.dart';
+import 'package:cake_wallet/src/domain/services/user_service.dart';
 import './authentication.dart';
 
 class AuthenticationBloc

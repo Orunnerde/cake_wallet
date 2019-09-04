@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cake_wallet/src/screens/pin_code/pin_code.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:cake_wallet/src/bloc/login/login.dart';
 import 'package:cake_wallet/src/bloc/authentication/authentication.dart';
-import 'package:cake_wallet/src/user_service.dart';
+import 'package:cake_wallet/src/screens/pin_code/pin_code.dart';
+
+import 'package:cake_wallet/src/domain/services/user_service.dart';
+import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
+import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 
 class LoginScreen extends StatelessWidget {
   final UserService userService;
+  final SharedPreferences sharedPreferences;
+  final WalletListService walletsService;
+  final WalletService walletService;
 
-  LoginScreen({this.userService});
+  LoginScreen(
+      {@required this.userService,
+      @required this.sharedPreferences,
+      @required this.walletsService,
+      @required this.walletService});
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +30,12 @@ class LoginScreen extends StatelessWidget {
         body: BlocProvider(
             builder: (context) {
               return LoginBloc(
-                authenticationBloc:
-                    BlocProvider.of<AuthenticationBloc>(context),
-                userService: userService,
-              );
+                  authenticationBloc:
+                      BlocProvider.of<AuthenticationBloc>(context),
+                  userService: userService,
+                  walletService: walletService,
+                  walletsService: walletsService,
+                  sharedPreferences: sharedPreferences);
             },
             child: _LoginPinCode()));
   }

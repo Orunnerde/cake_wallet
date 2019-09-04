@@ -1,16 +1,22 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:bloc/bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cake_wallet/src/wallets_service.dart';
 import 'package:cake_wallet/src/bloc/wallets_manager/wallets_manager_state.dart';
+import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
+import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import './wallets_manager.dart';
 
 class WalletsManagerBloc
     extends Bloc<WalletsManagerEvent, WalletsManagerState> {
-  final WalletsService walletsService;
+  final WalletListService walletsService;
+  final WalletService walletService;
   final SharedPreferences sharedPreferences;
 
-  WalletsManagerBloc({this.walletsService, this.sharedPreferences});
+  WalletsManagerBloc(
+      {@required this.walletsService,
+      @required this.walletService,
+      @required this.sharedPreferences});
 
   @override
   WalletsManagerState get initialState => WalletsManagerStateInitial();
@@ -25,6 +31,11 @@ class WalletsManagerBloc
       try {
         await walletsService.create(event.name);
         sharedPreferences.setString('current_wallet_name', event.name);
+        await walletService.connectToNode(
+            uri: 'node.moneroworld.com:18089',
+            login: '',
+            password: ''); 
+        await walletService.startSync();
         yield WalletCreatedSuccessfully();
       } catch (e) {
         yield WalletCreatedFailed(e.toString());
@@ -38,6 +49,29 @@ class WalletsManagerBloc
         await walletsService.restoreFromSeed(
             event.name, event.seed, event.restoreHeight);
         sharedPreferences.setString('current_wallet_name', event.name);
+        await walletService.connectToNode(
+            uri: 'node.moneroworld.com:18089',
+            login: '',
+            password: '');
+        await walletService.startSync();
+        yield WalletCreatedSuccessfully();
+      } catch (e) {
+        yield WalletCreatedFailed(e.toString());
+      }
+    }
+
+    if (event is RestoreFromKeysWallet) {
+      yield CreatingWallet();
+
+      try {
+        await walletsService.restoreFromKeys(event.name, event.restoreHeight,
+            event.address, event.viewKey, event.spendKey);
+        sharedPreferences.setString('current_wallet_name', event.name);
+        await walletService.connectToNode(
+            uri: 'node.moneroworld.com:18089',
+            login: '',
+            password: '');
+        await walletService.startSync();
         yield WalletCreatedSuccessfully();
       } catch (e) {
         yield WalletCreatedFailed(e.toString());

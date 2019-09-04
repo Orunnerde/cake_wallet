@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/bloc/wallets_manager/wallets_manager.dart';
-import 'package:cake_wallet/src/bloc/wallets_manager/wallets_manager_state.dart';
-import 'package:cake_wallet/src/wallets_service.dart';
+
+// import 'package:cake_wallet/src/wallets_service.dart';
+
+import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
+import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 
 class NewWallet extends StatelessWidget {
   static const _aspectRatioImage = 1.54;
   final _image = Image.asset('assets/images/bitmap.png');
 
-  final WalletsService walletsService;
+  final WalletListService walletsService;
+  final WalletService walletService;
   final SharedPreferences sharedPreferences;
 
-  NewWallet({this.walletsService, this.sharedPreferences});
+  NewWallet(
+      {@required this.walletsService,
+      @required this.walletService,
+      @required this.sharedPreferences});
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +37,7 @@ class NewWallet extends StatelessWidget {
         body: BlocProvider(
             builder: (context) => WalletsManagerBloc(
                 walletsService: walletsService,
+                walletService: walletService,
                 sharedPreferences: sharedPreferences),
             child: GestureDetector(
               onTap: () {
@@ -37,6 +45,9 @@ class NewWallet extends StatelessWidget {
               },
               child: Column(
                 children: <Widget>[
+                  Spacer(
+                    flex: 1,
+                  ),
                   AspectRatio(
                     aspectRatio: _aspectRatioImage,
                     child: Container(
@@ -47,7 +58,11 @@ class NewWallet extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Expanded(
+                  Spacer(
+                    flex: 1,
+                  ),
+                  Flexible(
+                    flex: 8,
                     child: WalletNameForm(),
                   )
                 ],
@@ -74,6 +89,11 @@ class _WalletNameFormState extends State<WalletNameForm> {
         child: BlocListener(
             bloc: bloc,
             listener: (context, state) {
+              if (state is WalletCreatedSuccessfully) {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/dashboard', (Route<dynamic> route) => false);
+              }
+
               if (state is WalletCreatedFailed) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   showDialog(

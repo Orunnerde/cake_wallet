@@ -31,7 +31,7 @@ class Restore extends StatelessWidget{
               Flexible(
                 child:RestoreButton(
                   onPressed: (){
-                    Navigator.pushNamed(context, restoreSeedKeysRoute);
+                    Navigator.pushNamed(context, restoreFromSeedKeysFromWelcomeRoute);
                   },
                   image: _imageSeedKeys,
                   aspectRatioImage: _aspectRatioImage,

@@ -5,11 +5,11 @@ import 'package:cake_wallet/src/bloc/user/user.dart';
 import 'package:cake_wallet/src/screens/pin_code/pin_code.dart';
 
 class SetupPinCode extends PinCodeWidget {
-  final block = UserBloc();
+  final UserBloc block;
 
   final Function(BuildContext, String) onPinCodeSetup;
 
-  SetupPinCode(this.onPinCodeSetup);
+  SetupPinCode(this.block, this.onPinCodeSetup);
 
   @override
   _SetupPinCodeState createState() => _SetupPinCodeState();
