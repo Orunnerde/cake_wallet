@@ -25,15 +25,15 @@ class NewWallet extends StatelessWidget{
                 top: 5.0,
               ),
               padding: EdgeInsets.only(
-                  left: 17.0,
-                  right: 17.0
+                  left: 8.0,
+                  right: 8.0
               ),
               child: Stack(
                 children: <Widget>[
                   Positioned(
                       left: 0.0,
                       child: Container(
-                        width: 19.0,
+                        width: 37.0,
                         height: 37.0,
                         child: InkWell(
                           onTap: (){ Navigator.pop(context); },
