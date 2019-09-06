@@ -9,7 +9,8 @@ class PinCode extends StatefulWidget {
 }
 
 class PinCodeState<T extends StatefulWidget> extends State<T> {
-  static const defaultButtonWidth = 79.0;
+  GlobalKey _gridViewKey = GlobalKey();
+
   static const defaultPinLength = 4;
   static const sixPinLength = 6;
   static const fourPinLength = 4;
@@ -18,8 +19,8 @@ class PinCodeState<T extends StatefulWidget> extends State<T> {
 
   int pinLength = defaultPinLength;
   List<int> pin = List<int>.filled(defaultPinLength, null);
-  String title = 'Create PIN';
-  double crossAxisSpacing;
+  String title = 'Enter your pin';
+  double _aspectRatio = 0;
 
   void setTitle(String title) {
     setState(() => this.title = title);
@@ -40,9 +41,24 @@ class PinCodeState<T extends StatefulWidget> extends State<T> {
     });
   }
 
-  double getCurrentCrossAxisSpacing(BuildContext context){
-    double _currentWidth = MediaQuery.of(context).size.width;
-    return (_currentWidth - 3*defaultButtonWidth)/4;
+  _getCurrentAspectRatio(){
+    final RenderBox renderBox = _gridViewKey.currentContext.findRenderObject();
+
+    double cellWidth = renderBox.size.width/3;
+    double cellHeight = renderBox.size.height/4;
+    if (cellWidth > 0 && cellHeight > 0) _aspectRatio = cellWidth/cellHeight;
+    setState(() {
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
+  }
+
+  _afterLayout(_) {
+    _getCurrentAspectRatio();
   }
 
   @override
@@ -51,7 +67,6 @@ class PinCodeState<T extends StatefulWidget> extends State<T> {
   }
 
   Widget body(BuildContext context) {
-    crossAxisSpacing = getCurrentCrossAxisSpacing(context);
     return SafeArea(
       child: Column(
         children: <Widget>[
@@ -61,15 +76,15 @@ class PinCodeState<T extends StatefulWidget> extends State<T> {
               top: 5.0,
             ),
             padding: EdgeInsets.only(
-                left: 17.0,
-                right: 17.0
+                left: 8.0,
+                right: 8.0
             ),
             child: Stack(
               children: <Widget>[
                 Positioned(
                     left: 0.0,
                     child: Container(
-                      width: 19.0,
+                      width: 37.0,
                       height: 37.0,
                       child: InkWell(
                         onTap: (){ Navigator.pop(context); },
@@ -87,7 +102,7 @@ class PinCodeState<T extends StatefulWidget> extends State<T> {
           ),
           Expanded(
             child: Container(
-              padding: EdgeInsets.only(left: crossAxisSpacing, right: crossAxisSpacing),
+              padding: EdgeInsets.only(left: 40.0, right: 40.0, bottom: 40.0),
               child: Column(
                   children: <Widget>[
                     Spacer(flex: 2),
@@ -131,56 +146,56 @@ class PinCodeState<T extends StatefulWidget> extends State<T> {
                     Spacer(flex: 1),
                     Flexible(
                       flex: 24,
-                      child: GridView.count(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: crossAxisSpacing,
-                        mainAxisSpacing: 8.0,
-                        childAspectRatio: 1,
-                        physics: const NeverScrollableScrollPhysics(),
-                        padding: const EdgeInsets.only(bottom: 40.0),
-                        children: List.generate(12, (index) {
-                          String buttonText = "";
+                      child: Container(
+                        key: _gridViewKey,
+                        child: _aspectRatio > 0 ? GridView.count(
+                          crossAxisCount: 3,
+                          childAspectRatio: _aspectRatio,
+                          physics: const NeverScrollableScrollPhysics(),
+                          children: List.generate(12, (index) {
 
-                          if (index == 9) {
+                            if (index == 9) {
+                              return Container(
+                                margin: EdgeInsets.all(5.0),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Palette.darkGrey,
+                                ),
+                              );
+                            } else if (index == 10) {
+                              index = 0;
+                            } else if (index == 11) {
+                              return Container(
+                                margin: EdgeInsets.all(5.0),
+                                child: FlatButton(
+                                  onPressed: () { _pop(); },
+                                  color: Palette.darkGrey,
+                                  shape: CircleBorder(),
+                                  child: deleteIconImage,
+                                ),
+                              );
+                            } else {
+                              index++;
+                            }
+
                             return Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Palette.darkGrey,
-                              ),
-                            );
-                          } else if (index == 10) {
-                            index = 0;
-                            buttonText = "0";
-                          } else if (index == 11) {
-                            return ButtonTheme(
+                              margin: EdgeInsets.all(5.0),
                               child: FlatButton(
-                                onPressed: () { _pop(); },
-                                color: Palette.darkGrey,
+                                onPressed: () { _push(index); },
+                                color: Palette.creamyGrey,
                                 shape: CircleBorder(),
-                                child: deleteIconImage,
+                                child: Text(
+                                    '$index',
+                                    style: TextStyle(
+                                        fontSize: 23.0,
+                                        color: Palette.blueGrey
+                                    )
+                                ),
                               ),
                             );
-                          } else {
-                            int i = ++index;
-                            buttonText =  '$i';
-                          }
-
-                          return ButtonTheme(
-                            child: FlatButton(
-                              onPressed: () { _push(index); },
-                              color: Palette.creamyGrey,
-                              shape: CircleBorder(),
-                              child: Text(
-                                  '$buttonText',
-                                  style: TextStyle(
-                                      fontSize: 23.0,
-                                      color: Palette.wildDarkBlue
-                                  )
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
+                          }),
+                        ) : null
+                      )
                     )
                   ]
               ),
