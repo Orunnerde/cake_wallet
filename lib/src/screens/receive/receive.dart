@@ -55,50 +55,27 @@ class _ReceiveState extends State<Receive>{
       key: _key,
       resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.white,
+      appBar: CupertinoNavigationBar(
+        leading: ButtonTheme(
+          minWidth: double.minPositive,
+          child: FlatButton(
+            onPressed: (){},
+            child: _closeButtonImage
+          ),
+        ),
+        middle: Text('Receive', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),),
+        trailing: ButtonTheme(
+          minWidth: double.minPositive,
+          child: FlatButton(
+            onPressed: (){},
+            child: _shareButtonImage),
+        ),
+        backgroundColor: Colors.white,
+        border: null,
+      ),
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            Container(
-              height: 37.0,
-              margin: EdgeInsets.only(
-                top: 5.0,
-              ),
-              padding: EdgeInsets.only(
-                left: 18.0,
-                right: 18.0
-              ),
-              child: Stack(
-                children: <Widget>[
-                  Positioned(
-                    left: 0.0,
-                    child: Container(
-                      width: 37.0,
-                      height: 37.0,
-                      child: InkWell(
-                        onTap: (){},
-                        child: _closeButtonImage,
-                      ),
-                    )
-                  ),
-                  Container(
-                    height: 37.0,
-                    alignment: Alignment.center,
-                    child: Text('Receive', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),),
-                  ),
-                  Positioned(
-                    right: 10.0,
-                    child: Container(
-                      width: 37.0,
-                      height: 37.0,
-                      child: InkWell(
-                        onTap: (){},
-                        child: _shareButtonImage,
-                      ),
-                    )
-                  )
-                ],
-              ),
-            ),
             Container(
               padding: EdgeInsets.all(35.0),
               child: Column(
