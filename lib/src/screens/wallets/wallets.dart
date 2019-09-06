@@ -29,40 +29,22 @@ class _WalletsState extends State<Wallets>{
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: CupertinoNavigationBar(
+        leading: ButtonTheme(
+          minWidth: double.minPositive,
+          child: FlatButton(
+            onPressed: (){},
+            child: _closeButtonImage
+          ),
+        ),
+        middle: Text('Monero Wallet', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),),
+        backgroundColor: Colors.white,
+        border: null,
+      ),
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            Container(
-              height: 37.0,
-              margin: EdgeInsets.only(
-                top: 5.0,
-                bottom: 20.0
-              ),
-              padding: EdgeInsets.only(
-                left: 18.0,
-                right: 18.0
-              ),
-              child: Stack(
-                children: <Widget>[
-                  Positioned(
-                    left: 0.0,
-                    child: InkWell(
-                      onTap: (){},
-                      child: Container(
-                        width: 37.0,
-                        height: 37.0,
-                        child: _closeButtonImage,
-                      ),
-                    )
-                  ),
-                  Container(
-                    height: 37.0,
-                    alignment: Alignment.center,
-                    child: Text('Monero Wallet', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),),
-                  ),
-                ],
-              ),
-            ),
+            SizedBox(height: 20.0),
             Expanded(
               child: Stack(
                 children: <Widget>[
