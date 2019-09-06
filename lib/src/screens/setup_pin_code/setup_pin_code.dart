@@ -16,6 +16,7 @@ class _SetupPinCodeState<WidgetType extends SetupPinCode> extends PinCodeState<W
   bool isEnteredOriginalPin() => !(_originalPin.length == 0);
   Function(BuildContext) onPinCodeSetup;
   List<int> _originalPin = [];
+  static final backArrowImage = Image.asset('assets/images/back_arrow.png');
   
   _SetupPinCodeState() {
     title = "Enter your pin";
@@ -82,6 +83,18 @@ class _SetupPinCodeState<WidgetType extends SetupPinCode> extends PinCodeState<W
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: CupertinoNavigationBar(
+        leading: ButtonTheme(
+          minWidth: double.minPositive,
+          child: FlatButton(
+            onPressed: (){Navigator.pop(context);},
+            child: backArrowImage
+          ),
+        ),
+        middle: Text('Setup Pin', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),),
+        backgroundColor: Colors.white,
+        border: null,
+      ),
       body: body(context)
     );
   }

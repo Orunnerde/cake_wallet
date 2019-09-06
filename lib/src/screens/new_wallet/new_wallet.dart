@@ -16,69 +16,45 @@ class NewWallet extends StatelessWidget{
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomPadding: false,
+      appBar: CupertinoNavigationBar(
+        leading: ButtonTheme(
+          minWidth: double.minPositive,
+          child: FlatButton(
+              onPressed: (){Navigator.pop(context);},
+              child: backArrowImage
+          ),
+        ),
+        middle: Text('New Wallet', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),),
+        backgroundColor: Colors.white,
+        border: null,
+      ),
       body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: 37.0,
-              margin: EdgeInsets.only(
-                top: 5.0,
-              ),
-              padding: EdgeInsets.only(
-                  left: 8.0,
-                  right: 8.0
-              ),
-              child: Stack(
-                children: <Widget>[
-                  Positioned(
-                      left: 0.0,
-                      child: Container(
-                        width: 37.0,
-                        height: 37.0,
-                        child: InkWell(
-                          onTap: (){ Navigator.pop(context); },
-                          child: backArrowImage,
-                        ),
-                      )
-                  ),
-                  Container(
-                    height: 37.0,
-                    alignment: Alignment.center,
-                    child: Text('New Wallet', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),),
-                  ),
-                ],
+        child: GestureDetector(
+          onTap: (){
+            SystemChannels.textInput.invokeMethod('TextInput.hide');
+          },
+          child: Column(children: <Widget>[
+            Spacer(
+              flex: 1,
+            ),
+            AspectRatio(
+              aspectRatio: _aspectRatioImage,
+              child: Container(
+                width: double.infinity,
+                child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: _image,
+                ),
               ),
             ),
-            Expanded(
-              child: GestureDetector(
-                onTap: (){
-                  SystemChannels.textInput.invokeMethod('TextInput.hide');
-                },
-                child: Column(children: <Widget>[
-                  Spacer(
-                    flex: 1,
-                  ),
-                  AspectRatio(
-                    aspectRatio: _aspectRatioImage,
-                    child: Container(
-                      width: double.infinity,
-                      child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: _image,
-                      ),
-                    ),
-                  ),
-                  Spacer(
-                    flex: 1,
-                  ),
-                  Flexible(
-                    flex: 8,
-                    child: WalletNameForm(),
-                  )
-                ],),
-              )
+            Spacer(
+              flex: 1,
+            ),
+            Flexible(
+              flex: 8,
+              child: WalletNameForm(),
             )
-          ],
+          ],),
         )
       )
     );

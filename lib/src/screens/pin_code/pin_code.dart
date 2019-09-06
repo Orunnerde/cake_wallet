@@ -68,140 +68,104 @@ class PinCodeState<T extends StatefulWidget> extends State<T> {
 
   Widget body(BuildContext context) {
     return SafeArea(
-      child: Column(
-        children: <Widget>[
-          Container(
-            height: 37.0,
-            margin: EdgeInsets.only(
-              top: 5.0,
-            ),
-            padding: EdgeInsets.only(
-                left: 8.0,
-                right: 8.0
-            ),
-            child: Stack(
-              children: <Widget>[
-                Positioned(
-                    left: 0.0,
-                    child: Container(
-                      width: 37.0,
-                      height: 37.0,
-                      child: InkWell(
-                        onTap: (){ Navigator.pop(context); },
-                        child: backArrowImage,
-                      ),
-                    )
-                ),
-                Container(
-                  height: 37.0,
-                  alignment: Alignment.center,
-                  child: Text('Setup Pin', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.only(left: 40.0, right: 40.0, bottom: 40.0),
-              child: Column(
-                  children: <Widget>[
-                    Spacer(flex: 2),
-                    Text(
-                        title,
-                        style: TextStyle(
-                            fontSize: 24,
-                            color: Palette.wildDarkBlue
-                        )
-                    ),
-                    Spacer(flex: 3),
-                    Container(
-                      width: 180,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: List.generate(pinLength, (index) {
-                          const size = 10.0;
-                          final isFilled = pin[index] != null;
+      child: Container(
+        padding: EdgeInsets.only(left: 40.0, right: 40.0, bottom: 40.0),
+        child: Column(
+            children: <Widget>[
+              Spacer(flex: 2),
+              Text(
+                  title,
+                  style: TextStyle(
+                      fontSize: 24,
+                      color: Palette.wildDarkBlue
+                  )
+              ),
+              Spacer(flex: 3),
+              Container(
+                width: 180,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(pinLength, (index) {
+                    const size = 10.0;
+                    final isFilled = pin[index] != null;
 
-                          return Container(
-                              width: size,
-                              height: size,
+                    return Container(
+                        width: size,
+                        height: size,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: isFilled ? Palette.deepPurple : Colors.transparent,
+                          border: Border.all(color: Palette.wildDarkBlue),
+                        ));
+                  }),
+                ),
+              ),
+              Spacer(flex: 2),
+              FlatButton(
+                  onPressed: (){ changePinLength(pinLength == PinCodeState.fourPinLength ? PinCodeState.sixPinLength : PinCodeState.fourPinLength); },
+                  child: Text(_changePinLengthText(),
+                    style: TextStyle(
+                        fontSize: 16.0,
+                        color: Palette.wildDarkBlue
+                    ),
+                  )
+              ),
+              Spacer(flex: 1),
+              Flexible(
+                  flex: 24,
+                  child: Container(
+                      key: _gridViewKey,
+                      child: _aspectRatio > 0 ? GridView.count(
+                        crossAxisCount: 3,
+                        childAspectRatio: _aspectRatio,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: List.generate(12, (index) {
+
+                          if (index == 9) {
+                            return Container(
+                              margin: EdgeInsets.all(5.0),
                               decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: isFilled ? Palette.deepPurple : Colors.transparent,
-                                  border: Border.all(color: Palette.wildDarkBlue),
-                              ));
-                        }),
-                      ),
-                    ),
-                    Spacer(flex: 2),
-                    FlatButton(
-                      onPressed: (){ changePinLength(pinLength == PinCodeState.fourPinLength ? PinCodeState.sixPinLength : PinCodeState.fourPinLength); },
-                      child: Text(_changePinLengthText(),
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: Palette.wildDarkBlue
-                        ),
-                      )
-                    ),
-                    Spacer(flex: 1),
-                    Flexible(
-                      flex: 24,
-                      child: Container(
-                        key: _gridViewKey,
-                        child: _aspectRatio > 0 ? GridView.count(
-                          crossAxisCount: 3,
-                          childAspectRatio: _aspectRatio,
-                          physics: const NeverScrollableScrollPhysics(),
-                          children: List.generate(12, (index) {
-
-                            if (index == 9) {
-                              return Container(
-                                margin: EdgeInsets.all(5.0),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Palette.darkGrey,
-                                ),
-                              );
-                            } else if (index == 10) {
-                              index = 0;
-                            } else if (index == 11) {
-                              return Container(
-                                margin: EdgeInsets.all(5.0),
-                                child: FlatButton(
-                                  onPressed: () { _pop(); },
-                                  color: Palette.darkGrey,
-                                  shape: CircleBorder(),
-                                  child: deleteIconImage,
-                                ),
-                              );
-                            } else {
-                              index++;
-                            }
-
+                                shape: BoxShape.circle,
+                                color: Palette.darkGrey,
+                              ),
+                            );
+                          } else if (index == 10) {
+                            index = 0;
+                          } else if (index == 11) {
                             return Container(
                               margin: EdgeInsets.all(5.0),
                               child: FlatButton(
-                                onPressed: () { _push(index); },
-                                color: Palette.creamyGrey,
+                                onPressed: () { _pop(); },
+                                color: Palette.darkGrey,
                                 shape: CircleBorder(),
-                                child: Text(
-                                    '$index',
-                                    style: TextStyle(
-                                        fontSize: 23.0,
-                                        color: Palette.blueGrey
-                                    )
-                                ),
+                                child: deleteIconImage,
                               ),
                             );
-                          }),
-                        ) : null
-                      )
-                    )
-                  ]
-              ),
-            )
-          )
-        ],
+                          } else {
+                            index++;
+                          }
+
+                          return Container(
+                            margin: EdgeInsets.all(5.0),
+                            child: FlatButton(
+                              onPressed: () { _push(index); },
+                              color: Palette.creamyGrey,
+                              shape: CircleBorder(),
+                              child: Text(
+                                  '$index',
+                                  style: TextStyle(
+                                      fontSize: 23.0,
+                                      color: Palette.blueGrey
+                                  )
+                              ),
+                            ),
+                          );
+                        }),
+                      ) : null
+                  )
+              )
+            ]
+        ),
       )
     );
   }
