@@ -74,144 +74,115 @@ class _ReceiveState extends State<Receive>{
         border: null,
       ),
       body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(35.0),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Spacer(
-                        flex: 1,
-                      ),
-                      Flexible(
-                        flex: 2,
-                        child: AspectRatio(
-                          aspectRatio: 1.0,
-                          child: QrImage(
-                            data: _qrText,
-                            backgroundColor: Colors.white,
-                          ),
-                        )
-                      ),
-                      Spacer(
-                        flex: 1,
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.all(20.0),
-                          child: Center(
-                            child: GestureDetector(
-                              onTap: (){
-                                Clipboard.setData(new ClipboardData(text: widget.address));
-                                _key.currentState.showSnackBar(
-                                  SnackBar(
-                                    content: Text('Copied to Clipboard',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                    backgroundColor: Palette.purple,
-                                  )
-                                );
-                              },
-                              child: Text(widget.address,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                          ),
-                        )
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: TextField(
-                          keyboardType: TextInputType.numberWithOptions(decimal: true),
-                          decoration: InputDecoration(
-                            hintStyle: TextStyle(color: Palette.lightBlue),
-                            hintText: 'Amount',
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Palette.lightGrey,
-                                width: 2.0
-                              )
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Palette.lightGrey,
-                                width: 2.0
-                              )
-                            )
-                          ),
-                          onSubmitted: (value){
-                            _validateAmount(value);
-                          },
-                        )
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    color: Palette.lightGrey2,
-                    child: Column(
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.all(35.0),
+                child: Column(
+                  children: <Widget>[
+                    Row(
                       children: <Widget>[
-                        ListTile(
-                          title: Text('Subaddresses', style: TextStyle(fontSize: 16.0),),
-                          trailing: Container(
-                            width: 28.0,
-                            height: 28.0,
-                            decoration: BoxDecoration(
-                              color: Palette.purple,
-                              shape: BoxShape.circle
-                            ),
-                            child: InkWell(
-                              onTap: (){},
-                              borderRadius: BorderRadius.all(Radius.circular(14.0)),
-                              child: Icon(Icons.add, color: Palette.violet, size: 20.0,),
-                            ),
-                          ),
+                        Spacer(
+                          flex: 1,
                         ),
-                        Divider(
-                          color: Palette.lightGrey,
-                          height: 1.0,
+                        Flexible(
+                          flex: 2,
+                          child: AspectRatio(
+                            aspectRatio: 1.0,
+                            child: QrImage(
+                              data: _qrText,
+                              backgroundColor: Colors.white,
+                            ),
+                          )
+                        ),
+                        Spacer(
+                          flex: 1,
                         )
                       ],
                     ),
-                  )
-                )
-              ],
-            ),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.only(bottom: 20.0),
-                child: ListView.builder(
-                  itemCount: widget.subaddressMap == null ? 0 : widget.subaddressMap.length,
-                  itemBuilder: (BuildContext context, int index){
-                    return Container(
-                      color: _currentWalletIndex == index ? Palette.purple : Palette.lightGrey2,
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.all(20.0),
+                            child: Center(
+                              child: GestureDetector(
+                                onTap: (){
+                                  Clipboard.setData(new ClipboardData(text: widget.address));
+                                  _key.currentState.showSnackBar(
+                                    SnackBar(
+                                      content: Text('Copied to Clipboard',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                      backgroundColor: Palette.purple,
+                                    )
+                                  );
+                                },
+                                child: Text(widget.address,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            ),
+                          )
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: TextField(
+                            keyboardType: TextInputType.numberWithOptions(decimal: true),
+                            decoration: InputDecoration(
+                              hintStyle: TextStyle(color: Palette.lightBlue),
+                              hintText: 'Amount',
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Palette.lightGrey,
+                                  width: 2.0
+                                )
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Palette.lightGrey,
+                                  width: 2.0
+                                )
+                              )
+                            ),
+                            onSubmitted: (value){
+                              _validateAmount(value);
+                            },
+                          )
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      color: Palette.lightGrey2,
                       child: Column(
                         children: <Widget>[
                           ListTile(
-                            title: Text(
-                              (widget.subaddressMap.keys.elementAt(index) == null)||(widget.subaddressMap.keys.elementAt(index) == '') ?
-                               widget.subaddressMap.values.elementAt(index) : widget.subaddressMap.keys.elementAt(index),
-                              style: TextStyle(fontSize: 16.0),
+                            title: Text('Subaddresses', style: TextStyle(fontSize: 16.0),),
+                            trailing: Container(
+                              width: 28.0,
+                              height: 28.0,
+                              decoration: BoxDecoration(
+                                color: Palette.purple,
+                                shape: BoxShape.circle
+                              ),
+                              child: InkWell(
+                                onTap: (){print('Add subaddress');},
+                                borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                                child: Icon(Icons.add, color: Palette.violet, size: 20.0,),
+                              ),
                             ),
-                            onTap: (){
-                              _setCheckedSubaddress(index);
-                            },
                           ),
                           Divider(
                             color: Palette.lightGrey,
@@ -219,13 +190,41 @@ class _ReceiveState extends State<Receive>{
                           )
                         ],
                       ),
-                    );
-                  }
-                )
+                    )
+                  )
+                ],
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: widget.subaddressMap == null ? 0 : widget.subaddressMap.length,
+                itemBuilder: (BuildContext context, int index){
+                  return Container(
+                    color: _currentWalletIndex == index ? Palette.purple : Palette.lightGrey2,
+                    child: Column(
+                      children: <Widget>[
+                        ListTile(
+                          title: Text(
+                            (widget.subaddressMap.keys.elementAt(index) == null)||(widget.subaddressMap.keys.elementAt(index) == '') ?
+                             widget.subaddressMap.values.elementAt(index) : widget.subaddressMap.keys.elementAt(index),
+                            style: TextStyle(fontSize: 16.0),
+                          ),
+                          onTap: (){
+                            _setCheckedSubaddress(index);
+                          },
+                        ),
+                        Divider(
+                          color: Palette.lightGrey,
+                          height: 1.0,
+                        )
+                      ],
+                    ),
+                  );
+                }
               )
-            )
-          ],
-        ),
+            ],
+          ),
+        )
       )
     );
   }
