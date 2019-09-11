@@ -57,6 +57,7 @@ class _ReceiveStateFrom extends State<ReceiveFrom> {
     final walletProvider = Provider.of<WalletInfo>(context);
 
     return SafeArea(
+        child: SingleChildScrollView(
       child: Column(
         children: <Widget>[
           Container(
@@ -223,6 +224,7 @@ class _ReceiveStateFrom extends State<ReceiveFrom> {
                   child: Consumer<SubaddressListInfo>(
                       builder: (context, subaddressInfo, snapshot) {
                     return ListView.separated(
+                        physics: NeverScrollableScrollPhysics(),
                         separatorBuilder: (BuildContext context, int index) =>
                             Divider(
                               color: Palette.lightGrey,
@@ -248,7 +250,8 @@ class _ReceiveStateFrom extends State<ReceiveFrom> {
                                     label,
                                     style: TextStyle(fontSize: 14.0),
                                   ),
-                                  onTap: () => walletProvider.changeCurrentSubaddress(subaddress),
+                                  onTap: () => walletProvider
+                                      .changeCurrentSubaddress(subaddress),
                                 ),
                               ],
                             ),
@@ -257,6 +260,6 @@ class _ReceiveStateFrom extends State<ReceiveFrom> {
                   })))
         ],
       ),
-    );
+    ));
   }
 }

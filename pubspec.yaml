@@ -19,8 +19,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
   intl: ^0.15.8
+  url_launcher: ^5.1.2
   qr: ^1.2.0
   uuid: 2.0.1
   shared_preferences: ^0.5.3+4
@@ -57,6 +57,7 @@ flutter:
   assets:
     - assets/images/
     - assets/node_list.yml
+    - assets/text/
 
   fonts:
     - family: Lato

@@ -14,7 +14,8 @@ import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 
 class NewWallet extends StatelessWidget {
   static const _aspectRatioImage = 1.54;
-  final _image = Image.asset('assets/images/bitmap.png');
+  static final _image = Image.asset('assets/images/bitmap.png');
+  static final backArrowImage = Image.asset('assets/images/back_arrow.png');
 
   final WalletListService walletsService;
   final WalletService walletService;
@@ -27,6 +28,7 @@ class NewWallet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         backgroundColor: Colors.white,
         resizeToAvoidBottomPadding: false,

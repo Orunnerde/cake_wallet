@@ -20,16 +20,17 @@ class _SetupPinCodeState<WidgetType extends SetupPinCode>
   bool isEnteredOriginalPin() => !(_originalPin.length == 0);
   Function(BuildContext) onPinCodeSetup;
   List<int> _originalPin = [];
-
+  static final backArrowImage = Image.asset('assets/images/back_arrow.png');
+  
   _SetupPinCodeState() {
-    title = "Setup PIN";
+    title = "Enter your pin";
   }
 
   @override
   void onPinCodeEntered(PinCodeState state) {
     if (!isEnteredOriginalPin()) {
       _originalPin = state.pin;
-      state.title = 'Enter your PIN again';
+      state.title = 'Enter your pin again';
       state.clear();
     } else {
       if (listEquals<int>(state.pin, _originalPin)) {
@@ -37,22 +38,24 @@ class _SetupPinCodeState<WidgetType extends SetupPinCode>
         widget.block.dispatch(SetPinCode(pin: pin));
 
         showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                content: Text("Your PIN has been set up successfully!"),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text("OK"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      widget.onPinCodeSetup(context, pin);
-                      reset();
-                    },
-                  ),
-                ],
-              );
-            });
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Text("Your PIN has been set up successfully!"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    widget.onPinCodeSetup(context, pin);
+                    reset();
+                  },
+                ),
+              ],
+            );
+          }
+        );
       } else {
         showDialog(
             context: context,
@@ -77,7 +80,7 @@ class _SetupPinCodeState<WidgetType extends SetupPinCode>
 
   void reset() {
     clear();
-    setTitle('Setup PIN');
+    setTitle('Enter your pin');
     _originalPin = [];
   }
 
@@ -88,13 +91,6 @@ class _SetupPinCodeState<WidgetType extends SetupPinCode>
           middle: Text('Setup PIN'),
           backgroundColor: Colors.white,
           border: null,
-          trailing: FlatButton(
-              onPressed: () {
-                changePinLength(pinLength == PinCodeState.fourPinLength
-                    ? PinCodeState.sixPinLength
-                    : PinCodeState.fourPinLength);
-              },
-              child: Text(_changePinLengthText())),
         ),
         backgroundColor: Colors.white,
         body: body(context));

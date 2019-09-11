@@ -29,6 +29,8 @@ import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 
 import 'package:cake_wallet/src/screens/send/send.dart';
+import 'package:cake_wallet/src/screens/disclaimer/disclaimer.dart';
+import 'package:cake_wallet/src/screens/seed_alert/seed_alert.dart';
 
 import 'package:cake_wallet/src/screens/transaction_details/transaction_details.dart';
 
@@ -157,6 +159,11 @@ class Router {
                     NewSubaddressInfo(walletService: walletService),
                 child: NewSubaddress()));
 
+        
+      case disclaimerRoute:
+        return CupertinoPageRoute(builder: (_) => Disclaimer());
+      case seedAlertRoute:
+        return CupertinoPageRoute(builder: (_) => SeedAlert());
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

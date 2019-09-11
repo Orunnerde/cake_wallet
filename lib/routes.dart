@@ -14,3 +14,5 @@ const sendRoute = '/send';
 const transactionDetailsRoute = '/transaction_info';
 const receiveRoute = '/receive';
 const newSubaddressRoute = '/new_subaddress';
+const disclaimerRoute = '/disclaimer';
+const seedAlertRoute = '/seed_alert';
