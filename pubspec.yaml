@@ -21,6 +21,7 @@ dependencies:
     sdk: flutter
 
   intl: ^0.15.8
+  url_launcher: ^5.1.2
   qr: ^1.2.0
 
   # The following adds the Cupertino Icons font to your application.
@@ -45,6 +46,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/text/
 
   fonts:
     - family: Lato

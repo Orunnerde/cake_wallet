@@ -9,6 +9,7 @@ import 'package:cake_wallet/src/screens/restore/restore_seed_keys.dart';
 import 'package:cake_wallet/src/screens/seed/seed.dart';
 import 'package:cake_wallet/src/screens/restore/restore_from_seed.dart';
 import 'package:cake_wallet/src/screens/restore/restore_from_keys.dart';
+import 'package:cake_wallet/src/screens/disclaimer/disclaimer.dart';
 import 'package:cake_wallet/src/screens/seed_alert/seed_alert.dart';
 
 
@@ -33,6 +34,8 @@ class Router {
         return CupertinoPageRoute(builder: (_) => RestoreFromSeed());
       case restoreFromKeysRoute:
         return CupertinoPageRoute(builder: (_) => RestoreFromKeys());
+      case disclaimerRoute:
+        return CupertinoPageRoute(builder: (_) => Disclaimer());
       case seedAlertRoute:
         return CupertinoPageRoute(builder: (_) => SeedAlert());
       default:
