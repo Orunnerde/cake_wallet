@@ -8,18 +8,16 @@ import 'package:cake_wallet/src/domain/common/pending_transaction.dart';
 
 class WalletService extends Wallet {
   Function(Wallet wallet) onWalletChange;
-  Function(Wallet wallet) onBalanceChange;
-
+  
+  get onBalanceChange => _onBalanceChange.stream;
   get syncStatus => _syncStatus.stream;
-
-  BehaviorSubject<SyncStatus> _syncStatus;
-
+  get syncStatusValue => _syncStatus.value;
   get walletType => _currentWallet.walletType;
   get currentWallet => _currentWallet;
 
   set currentWallet(Wallet wallet) {
     _currentWallet = wallet;
-    _currentWallet.onBalanceChange = onBalanceChange;
+    _currentWallet.onBalanceChange.listen((wallet) => _onBalanceChange.add(wallet));
     _currentWallet.syncStatus.listen((status) => _syncStatus.add(status));
 
     if (onWalletChange != null) {
@@ -27,13 +25,18 @@ class WalletService extends Wallet {
     }
   }
 
+  BehaviorSubject<Wallet> _onBalanceChange;
+  BehaviorSubject<SyncStatus> _syncStatus;
   Wallet _currentWallet;
 
   WalletService({this.onWalletChange}) {
     _currentWallet = null;
     walletType = WalletType.NONE;
     _syncStatus = BehaviorSubject<SyncStatus>();
+    _onBalanceChange = BehaviorSubject<Wallet>();
   }
+
+  WalletType getType() => WalletType.MONERO;
 
   Future<String> getFilename() => _currentWallet.getFilename();
 
@@ -50,6 +53,8 @@ class WalletService extends Wallet {
   Future<int> getCurrentHeight() => _currentWallet.getCurrentHeight();
 
   Future<int> getNodeHeight() => _currentWallet.getNodeHeight();
+
+  Future<bool> isConnected() => _currentWallet.isConnected();
 
   Future<void> connectToNode(
           {String uri,

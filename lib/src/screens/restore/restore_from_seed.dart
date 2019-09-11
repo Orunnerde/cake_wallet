@@ -201,6 +201,7 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
                             controller: _seedController,
                             keyboardType: TextInputType.multiline,
                             maxLines: null,
+                            textInputAction: TextInputAction.done,
                             decoration: InputDecoration(
                                 hintStyle: TextStyle(color: Palette.lightBlue),
                                 hintText: 'Seed',

@@ -1,31 +1,26 @@
-import 'dart:io';
-
+import 'package:cake_wallet/src/domain/common/sync_status.dart';
 import 'package:cake_wallet/src/domain/common/wallet_type.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
-// import 'package:cake_wallet/src/monero_wallet.dart';
-// import 'package:cake_wallet/src/monero_wallets_manager.dart';
 import 'package:cake_wallet/src/screens/dashboard/sync_info.dart';
-import 'package:cake_wallet/src/screens/send/send.dart';
-// import 'package:cake_wallet/src/wallets_service.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:cake_wallet/router.dart';
-// import 'package:cake_wallet/src/user_service.dart';
+
 import 'package:cake_wallet/src/bloc/authentication/authentication.dart';
 import 'package:cake_wallet/src/screens/welcome/welcome.dart';
 import 'package:cake_wallet/src/screens/splash/splash.dart';
 import 'package:cake_wallet/src/screens/login/login.dart';
 import 'package:cake_wallet/src/screens/dashboard/dashboard.dart';
 import 'package:provider/provider.dart';
-// import 'package:cake_wallet/src/sync_status.dart';
 
 import 'package:cake_wallet/src/domain/services/user_service.dart';
 import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
 
-import 'package:cake_wallet/src/screens/transaction_details/transaction_details.dart';
+import 'dart:async';
 
 void main() async {
   final sharedPreferences = await SharedPreferences.getInstance();
@@ -34,35 +29,32 @@ void main() async {
   final walletListService = WalletListService(
       secureStorage: FlutterSecureStorage(), walletService: walletService);
 
-  walletListService.changeWalletManger(walletType: WalletType.MONERO);
-  final price = await fetchPriceFor(crypto: CryptoCurrency.XMR, fiat: FiatCurrency.USD);
-  print('price $price');
-  // HttpClient client = new HttpClient();
-  // await client
-  //     .getUrl(Uri.parse("http://eu-node.cakewallet.io:18081/json_rpc"))
-  //     .then((HttpClientRequest request) {
-  //   return request.close();
-  // }).then((HttpClientResponse response) {
-  //   print(response.toString());
-  //   print(response.statusCode);
-  // });
+  await walletListService.changeWalletManger(walletType: WalletType.MONERO);
 
-  // WalletInfo walletInfo = WalletInfo(wallet: MoneroWallet());
+  var _lastIsConnected = false;
 
-  // final syncInfo = walletInfo.syncInfo;
-  // final balanceInfo = walletInfo.balanceInfo;
-  // final transactionsInfo = walletInfo.transactionsInfo;
+  Timer.periodic(Duration(seconds: 10), (_) async {
+    if (walletService.currentWallet == null) {
+      return;
+    }
 
-  // syncInfo.addListener(() async {
-  //   if (syncInfo.status == SyncedSyncStatus) {
-  //     await balanceInfo.updateBalances();
-  //     await transactionsInfo.updateTransactionsList();
-  //   }
-  // });
+    final isConnected = await walletService.isConnected();
 
-  // walletInfo.addListener(() {
+    print('isConnected $isConnected');
 
-  // });
+    if (!isConnected &&
+        !(walletService.syncStatusValue is ConnectingSyncStatus ||
+            walletService.syncStatusValue is StartingSyncStatus)) {
+      print('Start to reconnect');
+      try {
+        await walletService.connectToNode(
+            uri: 'node.moneroworld.com:18089', login: '', password: '');
+      } catch (e) {
+        print('Error while reconnection');
+        print(e);
+      }
+    }
+  });
 
   runApp(BlocProvider<AuthenticationBloc>(
       builder: (context) {

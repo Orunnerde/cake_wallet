@@ -11,5 +11,10 @@ public class PendingTransaction {
        commitJNI();
     }
 
+    public String getAmount() { return Wallet.displayAmount(getAmountJNI()); }
+    public String getFee() { return Wallet.displayAmount(getFeeJNI()); }
+
     private native void commitJNI();
+    private native long getAmountJNI();
+    private native long getFeeJNI();
 }

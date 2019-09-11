@@ -46,6 +46,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         final isAuth = await userService.authenticate(event.password);
 
         if (isAuth) {
+          yield LoginWalletLoading();
           final walletName = sharedPreferences.getString('current_wallet_name');
           await walletsService.openWallet(walletName);
 

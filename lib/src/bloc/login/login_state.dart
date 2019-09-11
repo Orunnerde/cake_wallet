@@ -10,6 +10,8 @@ class LoginInitial extends LoginState {}
 
 class LoginLoading extends LoginState {}
 
+class LoginWalletLoading extends LoginState {}
+
 class LoginFailure extends LoginState {
   final String error;
 

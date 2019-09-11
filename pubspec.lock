@@ -9,7 +9,7 @@ packages:
     source: hosted
     version: "2.2.0"
   barcode_scan:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: barcode_scan
       url: "https://pub.dartlang.org"
@@ -65,7 +65,7 @@ packages:
     source: hosted
     version: "0.1.2"
   equatable:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: equatable
       url: "https://pub.dartlang.org"
@@ -77,14 +77,14 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_bloc:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: flutter_bloc
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.20.1"
   flutter_secure_storage:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: flutter_secure_storage
       url: "https://pub.dartlang.org"
@@ -96,7 +96,7 @@ packages:
     source: sdk
     version: "0.0.0"
   http:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: http
       url: "https://pub.dartlang.org"
@@ -145,12 +145,19 @@ packages:
     source: hosted
     version: "1.7.0"
   provider:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.0"
+  qr:
+    dependency: "direct main"
+    description:
+      name: qr
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.0"
   quiver:
     dependency: transitive
     description:
@@ -159,14 +166,14 @@ packages:
     source: hosted
     version: "2.0.3"
   rxdart:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.22.2"
   shared_preferences:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: shared_preferences
       url: "https://pub.dartlang.org"
@@ -184,6 +191,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.5"
+  sqflite:
+    dependency: "direct main"
+    description:
+      name: sqflite
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.6+4"
   stack_trace:
     dependency: transitive
     description:
@@ -205,6 +219,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
+  synchronized:
+    dependency: transitive
+    description:
+      name: synchronized
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0+1"
   term_glyph:
     dependency: transitive
     description:
@@ -227,7 +248,7 @@ packages:
     source: hosted
     version: "1.1.6"
   uuid:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: uuid
       url: "https://pub.dartlang.org"
@@ -240,6 +261,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.8"
+  yaml:
+    dependency: "direct main"
+    description:
+      name: yaml
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.16"
 sdks:
   dart: ">=2.2.2 <3.0.0"
   flutter: ">=1.5.0 <2.0.0"

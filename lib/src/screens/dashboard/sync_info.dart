@@ -1,19 +1,19 @@
 import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
+import 'package:cake_wallet/src/domain/monero/monero_wallet.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:convert';
+import 'package:http/http.dart';
+import 'package:intl/intl.dart';
+
 import 'package:cake_wallet/src/domain/common/wallet.dart';
 import 'package:cake_wallet/src/domain/common/sync_status.dart';
 import 'package:cake_wallet/src/domain/common/transaction_info.dart';
 import 'package:cake_wallet/src/domain/common/transaction_history.dart';
-
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
-
-import 'package:cake_wallet/src/domain/monero/monero_transaction_creation_credentials.dart';
-
 import 'package:cake_wallet/src/domain/common/pending_transaction.dart';
-
-import 'package:http/http.dart';
-import 'package:intl/intl.dart';
+import 'package:cake_wallet/src/domain/monero/monero_transaction_creation_credentials.dart';
+import 'package:cake_wallet/src/domain/monero/subaddress_list.dart';
+import 'package:cake_wallet/src/domain/monero/subaddress.dart';
 
 class SyncInfo extends ChangeNotifier {
   WalletService _walletService;
@@ -26,12 +26,8 @@ class SyncInfo extends ChangeNotifier {
     _walletService = walletService;
 
     if (walletService.currentWallet != null) {
-      // walletService.onSyncStatusChange = onWalletSyncStatusChange;
       walletService.syncStatus.listen((status) => this.status = status);
     }
-
-    // walletService.onWalletChange =
-    //     (wallet) => wallet.onSyncStatusChange = onWalletSyncStatusChange;
   }
 
   get status => _syncStatus;
@@ -40,10 +36,6 @@ class SyncInfo extends ChangeNotifier {
     _syncStatus = status;
     notifyListeners();
   }
-
-  // void onWalletSyncStatusChange(SyncStatus status) {
-  //   this.status = status;
-  // }
 }
 
 class TransactionsInfo extends ChangeNotifier {
@@ -162,7 +154,10 @@ class BalanceInfo extends ChangeNotifier {
     _walletService = walletService;
 
     if (_walletService.currentWallet != null) {
-      _walletService.onBalanceChange = (wallet) async {
+      _walletService.onBalanceChange.listen((wallet) async {
+        if (this == null) { return; }
+        
+        print('Test 1');
         final fullBalance = await wallet.getFullBalance();
         final unlockedBalance = await wallet.getUnlockedBalance();
 
@@ -173,7 +168,7 @@ class BalanceInfo extends ChangeNotifier {
         if (this.unlockedBalance != unlockedBalance) {
           this.unlockedBalance = unlockedBalance;
         }
-      };
+      });
 
       onWalletChanged(_walletService.currentWallet);
     }
@@ -238,15 +233,33 @@ class BalanceInfo extends ChangeNotifier {
   }
 
   Future<void> onWalletChanged(Wallet wallet) async {
+    _walletService.onBalanceChange.listen((wallet) async {
+      print('Test 1');
+      final fullBalance = await wallet.getFullBalance();
+      final unlockedBalance = await wallet.getUnlockedBalance();
+
+      if (this.fullBalance != fullBalance) {
+        this.fullBalance = fullBalance;
+      }
+
+      if (this.unlockedBalance != unlockedBalance) {
+        this.unlockedBalance = unlockedBalance;
+      }
+    });
+
     await updateBalances();
   }
 }
 
 class WalletInfo extends ChangeNotifier {
-  WalletService _walletService;
+  get address => _address;
+  get name => _name;
+  get subaddress => _subaddress;
 
   String _address;
   String _name;
+  Subaddress _subaddress;
+  WalletService _walletService;
 
   WalletInfo({@required WalletService walletService}) {
     _walletService = walletService;
@@ -255,18 +268,35 @@ class WalletInfo extends ChangeNotifier {
     if (_walletService.currentWallet != null) {
       _walletService.getAddress().then((address) => _setAddress(address));
       _walletService.getName().then((address) => _setName(address));
+
+      if (_walletService.currentWallet is MoneroWallet) {
+        final subaddressList = _walletService.currentWallet.getSubaddress();
+        subaddressList
+            .refresh(accountIndex: 0)
+            .then((_) => subaddressList.getAll())
+            .then((subaddresses) => subaddresses[0])
+            .then((primary) => _setSubaddress(primary));
+      }
     }
 
     _walletService.onWalletChange = (wallet) => onWalletChanged(wallet);
   }
 
-  get address => _address;
-
-  get name => _name;
-
   void onWalletChanged(Wallet wallet) async {
     final address = await wallet.getAddress();
     _setAddress(address);
+
+    if (wallet is MoneroWallet) {
+      final subaddressList = wallet.getSubaddress();
+      await subaddressList.refresh(accountIndex: 0);
+      final subaddresses = await subaddressList.getAll();
+      final primary = subaddresses[0];
+      _setSubaddress(primary);
+    }
+  }
+
+  void changeCurrentSubaddress(Subaddress subaddress) {
+    _setSubaddress(subaddress);
   }
 
   void _setAddress(String address) {
@@ -276,6 +306,11 @@ class WalletInfo extends ChangeNotifier {
 
   void _setName(String name) {
     _name = name;
+    notifyListeners();
+  }
+
+  void _setSubaddress(Subaddress subaddress) {
+    _subaddress = subaddress;
     notifyListeners();
   }
 }
@@ -309,6 +344,7 @@ class SendInfo extends ChangeNotifier {
   get state => _state;
 
   set state(SendState state) {
+    print('new state $state');
     _state = state;
     notifyListeners();
   }
@@ -331,7 +367,9 @@ class SendInfo extends ChangeNotifier {
     _cryptoAmountRaw = amount;
 
     fetchPriceFor(crypto: CryptoCurrency.XMR, fiat: FiatCurrency.USD)
-        .then((price) => amount.isEmpty ? null : double.parse(amount) * price)
+        .then((price) => amount.isEmpty
+            ? null
+            : double.parse(amount.replaceAll(',', '.')) * price)
         .then(
             (amount) => amount == null ? '' : _fiatNumberFormat.format(amount))
         .then((amount) => _fiatAmountRaw = amount);
@@ -346,6 +384,8 @@ class SendInfo extends ChangeNotifier {
     _fiatAmount = amount;
     notifyListeners();
   }
+
+  get pendingTransaction => _pendingTransaction;
 
   bool _needToSendAll;
   WalletService _walletService;
@@ -365,15 +405,17 @@ class SendInfo extends ChangeNotifier {
     _fiatNumberFormat = NumberFormat()..maximumFractionDigits = 2;
   }
 
-  Future<void> createTransaction(
-      {String address, String paymentId}) async {
+  Future<void> createTransaction({String address, String paymentId}) async {
     state = SendState.CREATING_TRANSACTION;
 
     try {
+      final amount = _needToSendAll ? null : _cryptoAmount.replaceAll(',', '.');
+      print('amount $amount');
+
       final credentials = MoneroTransactionCreationCredentials(
           address: address,
           paymentId: paymentId,
-          amount: _needToSendAll ? null : cryptoAmount,
+          amount: amount,
           priority: TransactionPriority.DEFAULT);
 
       _pendingTransaction = await _walletService.createTransaction(credentials);
@@ -402,5 +444,94 @@ class SendInfo extends ChangeNotifier {
   void resetError() {
     error = null;
     state = SendState.NONE;
+  }
+}
+
+class SubaddressListInfo extends ChangeNotifier {
+  get subaddresses => _subaddresses;
+
+  set subaddresses(List<Subaddress> subaddresses) {
+    _subaddresses = subaddresses;
+    notifyListeners();
+  }
+
+  WalletService _walletService;
+  List<Subaddress> _subaddresses = [];
+  SubaddressList _subaddressList;
+
+  SubaddressListInfo({@required WalletService walletService}) {
+    _walletService = walletService;
+
+    if (walletService.currentWallet != null) {
+      onWalletChanged(walletService.currentWallet);
+    }
+
+    walletService.onWalletChange = (wallet) => onWalletChanged(wallet);
+  }
+
+  Future<void> updateSubaddressList() async {
+    await _subaddressList.refresh(accountIndex: 0);
+    _subaddresses = await _subaddressList.getAll();
+  }
+
+  Future<void> onWalletChanged(Wallet wallet) async {
+    if (wallet is MoneroWallet) {
+      _subaddressList = wallet.getSubaddress();
+      _subaddressList.subaddresses
+          .listen((subaddress) => this.subaddresses = subaddress);
+      await updateSubaddressList();
+
+      return;
+    }
+
+    print('Incorrect wallet type for this operation (SubaddressList)');
+  }
+}
+
+enum SubaddressCrationState { CREATING, CREATED, NONE }
+
+class NewSubaddressInfo extends ChangeNotifier {
+  get state => _state;
+
+  set state(SubaddressCrationState state) {
+    _state = state;
+    notifyListeners();
+  }
+
+  WalletService _walletService;
+  SubaddressList _subaddressList;
+  SubaddressCrationState _state;
+
+  NewSubaddressInfo({@required WalletService walletService}) {
+    _walletService = walletService;
+
+    if (walletService.currentWallet != null) {
+      onWalletChanged(walletService.currentWallet);
+    }
+
+    walletService.onWalletChange = (wallet) => onWalletChanged(wallet);
+    _state = SubaddressCrationState.NONE;
+  }
+
+  Future<void> add({String label}) async {
+    state = SubaddressCrationState.CREATING;
+
+    try {
+      await _subaddressList.addSubaddress(accountIndex: 0, label: label);
+      state = SubaddressCrationState.CREATED;
+      _subaddressList.update();
+    } catch (e) {
+      print(e);
+      state = SubaddressCrationState.NONE;
+    }
+  }
+
+  Future<void> onWalletChanged(Wallet wallet) async {
+    if (wallet is MoneroWallet) {
+      _subaddressList = wallet.getSubaddress();
+      return;
+    }
+
+    print('Incorrect wallet type for this operation (SubaddressList)');
   }
 }

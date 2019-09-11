@@ -197,20 +197,8 @@ class Dashboard extends StatelessWidget {
                                       Expanded(
                                           child: PrimaryButton(
                                         text: 'Send',
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                              context, sendRoute);
-                                          // showDialog(
-                                          //     context: context,
-                                          //     builder: (BuildContext context) {
-                                          //       return ChangeNotifierProvider(
-                                          //           builder: (context) =>
-                                          //               SendInfo(
-                                          //                   walletService:
-                                          //                       walletService),
-                                          //           child: Send());
-                                          //     });
-                                        },
+                                        onPressed: () => Navigator.of(context)
+                                            .pushNamed(sendRoute),
                                         color:
                                             Color.fromRGBO(227, 212, 255, 0.7),
                                         borderColor:
@@ -220,7 +208,8 @@ class Dashboard extends StatelessWidget {
                                       Expanded(
                                           child: PrimaryButton(
                                         text: 'Receive',
-                                        onPressed: () {},
+                                        onPressed: () => Navigator.of(context)
+                                            .pushNamed(receiveRoute),
                                         color:
                                             Color.fromRGBO(151, 226, 255, 0.5),
                                         borderColor:
@@ -287,7 +276,8 @@ class Dashboard extends StatelessWidget {
                 if (item is TransactionInfo) {
                   return InkWell(
                     onTap: () {
-                      Navigator.of(context).pushNamed(transactionDetailsRoute, arguments: item);
+                      Navigator.of(context)
+                          .pushNamed(transactionDetailsRoute, arguments: item);
                     },
                     child: Container(
                       padding: EdgeInsets.only(top: 14, bottom: 14),

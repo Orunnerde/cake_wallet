@@ -16,17 +16,6 @@ public class TransactionHistory {
 
     public List<TransactionInfo> getAll() {
         return Arrays.asList(getAllTransactionsJNI());
-
-//        long[] _transactions = getAllJNI();
-//        ArrayList<TransactionInfo> transactions = new ArrayList<TransactionInfo>();
-//
-//        for (int i = 0; i < _transactions.length; i++) {
-//            Long id = _transactions[i];
-//            TransactionInfo tx = new TransactionInfo(id);
-//            transactions.add(tx);
-//        }
-//
-//        return transactions;
     }
 
     public TransactionInfo getByIndex(int index) {

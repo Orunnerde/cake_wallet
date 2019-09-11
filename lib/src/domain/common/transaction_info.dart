@@ -1,5 +1,23 @@
 import 'package:cake_wallet/src/domain/common/transaction_direction.dart';
 
+String formatAmount(String originAmount) {
+  int lastIndex = 0;
+
+  for (int i = originAmount.length - 1; i >= 0; i--) {
+    if (originAmount[i] == "0") {
+      lastIndex = i;
+    } else {
+      break;
+    }
+  }
+  
+  if (lastIndex < 3) {
+    lastIndex = 3;
+  }
+
+  return originAmount.substring(0, lastIndex);
+}
+
 class TransactionInfo {
   final String id;
   final String height;
@@ -17,7 +35,7 @@ class TransactionInfo {
   TransactionInfo(this.id, this.height, this.direction, this.date, this._amount);
 
   String amount() {
-    return '$_amount XMR';
+    return '${formatAmount(_amount)} XMR';
   }
 
   String fiatAmount() {

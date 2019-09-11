@@ -7,15 +7,155 @@ import android.os.Looper;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
+
 import com.cakewallet.wallet.monero.WalletManager;
 import com.cakewallet.wallet.monero.Wallet;
+
+class OpenMoneroWalletCredentails extends Credentials {
+    String name;
+    String password;
+
+
+    OpenMoneroWalletCredentails(String name, String password) {
+        this.name = name;
+        this.password = password;
+    }
+}
+
+class CreateMoneroWalletCredentails extends Credentials {
+    String name;
+    String password;
+
+
+    CreateMoneroWalletCredentails(String name, String password) {
+        this.name = name;
+        this.password = password;
+    }
+}
+
+class RestoreMoneroWalletFromSeedCredentails extends Credentials {
+    String name;
+    String password;
+    String seed;
+    long height;
+
+
+    RestoreMoneroWalletFromSeedCredentails(String name, String password, String seed, long height) {
+        this.name = name;
+        this.password = password;
+        this.seed = seed;
+        this.height = height;
+    }
+}
+
+class RestoreMoneroWalletFromKeysCredentails extends Credentials {
+    String name;
+    String password;
+    String address;
+    String viewKey;
+    String spenKey;
+    long height;
+
+
+    RestoreMoneroWalletFromKeysCredentails(String name, String password, String address, String viewKey, String spenKey, long height) {
+        this.name = name;
+        this.password = password;
+        this.viewKey = viewKey;
+        this.spenKey = spenKey;
+        this.address = address;
+        this.height = height;
+    }
+}
+
+abstract class Credentials {}
+
+abstract class MoneroWalletMangerAsyncTask<Creds extends Credentials> extends AsyncTask<Creds, Void, Long> {
+    WalletManager walletManager;
+    MethodChannel.Result result;
+    Context context;
+
+    MoneroWalletMangerAsyncTask(WalletManager walletManager, MethodChannel.Result result, Context context) {
+        this.walletManager = walletManager;
+        this.result = result;
+        this.context = context;
+    }
+
+    protected void onPostExecute(Long id) {
+        result.success(id);
+    }
+}
+
+class OpenMoneroWalletAsyncTask extends MoneroWalletMangerAsyncTask<OpenMoneroWalletCredentails> {
+    OpenMoneroWalletAsyncTask(WalletManager walletManager, MethodChannel.Result result, Context context) {
+        super(walletManager, result, context);
+    }
+
+    @Override
+    protected Long doInBackground(OpenMoneroWalletCredentails... credentails) {
+        long id = walletManager.openWallet(context, credentails[0].name, credentails[0].password);
+        MoneroWalletHandler.setCurrentWallet(new Wallet(id));
+        return id;
+    }
+}
+
+class CreateMoneroWalletAsyncTask extends MoneroWalletMangerAsyncTask<CreateMoneroWalletCredentails> {
+    CreateMoneroWalletAsyncTask(WalletManager walletManager, MethodChannel.Result result, Context context) {
+        super(walletManager, result, context);
+    }
+
+    @Override
+    protected Long doInBackground(CreateMoneroWalletCredentails... credentails) {
+        long id = walletManager.createWallet(context, credentails[0].name, credentails[0].password);
+        MoneroWalletHandler.setCurrentWallet(new Wallet(id));
+        return id;
+    }
+}
+
+class RestoreMoneroWalletFromSeedAsyncTask extends MoneroWalletMangerAsyncTask<RestoreMoneroWalletFromSeedCredentails> {
+    RestoreMoneroWalletFromSeedAsyncTask(WalletManager walletManager, MethodChannel.Result result, Context context) {
+        super(walletManager, result, context);
+    }
+
+    @Override
+    protected Long doInBackground(RestoreMoneroWalletFromSeedCredentails... credentails) {
+        long id = walletManager.recoveryWalletFromSeed(
+                context,
+                credentails[0].name,
+                credentails[0].password,
+                credentails[0].seed,
+                credentails[0].height);
+        MoneroWalletHandler.setCurrentWallet(new Wallet(id));
+        return id;
+    }
+}
+
+class RestoreMoneroWalletFromKeysAsyncTask extends MoneroWalletMangerAsyncTask<RestoreMoneroWalletFromKeysCredentails> {
+    RestoreMoneroWalletFromKeysAsyncTask(WalletManager walletManager, MethodChannel.Result result, Context context) {
+        super(walletManager, result, context);
+    }
+
+    @Override
+    protected Long doInBackground(RestoreMoneroWalletFromKeysCredentails... credentails) {
+        long id = walletManager.recoveryWalletFromKeys(
+                context,
+                credentails[0].name,
+                credentails[0].password,
+                credentails[0].height,
+                credentails[0].address,
+                credentails[0].viewKey,
+                credentails[0].spenKey);
+        MoneroWalletHandler.setCurrentWallet(new Wallet(id));
+        return id;
+    }
+}
+
 
 class MoneroWalletsManagerHandler {
     static final String MONERO_WALLET_MANAGER_CHANNEL = "com.cakewallet.wallet/monero-wallet-manager";
 
     private static final WalletManager MoneroWalletsManager = new WalletManager();
 
-    public void handle(MethodCall call, MethodChannel.Result result, Context context) {
+    void handle(MethodCall call, MethodChannel.Result result, Context context) {
         try {
             switch (call.method) {
                 case "createWallet":
@@ -42,69 +182,55 @@ class MoneroWalletsManagerHandler {
         }
     }
 
-    public void createWallet(MethodCall call, MethodChannel.Result result, Context context) {
-        AsyncTask.execute(() -> {
-            String name = call.argument("name");
-            String password = call.argument("password");
-            long id = MoneroWalletsManager.createWallet(context, name, password);
-            MoneroWalletHandler.setCurrentWallet(new Wallet(id));
-
-            Handler mainHandler = new Handler(Looper.getMainLooper());
-            mainHandler.post(() -> result.success(id));
-        });
+    private void createWallet(MethodCall call, MethodChannel.Result result, Context context) {
+        String name = call.argument("name");
+        String password = call.argument("password");
+        CreateMoneroWalletAsyncTask createMoneroWalletAsyncTask = new CreateMoneroWalletAsyncTask(
+                MoneroWalletsManager,
+                result,
+                context);
+        CreateMoneroWalletCredentails credentails = new CreateMoneroWalletCredentails(name, password);
+        createMoneroWalletAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, credentails);
     }
 
-    public void openWallet(MethodCall call, MethodChannel.Result result, Context context) {
-        AsyncTask.execute(() -> {
-            String name = call.argument("name");
-            String password = call.argument("password");
-            long id = MoneroWalletsManager.openWallet(context, name, password);
-            MoneroWalletHandler.setCurrentWallet(new Wallet(id));
-
-            Handler mainHandler = new Handler(Looper.getMainLooper());
-            mainHandler.post(() -> result.success(id));
-        });
+    private void openWallet(MethodCall call, MethodChannel.Result result, Context context) {
+        String name = call.argument("name");
+        String password = call.argument("password");
+        OpenMoneroWalletAsyncTask openMoneroWalletAsyncTask = new OpenMoneroWalletAsyncTask(
+                MoneroWalletsManager,
+                result,
+                context);
+        OpenMoneroWalletCredentails credentails = new OpenMoneroWalletCredentails(name, password);
+        openMoneroWalletAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, credentails);
     }
 
-    public void recoveryWalletFromSeed(MethodCall call, MethodChannel.Result result, Context context) {
-        AsyncTask.execute(() -> {
-            String name = call.argument("name");
-            String password = call.argument("password");
-            String seed = call.argument("seed");
-            int _height = call.argument("restoreHeight");
-            long height = Long.valueOf(_height);
-            long id = MoneroWalletsManager.recoveryWalletFromSeed(context, name, password, seed, height);
-            MoneroWalletHandler.setCurrentWallet(new Wallet(id));
-            Wallet wallet = MoneroWalletHandler.getCurrentWallet();
-            wallet.setRecoveringFromSeed(true);
-            wallet.setRefreshFromBlockHeight(height);
+    private void recoveryWalletFromSeed(MethodCall call, MethodChannel.Result result, Context context) {
+        String name = call.argument("name");
+        String password = call.argument("password");
+        String seed = call.argument("seed");
+        int _height = call.argument("restoreHeight");
+        long height = Long.valueOf(_height);
 
-            Handler mainHandler = new Handler(Looper.getMainLooper());
-            mainHandler.post(() -> result.success(id));
-        });
+        RestoreMoneroWalletFromSeedCredentails credentails = new RestoreMoneroWalletFromSeedCredentails(name, password, seed, height);
+        RestoreMoneroWalletFromSeedAsyncTask restoreTask = new RestoreMoneroWalletFromSeedAsyncTask(MoneroWalletsManager, result, context);
+        restoreTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, credentails);
     }
 
-    public void recoveryWalletFromKeys(MethodCall call, MethodChannel.Result result, Context context) {
-        AsyncTask.execute(() -> {
-            String name = call.argument("name");
-            String password = call.argument("password");
-            String address = call.argument("address");
-            String viewKey = call.argument("viewKey");
-            String spendKey = call.argument("spendKey");
-            int _height = call.argument("restoreHeight");
-            long height = Long.valueOf(_height);
-            long id = MoneroWalletsManager.recoveryWalletFromKeys(context, name, password, height, address, viewKey, spendKey);
-            MoneroWalletHandler.setCurrentWallet(new Wallet(id));
-            Wallet wallet = MoneroWalletHandler.getCurrentWallet();
-            wallet.setRecoveringFromSeed(true);
-            wallet.setRefreshFromBlockHeight(height);
+    private void recoveryWalletFromKeys(MethodCall call, MethodChannel.Result result, Context context) {
+        String name = call.argument("name");
+        String password = call.argument("password");
+        String address = call.argument("address");
+        String viewKey = call.argument("viewKey");
+        String spendKey = call.argument("spendKey");
+        int _height = call.argument("restoreHeight");
+        long height = Long.valueOf(_height);
 
-            Handler mainHandler = new Handler(Looper.getMainLooper());
-            mainHandler.post(() -> result.success(id));
-        });
+        RestoreMoneroWalletFromKeysCredentails credentails = new RestoreMoneroWalletFromKeysCredentails(name, password, address, viewKey, spendKey, height);
+        RestoreMoneroWalletFromKeysAsyncTask restoreTask = new RestoreMoneroWalletFromKeysAsyncTask(MoneroWalletsManager, result, context);
+        restoreTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, credentails);
     }
 
-    public void isExist(MethodCall call, MethodChannel.Result result, Context context) {
+    private void isExist(MethodCall call, MethodChannel.Result result, Context context) {
         AsyncTask.execute(() -> {
             String name = call.argument("name");
             boolean isExist = MoneroWalletsManager.isExist(context, name);

@@ -7,6 +7,9 @@ class MoneroTransactionHistory extends TransactionHistory {
   
   get transactions => _transactions.stream;
   BehaviorSubject<List<TransactionInfo>> _transactions;
+
+  bool _isUpdating = false;
+  bool _isRefreshing = false;
   
   MethodChannel _platform;
 
@@ -16,9 +19,13 @@ class MoneroTransactionHistory extends TransactionHistory {
   }
 
   Future<void> update() async {
+    if (_isUpdating) { return; }
+    
+    _isUpdating = true;
     await refresh();
     final transactions = await getAll();
     _transactions.add(transactions);
+    _isUpdating = false;
   }
 
   Future<List<TransactionInfo>> getAll() async {
@@ -41,9 +48,14 @@ class MoneroTransactionHistory extends TransactionHistory {
   }
 
   Future<void> refresh() async {
+    if (_isRefreshing) { return; }
+
     try {
+      _isRefreshing = true;
       return await _platform.invokeMethod('refreshTransactionHistory');
+      _isRefreshing = false;
     } on PlatformException catch (e) {
+      _isRefreshing = false;
       print(e);
       throw e;
     }

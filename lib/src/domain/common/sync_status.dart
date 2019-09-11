@@ -19,3 +19,5 @@ class StartingSyncStatus extends SyncStatus {}
 class FailedSyncStatus extends SyncStatus {}
 
 class ConnectingSyncStatus extends SyncStatus {}
+
+class ConnectedSyncStatus extends SyncStatus {}

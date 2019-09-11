@@ -76,6 +76,15 @@ class _LoginPinCodeState extends PinCodeState<_LoginPinCode> {
               ),
             );
           }
+
+          if (state is LoginWalletLoading) {
+            Scaffold.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Loading your wallet'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          }
         },
         child: body(context));
   }

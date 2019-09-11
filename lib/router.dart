@@ -1,6 +1,8 @@
 import 'package:cake_wallet/src/bloc/user/user_bloc.dart';
 
 import 'package:cake_wallet/src/screens/dashboard/dashboard.dart';
+import 'package:cake_wallet/src/screens/receive/receive.dart';
+import 'package:cake_wallet/src/screens/subaddress/new_subaddress.dart';
 // import 'package:cake_wallet/src/user_service.dart';
 // import 'package:cake_wallet/src/wallets_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -132,9 +134,28 @@ class Router {
                           SendInfo(walletService: walletService)),
                 ], child: Send()));
 
+      case receiveRoute:
+        return MaterialPageRoute(
+            builder: (_) => MultiProvider(providers: [
+                  ChangeNotifierProvider(
+                      builder: (context) =>
+                          WalletInfo(walletService: walletService)),
+                  ChangeNotifierProvider(
+                      builder: (context) =>
+                          SubaddressListInfo(walletService: walletService))
+                ], child: Receive()));
+
       case transactionDetailsRoute:
         return MaterialPageRoute(
-            builder: (_) => TransactionDetails(transactionInfo: settings.arguments));
+            builder: (_) =>
+                TransactionDetails(transactionInfo: settings.arguments));
+
+      case newSubaddressRoute:
+        return CupertinoPageRoute(
+            builder: (_) => ChangeNotifierProvider(
+                builder: (context) =>
+                    NewSubaddressInfo(walletService: walletService),
+                child: NewSubaddress()));
 
       default:
         return MaterialPageRoute(

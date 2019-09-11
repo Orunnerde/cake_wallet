@@ -51,7 +51,8 @@ class TransactionDetails extends StatelessWidget {
   TransactionDetails({TransactionInfo transactionInfo}) {
     _items.addAll([
       StandartListItem(title: 'Transaction ID', value: transactionInfo.id),
-      StandartListItem(title: 'Date', value: dateFormat.format(transactionInfo.date)),
+      StandartListItem(
+          title: 'Date', value: dateFormat.format(transactionInfo.date)),
       StandartListItem(title: 'Height', value: transactionInfo.height),
       StandartListItem(title: 'Amount', value: transactionInfo.amount())
     ]);
@@ -63,7 +64,14 @@ class TransactionDetails extends StatelessWidget {
         resizeToAvoidBottomPadding: false,
         backgroundColor: Colors.white,
         appBar: CupertinoNavigationBar(
-          // leading: FlatButton(child: Text('done'), onPressed: () => Navigator.of(context).pop()),
+          leading: SizedBox(
+            height: 12,
+            width: 12,
+            child: FlatButton(
+                padding: EdgeInsets.all(0),
+                onPressed: () => Navigator.of(context).pop(),
+                child: Image.asset('assets/images/close_symbol.png')),
+          ),
           middle: Text('Transaction details',
               style: TextStyle(
                   fontSize: 16,

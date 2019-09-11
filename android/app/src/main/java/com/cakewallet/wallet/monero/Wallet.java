@@ -89,6 +89,8 @@ public class Wallet {
         return getAddressJNI(accountIndex, addressIndex);
     }
 
+    public boolean getIsConnected() { return getIsConnectedJNI(); }
+
     public void connectToNode(String uri, String login, String password, boolean useSSL, boolean isLightWallet) {
         setNodeAddressJNI(uri, login, password, useSSL, isLightWallet);
         connectToNodeJNI();
@@ -126,6 +128,11 @@ public class Wallet {
     public TransactionHistory history() {
         long id = transactionHistoryJNI();
         return new TransactionHistory(id);
+    }
+
+    public Subaddress subaddress() {
+        long id = subaddressJNI();
+        return new Subaddress(id);
     }
 
     public void moneySpent(String txId, long amount) {
@@ -178,6 +185,8 @@ public class Wallet {
 
     private native long getNodeHeightJNI();
 
+    private native boolean getIsConnectedJNI();
+
     private native long setListenerJNI();
 
     private native void setNodeAddressJNI(String uri, String login, String password, boolean useSSL, boolean isLightWallet);
@@ -187,6 +196,8 @@ public class Wallet {
     private native void startRefreshAsyncJNI();
 
     private native long transactionHistoryJNI();
+
+    private native long subaddressJNI();
 
     private native void setRefreshFromBlockHeightJNI(long height);
 

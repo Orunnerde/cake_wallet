@@ -12,3 +12,5 @@ const restoreFromSeedKeysFromWelcomeRoute = '/restore_seed_keys_from_welcome';
 const dashboardRoute = '/dashboard';
 const sendRoute = '/send';
 const transactionDetailsRoute = '/transaction_info';
+const receiveRoute = '/receive';
+const newSubaddressRoute = '/new_subaddress';

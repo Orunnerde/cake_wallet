@@ -15,6 +15,14 @@ class Send extends StatelessWidget {
         resizeToAvoidBottomPadding: false,
         backgroundColor: Color.fromRGBO(253, 253, 253, 1),
         appBar: CupertinoNavigationBar(
+          leading: SizedBox(
+            height: 37,
+            width: 37,
+            child: FlatButton(
+                padding: EdgeInsets.all(0),
+                onPressed: () => Navigator.of(context).pop(),
+                child: Image.asset('assets/images/close_button.png')),
+          ),
           middle: Text('Send Monero',
               style: TextStyle(
                   fontSize: 16,
@@ -69,19 +77,19 @@ class SendFormState extends State<SendForm> {
     });
 
     return Consumer<SendInfo>(builder: (context, sendInfo, child) {
-      if (sendInfo.state == SendState.ERROR) {
+      if (provider.state == SendState.ERROR) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: Text('Error'),
-                  content: Text(sendInfo.error.toString()),
+                  content: Text(provider.error.toString()),
                   actions: <Widget>[
                     FlatButton(
                         child: Text("OK"),
                         onPressed: () {
-                          sendInfo.resetError();
+                          provider.resetError();
                           Navigator.of(context).pop();
                         })
                   ],
@@ -90,7 +98,7 @@ class SendFormState extends State<SendForm> {
         });
       }
 
-      if (sendInfo.state == SendState.TRANSACTION_CREATED) {
+      if (provider.state == SendState.TRANSACTION_CREATED) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showDialog(
               context: context,
@@ -98,18 +106,43 @@ class SendFormState extends State<SendForm> {
                 return AlertDialog(
                   title: Text('Confirm sending'),
                   content: Text(
-                      'Commit transaction\nAmount: __amount__\nFee: __fee__'),
+                      'Commit transaction\nAmount: ${provider.pendingTransaction.amount}\nFee: ${provider.pendingTransaction.fee}'),
                   actions: <Widget>[
                     FlatButton(
                         child: Text("OK"),
                         onPressed: () {
-                          sendInfo.commitTransaction();
                           Navigator.of(context).pop();
+                          provider.commitTransaction();
                         }),
                     FlatButton(
                       child: Text("Cancel"),
                       onPressed: () => Navigator.of(context).pop(),
                     )
+                  ],
+                );
+              });
+        });
+      }
+
+      print('sendInfo.state ${provider.state}');
+
+      if (provider.state == SendState.COMMITTED) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Sending'),
+                  content: Text('Transaction sent!'),
+                  actions: <Widget>[
+                    FlatButton(
+                        child: Text("OK"),
+                        onPressed: () {
+                          _addressController.text = '';
+                          _cryptoAmountController.text = '';
+                          provider.resetError();
+                          Navigator.of(context).pop();
+                        })
                   ],
                 );
               });
@@ -184,7 +217,6 @@ class SendFormState extends State<SendForm> {
                     Column(children: <Widget>[
                       TextFormField(
                           controller: _addressController,
-                          maxLines: null,
                           decoration: InputDecoration(
                               suffixIcon: Container(
                                   width: 34,
@@ -352,9 +384,30 @@ class SendFormState extends State<SendForm> {
                     Consumer<SendInfo>(builder: (context, sendInfo, child) {
                       return LoadingPrimaryButton(
                           onPressed: () async {
-                            await sendInfo.createTransaction(
-                                address: _addressController.text,
-                                paymentId: _paymentIdController.text);
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text('Creating transaction'),
+                                    content: Text('Confirm sending'),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                          child: Text("Send"),
+                                          onPressed: () async {
+                                            sendInfo.createTransaction(
+                                                address:
+                                                    _addressController.text,
+                                                paymentId:
+                                                    _paymentIdController.text);
+                                            Navigator.of(context).pop();
+                                          }),
+                                      FlatButton(
+                                          child: Text("Cancel"),
+                                          onPressed: () =>
+                                              Navigator.of(context).pop())
+                                    ],
+                                  );
+                                });
                           },
                           text: 'Send',
                           color: Color.fromRGBO(216, 223, 246, 0.7),
