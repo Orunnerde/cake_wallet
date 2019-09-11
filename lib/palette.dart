@@ -15,4 +15,7 @@ class Palette {
   static const Color darkPurple = Color.fromRGBO(124, 83, 240, 1.0);
   static const Color darkGrey = Color.fromRGBO(136, 155, 183, 0.21);
   static const Color blueGrey = Color.fromRGBO(103, 107, 141, 1.0);
+  static const Color lightGrey2 = Color.fromRGBO(249, 249, 249, 1.0);
+  static const Color violet = Color.fromRGBO(138, 80, 255, 1.0);
+  static const Color cakeGreen = Color.fromRGBO(41, 187, 244, 1.0);
 }
