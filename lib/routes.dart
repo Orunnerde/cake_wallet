@@ -9,3 +9,4 @@ const String seedRoute = '/seed';
 const String restoreFromSeedRoute = '/restore_from_seed';
 const String restoreFromKeysRoute = '/restore_from_keys';
 const String disclaimerRoute = '/disclaimer';
+const String seedAlertRoute = '/seed_alert';
