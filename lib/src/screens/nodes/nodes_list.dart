@@ -1,29 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/src/screens/nodes/new_node.dart';
 
 class NodesList extends StatefulWidget {
 
   Map<String, bool> nodes;
-  String currentNodeIndex;
+  String currentNode;
 
-  NodesList(this.nodes, this.currentNodeIndex);
+  NodesList(this.nodes, this.currentNode);
 
   @override
-  createState() => _NodeListState();
+  createState() => NodeListState(currentNode);
 
 }
 
-class _NodeListState extends State<NodesList>{
+class NodeListState extends State<NodesList>{
 
   final _backArrowImage = Image.asset('assets/images/back_arrow.png');
   bool _isOn = true;
+  String _defaultNode;
+
+  NodeListState(this._defaultNode);
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomPadding: false,
       appBar: CupertinoNavigationBar(
         leading: ButtonTheme(
           minWidth: double.minPositive,
@@ -39,7 +44,73 @@ class _NodeListState extends State<NodesList>{
             ButtonTheme(
               minWidth: double.minPositive,
               child: FlatButton(
-                onPressed: (){},
+                onPressed: () async {
+                  await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20.0))
+                        ),
+                        title: Text('Reset settings',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text('Are you sure that you want to reset settings to default?', textAlign: TextAlign.center,),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Flexible(
+                                  flex: 3,
+                                  child: ButtonTheme(
+                                    minWidth: double.infinity,
+                                    child: FlatButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text('Cancel',
+                                        style: TextStyle(
+                                          color: Palette.cakeGreen,
+                                          fontSize: 16.0
+                                        ),
+                                      )
+                                    ),
+                                  ),
+                                ),
+                                Spacer(
+                                  flex: 1,
+                                ),
+                                Flexible(
+                                  flex: 3,
+                                  child: ButtonTheme(
+                                    minWidth: double.infinity,
+                                    child: FlatButton(
+                                      onPressed: (){
+                                        Navigator.pop(context);
+                                        setState(() {
+                                          widget.currentNode = _defaultNode;
+                                        });
+                                      },
+                                      child: Text('Reset',
+                                        style: TextStyle(
+                                          color: Palette.cakeGreen,
+                                          fontSize: 16.0
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ),
+                              ],
+                            )
+                          ],
+                        )
+                      );
+                    }
+                  );
+                },
                 child: Text('Reset', style: TextStyle(fontSize: 16.0, color: Palette.wildDarkBlue),)),
             ),
             Container(
@@ -58,7 +129,19 @@ class _NodeListState extends State<NodesList>{
                     height: 28.0,
                     child: FlatButton(
                       shape: CircleBorder(),
-                      onPressed: (){},
+                      onPressed: () async {
+
+                        var nodeAddress = await Navigator.push(context, CupertinoPageRoute(builder: (BuildContext context) => NewNode()));
+                        if (nodeAddress != null){
+                          setState(() {
+
+                            if (widget.nodes == null) widget.nodes = new Map();
+                            widget.nodes[nodeAddress] = false;
+
+                          });
+                        }
+
+                      },
                       child: Offstage()
                     ),
                   )
@@ -136,14 +219,14 @@ class _NodeListState extends State<NodesList>{
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(20.0))
                               ),
-                              title: const Text('Remove node',
+                              title: Text('Remove node',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               content: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  Text('Are you sure that you want to remove\nselected node?', textAlign: TextAlign.center,),
+                                  Text('Are you sure that you want to remove selected node?', textAlign: TextAlign.center,),
                                   SizedBox(
                                     height: 10.0,
                                   ),
@@ -205,13 +288,13 @@ class _NodeListState extends State<NodesList>{
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Icon(Icons.delete, color: Colors.white,),
+                            Icon(CupertinoIcons.delete, color: Colors.white,),
                             Text('Delete', style: TextStyle(color: Colors.white),)
                           ],
                         )
                       ),
                       child: Container(
-                        color: (widget.currentNodeIndex == widget.nodes.keys.elementAt(index)) ? Palette.purple : Colors.white,
+                        color: (widget.currentNode == widget.nodes.keys.elementAt(index)) ? Palette.purple : Colors.white,
                         child: Column(
                           children: <Widget>[
                             ListTile(
@@ -227,7 +310,76 @@ class _NodeListState extends State<NodesList>{
                                   color: widget.nodes.values.elementAt(index) ? Palette.green : Palette.red
                                 ),
                               ),
-                              onTap: (){},
+                              onTap: () async {
+
+                                if (widget.currentNode != widget.nodes.keys.elementAt(index)){
+                                  await showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(Radius.circular(20.0))
+                                        ),
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            Text('Are you sure to change current node to '
+                                                 '${widget.nodes.keys.elementAt(index)}?',
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            SizedBox(
+                                              height: 10.0,
+                                            ),
+                                            Row(
+                                              children: <Widget>[
+                                                Flexible(
+                                                  flex: 3,
+                                                  child: ButtonTheme(
+                                                    minWidth: double.infinity,
+                                                    child: FlatButton(
+                                                      onPressed: () => Navigator.pop(context),
+                                                      child: Text('Cancel',
+                                                        style: TextStyle(
+                                                          color: Palette.cakeGreen,
+                                                          fontSize: 16.0
+                                                        ),
+                                                      )
+                                                    ),
+                                                  ),
+                                                ),
+                                                Spacer(
+                                                  flex: 1,
+                                                ),
+                                                Flexible(
+                                                  flex: 3,
+                                                  child: ButtonTheme(
+                                                    minWidth: double.infinity,
+                                                    child: FlatButton(
+                                                      onPressed: (){
+                                                        Navigator.pop(context);
+                                                        setState(() {
+                                                          widget.currentNode = widget.nodes.keys.elementAt(index);
+                                                        });
+                                                      },
+                                                      child: Text('Change',
+                                                        style: TextStyle(
+                                                          color: Palette.cakeGreen,
+                                                          fontSize: 16.0
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        )
+                                      );
+                                    }
+                                  );
+                                }
+
+                              },
                             ),
                             Divider(
                               color: Palette.lightGrey,
