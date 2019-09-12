@@ -5,23 +5,25 @@ import 'package:cake_wallet/src/screens/nodes/new_node.dart';
 
 class NodesList extends StatefulWidget {
 
-  Map<String, bool> nodes;
-  String currentNode;
+  final Map<String, bool> nodes;
+  final String currentNode;
+  final String defaultNode;
 
-  NodesList(this.nodes, this.currentNode);
+  NodesList(this.nodes, this.currentNode, this.defaultNode);
 
   @override
-  createState() => NodeListState(currentNode);
+  createState() => NodeListState(nodes, currentNode);
 
 }
 
 class NodeListState extends State<NodesList>{
 
   final _backArrowImage = Image.asset('assets/images/back_arrow.png');
+  Map<String, bool> _nodes;
+  String _currentNode;
   bool _isOn = true;
-  String _defaultNode;
 
-  NodeListState(this._defaultNode);
+  NodeListState(this._nodes, this._currentNode);
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +93,7 @@ class NodeListState extends State<NodesList>{
                                       onPressed: (){
                                         Navigator.pop(context);
                                         setState(() {
-                                          widget.currentNode = _defaultNode;
+                                          _currentNode = widget.defaultNode;
                                         });
                                       },
                                       child: Text('Reset',
@@ -135,8 +137,8 @@ class NodeListState extends State<NodesList>{
                         if (nodeAddress != null){
                           setState(() {
 
-                            if (widget.nodes == null) widget.nodes = new Map();
-                            widget.nodes[nodeAddress] = false;
+                            if (_nodes == null) _nodes = new Map();
+                            _nodes[nodeAddress] = false;
 
                           });
                         }
@@ -207,10 +209,10 @@ class NodeListState extends State<NodesList>{
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: widget.nodes == null ? 0 : widget.nodes.length,
+                  itemCount: _nodes == null ? 0 : _nodes.length,
                   itemBuilder: (BuildContext context, int index){
                     return Dismissible(
-                      key: Key(widget.nodes.keys.elementAt(index)),
+                      key: Key(_nodes.keys.elementAt(index)),
                       confirmDismiss: (direction) async {
                         return await showDialog(
                           context: context,
@@ -275,7 +277,7 @@ class NodeListState extends State<NodesList>{
                       },
                       onDismissed: (direction){
                         setState(() {
-                          widget.nodes.remove(widget.nodes.keys.elementAt(index));
+                          _nodes.remove(_nodes.keys.elementAt(index));
                         });
                       },
                       direction: DismissDirection.endToStart,
@@ -294,12 +296,12 @@ class NodeListState extends State<NodesList>{
                         )
                       ),
                       child: Container(
-                        color: (widget.currentNode == widget.nodes.keys.elementAt(index)) ? Palette.purple : Colors.white,
+                        color: (_currentNode == _nodes.keys.elementAt(index)) ? Palette.purple : Colors.white,
                         child: Column(
                           children: <Widget>[
                             ListTile(
                               title: Text(
-                                widget.nodes.keys.elementAt(index),
+                                _nodes.keys.elementAt(index),
                                 style: TextStyle(fontSize: 16.0),
                               ),
                               trailing: Container(
@@ -307,12 +309,12 @@ class NodeListState extends State<NodesList>{
                                 height: 10.0,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: widget.nodes.values.elementAt(index) ? Palette.green : Palette.red
+                                  color: _nodes.values.elementAt(index) ? Palette.green : Palette.red
                                 ),
                               ),
                               onTap: () async {
 
-                                if (widget.currentNode != widget.nodes.keys.elementAt(index)){
+                                if (_currentNode != _nodes.keys.elementAt(index)){
                                   await showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
@@ -324,7 +326,7 @@ class NodeListState extends State<NodesList>{
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
                                             Text('Are you sure to change current node to '
-                                                 '${widget.nodes.keys.elementAt(index)}?',
+                                                 '${_nodes.keys.elementAt(index)}?',
                                               textAlign: TextAlign.center,
                                             ),
                                             SizedBox(
@@ -358,7 +360,7 @@ class NodeListState extends State<NodesList>{
                                                       onPressed: (){
                                                         Navigator.pop(context);
                                                         setState(() {
-                                                          widget.currentNode = widget.nodes.keys.elementAt(index);
+                                                          _currentNode = _nodes.keys.elementAt(index);
                                                         });
                                                       },
                                                       child: Text('Change',
