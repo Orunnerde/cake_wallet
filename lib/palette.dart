@@ -20,4 +20,5 @@ class Palette {
   static const Color lightGrey2 = Color.fromRGBO(249, 249, 249, 1.0);
   static const Color violet = Color.fromRGBO(138, 80, 255, 1.0);
   static const Color cakeGreen = Color.fromRGBO(41, 187, 244, 1.0);
+  static const Color cakeGreenWithOpacity = Color.fromRGBO(41, 187, 244, 0.2);
 }
