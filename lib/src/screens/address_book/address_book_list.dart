@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/src/screens/address_book/contact.dart';
+import 'package:cake_wallet/src/screens/address_book/contact_data.dart';
 
 class AddressBookList extends StatefulWidget{
 
-  final Map<String,String> contactsList;
+  final Map<String,String> contactsList; // key: contact name, value: currency type
 
   AddressBookList(this.contactsList);
 
@@ -94,7 +96,15 @@ class AddressBookListState extends State<AddressBookList>{
                   height: 28.0,
                   child: FlatButton(
                     shape: CircleBorder(),
-                    onPressed: (){},
+                    onPressed: () async {
+                      ContactData data = await Navigator.push(context, CupertinoPageRoute(builder: (BuildContext context) => Contact()));
+                      if (data != null){
+                        setState(() {
+                          if (_contactsList == null) _contactsList = new Map();
+                          _contactsList[data.contactName] = data.currencyType;
+                        });
+                      }
+                    },
                     child: Offstage()
                   ),
                 )
