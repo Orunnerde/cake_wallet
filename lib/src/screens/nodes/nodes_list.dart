@@ -51,64 +51,25 @@ class NodeListState extends State<NodesList>{
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0))
-                        ),
                         title: Text('Reset settings',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Text('Are you sure that you want to reset settings to default?', textAlign: TextAlign.center,),
-                            SizedBox(
-                              height: 10.0,
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Flexible(
-                                  flex: 3,
-                                  child: ButtonTheme(
-                                    minWidth: double.infinity,
-                                    child: FlatButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: Text('Cancel',
-                                        style: TextStyle(
-                                          color: Palette.cakeGreen,
-                                          fontSize: 16.0
-                                        ),
-                                      )
-                                    ),
-                                  ),
-                                ),
-                                Spacer(
-                                  flex: 1,
-                                ),
-                                Flexible(
-                                  flex: 3,
-                                  child: ButtonTheme(
-                                    minWidth: double.infinity,
-                                    child: FlatButton(
-                                      onPressed: (){
-                                        Navigator.pop(context);
-                                        setState(() {
-                                          _currentNode = widget.defaultNode;
-                                        });
-                                      },
-                                      child: Text('Reset',
-                                        style: TextStyle(
-                                          color: Palette.cakeGreen,
-                                          fontSize: 16.0
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ),
-                              ],
-                            )
-                          ],
-                        )
+                        content: Text('Are you sure that you want to reset settings to default?', textAlign: TextAlign.center,),
+                        actions: <Widget>[
+                          FlatButton(
+                            onPressed: (){ Navigator.pop(context); },
+                            child: Text('Cancel')
+                          ),
+                          FlatButton(
+                            onPressed: (){
+                              Navigator.pop(context);
+                              setState(() {
+                                _currentNode = widget.defaultNode;
+                              });
+                            },
+                            child: Text('Reset')
+                          )
+                        ],
                       );
                     }
                   );
@@ -218,59 +179,24 @@ class NodeListState extends State<NodesList>{
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(20.0))
-                              ),
                               title: Text('Remove node',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Text('Are you sure that you want to remove selected node?', textAlign: TextAlign.center,),
-                                  SizedBox(
-                                    height: 10.0,
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Flexible(
-                                        flex: 3,
-                                        child: ButtonTheme(
-                                          minWidth: double.infinity,
-                                          child: FlatButton(
-                                            onPressed: () => Navigator.of(context).pop(false),
-                                            child: Text('Cancel',
-                                              style: TextStyle(
-                                                color: Palette.cakeGreen,
-                                                fontSize: 16.0
-                                              ),
-                                            )
-                                          ),
-                                        ),
-                                      ),
-                                      Spacer(
-                                        flex: 1,
-                                      ),
-                                      Flexible(
-                                        flex: 3,
-                                        child: ButtonTheme(
-                                          minWidth: double.infinity,
-                                          child: FlatButton(
-                                            onPressed: () => Navigator.of(context).pop(true),
-                                            child: Text('Remove',
-                                              style: TextStyle(
-                                                color: Palette.cakeGreen,
-                                                fontSize: 16.0
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              )
+                              content: Text('Are you sure that you want to remove selected node?', textAlign: TextAlign.center,),
+                              actions: <Widget>[
+                                FlatButton(
+                                  onPressed: (){
+                                    Navigator.pop(context, false);
+                                  },
+                                  child: Text('Cancel')
+                                ),
+                                FlatButton(
+                                  onPressed: (){
+                                    Navigator.pop(context, true);
+                                  },
+                                  child: Text('Remove')
+                                ),
+                              ],
                             );
                           }
                         );
@@ -313,74 +239,36 @@ class NodeListState extends State<NodesList>{
                                 ),
                               ),
                               onTap: () async {
-
                                 if (_currentNode != _nodes.keys.elementAt(index)){
                                   await showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(Radius.circular(20.0))
+                                        content: Text('Are you sure to change current node to '
+                                                      '${_nodes.keys.elementAt(index)}?',
+                                          textAlign: TextAlign.center,
                                         ),
-                                        content: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            Text('Are you sure to change current node to '
-                                                 '${_nodes.keys.elementAt(index)}?',
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            SizedBox(
-                                              height: 10.0,
-                                            ),
-                                            Row(
-                                              children: <Widget>[
-                                                Flexible(
-                                                  flex: 3,
-                                                  child: ButtonTheme(
-                                                    minWidth: double.infinity,
-                                                    child: FlatButton(
-                                                      onPressed: () => Navigator.pop(context),
-                                                      child: Text('Cancel',
-                                                        style: TextStyle(
-                                                          color: Palette.cakeGreen,
-                                                          fontSize: 16.0
-                                                        ),
-                                                      )
-                                                    ),
-                                                  ),
-                                                ),
-                                                Spacer(
-                                                  flex: 1,
-                                                ),
-                                                Flexible(
-                                                  flex: 3,
-                                                  child: ButtonTheme(
-                                                    minWidth: double.infinity,
-                                                    child: FlatButton(
-                                                      onPressed: (){
-                                                        Navigator.pop(context);
-                                                        setState(() {
-                                                          _currentNode = _nodes.keys.elementAt(index);
-                                                        });
-                                                      },
-                                                      child: Text('Change',
-                                                        style: TextStyle(
-                                                          color: Palette.cakeGreen,
-                                                          fontSize: 16.0
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  )
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        )
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            onPressed: (){
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text('Cancel')
+                                          ),
+                                          FlatButton(
+                                            onPressed: (){
+                                              Navigator.pop(context);
+                                              setState(() {
+                                                _currentNode = _nodes.keys.elementAt(index);
+                                              });
+                                            },
+                                            child: Text('Change')
+                                          ),
+                                        ],
                                       );
                                     }
                                   );
                                 }
-
                               },
                             ),
                             Divider(

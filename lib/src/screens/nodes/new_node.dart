@@ -15,12 +15,18 @@ class NewNodeState extends State<NewNode>{
   final _formKey = GlobalKey<FormState>();
   final _backArrowImage = Image.asset('assets/images/back_arrow.png');
   final _nodeAddressController = TextEditingController();
+  final _nodePortController = TextEditingController();
+  final _loginController = TextEditingController();
+  final _passwordController = TextEditingController();
   String _nodeAddress;
   bool _isSaved = false;
 
   @override
   void dispose() {
     _nodeAddressController.dispose();
+    _nodePortController.dispose();
+    _loginController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -98,6 +104,10 @@ class NewNodeState extends State<NewNode>{
                             Expanded(
                               child: TextFormField(
                                 style: TextStyle(fontSize: 14.0),
+                                keyboardType: TextInputType.numberWithOptions(
+                                  signed: false,
+                                  decimal: false
+                                ),
                                 decoration: InputDecoration(
                                   hintStyle: TextStyle(color: Palette.wildDarkBlue),
                                   hintText: 'Node port',
@@ -114,6 +124,7 @@ class NewNodeState extends State<NewNode>{
                                     )
                                   )
                                 ),
+                                controller: _nodePortController,
                                 validator: (value){
                                   return null;
                                 },
@@ -145,6 +156,7 @@ class NewNodeState extends State<NewNode>{
                                     )
                                   )
                                 ),
+                                controller: _loginController,
                                 validator: (value){
                                   return null;
                                 },
@@ -176,6 +188,7 @@ class NewNodeState extends State<NewNode>{
                                     )
                                   )
                                 ),
+                                controller: _passwordController,
                                 validator: (value){
                                   return null;
                                 },
@@ -196,7 +209,13 @@ class NewNodeState extends State<NewNode>{
                       child: Container(
                         padding: EdgeInsets.only(right: 8.0),
                         child: PrimaryButton(
-                          onPressed: (){},
+                          onPressed: (){
+                            _isSaved = false;
+                            _nodeAddressController.text = '';
+                            _nodePortController.text = '';
+                            _loginController.text = '';
+                            _passwordController.text = '';
+                          },
                           text: 'Reset',
                           color: Palette.indigo,
                           borderColor: Palette.deepIndigo,
@@ -214,18 +233,11 @@ class NewNodeState extends State<NewNode>{
                                 context: context,
                                 builder: (BuildContext context) {
                                   Future.delayed(const Duration(milliseconds: 500), () {
-                                      Navigator.pop(context, true);
+                                    Navigator.pop(context, true);
                                   });
                                   return AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(Radius.circular(20.0))
-                                    ),
                                     title: Text('Saving',
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold
-                                      ),
                                     ),
                                     content: CupertinoActivityIndicator(animating: true)
                                   );
@@ -238,35 +250,17 @@ class NewNodeState extends State<NewNode>{
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(Radius.circular(20.0))
+                                      title: Text('Saved',
+                                        textAlign: TextAlign.center,
                                       ),
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          Text('Saved',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontSize: 16.0,
-                                              fontWeight: FontWeight.bold
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 10.0,
-                                          ),
-                                          FlatButton(
-                                            onPressed: (){
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text('OK',
-                                              style: TextStyle(
-                                                color: Palette.cakeGreen,
-                                                fontSize: 16.0
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          onPressed: (){
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('OK')
+                                        )
+                                      ],
                                     );
                                   }
                                 );
