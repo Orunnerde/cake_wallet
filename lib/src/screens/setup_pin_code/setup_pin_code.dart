@@ -16,22 +16,24 @@ class _SetupPinCodeState<WidgetType extends SetupPinCode> extends PinCodeState<W
   bool isEnteredOriginalPin() => !(_originalPin.length == 0);
   Function(BuildContext) onPinCodeSetup;
   List<int> _originalPin = [];
+  static final backArrowImage = Image.asset('assets/images/back_arrow.png');
   
   _SetupPinCodeState() {
-    title = "Setup PIN";
+    title = "Enter your pin";
   }
 
   @override
   void onPinCodeEntered(PinCodeState state) {
     if (!isEnteredOriginalPin()) {
       _originalPin = state.pin;
-      state.title = 'Enter your PIN again';
+      state.title = 'Enter your pin again';
       state.clear();
     } else {
 
       if (listEquals<int>(state.pin, _originalPin)) {
         showDialog(
           context: context,
+          barrierDismissible: false,
           builder: (BuildContext context) {
             return AlertDialog(
               content: Text("Your PIN has been set up successfully!"),
@@ -73,30 +75,28 @@ class _SetupPinCodeState<WidgetType extends SetupPinCode> extends PinCodeState<W
 
   void reset() {
     clear();
-    setTitle('Setup PIN');
+    setTitle('Enter your pin');
     _originalPin = [];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CupertinoNavigationBar(
-          middle: Text('Setup PIN'),
-          backgroundColor: Colors.white,
-          border: null,
-          trailing: FlatButton(
-            onPressed: () { changePinLength(pinLength == PinCodeState.fourPinLength ? PinCodeState.sixPinLength : PinCodeState.fourPinLength); },
-            child: Text(_changePinLengthText())
-          ),
-      ),
       backgroundColor: Colors.white,
+      appBar: CupertinoNavigationBar(
+        leading: ButtonTheme(
+          minWidth: double.minPositive,
+          child: FlatButton(
+            onPressed: (){Navigator.pop(context);},
+            child: backArrowImage
+          ),
+        ),
+        middle: Text('Setup Pin', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),),
+        backgroundColor: Colors.white,
+        border: null,
+      ),
       body: body(context)
     );
   }
 
-  String _changePinLengthText() {
-    return 'Use '
-      + (pinLength == PinCodeState.fourPinLength ? '${PinCodeState.sixPinLength}' : '${PinCodeState.fourPinLength}')
-      + '-digits PIN';
-  }
 }
