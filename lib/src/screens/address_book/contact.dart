@@ -46,7 +46,7 @@ class ContactState extends State<Contact>{
   }
 
   _setCurrencyType(BuildContext context) async {
-    String _currencyType;
+    String _currencyType = currency[0];
 
     _currencyTypeController.text = await showDialog(
       context: context,
