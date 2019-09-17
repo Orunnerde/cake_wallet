@@ -1,7 +1,10 @@
 import 'package:cake_wallet/src/domain/common/sync_status.dart';
+import 'package:cake_wallet/src/domain/common/wallet.dart';
+import 'package:cake_wallet/src/domain/common/wallet_description.dart';
 import 'package:cake_wallet/src/domain/common/wallet_type.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/screens/dashboard/sync_info.dart';
+import 'package:cake_wallet/src/screens/wallets/wallets.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,36 +28,46 @@ import 'dart:async';
 void main() async {
   final sharedPreferences = await SharedPreferences.getInstance();
 
+  final dbHelper = await DbHelper.getInstance();
+  final db = await dbHelper.getDb();
+
   final walletService = WalletService();
   final walletListService = WalletListService(
-      secureStorage: FlutterSecureStorage(), walletService: walletService);
+      secureStorage: FlutterSecureStorage(),
+      db: db,
+      walletService: walletService,
+      sharedPreferences: sharedPreferences);
+
+  final userService = UserService(
+      sharedPreferences: sharedPreferences,
+      secureStorage: FlutterSecureStorage());
 
   await walletListService.changeWalletManger(walletType: WalletType.MONERO);
 
   var _lastIsConnected = false;
 
-  Timer.periodic(Duration(seconds: 10), (_) async {
-    if (walletService.currentWallet == null) {
-      return;
-    }
-
-    final isConnected = await walletService.isConnected();
-
-    print('isConnected $isConnected');
-
-    if (!isConnected &&
-        !(walletService.syncStatusValue is ConnectingSyncStatus ||
-            walletService.syncStatusValue is StartingSyncStatus)) {
-      print('Start to reconnect');
-      try {
-        await walletService.connectToNode(
-            uri: 'node.moneroworld.com:18089', login: '', password: '');
-      } catch (e) {
-        print('Error while reconnection');
-        print(e);
-      }
-    }
-  });
+//  Timer.periodic(Duration(seconds: 10), (_) async {
+//    if (walletService.currentWallet == null) {
+//      return;
+//    }
+//
+//    final isConnected = await walletService.isConnected();
+//
+//    print('isConnected $isConnected');
+//
+//    if (!isConnected &&
+//        !(walletService.syncStatusValue is ConnectingSyncStatus ||
+//            walletService.syncStatusValue is StartingSyncStatus)) {
+//      print('Start to reconnect');
+//      try {
+//        await walletService.connectToNode(
+//            uri: 'node.moneroworld.com:18089', login: '', password: '');
+//      } catch (e) {
+//        print('Error while reconnection');
+//        print(e);
+//      }
+//    }
+//  });
 
   runApp(BlocProvider<AuthenticationBloc>(
       builder: (context) {
@@ -67,18 +80,21 @@ void main() async {
       child: CakeWalletApp(
           sharedPreferences: sharedPreferences,
           walletService: walletService,
-          walletListService: walletListService)));
+          walletListService: walletListService,
+          userService: userService)));
 }
 
 class CakeWalletApp extends StatelessWidget {
   final SharedPreferences sharedPreferences;
   final WalletService walletService;
   final WalletListService walletListService;
+  final UserService userService;
 
   CakeWalletApp(
       {@required this.sharedPreferences,
       @required this.walletService,
-      @required this.walletListService});
+      @required this.walletListService,
+      @required this.userService});
 
   @override
   Widget build(BuildContext context) {
@@ -93,11 +109,9 @@ class CakeWalletApp extends StatelessWidget {
           fontFamily: 'Lato',
         ),
         onGenerateRoute: (settings) => Router.generateRoute(
-            sharedPreferences, walletListService, walletService, settings),
+            sharedPreferences, walletListService, walletService, userService, settings),
         home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
           builder: (context, state) {
-            // return TransactionDetails();
-
             if (state is AuthenticationUninitialized) {
               return Splash();
             }

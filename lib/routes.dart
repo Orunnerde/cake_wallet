@@ -16,3 +16,5 @@ const receiveRoute = '/receive';
 const newSubaddressRoute = '/new_subaddress';
 const disclaimerRoute = '/disclaimer';
 const seedAlertRoute = '/seed_alert';
+const walletListRoute = '/wallet_list';
+const authRoute = '/auth';

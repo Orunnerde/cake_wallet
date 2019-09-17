@@ -1,10 +1,13 @@
 import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/src/domain/common/transaction_info.dart';
 import 'package:cake_wallet/src/domain/common/transaction_direction.dart';
+import 'package:cake_wallet/src/screens/auth/auth.dart';
+
 // import 'package:cake_wallet/src/monero_wallet.dart';
 import 'package:cake_wallet/src/screens/dashboard/sync_info.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
+
 // import 'package:cake_wallet/src/screens/restore/widgets/restore_button.dart';
 // import 'package:cake_wallet/palette.dart';
 // import 'package:cake_wallet/routes.dart';
@@ -64,15 +67,63 @@ class Dashboard extends StatelessWidget {
     return formattedList;
   }
 
+  void presentWalletMenu(BuildContext bodyContext) {
+    showDialog(
+        context: bodyContext,
+        builder: (context) {
+          return Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+            CupertinoActionSheet(
+              actions: <Widget>[
+                CupertinoActionSheetAction(
+                    child: const Text('Reconnect'), onPressed: () => null),
+                CupertinoActionSheetAction(
+                    child: const Text('Accounts'), onPressed: () => null),
+                CupertinoActionSheetAction(
+                    child: const Text('Wallets'),
+                    onPressed: () =>
+                        Navigator.of(context).popAndPushNamed(walletListRoute)),
+                CupertinoActionSheetAction(
+                    child: const Text('Show seed'),
+                    onPressed: () {
+                      Navigator.of(bodyContext).popAndPushNamed(authRoute,
+                          arguments: <void Function(Auth)>[
+                            (auth) {
+                              Navigator.of(bodyContext)
+                                  .popAndPushNamed(seedRoute);
+                            }
+                          ]);
+                    }),
+                CupertinoActionSheetAction(
+                    child: const Text('Show keys'), onPressed: () => null),
+                CupertinoActionSheetAction(
+                    child: const Text('Address book'), onPressed: () => null),
+              ],
+              cancelButton: CupertinoActionSheetAction(
+                  child: const Text('Cancel'),
+                  isDefaultAction: true,
+                  onPressed: () => Navigator.of(context).pop()),
+            )
+          ]);
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: CupertinoNavigationBar(
-          middle: Consumer<WalletInfo>(builder: (context, walletInfo, child) {
-            return Text(walletInfo.name,
-                style: TextStyle(fontWeight: FontWeight.w400));
-          }),
+          leading: SizedBox(
+              width: 30,
+              child: FlatButton(
+                  padding: EdgeInsets.all(0),
+                  onPressed: () => presentWalletMenu(context),
+                  child: Image.asset('assets/images/more.png',
+                      color: Colors.black, width: 30))),
+          // middle: Container(child:
+          //     Consumer<WalletInfo>(builder: (context, walletInfo, child) {
+          //   return Text(walletInfo.name,
+          //       style: TextStyle(fontWeight: FontWeight.w400));
+          // })),
           backgroundColor: Colors.white,
           border: null,
         ),

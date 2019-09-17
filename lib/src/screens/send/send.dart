@@ -124,8 +124,6 @@ class SendFormState extends State<SendForm> {
         });
       }
 
-      print('sendInfo.state ${provider.state}');
-
       if (provider.state == SendState.COMMITTED) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showDialog(

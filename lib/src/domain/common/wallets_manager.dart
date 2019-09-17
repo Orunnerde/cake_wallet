@@ -1,4 +1,5 @@
 import 'package:cake_wallet/src/domain/common/wallet.dart';
+import 'package:cake_wallet/src/domain/common/wallet_description.dart';
 
 abstract class WalletsManager {
   Future<Wallet> create(String name, String password);
@@ -12,4 +13,6 @@ abstract class WalletsManager {
   Future<Wallet> openWallet(String name, String password);
 
   Future<bool> isWalletExit(String name);
+
+  Future<void> remove(WalletDescription wallet);
 }

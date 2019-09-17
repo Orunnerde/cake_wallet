@@ -8,6 +8,7 @@ class SetupPinCode extends PinCodeWidget {
   final UserBloc block;
 
   final Function(BuildContext, String) onPinCodeSetup;
+  bool hasLengthSwitcher = true;
 
   SetupPinCode(this.block, this.onPinCodeSetup);
 

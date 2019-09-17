@@ -9,6 +9,7 @@ import 'package:sqflite/sqflite.dart';
 abstract class Wallet {
   static final walletsTable = 'wallets';
   static final idColumn = 'id';
+  static final nameColumn = 'name';
   static final isRecoveryColumn = 'is_recovery';
   static final restoreHeightColumn = 'restore_height';
 
@@ -21,6 +22,7 @@ abstract class Wallet {
     final id = walletTypeToString(type).toLowerCase() + '_' + name;
     await db.insert(walletsTable, {
       idColumn: id,
+      nameColumn : name,
       isRecoveryColumn: isRecovery,
       restoreHeightColumn: restoreHeight
     });
@@ -76,6 +78,8 @@ abstract class Wallet {
   Future<int> getNodeHeight();
 
   Future<bool> isConnected();
+
+  Future<void> close();
 
   TransactionHistory getHistory();
 

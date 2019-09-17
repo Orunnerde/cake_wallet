@@ -64,14 +64,7 @@ class TransactionDetails extends StatelessWidget {
         resizeToAvoidBottomPadding: false,
         backgroundColor: Colors.white,
         appBar: CupertinoNavigationBar(
-          leading: SizedBox(
-            height: 12,
-            width: 12,
-            child: FlatButton(
-                padding: EdgeInsets.all(0),
-                onPressed: () => Navigator.of(context).pop(),
-                child: Image.asset('assets/images/close_symbol.png')),
-          ),
+          leading: CloseButton(),
           middle: Text('Transaction details',
               style: TextStyle(
                   fontSize: 16,

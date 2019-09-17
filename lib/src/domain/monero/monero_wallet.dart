@@ -27,7 +27,7 @@ String formatAmount(String originAmount) {
       break;
     }
   }
-  
+
   if (lastIndex < 3) {
     lastIndex = 3;
   }
@@ -36,6 +36,7 @@ String formatAmount(String originAmount) {
 }
 
 class MoneroWallet extends Wallet {
+  static final platformBinaryEmptyResponse = ByteData(4);
   static const platform =
       const MethodChannel('com.cakewallet.wallet/monero-wallet');
 
@@ -57,15 +58,28 @@ class MoneroWallet extends Wallet {
     }
   }
 
-  static Future<MoneroWallet> createdWallet({Database db, String name, WalletType type, bool isRecovery, int restoreHeight}) async {
-    await Wallet.setInitialWalletData(db: db, isRecovery: isRecovery, name: name, type: WalletType.MONERO, restoreHeight: restoreHeight);
+  static Future<MoneroWallet> createdWallet(
+      {Database db,
+      String name,
+      WalletType type,
+      bool isRecovery,
+      int restoreHeight}) async {
+    await Wallet.setInitialWalletData(
+        db: db,
+        isRecovery: isRecovery,
+        name: name,
+        type: WalletType.MONERO,
+        restoreHeight: restoreHeight);
     return await configured(isRecovery: isRecovery);
   }
 
-  static Future<MoneroWallet> load(Database db, String name, WalletType type) async {
+  static Future<MoneroWallet> load(
+      Database db, String name, WalletType type) async {
     final id = walletTypeToString(type).toLowerCase() + '_' + name;
     final wallets = await db.query(Wallet.walletsTable,
-        columns: [Wallet.isRecoveryColumn], where: '${Wallet.idColumn} = ?', whereArgs: [id]);
+        columns: [Wallet.isRecoveryColumn],
+        where: '${Wallet.idColumn} = ?',
+        whereArgs: [id]);
     var isRecovery = false;
     var restoreHeight = 0;
 
@@ -74,12 +88,14 @@ class MoneroWallet extends Wallet {
       restoreHeight = wallets[0][Wallet.restoreHeightColumn];
     }
 
-    return await configured(isRecovery: isRecovery, restoreHeight: restoreHeight);
+    return await configured(
+        isRecovery: isRecovery, restoreHeight: restoreHeight);
   }
 
-  static Future<MoneroWallet> configured({bool isRecovery, int restoreHeight}) async {
+  static Future<MoneroWallet> configured(
+      {bool isRecovery, int restoreHeight}) async {
     final wallet = MoneroWallet(isRecovery: isRecovery);
-    
+
     if (isRecovery) {
       await wallet.setRecoveringFromSeed();
 
@@ -95,7 +111,7 @@ class MoneroWallet extends Wallet {
   get onBalanceChange => _onBalanceChange.stream;
   bool isRecovery;
   Function(int height) onHeightChange;
-  
+
   BehaviorSubject<Wallet> _onBalanceChange;
   BehaviorSubject<SyncStatus> _syncStatus;
   int _cachedBlockchainHeight;
@@ -114,6 +130,7 @@ class MoneroWallet extends Wallet {
 
     _syncStatus = BehaviorSubject<SyncStatus>();
     _onBalanceChange = BehaviorSubject<Wallet>();
+
     walletHeightChannel.setMessageHandler((h) async {
       final height = h.getUint64(0);
 
@@ -131,27 +148,34 @@ class MoneroWallet extends Wallet {
         _syncStatus.add(SyncingSyncStatus(height, nodeHeight));
       }
 
-      final writter = WriteBuffer();
-      writter.putUint8(0);
-      return writter.done();
+      return platformBinaryEmptyResponse;
     });
 
     balanceChangeChannel.setMessageHandler((_) async {
-      print('Test');
+      print('Balance changed');
       _onBalanceChange.add(this);
+
+      getHistory()
+          .update()
+          .then((_) => print('ask to update transaction history'));
+          
       return '';
     });
 
     syncStateChannel.setMessageHandler((_) async {
       final currentHeight = await getCurrentHeight();
       final nodeHeight = await getNodeHeight();
-      
+
+      getHistory()
+          .update()
+          .then((_) => print('ask to update transaction history'));
+
       if (currentHeight == 0) {
-        return ByteData(4);
+        return platformBinaryEmptyResponse;
       }
 
       if (_syncStatus.value is FailedSyncStatus) {
-        return ByteData(4);
+        return platformBinaryEmptyResponse;
       }
 
       _syncStatus.add(SyncedSyncStatus());
@@ -171,10 +195,10 @@ class MoneroWallet extends Wallet {
 
       _lastRefreshTime = now;
 
-      return ByteData(4);
+      return platformBinaryEmptyResponse;
     });
   }
-  
+
   WalletType getType() => WalletType.MONERO;
 
   Future<String> getFilename() async {
@@ -194,11 +218,13 @@ class MoneroWallet extends Wallet {
   }
 
   Future<String> getFullBalance() async {
-    return formatAmount(await getValue(key: 'getBalance', arguments: {'account_index': 0}));
+    return formatAmount(
+        await getValue(key: 'getBalance', arguments: {'account_index': 0}));
   }
 
   Future<String> getUnlockedBalance() async {
-    return formatAmount(await getValue(key: 'getUnlockedBalance', arguments: {'account_index': 0}));
+    return formatAmount(await getValue(
+        key: 'getUnlockedBalance', arguments: {'account_index': 0}));
   }
 
   Future<int> getCurrentHeight() async {
@@ -211,6 +237,15 @@ class MoneroWallet extends Wallet {
 
   Future<int> getNodeHeight() async {
     return getValue(key: 'getNodeHeight');
+  }
+
+  Future<void> close() async {
+    try {
+      await platform.invokeMethod('close');
+    } on PlatformException catch (e) {
+      print(e);
+      throw e;
+    }
   }
 
   Future<void> connectToNode(
@@ -339,12 +374,13 @@ class MoneroWallet extends Wallet {
       throw e;
     }
   }
-  
+
   Future<void> setAsRecovered() async {
     final helper = await DbHelper.getInstance();
     final db = await helper.getDb();
     final name = await getName();
-    await Wallet.updateWalletData(db: db, name: name, isRecovery: false, type: WalletType.MONERO);
+    await Wallet.updateWalletData(
+        db: db, name: name, isRecovery: false, type: WalletType.MONERO);
     isRecovery = true;
   }
 }

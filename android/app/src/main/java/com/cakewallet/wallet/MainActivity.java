@@ -1,6 +1,5 @@
 package com.cakewallet.wallet;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import io.flutter.app.FlutterActivity;
@@ -13,22 +12,21 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 
-import com.cakewallet.wallet.MoneroWalletsManagerHandler;
-import com.cakewallet.wallet.MoneroWalletHandler;
+import com.cakewallet.wallet.handlers.moneroWalletManager.MoneroWalletManagerHandler;
 import com.cakewallet.wallet.monero.Wallet;
 
 import java.nio.ByteBuffer;
 
 public class MainActivity extends FlutterActivity {
-    private static final MoneroWalletsManagerHandler moneroWalletsManagerHandler = new MoneroWalletsManagerHandler();
     private static final MoneroWalletHandler moneroWalletHandler = new MoneroWalletHandler();
+    private static final MoneroWalletManagerHandler moneroWalletsManagerHandler = new MoneroWalletManagerHandler(moneroWalletHandler);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GeneratedPluginRegistrant.registerWith(this);
 
-        MethodChannel walletManagerChannel = new MethodChannel(getFlutterView(), MoneroWalletsManagerHandler.MONERO_WALLET_MANAGER_CHANNEL);
+        MethodChannel walletManagerChannel = new MethodChannel(getFlutterView(), MoneroWalletManagerHandler.MONERO_WALLET_MANAGER_CHANNEL);
         walletManagerChannel.setMethodCallHandler(
                 new MethodCallHandler() {
                     @Override

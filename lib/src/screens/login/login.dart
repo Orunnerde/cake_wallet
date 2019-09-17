@@ -42,7 +42,7 @@ class LoginScreen extends StatelessWidget {
 }
 
 class _LoginPinCode extends PinCode {
-  _LoginPinCode() : super((_, __) {});
+  _LoginPinCode() : super((_, __) => null, false);
 
   @override
   _LoginPinCodeState createState() => _LoginPinCodeState();

@@ -30,12 +30,6 @@ class WalletsManagerBloc
 
       try {
         await walletsService.create(event.name);
-        sharedPreferences.setString('current_wallet_name', event.name);
-        await walletService.connectToNode(
-            uri: 'node.moneroworld.com:18089',
-            login: '',
-            password: ''); 
-        await walletService.startSync();
         yield WalletCreatedSuccessfully();
       } catch (e) {
         yield WalletCreatedFailed(e.toString());
@@ -48,12 +42,6 @@ class WalletsManagerBloc
       try {
         await walletsService.restoreFromSeed(
             event.name, event.seed, event.restoreHeight);
-        sharedPreferences.setString('current_wallet_name', event.name);
-        await walletService.connectToNode(
-            uri: 'node.moneroworld.com:18089',
-            login: '',
-            password: '');
-        await walletService.startSync();
         yield WalletCreatedSuccessfully();
       } catch (e) {
         yield WalletCreatedFailed(e.toString());
@@ -66,12 +54,6 @@ class WalletsManagerBloc
       try {
         await walletsService.restoreFromKeys(event.name, event.restoreHeight,
             event.address, event.viewKey, event.spendKey);
-        sharedPreferences.setString('current_wallet_name', event.name);
-        await walletService.connectToNode(
-            uri: 'node.moneroworld.com:18089',
-            login: '',
-            password: '');
-        await walletService.startSync();
         yield WalletCreatedSuccessfully();
       } catch (e) {
         yield WalletCreatedFailed(e.toString());

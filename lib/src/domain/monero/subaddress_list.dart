@@ -7,16 +7,29 @@ class SubaddressList {
   BehaviorSubject<List<Subaddress>> _subaddress;
 
   MethodChannel _platform;
+  bool _isRefreshing;
+  bool _isUpdating;
 
   SubaddressList({MethodChannel platform}) {
     this._platform = platform;
+    _isRefreshing = false;
+    _isUpdating = false;
     _subaddress = BehaviorSubject<List<Subaddress>>();
   }
 
   Future<void> update() async {
-    await refresh(accountIndex: 0);
-    final transactions = await getAll();
-    _subaddress.add(transactions);
+    if (_isUpdating) { return; }
+    
+    try {
+      _isUpdating = true;
+      await refresh(accountIndex: 0);
+      final transactions = await getAll();
+      _subaddress.add(transactions);
+      _isUpdating = false;
+    } catch (e) {
+      _isUpdating = false;
+      throw e;
+    }
   }
 
   Future<List<Subaddress>> getAll() async {
@@ -57,12 +70,17 @@ class SubaddressList {
   }
 
   Future<void> refresh({int accountIndex}) async {
+    if (_isRefreshing) { return; }
+
     try {
+      _isRefreshing = true;
       final arguments = {
         'accountIndex': accountIndex
       };
       await _platform.invokeMethod('refreshSubaddresses', arguments);
+      _isRefreshing = false;
     } on PlatformException catch (e) {
+      _isRefreshing = false;
       print(e);
       throw e;
     }

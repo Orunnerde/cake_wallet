@@ -3,6 +3,7 @@ package com.cakewallet.wallet;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import io.flutter.plugin.common.BasicMessageChannel;
 import io.flutter.plugin.common.BinaryCodec;
@@ -22,6 +23,7 @@ import com.cakewallet.wallet.monero.TransactionInfo;
 import com.cakewallet.wallet.monero.Wallet;
 
 import com.cakewallet.wallet.monero.WalletListener;
+import com.cakewallet.wallet.monero.WalletManager;
 
 public class MoneroWalletHandler implements WalletListener {
     static final String MONERO_WALLET_CHANNEL = "com.cakewallet.wallet/monero-wallet";
@@ -30,31 +32,34 @@ public class MoneroWalletHandler implements WalletListener {
     private static TransactionHistory currentTransactionHistory;
     private static Subaddress currentSubaddress;
 
-//    private static ByteBuffer refreshedBuffer = ByteBuffer.allocate(4);
+    private static final WalletManager moneroWalletsManager = new WalletManager();
 
-    public static Wallet getCurrentWallet() {
-        return currentWallet;
-    }
+    private static ByteBuffer refreshedEmptyResponse = ByteBuffer.allocateDirect(4);
 
-    public static TransactionHistory getTransactionHistory() {
+
+    TransactionHistory getTransactionHistory() {
         return currentTransactionHistory;
     }
 
-    public static Subaddress getSubaddress() {
+    Subaddress getSubaddress() {
         return currentSubaddress;
     }
 
-    public static void setCurrentWallet(Wallet wallet) {
-        currentWallet = wallet;
-        setCurrentWallet(currentWallet.history());
-        setCurrentWallet(currentWallet.subaddress());
+    Wallet getCurrentWallet() {
+        return currentWallet;
     }
 
-    public static void setCurrentWallet(TransactionHistory history) {
+    public void setCurrentWallet(Wallet wallet) {
+        currentWallet = wallet;
+        setCurrentTransactionHistory(currentWallet.history());
+        setCurrentSubaddress(currentWallet.subaddress());
+    }
+
+    void setCurrentTransactionHistory(TransactionHistory history) {
         currentTransactionHistory = history;
     }
 
-    public static void setCurrentWallet(Subaddress subaddress) {
+    void setCurrentSubaddress(Subaddress subaddress) {
         currentSubaddress = subaddress;
     }
 
@@ -154,6 +159,12 @@ public class MoneroWalletHandler implements WalletListener {
                 case "setRefreshFromBlockHeight":
                     setRefreshFromBlockHeight(call, result);
                     break;
+                case "close":
+                    close(call, result);
+                    break;
+                case "isNeedToRefresh":
+                    isNeedToRefresh(call, result);
+                    break;
                 default:
                     result.notImplemented();
                     break;
@@ -206,56 +217,74 @@ public class MoneroWalletHandler implements WalletListener {
         AsyncTask.execute(() -> {
             getCurrentWallet().store();
 
-            Handler mainHandler = new Handler(Looper.getMainLooper());
-            mainHandler.post(() -> result.success(null));
+            new Handler(Looper.getMainLooper())
+                    .post(() -> result.success(null));
         });
     }
 
     public void getCurrentHeight(MethodCall call, MethodChannel.Result result) {
-        long height = getCurrentWallet().getCurrentHeight();
-        result.success(height);
+//        AsyncTask.execute(() -> {
+            long height = getCurrentWallet().getCurrentHeight();
+            result.success(height);
+//        });
     }
 
     public void getNodeHeight(MethodCall call, MethodChannel.Result result) {
-        long height = getCurrentWallet().getNodeHeight();
-        result.success(height);
+//        AsyncTask.execute(() -> {
+            long height = getCurrentWallet().getNodeHeight();
+            result.success(height);
+//        });
     }
 
     public void getBalance(MethodCall call, MethodChannel.Result result) {
-        long accountIndex = Long.valueOf((int) call.argument("account_index"));
-        String balance = getCurrentWallet().getBalance(accountIndex);
-        result.success(balance);
+//        AsyncTask.execute(() -> {
+            long accountIndex = Long.valueOf((int) call.argument("account_index"));
+            String balance = getCurrentWallet().getBalance(accountIndex);
+            result.success(balance);
+//        });
     }
 
     public void getUnlockedBalance(MethodCall call, MethodChannel.Result result) {
-        long accountIndex = Long.valueOf((int) call.argument("account_index"));
-        String balance = getCurrentWallet().getUnlockedBalance(accountIndex);
-        result.success(balance);
+//        AsyncTask.execute(() -> {
+            long accountIndex = Long.valueOf((int) call.argument("account_index"));
+            String balance = getCurrentWallet().getUnlockedBalance(accountIndex);
+            result.success(balance);
+//        });
     }
 
     public void getName(MethodCall call, MethodChannel.Result result) {
-        String name = getCurrentWallet().getName();
-        result.success(name);
+//        AsyncTask.execute(() -> {
+            String name = getCurrentWallet().getName();
+            result.success(name);
+//        });
     }
 
     public void getFilename(MethodCall call, MethodChannel.Result result) {
-        String filename = getCurrentWallet().getFilename();
-        result.success(filename);
+//        AsyncTask.execute(() -> {
+            String filename = getCurrentWallet().getFilename();
+            result.success(filename);
+//        });
     }
 
     public void getSeed(MethodCall call, MethodChannel.Result result) {
-        String seed = getCurrentWallet().getSeed();
-        result.success(seed);
+//        AsyncTask.execute(() -> {
+            String seed = getCurrentWallet().getSeed();
+            result.success(seed);
+//        });
     }
 
     public void getAddress(MethodCall call, MethodChannel.Result result) {
-        String address = getCurrentWallet().getAddress();
-        result.success(address);
+//        AsyncTask.execute(() -> {
+            String address = getCurrentWallet().getAddress();
+            result.success(address);
+//        });
     }
 
     public void getIsConnected(MethodCall call, MethodChannel.Result result) {
-        boolean isConnected = getCurrentWallet().getIsConnected();
-        result.success(isConnected);
+//        AsyncTask.execute(() -> {
+            boolean isConnected = getCurrentWallet().getIsConnected();
+            result.success(isConnected);
+//        });
     }
 
     public void connectToNode(MethodCall call, MethodChannel.Result result) {
@@ -287,15 +316,40 @@ public class MoneroWalletHandler implements WalletListener {
     }
 
     public void setRecoveringFromSeed(MethodCall call, MethodChannel.Result result) {
-        boolean isRecovering = true; //call.argument("isRecovering");
-        getCurrentWallet().setRecoveringFromSeed(isRecovering);
-        result.success(null);
+        AsyncTask.execute(() -> {
+            boolean isRecovering = true; //call.argument("isRecovering");
+            getCurrentWallet().setRecoveringFromSeed(isRecovering);
+            new Handler(Looper.getMainLooper())
+                    .post(() -> result.success(null));
+        });
     }
 
     public void setRefreshFromBlockHeight(MethodCall call, MethodChannel.Result result) {
-        long height = call.argument("height");
-        getCurrentWallet().setRefreshFromBlockHeight(height);
-        result.success(null);
+        AsyncTask.execute(() -> {
+            long height = call.argument("height");
+            getCurrentWallet().setRefreshFromBlockHeight(height);
+            new Handler(Looper.getMainLooper())
+                    .post(() -> result.success(null));
+        });
+    }
+
+    public void close(MethodCall call, MethodChannel.Result result) {
+        AsyncTask.execute(() -> {
+            boolean isClosed = moneroWalletsManager.close(getCurrentWallet(), true);
+
+            if (isClosed) {
+                result.success(true);
+                currentWallet = null;
+                currentSubaddress = null;
+                currentTransactionHistory = null;
+
+                new Handler(Looper.getMainLooper())
+                        .post(() -> result.success(null));
+            } else {
+                new Handler(Looper.getMainLooper())
+                        .post(() -> result.error("CLOSE_WALLET_ERROR", "Cannot close the wallet", null));
+            }
+        });
     }
 
     // MARK: TransactionHistory
@@ -322,27 +376,56 @@ public class MoneroWalletHandler implements WalletListener {
                 transactions.add(txMap);
             }
 
-            Handler mainHandler = new Handler(Looper.getMainLooper());
-            mainHandler.post(() -> result.success(transactions));
+            new Handler(Looper.getMainLooper())
+                    .post(() -> result.success(transactions));
         });
     }
 
     public void getByIndex(MethodCall call, MethodChannel.Result result) {
-        int index = call.argument("index");
-        TransactionInfo transaction = getTransactionHistory().getByIndex(index);
-
-        result.success(transaction);
+        AsyncTask.execute(() -> {
+            int index = call.argument("index");
+            TransactionInfo transaction = getTransactionHistory().getByIndex(index);
+            new Handler(Looper.getMainLooper())
+                    .post(() -> result.success(transaction));
+        });
     }
 
 
     public void count(MethodCall call, MethodChannel.Result result) {
-        int count = getTransactionHistory().count();
-        result.success(count);
+        AsyncTask.execute(() -> {
+            int count = getTransactionHistory().count();
+            new Handler(Looper.getMainLooper())
+                    .post(() -> result.success(count));
+        });
     }
 
     public void refresh(MethodCall call, MethodChannel.Result result) {
-        getTransactionHistory().refresh();
-        result.success(null);
+        AsyncTask.execute(() -> {
+            getTransactionHistory().refresh();
+            new Handler(Looper.getMainLooper())
+                    .post(() -> result.success(null));
+        });
+    }
+
+    public void isNeedToRefresh(MethodCall call, MethodChannel.Result result) {
+        AsyncTask.execute(() -> {
+            int preCount = getTransactionHistory().count();
+            List<TransactionInfo> preTransactons = getTransactionHistory().getAll();
+            getTransactionHistory().refresh();
+            int count = getTransactionHistory().count();
+            List<TransactionInfo> transactons = getTransactionHistory().getAll();
+
+            if (preCount < count) {
+                new Handler(Looper.getMainLooper())
+                        .post(() -> result.success(true));
+                return;
+            }
+
+            final boolean needToRefresh = preTransactons.containsAll(transactons);
+
+            new Handler(Looper.getMainLooper())
+                    .post(() -> result.success(needToRefresh));
+        });
     }
 
     // MARK: Subaddress
@@ -363,63 +446,72 @@ public class MoneroWalletHandler implements WalletListener {
                 subaddresses.add(subaddressMap);
             }
 
-            Handler mainHandler = new Handler(Looper.getMainLooper());
-            mainHandler.post(() -> result.success(subaddresses));
+            new Handler(Looper.getMainLooper())
+                    .post(() -> result.success(subaddresses));
         });
     }
 
     public void refreshSubaddresses(MethodCall call, MethodChannel.Result result) {
-        int account = call.argument("accountIndex");
-        getSubaddress().refresh(account);
-        result.success(null);
+        AsyncTask.execute(() -> {
+            int account = call.argument("accountIndex");
+            getSubaddress().refresh(account);
+            new Handler(Looper.getMainLooper())
+                    .post(() -> result.success(null));
+        });
     }
 
     public void addSubaddress(MethodCall call, MethodChannel.Result result) {
-        int account = call.argument("accountIndex");
-        String label = call.argument("label");
-        getSubaddress().add(account, label);
-        result.success(null);
+        AsyncTask.execute(() -> {
+            int account = call.argument("accountIndex");
+            String label = call.argument("label");
+            getSubaddress().add(account, label);
+            new Handler(Looper.getMainLooper())
+                    .post(() -> result.success(null));
+        });
     }
 
     public void setLabelSubaddress(MethodCall call, MethodChannel.Result result) {
-        int account = call.argument("accountIndex");
-        int addressIndex = call.argument("addressIndex");
-        String label = call.argument("label");
-        getSubaddress().setLabel(account, addressIndex, label);
-        result.success(null);
+        AsyncTask.execute(() -> {
+            int account = call.argument("accountIndex");
+            int addressIndex = call.argument("addressIndex");
+            String label = call.argument("label");
+            getSubaddress().setLabel(account, addressIndex, label);
+            new Handler(Looper.getMainLooper())
+                    .post(() -> result.success(null));
+        });
     }
 
     // MARK: WalletListener
 
     public void moneySpent(String txId, long amount) {
-        if (balanceChannel == null) {
+        if (balanceChannel == null || getCurrentWallet() == null) {
             return;
         }
 
-        Handler mainHandler = new Handler(Looper.getMainLooper());
-        mainHandler.post(() -> balanceChannel.send(null));
+        new Handler(Looper.getMainLooper())
+                .post(() -> balanceChannel.send(null));
     }
 
     public void moneyReceived(String txId, long amount) {
-        if (balanceChannel == null) {
+        if (balanceChannel == null || getCurrentWallet() == null) {
             return;
         }
 
-        Handler mainHandler = new Handler(Looper.getMainLooper());
-        mainHandler.post(() -> balanceChannel.send(null));
+        new Handler(Looper.getMainLooper())
+                .post(() -> balanceChannel.send(null));
     }
 
     public void unconfirmedMoneyReceived(String txId, long amount) {
-        if (balanceChannel == null) {
+        if (balanceChannel == null || getCurrentWallet() == null) {
             return;
         }
 
-        Handler mainHandler = new Handler(Looper.getMainLooper());
-        mainHandler.post(() -> balanceChannel.send(null));
+        new Handler(Looper.getMainLooper())
+                .post(() -> balanceChannel.send(null));
     }
 
     public void newBlock(long height) {
-        if (walletHeightChannel == null) {
+        if (walletHeightChannel == null || getCurrentWallet() == null) {
             return;
         }
 
@@ -427,31 +519,25 @@ public class MoneroWalletHandler implements WalletListener {
         buffer.putLong(height);
 
 
-        Handler mainHandler = new Handler(Looper.getMainLooper());
-        mainHandler.post(() -> walletHeightChannel.send(buffer));
+        new Handler(Looper.getMainLooper())
+                .post(() -> walletHeightChannel.send(buffer));
     }
 
     public void refreshed() {
-        if (syncStateChannel == null) {
+        if (syncStateChannel == null || getCurrentWallet() == null) {
             return;
         }
 
-        ByteBuffer refreshedBuffer = ByteBuffer.allocateDirect(4);
-        refreshedBuffer.putInt(1);
-
         new Handler(Looper.getMainLooper())
-                .post(() -> syncStateChannel.send(refreshedBuffer));
+                .post(() -> syncStateChannel.send(refreshedEmptyResponse));
     }
 
     public void updated() {
-        if (syncStateChannel == null) {
+        if (syncStateChannel == null || getCurrentWallet() == null) {
             return;
         }
 
-        ByteBuffer refreshedBuffer = ByteBuffer.allocateDirect(4);
-        refreshedBuffer.putInt(1);
-
         new Handler(Looper.getMainLooper())
-                .post(() -> syncStateChannel.send(refreshedBuffer));
+                .post(() -> syncStateChannel.send(refreshedEmptyResponse));
     }
 }

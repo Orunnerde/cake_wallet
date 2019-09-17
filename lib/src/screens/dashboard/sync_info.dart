@@ -1,15 +1,19 @@
-import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
-import 'package:cake_wallet/src/domain/monero/monero_wallet.dart';
+import 'package:cake_wallet/src/domain/services/user_service.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:convert';
+import 'dart:async';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
-
 import 'package:cake_wallet/src/domain/common/wallet.dart';
 import 'package:cake_wallet/src/domain/common/sync_status.dart';
 import 'package:cake_wallet/src/domain/common/transaction_info.dart';
 import 'package:cake_wallet/src/domain/common/transaction_history.dart';
+import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
+import 'package:cake_wallet/src/domain/common/wallet_description.dart';
+import 'package:cake_wallet/src/domain/common/wallet_type.dart';
+import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
+import 'package:cake_wallet/src/domain/monero/monero_wallet.dart';
 import 'package:cake_wallet/src/domain/common/pending_transaction.dart';
 import 'package:cake_wallet/src/domain/monero/monero_transaction_creation_credentials.dart';
 import 'package:cake_wallet/src/domain/monero/subaddress_list.dart';
@@ -42,6 +46,7 @@ class TransactionsInfo extends ChangeNotifier {
   WalletService _walletService;
   List<TransactionInfo> _transactions = [];
   TransactionHistory _history;
+  StreamSubscription<Wallet> _onWalletChangeSubscription;
 
   TransactionsInfo({@required WalletService walletService}) {
     _walletService = walletService;
@@ -50,7 +55,14 @@ class TransactionsInfo extends ChangeNotifier {
       onWalletChanged(walletService.currentWallet);
     }
 
-    walletService.onWalletChange = (wallet) => onWalletChanged(wallet);
+    _onWalletChangeSubscription = walletService.onWalletChange
+        .listen((wallet) => onWalletChanged(wallet));
+  }
+
+  @override
+  void dispose() {
+    _onWalletChangeSubscription.cancel();
+    super.dispose();
   }
 
   get transactions => _transactions;
@@ -142,6 +154,8 @@ class BalanceInfo extends ChangeNotifier {
   String _unlockedBalance;
   String _fiatFullBalance;
   String _fiatUnlockedBalance;
+  StreamSubscription<Wallet> _onWalletChangeSubscription;
+  StreamSubscription<Wallet> _onBalanceChangeSubscription;
 
   BalanceInfo(
       {String fullBalance = '0.0',
@@ -154,10 +168,12 @@ class BalanceInfo extends ChangeNotifier {
     _walletService = walletService;
 
     if (_walletService.currentWallet != null) {
-      _walletService.onBalanceChange.listen((wallet) async {
-        if (this == null) { return; }
-        
-        print('Test 1');
+      _onBalanceChangeSubscription = _walletService.onBalanceChange.listen((wallet) async {
+        if (this == null) {
+          return;
+        }
+
+        print('Test onBalanceChange #1');
         final fullBalance = await wallet.getFullBalance();
         final unlockedBalance = await wallet.getUnlockedBalance();
 
@@ -173,7 +189,19 @@ class BalanceInfo extends ChangeNotifier {
       onWalletChanged(_walletService.currentWallet);
     }
 
-    _walletService.onWalletChange = (wallet) => onWalletChanged(wallet);
+    _onWalletChangeSubscription = _walletService.onWalletChange
+        .listen((wallet) => onWalletChanged(wallet));
+  }
+
+  @override
+  void dispose() {
+    _onWalletChangeSubscription.cancel();
+
+    if (_onBalanceChangeSubscription != null) {
+      _onBalanceChangeSubscription.cancel();
+    }
+
+    super.dispose();
   }
 
   void onBalanceChange(Wallet wallet) async {
@@ -233,8 +261,12 @@ class BalanceInfo extends ChangeNotifier {
   }
 
   Future<void> onWalletChanged(Wallet wallet) async {
-    _walletService.onBalanceChange.listen((wallet) async {
-      print('Test 1');
+    if (_onBalanceChangeSubscription != null) {
+      _onBalanceChangeSubscription.cancel();
+    }
+
+    _onBalanceChangeSubscription = _walletService.onBalanceChange.listen((wallet) async {
+      print('Test onBalanceChange #2');
       final fullBalance = await wallet.getFullBalance();
       final unlockedBalance = await wallet.getUnlockedBalance();
 
@@ -255,11 +287,14 @@ class WalletInfo extends ChangeNotifier {
   get address => _address;
   get name => _name;
   get subaddress => _subaddress;
+  get description => _description;
 
+  WalletDescription _description;
   String _address;
   String _name;
   Subaddress _subaddress;
   WalletService _walletService;
+  StreamSubscription<Wallet> _onWalletChangeSubscription;
 
   WalletInfo({@required WalletService walletService}) {
     _walletService = walletService;
@@ -267,7 +302,7 @@ class WalletInfo extends ChangeNotifier {
 
     if (_walletService.currentWallet != null) {
       _walletService.getAddress().then((address) => _setAddress(address));
-      _walletService.getName().then((address) => _setName(address));
+      _walletService.getName().then((name) => _setName(name));
 
       if (_walletService.currentWallet is MoneroWallet) {
         final subaddressList = _walletService.currentWallet.getSubaddress();
@@ -279,11 +314,24 @@ class WalletInfo extends ChangeNotifier {
       }
     }
 
-    _walletService.onWalletChange = (wallet) => onWalletChanged(wallet);
+    _onWalletChangeSubscription = _walletService.onWalletChange
+        .listen((wallet) => onWalletChanged(wallet));
+  }
+
+  @override
+  void dispose() {
+    _onWalletChangeSubscription.cancel();
+    super.dispose();
   }
 
   void onWalletChanged(Wallet wallet) async {
+    if (this == null) {
+      return;
+    }
     final address = await wallet.getAddress();
+    final name = await _walletService.getName();
+
+    _setName(name);
     _setAddress(address);
 
     if (wallet is MoneroWallet) {
@@ -306,6 +354,8 @@ class WalletInfo extends ChangeNotifier {
 
   void _setName(String name) {
     _name = name;
+    _description =
+        WalletDescription(name: name, type: _walletService.getType());
     notifyListeners();
   }
 
@@ -344,7 +394,6 @@ class SendInfo extends ChangeNotifier {
   get state => _state;
 
   set state(SendState state) {
-    print('new state $state');
     _state = state;
     notifyListeners();
   }
@@ -410,8 +459,6 @@ class SendInfo extends ChangeNotifier {
 
     try {
       final amount = _needToSendAll ? null : _cryptoAmount.replaceAll(',', '.');
-      print('amount $amount');
-
       final credentials = MoneroTransactionCreationCredentials(
           address: address,
           paymentId: paymentId,
@@ -456,29 +503,40 @@ class SubaddressListInfo extends ChangeNotifier {
   }
 
   WalletService _walletService;
-  List<Subaddress> _subaddresses = [];
+  List<Subaddress> _subaddresses;
   SubaddressList _subaddressList;
+  StreamSubscription<Wallet> _onWalletChangeSubscription;
 
   SubaddressListInfo({@required WalletService walletService}) {
+    _subaddresses = [];
     _walletService = walletService;
 
     if (walletService.currentWallet != null) {
-      onWalletChanged(walletService.currentWallet);
+      onWalletChanged(walletService.currentWallet).then((_) => null);
     }
 
-    walletService.onWalletChange = (wallet) => onWalletChanged(wallet);
+    _onWalletChangeSubscription = walletService.onWalletChange
+        .listen((wallet) => onWalletChanged(wallet));
+  }
+
+  @override
+  void dispose() {
+    _onWalletChangeSubscription.cancel();
+    super.dispose();
   }
 
   Future<void> updateSubaddressList() async {
+    print('updateSubaddressList');
     await _subaddressList.refresh(accountIndex: 0);
-    _subaddresses = await _subaddressList.getAll();
+    subaddresses = await _subaddressList.getAll();
+    print('subaddresses ${subaddresses.length}');
   }
 
   Future<void> onWalletChanged(Wallet wallet) async {
     if (wallet is MoneroWallet) {
       _subaddressList = wallet.getSubaddress();
       _subaddressList.subaddresses
-          .listen((subaddress) => this.subaddresses = subaddress);
+          .listen((subaddress) => subaddresses = subaddress);
       await updateSubaddressList();
 
       return;
@@ -501,6 +559,7 @@ class NewSubaddressInfo extends ChangeNotifier {
   WalletService _walletService;
   SubaddressList _subaddressList;
   SubaddressCrationState _state;
+  StreamSubscription<Wallet> _onWalletChangeSubscription;
 
   NewSubaddressInfo({@required WalletService walletService}) {
     _walletService = walletService;
@@ -509,8 +568,15 @@ class NewSubaddressInfo extends ChangeNotifier {
       onWalletChanged(walletService.currentWallet);
     }
 
-    walletService.onWalletChange = (wallet) => onWalletChanged(wallet);
+    _onWalletChangeSubscription = walletService.onWalletChange
+        .listen((wallet) => onWalletChanged(wallet));
     _state = SubaddressCrationState.NONE;
+  }
+
+  @override
+  void dispose() {
+    _onWalletChangeSubscription.cancel();
+    super.dispose();
   }
 
   Future<void> add({String label}) async {
@@ -533,5 +599,103 @@ class NewSubaddressInfo extends ChangeNotifier {
     }
 
     print('Incorrect wallet type for this operation (SubaddressList)');
+  }
+}
+
+class WalletListInfo extends ChangeNotifier {
+  final WalletListService walletListService;
+  final WalletInfo walletInfo;
+
+  get wallets => _wallets;
+
+  set wallets(List<WalletDescription> wallets) {
+    _wallets = wallets;
+    notifyListeners();
+  }
+
+  List<WalletDescription> _wallets;
+
+  WalletListInfo({this.walletListService, this.walletInfo}) {
+    _wallets = [];
+    walletListService.getAll().then((walletList) => wallets = walletList);
+  }
+
+  Future<void> updateWalletList() async {
+    wallets = await walletListService.getAll();
+  }
+
+  Future<void> loadWallet(WalletDescription wallet) async {
+    await walletListService.openWallet(wallet.name);
+  }
+
+  Future<void> remove(WalletDescription wallet) async {
+    try {
+      await walletListService.remove(wallet);
+      await updateWalletList();
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  bool isCurrentWallet(WalletDescription wallet) {
+    return walletInfo.description.name == wallet.name;
+  }
+}
+
+enum AuthState { AUTHENTICATION, AUTHENTICATED, FAILED_AUTHENTICATION, NONE }
+
+class AuthInfo extends ChangeNotifier {
+  final UserService userService;
+
+  get state => _state;
+
+  set state(AuthState state) {
+    _state = state;
+    notifyListeners();
+  }
+
+  AuthState _state;
+
+  AuthInfo({this.userService}) {
+    _state = AuthState.NONE;
+  }
+
+  Future<void> auth({String pin}) async {
+    _state = AuthState.AUTHENTICATION;
+    final isAuthenticated = await userService.authenticate(pin);
+    state = isAuthenticated
+        ? AuthState.AUTHENTICATED
+        : AuthState.FAILED_AUTHENTICATION;
+  }
+}
+
+class WalletSeedInfo extends ChangeNotifier {
+  final WalletService walletService;
+
+  get name => _name;
+
+  get seed => _seed;
+
+  set seed(String seed) {
+    _seed = seed;
+    notifyListeners();
+  }
+
+  set name(String name) {
+    _name = name;
+    notifyListeners();
+  }
+
+  String _name;
+  String _seed;
+
+  WalletSeedInfo({this.walletService}) {
+    _seed = '';
+
+    if (walletService.currentWallet != null) {
+      walletService.getSeed().then((seed) => this.seed = seed);
+      walletService.getName().then((name) => this.name = name);
+    }
   }
 }

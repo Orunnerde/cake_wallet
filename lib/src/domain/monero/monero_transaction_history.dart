@@ -10,22 +10,45 @@ class MoneroTransactionHistory extends TransactionHistory {
 
   bool _isUpdating = false;
   bool _isRefreshing = false;
+  bool _needToCheckForRefresh = false;
   
   MethodChannel _platform;
 
   MoneroTransactionHistory({MethodChannel platform}) {
     this._platform = platform;
-    _transactions = BehaviorSubject<List<TransactionInfo>>();
+    _transactions = BehaviorSubject<List<TransactionInfo>>.seeded([]);
   }
 
   Future<void> update() async {
     if (_isUpdating) { return; }
     
-    _isUpdating = true;
-    await refresh();
-    final transactions = await getAll();
-    _transactions.add(transactions);
-    _isUpdating = false;
+    
+    try {
+      _isUpdating = true;
+      final _isNeedToRefresh = _needToCheckForRefresh ? await isNeedToRefresh() : true;
+      var transactions;
+
+      print ('_isNeedToRefresh $_isNeedToRefresh');
+      
+      if (_isNeedToRefresh) {
+        await refresh();
+        transactions = await getAll();
+      } else {
+        transactions = _transactions.value;
+      }
+      
+      _transactions.add(transactions);
+      
+      _isUpdating = false;
+
+      if (!_needToCheckForRefresh) { 
+        _needToCheckForRefresh = true;
+      }
+    } catch (e) {
+      _isUpdating = false;
+      print(e);
+      throw e;
+    }
   }
 
   Future<List<TransactionInfo>> getAll() async {
@@ -47,12 +70,21 @@ class MoneroTransactionHistory extends TransactionHistory {
     }
   }
 
+  Future<bool> isNeedToRefresh() async {
+    try {
+      return await _platform.invokeMethod('isNeedToRefresh');
+    } on PlatformException catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
   Future<void> refresh() async {
     if (_isRefreshing) { return; }
 
     try {
       _isRefreshing = true;
-      return await _platform.invokeMethod('refreshTransactionHistory');
+      await _platform.invokeMethod('refreshTransactionHistory');
       _isRefreshing = false;
     } on PlatformException catch (e) {
       _isRefreshing = false;

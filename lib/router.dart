@@ -1,8 +1,11 @@
 import 'package:cake_wallet/src/bloc/user/user_bloc.dart';
+import 'package:cake_wallet/src/screens/auth/auth.dart';
 
 import 'package:cake_wallet/src/screens/dashboard/dashboard.dart';
 import 'package:cake_wallet/src/screens/receive/receive.dart';
 import 'package:cake_wallet/src/screens/subaddress/new_subaddress.dart';
+import 'package:cake_wallet/src/screens/wallets/wallets.dart';
+
 // import 'package:cake_wallet/src/user_service.dart';
 // import 'package:cake_wallet/src/wallets_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,6 +23,7 @@ import 'package:cake_wallet/src/screens/restore/restore_from_seed.dart';
 import 'package:cake_wallet/src/screens/restore/restore_from_keys.dart';
 import 'package:cake_wallet/src/screens/dashboard/dashboard.dart';
 import 'package:provider/provider.dart';
+
 // import 'package:cake_wallet/src/sync_status.dart';
 import 'package:cake_wallet/src/screens/dashboard/sync_info.dart';
 // import 'package:cake_wallet/src/monero_wallet.dart';
@@ -35,11 +39,8 @@ import 'package:cake_wallet/src/screens/seed_alert/seed_alert.dart';
 import 'package:cake_wallet/src/screens/transaction_details/transaction_details.dart';
 
 class Router {
-  static Route<dynamic> generateRoute(
-      SharedPreferences sharedPreferences,
-      WalletListService walletListService,
-      WalletService walletService,
-      RouteSettings settings) {
+  static Route<dynamic> generateRoute(SharedPreferences sharedPreferences, WalletListService walletListService,
+      WalletService walletService, UserService userService, RouteSettings settings) {
     switch (settings.name) {
       case welcomeRoute:
         return MaterialPageRoute(builder: (_) => Welcome());
@@ -47,24 +48,18 @@ class Router {
       case newWalletFromWelcomeRoute:
         return CupertinoPageRoute(
             builder: (_) => SetupPinCode(
-                UserBloc(UserService(
-                    secureStorage: FlutterSecureStorage(),
-                    sharedPreferences: sharedPreferences)),
+                UserBloc(UserService(secureStorage: FlutterSecureStorage(), sharedPreferences: sharedPreferences)),
                 (context, _) => Navigator.pushNamed(context, newWalletRoute)));
 
       case newWalletRoute:
         return CupertinoPageRoute(
             builder: (_) => NewWallet(
-                walletsService: walletListService,
-                walletService: walletService,
-                sharedPreferences: sharedPreferences));
+                walletsService: walletListService, walletService: walletService, sharedPreferences: sharedPreferences));
 
       case setupPinRoute:
         return CupertinoPageRoute(
             builder: (_) => SetupPinCode(
-                UserBloc(UserService(
-                    secureStorage: FlutterSecureStorage(),
-                    sharedPreferences: sharedPreferences)),
+                UserBloc(UserService(secureStorage: FlutterSecureStorage(), sharedPreferences: sharedPreferences)),
                 (context, _) {}));
 
       case restoreRoute:
@@ -76,47 +71,38 @@ class Router {
       case restoreFromSeedKeysFromWelcomeRoute:
         return CupertinoPageRoute(
             builder: (_) => SetupPinCode(
-                UserBloc(UserService(
-                    secureStorage: FlutterSecureStorage(),
-                    sharedPreferences: sharedPreferences)),
-                (context, _) =>
-                    Navigator.pushNamed(context, restoreSeedKeysRoute)));
+                UserBloc(UserService(secureStorage: FlutterSecureStorage(), sharedPreferences: sharedPreferences)),
+                (context, _) => Navigator.pushNamed(context, restoreSeedKeysRoute)));
 
-      case seedRoute:
-        return CupertinoPageRoute(builder: (_) => Seed());
+      case seedRoute: //WalletSeedInfo
+        return MaterialPageRoute(
+            builder: (_) => ChangeNotifierProvider(
+                builder: (context) => WalletSeedInfo(walletService: walletService), child: Seed()));
 
       case restoreFromSeedRoute:
         return CupertinoPageRoute(
             builder: (_) => RestoreFromSeed(
-                walletsService: walletListService,
-                walletService: walletService,
-                sharedPreferences: sharedPreferences));
+                walletsService: walletListService, walletService: walletService, sharedPreferences: sharedPreferences));
 
       case restoreFromKeysRoute:
         return CupertinoPageRoute(
             builder: (_) => RestoreFromKeys(
-                walletsService: walletListService,
-                walletService: walletService,
-                sharedPreferences: sharedPreferences));
+                walletsService: walletListService, walletService: walletService, sharedPreferences: sharedPreferences));
 
       case dashboardRoute:
         return CupertinoPageRoute(
             builder: (_) => MultiProvider(providers: [
                   ChangeNotifierProvider(
-                    builder: (context) =>
-                        TransactionsInfo(walletService: walletService),
+                    builder: (context) => TransactionsInfo(walletService: walletService),
                   ),
                   ChangeNotifierProvider(
-                    builder: (context) =>
-                        BalanceInfo(walletService: walletService),
+                    builder: (context) => BalanceInfo(walletService: walletService),
                   ),
                   ChangeNotifierProvider(
-                    builder: (context) =>
-                        WalletInfo(walletService: walletService),
+                    builder: (context) => WalletInfo(walletService: walletService),
                   ),
                   ChangeNotifierProvider(
-                    builder: (context) =>
-                        SyncInfo(walletService: walletService),
+                    builder: (context) => SyncInfo(walletService: walletService),
                   ),
                 ], child: Dashboard(walletService: walletService)));
 
@@ -124,51 +110,71 @@ class Router {
         return MaterialPageRoute(
             builder: (_) => MultiProvider(providers: [
                   ChangeNotifierProvider(
-                    builder: (context) =>
-                        BalanceInfo(walletService: walletService),
+                    builder: (context) => BalanceInfo(walletService: walletService),
                   ),
                   ChangeNotifierProvider(
-                    builder: (context) =>
-                        WalletInfo(walletService: walletService),
+                    builder: (context) => WalletInfo(walletService: walletService),
                   ),
-                  ChangeNotifierProvider(
-                      builder: (context) =>
-                          SendInfo(walletService: walletService)),
+                  ChangeNotifierProvider(builder: (context) => SendInfo(walletService: walletService)),
                 ], child: Send()));
 
       case receiveRoute:
         return MaterialPageRoute(
             builder: (_) => MultiProvider(providers: [
-                  ChangeNotifierProvider(
-                      builder: (context) =>
-                          WalletInfo(walletService: walletService)),
-                  ChangeNotifierProvider(
-                      builder: (context) =>
-                          SubaddressListInfo(walletService: walletService))
+                  ChangeNotifierProvider(builder: (context) => WalletInfo(walletService: walletService)),
+                  ChangeNotifierProvider(builder: (context) => SubaddressListInfo(walletService: walletService))
                 ], child: Receive()));
 
       case transactionDetailsRoute:
-        return MaterialPageRoute(
-            builder: (_) =>
-                TransactionDetails(transactionInfo: settings.arguments));
+        return MaterialPageRoute(builder: (_) => TransactionDetails(transactionInfo: settings.arguments));
 
       case newSubaddressRoute:
         return CupertinoPageRoute(
             builder: (_) => ChangeNotifierProvider(
-                builder: (context) =>
-                    NewSubaddressInfo(walletService: walletService),
-                child: NewSubaddress()));
+                builder: (context) => NewSubaddressInfo(walletService: walletService), child: NewSubaddress()));
 
-        
       case disclaimerRoute:
         return CupertinoPageRoute(builder: (_) => Disclaimer());
+
       case seedAlertRoute:
         return CupertinoPageRoute(builder: (_) => SeedAlert());
+
+      case walletListRoute:
+        return MaterialPageRoute(
+            builder: (_) => ChangeNotifierProvider(
+                  builder: (context) => WalletListInfo(
+                      walletListService: walletListService, walletInfo: WalletInfo(walletService: walletService)),
+                  child: WalletListScreen(),
+                ));
+
+      case authRoute:
+        void Function(Auth) onAuthenticationSuccessful;
+        void Function(Auth) onAuthenticationFailed;
+
+        if (settings.arguments is List<void Function(Auth)>) {
+          final args = settings.arguments as List<void Function(Auth)>;
+
+          if (args.length > 0) {
+            onAuthenticationSuccessful = args[0];
+          }
+
+          if (args.length > 1) {
+            onAuthenticationFailed = args[1];
+          }
+        }
+
+        return MaterialPageRoute(
+            builder: (_) => ChangeNotifierProvider(
+                  builder: (context) => AuthInfo(userService: userService),
+                  child: Auth(
+                      onAuthenticationSuccessful: onAuthenticationSuccessful,
+                      onAuthenticationFailed: onAuthenticationFailed),
+                ));
+
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(
-                  body: Center(
-                      child: Text('No route defined for ${settings.name}')),
+                  body: Center(child: Text('No route defined for ${settings.name}')),
                 ));
     }
   }

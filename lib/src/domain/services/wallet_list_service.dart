@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'package:cake_wallet/src/domain/common/node_list.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cake_wallet/src/domain/common/wallet.dart';
+import 'package:cake_wallet/src/domain/common/wallet_description.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:cake_wallet/src/domain/common/wallets_manager.dart';
 import 'package:cake_wallet/src/domain/common/secret_store_key.dart';
@@ -26,16 +30,23 @@ class DbHelper {
   }
 
   final String path;
+
   DbHelper({this.path});
+
   Database _db;
 
   Future<Database> getDb() async {
     if (_db == null) {
-      _db =
-          await openDatabase(path, version: 1, onCreate: (Database db, int version) async {
-        
+      _db = await openDatabase(path, version: 1,
+          onCreate: (Database db, int version) async {
         await db.execute(
-            'CREATE TABLE Wallets (id TEXT PRIMARY KEY, is_recovery NUMERIC, restore_height INTEGER)');
+            'CREATE TABLE Wallets (id TEXT PRIMARY KEY, name TEXT, is_recovery NUMERIC, restore_height INTEGER);' +
+                'CREATE TABLE ${NodeList.tableName}' +
+                '(${NodeList.tableName} INTEGER PRIMARY KEY,' +
+                '${NodeList.uriColumn} TEXT PRIMARY KEY,' +
+                '${NodeList.loginColumn} TEXT,' +
+                '${NodeList.passwordColumn} TEXT,' +
+                '${NodeList.isDefault} NUMERIC);');
       });
     }
     return _db;
@@ -44,6 +55,7 @@ class DbHelper {
 
 class WalletIsExistException implements Exception {
   String name;
+
   WalletIsExistException(this.name);
 
   @override
@@ -55,14 +67,34 @@ class WalletIsExistException implements Exception {
 class WalletListService {
   final FlutterSecureStorage secureStorage;
   final WalletService walletService;
+  final Database db;
+  final SharedPreferences sharedPreferences;
   WalletsManager walletsManager;
 
   WalletListService(
-      {this.secureStorage, this.walletsManager, @required this.walletService});
+      {this.secureStorage,
+      this.db,
+      this.walletsManager,
+      @required this.walletService,
+      @required this.sharedPreferences});
+
+  Future<List<WalletDescription>> getAll() async {
+    List<Map> result = await db.query('wallets', columns: ['name']);
+    List<WalletDescription> wallets = result
+        .map((res) =>
+            WalletDescription(name: res['name'], type: WalletType.MONERO))
+        .toList();
+
+    return wallets;
+  }
 
   Future<void> create(String name) async {
     if (await walletsManager.isWalletExit(name)) {
       throw WalletIsExistException(name);
+    }
+
+    if (walletService.currentWallet != null) {
+      await walletService.close();
     }
 
     final password = Uuid().v4();
@@ -72,13 +104,17 @@ class WalletListService {
 
     final wallet = await walletsManager.create(name, password);
 
-    walletService.currentWallet = wallet;
+    await onWalletChange(wallet);
   }
 
   Future<void> restoreFromSeed(
       String name, String seed, int restoreHeight) async {
     if (await walletsManager.isWalletExit(name)) {
       throw WalletIsExistException(name);
+    }
+
+    if (walletService.currentWallet != null) {
+      await walletService.close();
     }
 
     final password = Uuid().v4();
@@ -89,13 +125,17 @@ class WalletListService {
     final wallet = await walletsManager.restoreFromSeed(
         name, password, seed, restoreHeight);
 
-    walletService.currentWallet = wallet;
+    await onWalletChange(wallet);
   }
 
   Future<void> restoreFromKeys(String name, int restoreHeight, String address,
       String viewKey, String spendKey) async {
     if (await walletsManager.isWalletExit(name)) {
       throw WalletIsExistException(name);
+    }
+
+    if (walletService.currentWallet != null) {
+      await walletService.close();
     }
 
     final password = Uuid().v4();
@@ -106,16 +146,20 @@ class WalletListService {
     final wallet = await walletsManager.restoreFromKeys(
         name, password, restoreHeight, address, viewKey, spendKey);
 
-    walletService.currentWallet = wallet;
+    await onWalletChange(wallet);
   }
 
   Future<void> openWallet(String name) async {
+    if (walletService.currentWallet != null) {
+      await walletService.close();
+    }
+
     final key = generateStoreKeyFor(
         key: SecretStoreKey.MONERO_WALLET_PASSWORD, walletName: name);
     final password = await secureStorage.read(key: key);
     final wallet = await walletsManager.openWallet(name, password);
 
-    walletService.currentWallet = wallet;
+    await onWalletChange(wallet);
   }
 
   Future<void> changeWalletManger({WalletType walletType}) async {
@@ -129,5 +173,18 @@ class WalletListService {
         walletsManager = null;
         break;
     }
+  }
+
+  Future<void> onWalletChange(Wallet wallet) async {
+    walletService.currentWallet = wallet;
+    final walletName = await wallet.getName();
+    await sharedPreferences.setString('current_wallet_name', walletName);
+    await walletService.connectToNode(
+        uri: 'node.moneroworld.com:18089', login: '', password: '');
+    await walletService.startSync();
+  }
+
+  Future<void> remove(WalletDescription wallet) async {
+    await walletsManager.remove(wallet);
   }
 }

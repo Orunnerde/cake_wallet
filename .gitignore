@@ -75,3 +75,6 @@
 # External libs
 monero_android/
 android/app/.externalNativeBuild/
+
+# Generated dart files
+**/*.g.dart

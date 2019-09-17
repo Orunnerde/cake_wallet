@@ -4,12 +4,14 @@ import 'package:cake_wallet/palette.dart';
 
 abstract class PinCodeWidget extends StatefulWidget {
   Function(List<int> pin, PinCodeState state) onPinCodeEntered;
+  bool hasLengthSwitcher;
 }
 
 class PinCode extends PinCodeWidget {
   Function(List<int> pin, PinCodeState state) onPinCodeEntered;
+  bool hasLengthSwitcher = false;
 
-  PinCode(this.onPinCodeEntered);
+  PinCode(this.onPinCodeEntered, this.hasLengthSwitcher);
 
   @override
   PinCodeState createState() => PinCodeState();
@@ -77,6 +79,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
   Widget body(BuildContext context) {
     return SafeArea(
       child: Container(
+        color: Colors.white,
         padding: EdgeInsets.only(left: 40.0, right: 40.0, bottom: 40.0),
         child: Column(
             children: <Widget>[
@@ -109,7 +112,8 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
                 ),
               ),
               Spacer(flex: 2),
-              FlatButton(
+              if (widget.hasLengthSwitcher)
+              ...[FlatButton(
                   onPressed: (){ changePinLength(pinLength == PinCodeState.fourPinLength ? PinCodeState.sixPinLength : PinCodeState.fourPinLength); },
                   child: Text(_changePinLengthText(),
                     style: TextStyle(
@@ -117,7 +121,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
                         color: Palette.wildDarkBlue
                     ),
                   )
-              ),
+              )],
               Spacer(flex: 1),
               Flexible(
                   flex: 24,

@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqlite_api.dart';
 import 'package:cake_wallet/src/domain/common/wallet_type.dart';
 import 'package:cake_wallet/src/domain/common/wallets_manager.dart';
 import 'package:cake_wallet/src/domain/common/wallet.dart';
 import 'package:cake_wallet/src/domain/monero/monero_wallet.dart';
-import 'package:sqflite/sqlite_api.dart';
+import 'package:cake_wallet/src/domain/common/wallet_description.dart';
 
 class MoneroWalletsManager extends WalletsManager {
   static const type = WalletType.MONERO;
@@ -116,5 +119,31 @@ class MoneroWalletsManager extends WalletsManager {
       print('MoneroWalletsManager Error: $e');
       throw e;
     }
+  }
+
+  Future<void> remove(WalletDescription wallet) async {
+    final dir = await getApplicationDocumentsDirectory();
+    final root = dir.path.replaceAll('app_flutter', 'files');
+    final walletFilePath = root + '/cw_monero/' + wallet.name;
+    final keyPath = walletFilePath + '.keys';
+    final addressFilePath = walletFilePath + '.address.txt';
+    final walletFile = File(walletFilePath);
+    final keyFile = File(keyPath);
+    final addressFile = File(addressFilePath);
+
+    if (await walletFile.exists()) {
+      await walletFile.delete();
+    }
+
+    if (await keyFile.exists()) {
+      await keyFile.delete();
+    }
+
+    if (await addressFile.exists()) {
+      await addressFile.delete();
+    }
+
+    final id = walletTypeToString(wallet.type).toLowerCase() + '_' + wallet.name;
+    await db.delete(Wallet.walletsTable, where: '${Wallet.idColumn} = ?', whereArgs: [id]);
   }
 }

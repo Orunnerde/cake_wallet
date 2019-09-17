@@ -1,22 +1,19 @@
 import 'package:flutter/services.dart';
 import "package:yaml/yaml.dart";
-
-class Node {
-  final String uri;
-  final String login;
-  final String password;
-  final bool isDefault;
-
-  Node({this.uri, this.login, this.password, this.isDefault});
-
-  Node.fromMap(Map map)
-      : uri = map['uri'] ?? '',
-        login = map['login'],
-        password = map['password'],
-        isDefault = map['is_default'] ?? false;
-}
+import 'package:cake_wallet/src/domain/common/node.dart';
+import 'package:sqflite/sqlite_api.dart';
 
 class NodeList {
+  static const tableName = 'nodes';
+  static const idColumn = 'id';
+  static const uriColumn = 'uri';
+  static const loginColumn = 'login';
+  static const passwordColumn = 'password';
+  static const isDefault = 'is_default';
+
+  get nodes => _nodes;
+
+  Database _db;
   List<Node> _nodes;
 
   static Future<NodeList> load() async {
@@ -26,8 +23,27 @@ class NodeList {
     return NodeList(nodes: nodes);
   }
 
-  NodeList({List<Node> nodes}) {
+  NodeList({List<Node> nodes, Database db}) {
     _nodes = nodes;
-    print('nodes $nodes');
+    _db = db;
+  }
+
+  Future<void> add({Node node}) async {
+    await _db.insert(tableName, {
+      uriColumn: node.uri,
+      loginColumn: node.login,
+      passwordColumn: node.password,
+      isDefault: node.isDefault
+    });
+  }
+
+  Future<void> updateList() async {
+    _nodes = await _selectAllNodes();
+  }
+
+  Future<List<Node>> _selectAllNodes() async {
+    final results = await _db
+        .query(tableName, columns: [uriColumn, loginColumn, passwordColumn]);
+    return results.map((result) => Node.fromMap(result)).toList();
   }
 }

@@ -14,4 +14,13 @@ public class TransactionInfo {
     public String formattedAmount() {
         return Wallet.displayAmount(amount);
     }
+
+
+    public boolean equals (TransactionInfo tx)  {
+        if (this == tx) return true;
+        if (this == null) return false;
+        if (this.getClass() != tx.getClass()) return false;
+
+        return hash == tx.hash && isPending == tx.isPending;
+    }
 }
