@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/routes.dart';
+import 'package:cake_wallet/src/screens/settings/enter_pin_code.dart';
 
 const List<String> balanceList = const <String>[
   'Full Balance',
@@ -9,9 +11,11 @@ const List<String> balanceList = const <String>[
 ];
 
 const List<String> currencyList = const <String>[
-  'USD',
-  'EUR',
-  'GBP'
+  'AUD', 'BGN', 'BRL', 'CAD', 'CHF', 'CNY', 'CZK',
+  'EUR', 'DKK', 'GBP', 'HKD', 'HRK', 'HUF', 'IDR',
+  'ILS', 'INR', 'ISK', 'JPY', 'KRW', 'MXN', 'MYR',
+  'NOK', 'NZD', 'PHP', 'PLN', 'RON', 'RUB', 'SEK',
+  'SGD', 'THB', 'TRY', 'USD', 'ZAR', 'VEF'
 ];
 
 const List<String> feePriorityList = const <String>[
@@ -24,8 +28,10 @@ const List<String> feePriorityList = const <String>[
 class Settings extends StatefulWidget{
 
   final String currentNode;
+  final int currentPinLength;
+  final List<int> currentPin;
   
-  const Settings(this.currentNode);
+  const Settings(this.currentNode, this.currentPinLength, this.currentPin);
 
   @override
   createState() => SettingsState();
@@ -33,6 +39,8 @@ class Settings extends StatefulWidget{
 }
 
 class SettingsState extends State<Settings>{
+  final _formKey = GlobalKey<FormState>();
+  final _newPasswordController = TextEditingController();
 
   final _cakeArrowImage = Image.asset('assets/images/cake_arrow.png');
   final _telegramImage = Image.asset('assets/images/Telegram.png');
@@ -130,6 +138,39 @@ class SettingsState extends State<Settings>{
 
   }
 
+  _showBackupPasswordAlertDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return AlertDialog(
+          title: Text('Backup password',
+            textAlign: TextAlign.center,
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: (){
+                Navigator.pop(context);
+              },
+              child: Text('Cancel')
+            ),
+            FlatButton(
+              onPressed: (){
+                Navigator.pop(context);
+              },
+              child: Text('Copy')
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+  @override
+  void dispose() {
+    _newPasswordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -146,12 +187,15 @@ class SettingsState extends State<Settings>{
       ),
       body: Container(
         padding: EdgeInsets.only(
-          top: 20.0,
-          bottom: 20.0
+          //top: 20.0,
+          //bottom: 20.0
         ),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
+              SizedBox(
+                height: 20.0,
+              ),
               Container(
                 padding: EdgeInsets.only(
                   left: 20.0
@@ -484,7 +528,14 @@ class SettingsState extends State<Settings>{
                         style: TextStyle(fontSize: 16.0),
                       ),
                       trailing: _cakeArrowImage,
-                      onTap: (){},
+                      onTap: () async {
+
+                        var _isPinCorrect = await Navigator.push(context,CupertinoPageRoute(builder: (BuildContext context) => EnterPinCode(widget.currentPinLength, widget.currentPin)));
+                        if (_isPinCorrect != null && _isPinCorrect){
+                            _showBackupPasswordAlertDialog(context);
+                        }
+
+                      },
                     ),
                     Container(
                       padding: EdgeInsets.only(
@@ -505,7 +556,133 @@ class SettingsState extends State<Settings>{
                         style: TextStyle(fontSize: 16.0),
                       ),
                       trailing: _cakeArrowImage,
-                      onTap: (){},
+                      onTap: () async {
+
+                        _newPasswordController.text = '';
+
+                        var _isChange = await showDialog(
+                          context: context,
+                          builder: (BuildContext context){
+                            return AlertDialog(
+                              title: Text('Backup password',
+                                textAlign: TextAlign.center,
+                              ),
+                              content: Text('If you will change the Backup password for backups, '
+                                  'the previous MANUAL backups will not work with the new password. '
+                                  'Auto backups will continue to work with the new password.',
+                                textAlign: TextAlign.center,
+                              ),
+                              actions: <Widget>[
+                                FlatButton(
+                                  onPressed: (){
+                                    Navigator.pop(context, false);
+                                  },
+                                    child: Text('Cancel')
+                                ),
+                                FlatButton(
+                                  onPressed: (){
+                                    Navigator.pop(context, true);
+                                  },
+                                  child: Text('Change')
+                                ),
+                              ],
+                            );
+                          }
+                        );
+                        
+                        if (_isChange != null && _isChange){
+
+                          var _isPinCorrect = await Navigator.push(context,CupertinoPageRoute(builder: (BuildContext context) => EnterPinCode(widget.currentPinLength, widget.currentPin)));
+
+                          if (_isPinCorrect != null && _isPinCorrect){
+                            
+                            var _isOK = await showDialog(
+                              context: context,
+                              builder: (BuildContext context){
+                                return AlertDialog(
+                                  title: Text('Change/Set master password',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  content: Form(
+                                    key: _formKey,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Text('Enter new password',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        SizedBox(
+                                          height: 20.0,
+                                        ),
+                                        TextFormField(
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Palette.lightGrey
+                                              )
+                                            )
+                                          ),
+                                          controller: _newPasswordController,
+                                          validator: (value){
+                                            String p = '[^ ]';
+                                            RegExp regExp = new RegExp(p);
+                                            if (regExp.hasMatch(value)) return null;
+                                            else return 'Please enter a new password';
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      onPressed: (){
+                                        Navigator.pop(context, false);
+                                      },
+                                        child: Text('Generate new')
+                                    ),
+                                    FlatButton(
+                                      onPressed: (){
+                                        if (_formKey.currentState.validate()){
+                                          Navigator.pop(context, true);
+                                        }
+                                      },
+                                      child: Text('OK')
+                                    ),
+                                  ],
+                                );
+                              }
+                            );
+
+                            if (_isOK != null && _isOK){
+
+                              await showDialog(
+                                context: context,
+                                builder: (BuildContext context){
+                                  return AlertDialog(
+                                    title: Text('Backup password',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    content: Text('Backup password has changed successfuly.',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        onPressed: (){
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text('OK')
+                                      ),
+                                    ],
+                                  );
+                                }
+                              );
+
+                            }
+                            
+                          }
+                        }
+
+                      },
                     ),
                     Container(
                       padding: EdgeInsets.only(
@@ -574,7 +751,96 @@ class SettingsState extends State<Settings>{
                         style: TextStyle(fontSize: 16.0),
                       ),
                       trailing: _cakeArrowImage,
-                      onTap: (){},
+                      onTap: () async {
+
+                        var _pushedButton = await showDialog(
+                          context: context,
+                          builder: (BuildContext context){
+                            return AlertDialog(
+                              title: Text('Backup',
+                                textAlign: TextAlign.center,
+                              ),
+                              content: Text('Did you save your backup password?',
+                                textAlign: TextAlign.center,
+                              ),
+                              actions: <Widget>[
+                                FlatButton(
+                                  onPressed: (){
+                                    Navigator.pop(context, 1);
+                                  },
+                                  child: Text('Yes')
+                                ),
+                                FlatButton(
+                                  onPressed: (){
+                                    Navigator.pop(context, 2);
+                                  },
+                                  child: Text('Show password')
+                                ),
+                                FlatButton(
+                                  onPressed: (){
+                                    Navigator.pop(context, 3);
+                                  },
+                                  child: Text('Cancel')
+                                ),
+                              ],
+                            );
+                          }
+                        );
+
+                        if (_pushedButton != null){
+
+                          switch(_pushedButton){
+                            case 1:
+                              await showDialog(
+                                context: context,
+                                builder: (BuildContext context){
+                                  Future.delayed(const Duration(milliseconds: 500), () {
+                                    Navigator.pop(context, true);
+                                  });
+                                  return AlertDialog(
+                                    title: Text('Creating backup',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    content: CupertinoActivityIndicator(animating: true)
+                                  );
+                                }
+                              );
+
+                              await showDialog(
+                                context: context,
+                                builder: (BuildContext context){
+                                  return AlertDialog(
+                                    title: Text('Backup uploaded',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    content: Text('Backup has uploaded to your Cloud',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        onPressed: (){
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text('OK')
+                                      )
+                                    ],
+                                  );
+                                }
+                              );
+
+                              break;
+
+                            case 2:
+                              var _isPinCorrect = await Navigator.push(context,CupertinoPageRoute(builder: (BuildContext context) => EnterPinCode(widget.currentPinLength, widget.currentPin)));
+
+                              if (_isPinCorrect != null && _isPinCorrect){
+                                _showBackupPasswordAlertDialog(context);
+                              }
+                          }
+
+                        }
+
+                      },
                     ),
                   ],
                 ),
@@ -671,9 +937,17 @@ class SettingsState extends State<Settings>{
                         left: 20.0,
                         right: 20.0
                       ),
-                      leading: _telegramImage,
-                      title: Text('Telegram',
-                        style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          _telegramImage,
+                          Container(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text('Telegram',
+                              style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
+                            ),
+                          )
+                        ],
                       ),
                       trailing: Text('support@cakewallet.io',
                         style: TextStyle(
@@ -697,9 +971,17 @@ class SettingsState extends State<Settings>{
                         left: 20.0,
                         right: 20.0
                       ),
-                      leading: _twitterImage,
-                      title: Text('Twitter',
-                        style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          _twitterImage,
+                          Container(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text('Twitter',
+                              style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
+                            ),
+                          )
+                        ],
                       ),
                       trailing: Text('support@cakewallet.io',
                         style: TextStyle(
@@ -723,9 +1005,17 @@ class SettingsState extends State<Settings>{
                         left: 20.0,
                         right: 20.0
                       ),
-                      leading: _changeNowImage,
-                      title: Text('ChangeNow',
-                        style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          _changeNowImage,
+                          Container(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text('ChangeNow',
+                              style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
+                            ),
+                          )
+                        ],
                       ),
                       trailing: Text('support@changenow.io',
                         style: TextStyle(
@@ -749,9 +1039,17 @@ class SettingsState extends State<Settings>{
                         left: 20.0,
                         right: 20.0
                       ),
-                      leading: _morphImage,
-                      title: Text('Morph',
-                        style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          _morphImage,
+                          Container(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text('Morph',
+                              style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
+                            ),
+                          )
+                        ],
                       ),
                       trailing: Text('contact@morphtoken.com',
                         style: TextStyle(
@@ -775,9 +1073,17 @@ class SettingsState extends State<Settings>{
                         left: 20.0,
                         right: 20.0
                       ),
-                      leading: _xmrBtcImage,
-                      title: Text('Xmr->BTC',
-                        style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          _xmrBtcImage,
+                          Container(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text('Xmr->BTC',
+                              style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
+                            ),
+                          )
+                        ],
                       ),
                       trailing: Text('support@xmr.to',
                         style: TextStyle(
@@ -805,7 +1111,9 @@ class SettingsState extends State<Settings>{
                         style: TextStyle(fontSize: 14.0),
                       ),
                       trailing: _cakeArrowImage,
-                      onTap: (){},
+                      onTap: (){
+                        Navigator.pushNamed(context, disclaimerRoute);
+                      },
                     ),
                     Container(
                       padding: EdgeInsets.only(
@@ -818,6 +1126,9 @@ class SettingsState extends State<Settings>{
                     ),
                   ],
                 ),
+              ),
+              SizedBox(
+                height: 20.0,
               )
             ],
           ),
