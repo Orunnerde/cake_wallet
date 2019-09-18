@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/src/screens/settings/enter_pin_code.dart';
+import 'package:share/share.dart';
 
 const List<String> balanceList = const <String>[
   'Full Balance',
@@ -178,7 +179,7 @@ class SettingsState extends State<Settings>{
       backgroundColor: Palette.lightGrey2,
       resizeToAvoidBottomPadding: false,
       appBar: CupertinoNavigationBar(
-        leading: Offstage(),
+        //leading: Offstage(),
         middle: Text('Settings',
           style: TextStyle(fontSize: 16.0),
         ),
@@ -878,7 +879,60 @@ class SettingsState extends State<Settings>{
                     style: TextStyle(fontSize: 16.0),
                   ),
                   trailing: _cakeArrowImage,
-                  onTap: (){},
+                  onTap: () async {
+
+                    var _pushedButton = await showDialog(
+                      context: context,
+                      builder: (BuildContext context){
+                        return AlertDialog(
+                          title: Text('Backup',
+                            textAlign: TextAlign.center,
+                          ),
+                          content: Text('Did you save your backup password?',
+                            textAlign: TextAlign.center,
+                          ),
+                          actions: <Widget>[
+                            FlatButton(
+                              onPressed: (){
+                                Navigator.pop(context, 1);
+                              },
+                              child: Text('Yes')
+                            ),
+                            FlatButton(
+                              onPressed: (){
+                                Navigator.pop(context, 2);
+                              },
+                              child: Text('Show password')
+                            ),
+                            FlatButton(
+                              onPressed: (){
+                                Navigator.pop(context, 3);
+                              },
+                              child: Text('Cancel')
+                            ),
+                          ],
+                        );
+                      }
+                    );
+
+                    if (_pushedButton != null){
+
+                      switch(_pushedButton){
+                        case 1:
+                          Share.share(' ');
+                          break;
+
+                        case 2:
+                          var _isPinCorrect = await Navigator.push(context,CupertinoPageRoute(builder: (BuildContext context) => EnterPinCode(widget.currentPinLength, widget.currentPin)));
+
+                          if (_isPinCorrect != null && _isPinCorrect){
+                            _showBackupPasswordAlertDialog(context);
+                          }
+                      }
+
+                    }
+
+                  },
                 ),
               ),
               SizedBox(
@@ -1111,8 +1165,38 @@ class SettingsState extends State<Settings>{
                         style: TextStyle(fontSize: 14.0),
                       ),
                       trailing: _cakeArrowImage,
-                      onTap: (){
-                        Navigator.pushNamed(context, disclaimerRoute);
+                      onTap: () async {
+
+                        var _isOK = await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Terms and conditions',
+                                textAlign: TextAlign.center,
+                              ),
+                              content: Text('Do you want to read legal disclaimer and terms of use?',
+                                textAlign: TextAlign.center,
+                              ),
+                              actions: <Widget>[
+                                FlatButton(
+                                  onPressed: (){
+                                    Navigator.pop(context, false);
+                                  },
+                                  child: Text('Cancel')
+                                ),
+                                FlatButton(
+                                  onPressed: (){
+                                    Navigator.pop(context, true);
+                                  },
+                                  child: Text('OK')
+                                ),
+                              ],
+                            );
+                          }
+                        );
+
+                        if (_isOK != null && _isOK) Navigator.pushNamed(context, disclaimerRoute);
+
                       },
                     ),
                     Container(

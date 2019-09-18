@@ -156,6 +156,25 @@ class EnterPinCodeState extends State<EnterPinCode>{
     );
   }
 
+  _showIncorrectPinDialog(BuildContext context) async {
+    await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text("PIN is incorrect"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        }
+    );
+  }
+
   void _push(int num) {
     if (_pinLength() >= pinLength) {
       return;
@@ -178,22 +197,7 @@ class EnterPinCodeState extends State<EnterPinCode>{
 
         Navigator.pop(context, false);
 
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                content: Text("PIN is incorrect"),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text("OK"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            }
-        );
+        _showIncorrectPinDialog(context);
 
       }
 
