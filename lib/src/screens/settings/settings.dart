@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
-import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/src/screens/settings/enter_pin_code.dart';
+import 'package:cake_wallet/src/screens/settings/change_language.dart';
+import 'package:cake_wallet/src/screens/disclaimer/disclaimer.dart';
 import 'package:share/share.dart';
 
 const List<String> balanceList = const <String>[
@@ -179,7 +180,7 @@ class SettingsState extends State<Settings>{
       backgroundColor: Palette.lightGrey2,
       resizeToAvoidBottomPadding: false,
       appBar: CupertinoNavigationBar(
-        //leading: Offstage(),
+        leading: Offstage(),
         middle: Text('Settings',
           style: TextStyle(fontSize: 16.0),
         ),
@@ -441,7 +442,9 @@ class SettingsState extends State<Settings>{
                         style: TextStyle(fontSize: 16.0),
                       ),
                       trailing: _cakeArrowImage,
-                      onTap: (){},
+                      onTap: (){
+                        Navigator.push(context, CupertinoPageRoute(builder: (BuildContext context) => ChangeLanguage()));
+                      },
                     ),
                     Container(
                       padding: EdgeInsets.only(
@@ -1165,38 +1168,8 @@ class SettingsState extends State<Settings>{
                         style: TextStyle(fontSize: 14.0),
                       ),
                       trailing: _cakeArrowImage,
-                      onTap: () async {
-
-                        var _isOK = await showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Terms and conditions',
-                                textAlign: TextAlign.center,
-                              ),
-                              content: Text('Do you want to read legal disclaimer and terms of use?',
-                                textAlign: TextAlign.center,
-                              ),
-                              actions: <Widget>[
-                                FlatButton(
-                                  onPressed: (){
-                                    Navigator.pop(context, false);
-                                  },
-                                  child: Text('Cancel')
-                                ),
-                                FlatButton(
-                                  onPressed: (){
-                                    Navigator.pop(context, true);
-                                  },
-                                  child: Text('OK')
-                                ),
-                              ],
-                            );
-                          }
-                        );
-
-                        if (_isOK != null && _isOK) Navigator.pushNamed(context, disclaimerRoute);
-
+                      onTap: () {
+                        Navigator.push(context, CupertinoPageRoute(builder: (BuildContext context) => Disclaimer(true)));
                       },
                     ),
                     Container(

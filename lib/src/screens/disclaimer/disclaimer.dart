@@ -7,16 +7,25 @@ import 'package:cake_wallet/palette.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Disclaimer extends StatefulWidget{
+  final bool isAccepted;
+
+  const Disclaimer(this.isAccepted);
+
   @override
-  createState() => _DisclaimerState();
+  createState() => DisclaimerState(isAccepted);
 }
 
-class _DisclaimerState extends State<Disclaimer>{
+class DisclaimerState extends State<Disclaimer>{
   static const url1 = 'https://xmr.to/app_static/html/tos.html';
   static const url2 = 'https://www.morphtoken.com/terms/';
 
+  static final backArrowImage = Image.asset('assets/images/back_arrow.png');
+
+  bool _isAccepted;
   bool _checked = false;
   String _fileText = '';
+
+  DisclaimerState(this._isAccepted);
 
   launchUrl(String url) async{
     await launch(url);
@@ -28,10 +37,39 @@ class _DisclaimerState extends State<Disclaimer>{
     });
   }
 
+  _showAlertDialog(BuildContext context) async {
+    await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Terms and conditions',
+              textAlign: TextAlign.center,
+            ),
+            content: Text('By using this app, you agree to the Terms of Agreement set forth to below',
+              textAlign: TextAlign.center,
+            ),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK')
+              ),
+            ],
+          );
+        }
+    );
+  }
+
+  _afterLayout(_) {
+    _showAlertDialog(context);
+  }
+
   @override
   void initState() {
     super.initState();
     getFileLines();
+    if (_isAccepted) WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
   }
 
   @override
@@ -39,6 +77,20 @@ class _DisclaimerState extends State<Disclaimer>{
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: _isAccepted ? CupertinoNavigationBar(
+        leading: ButtonTheme(
+          minWidth: double.minPositive,
+          child: FlatButton(
+              onPressed: (){Navigator.pop(context);},
+              child: backArrowImage
+          ),
+        ),
+        middle: Text('Terms and conditions',
+          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.white,
+        border: null,
+      ) : null,
       body: SafeArea(
         child: Column(
           children: <Widget>[
@@ -53,7 +105,7 @@ class _DisclaimerState extends State<Disclaimer>{
                       ),
                       child: Column(
                         children: <Widget>[
-                          Row(
+                          !_isAccepted? Row(
                             children: <Widget>[
                               Expanded(
                                 child: Text('Terms and conditions',
@@ -65,10 +117,10 @@ class _DisclaimerState extends State<Disclaimer>{
                                 ),
                               )
                             ],
-                          ),
-                          SizedBox(
+                          ) : Offstage(),
+                          !_isAccepted? SizedBox(
                             height: 20.0,
-                          ),
+                          ) : Offstage(),
                           Row(
                             children: <Widget>[
                               Expanded(
@@ -185,7 +237,7 @@ class _DisclaimerState extends State<Disclaimer>{
                   ],
                 )
             ),
-            Row(
+            !_isAccepted? Row(
               children: <Widget>[
                 Expanded(
                   child: Container(
@@ -229,8 +281,8 @@ class _DisclaimerState extends State<Disclaimer>{
                   ),
                 ),
               ],
-            ),
-            Container(
+            ) : Offstage(),
+            !_isAccepted? Container(
               padding: EdgeInsets.only(
                   left: 25.0,
                   right: 25.0,
@@ -240,7 +292,10 @@ class _DisclaimerState extends State<Disclaimer>{
                   onPressed: _checked ? (){} : null,
                   text: 'Accept'
               ),
-            ),
+            ) : Offstage(),
+            _isAccepted ? SizedBox(
+              height: 20.0,
+            ) : Offstage()
           ],
         ),
       )
