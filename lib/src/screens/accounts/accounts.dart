@@ -7,7 +7,7 @@ import 'package:cake_wallet/src/screens/accounts/add_account.dart';
 class Accounts extends StatefulWidget{
 
   final List<String> listAccounts;
-  final int currentAccount;
+  final String currentAccount;
 
   const Accounts(this.listAccounts, this.currentAccount);
 
@@ -22,7 +22,7 @@ class AccountsState extends State<Accounts>{
   final _editController = TextEditingController();
 
   List<String> _listAccounts;
-  int _currentAccount;
+  String _currentAccount;
   
   static final backArrowImage = Image.asset('assets/images/back_arrow.png');
 
@@ -32,6 +32,29 @@ class AccountsState extends State<Accounts>{
   void dispose() {
     _editController.dispose();
     super.dispose();
+  }
+
+  _showAccountExistsDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return AlertDialog(
+          title: Text('Account',
+            textAlign: TextAlign.center,
+          ),
+          content: Text('An account with the same name exists!',
+            textAlign: TextAlign.center,
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: (){
+                Navigator.pop(context);
+              },
+              child: Text('OK'))
+          ],
+        );
+      }
+    );
   }
 
   @override
@@ -74,9 +97,17 @@ class AccountsState extends State<Accounts>{
 
                       if (_listAccounts == null) _listAccounts = new List();
 
-                      setState(() {
-                        _listAccounts.add(_accountName);
-                      });
+                      if (_listAccounts.contains(_accountName)) {
+
+                        _showAccountExistsDialog(context);
+
+                      } else {
+
+                        setState(() {
+                          _listAccounts.add(_accountName);
+                        });
+
+                      }
 
                     }
 
@@ -103,7 +134,7 @@ class AccountsState extends State<Accounts>{
                 key: Key(_listAccounts[index]),
                 actionPane: SlidableDrawerActionPane(),
                 child: Container(
-                  color: _currentAccount == index? Palette.purple : Colors.white,
+                  color: _currentAccount == _listAccounts[index]? Palette.purple : Colors.white,
                   child: Column(
                     children: <Widget>[
                       ListTile(
@@ -111,9 +142,11 @@ class AccountsState extends State<Accounts>{
                           style: TextStyle(fontSize: 16.0),
                         ),
                         onTap: (){
-                          setState(() {
-                            _currentAccount = index;
-                          });
+                          if (_currentAccount != _listAccounts[index]){
+                            setState(() {
+                              _currentAccount = _listAccounts[index];
+                            });
+                          }
                         },
                       ),
                       Divider(
@@ -216,9 +249,20 @@ class AccountsState extends State<Accounts>{
                                 onPressed: (){
                                   if (_formKey.currentState.validate()){
                                     Navigator.pop(context);
-                                    setState(() {
-                                      _listAccounts[index] = _editController.text;
-                                    });
+
+                                    if (_listAccounts.contains(_editController.text)){
+
+                                      _showAccountExistsDialog(context);
+
+                                    } else {
+
+                                      setState(() {
+                                        if (_currentAccount == _listAccounts[index]) _currentAccount = _editController.text;
+                                        _listAccounts[index] = _editController.text;
+                                      });
+
+                                    }
+
                                   }
                                 },
                                   child: Text('OK')
