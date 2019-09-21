@@ -1,8 +1,8 @@
-enum WalletType { MONERO, NONE }
+enum WalletType { monero, none }
 
 String walletTypeToString(WalletType type) {
   switch (type) {
-    case WalletType.MONERO:
+    case WalletType.monero:
       return 'Monero';
     default:
       return '';

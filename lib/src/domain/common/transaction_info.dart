@@ -28,7 +28,7 @@ class TransactionInfo {
   TransactionInfo.fromMap(Map map) :
     id = map['hash'] ?? '',
     height = map['height'] ?? '',
-    direction = parseTransactionDirectionFromNumber(map['direction']) ?? TransactionDirection.INCOMING,
+    direction = parseTransactionDirectionFromNumber(map['direction']) ?? TransactionDirection.incoming,
     date = DateTime.fromMillisecondsSinceEpoch((int.parse(map['timestamp']) ?? 0) * 1000),
     _amount = map['amount'];
 

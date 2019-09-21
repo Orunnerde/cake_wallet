@@ -1,0 +1,1 @@
+enum FiatCurrency { usd, eur }

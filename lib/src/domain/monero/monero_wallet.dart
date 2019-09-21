@@ -68,7 +68,7 @@ class MoneroWallet extends Wallet {
         db: db,
         isRecovery: isRecovery,
         name: name,
-        type: WalletType.MONERO,
+        type: WalletType.monero,
         restoreHeight: restoreHeight);
     return await configured(isRecovery: isRecovery);
   }
@@ -199,7 +199,7 @@ class MoneroWallet extends Wallet {
     });
   }
 
-  WalletType getType() => WalletType.MONERO;
+  WalletType getType() => WalletType.monero;
 
   Future<String> getFilename() async {
     return getValue(key: 'getFilename');
@@ -380,7 +380,7 @@ class MoneroWallet extends Wallet {
     final db = await helper.getDb();
     final name = await getName();
     await Wallet.updateWalletData(
-        db: db, name: name, isRecovery: false, type: WalletType.MONERO);
+        db: db, name: name, isRecovery: false, type: WalletType.monero);
     isRecovery = true;
   }
 }

@@ -11,7 +11,7 @@ import 'package:cake_wallet/src/domain/monero/monero_wallet.dart';
 import 'package:cake_wallet/src/domain/common/wallet_description.dart';
 
 class MoneroWalletsManager extends WalletsManager {
-  static const type = WalletType.MONERO;
+  static const type = WalletType.monero;
   static const platform =
       const MethodChannel('com.cakewallet.wallet/monero-wallet-manager');
 

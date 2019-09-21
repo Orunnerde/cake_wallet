@@ -9,7 +9,7 @@ class UserService {
   UserService({this.sharedPreferences, this.secureStorage});
 
   Future<void> setPassword(String password) async {
-    final key = generateStoreKeyFor(key: SecretStoreKey.PIN_CODE_PASSWORD);
+    final key = generateStoreKeyFor(key: SecretStoreKey.pinCodePassword);
     try {
       await secureStorage.write(key: key, value: password);
     } catch (e) {
@@ -18,7 +18,7 @@ class UserService {
   }
 
   Future<bool> canAuthenticate() async {
-    final key = generateStoreKeyFor(key: SecretStoreKey.PIN_CODE_PASSWORD);
+    final key = generateStoreKeyFor(key: SecretStoreKey.pinCodePassword);
     final sharedPreferences = await SharedPreferences.getInstance();
     final walletName = sharedPreferences.getString("current_wallet_name") ?? "";
     var password = '';
@@ -33,7 +33,7 @@ class UserService {
   }
 
   Future<bool> authenticate(String pin) async {
-    final key = generateStoreKeyFor(key: SecretStoreKey.PIN_CODE_PASSWORD);
+    final key = generateStoreKeyFor(key: SecretStoreKey.pinCodePassword);
     final original = await secureStorage.read(key: key);
 
     return original == pin;

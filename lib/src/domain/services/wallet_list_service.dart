@@ -40,13 +40,13 @@ class DbHelper {
       _db = await openDatabase(path, version: 1,
           onCreate: (Database db, int version) async {
         await db.execute(
-            'CREATE TABLE Wallets (id TEXT PRIMARY KEY, name TEXT, is_recovery NUMERIC, restore_height INTEGER);' +
-                'CREATE TABLE ${NodeList.tableName}' +
-                '(${NodeList.tableName} INTEGER PRIMARY KEY,' +
-                '${NodeList.uriColumn} TEXT PRIMARY KEY,' +
-                '${NodeList.loginColumn} TEXT,' +
-                '${NodeList.passwordColumn} TEXT,' +
-                '${NodeList.isDefault} NUMERIC);');
+            'CREATE TABLE Wallets (id TEXT PRIMARY KEY, name TEXT, is_recovery NUMERIC, restore_height INTEGER)');
+        await db.execute('CREATE TABLE ${NodeList.tableName}' +
+            '(${NodeList.idColumn} INTEGER PRIMARY KEY,' +
+            '${NodeList.uriColumn} TEXT KEY,' +
+            '${NodeList.loginColumn} TEXT,' +
+            '${NodeList.passwordColumn} TEXT,' +
+            '${NodeList.isDefault} NUMERIC);');
       });
     }
     return _db;
@@ -82,7 +82,7 @@ class WalletListService {
     List<Map> result = await db.query('wallets', columns: ['name']);
     List<WalletDescription> wallets = result
         .map((res) =>
-            WalletDescription(name: res['name'], type: WalletType.MONERO))
+            WalletDescription(name: res['name'], type: WalletType.monero))
         .toList();
 
     return wallets;
@@ -99,7 +99,7 @@ class WalletListService {
 
     final password = Uuid().v4();
     final key = generateStoreKeyFor(
-        key: SecretStoreKey.MONERO_WALLET_PASSWORD, walletName: name);
+        key: SecretStoreKey.moneroWalletPassword, walletName: name);
     await secureStorage.write(key: key, value: password);
 
     final wallet = await walletsManager.create(name, password);
@@ -119,7 +119,7 @@ class WalletListService {
 
     final password = Uuid().v4();
     final key = generateStoreKeyFor(
-        key: SecretStoreKey.MONERO_WALLET_PASSWORD, walletName: name);
+        key: SecretStoreKey.moneroWalletPassword, walletName: name);
     await secureStorage.write(key: key, value: password);
 
     final wallet = await walletsManager.restoreFromSeed(
@@ -140,7 +140,7 @@ class WalletListService {
 
     final password = Uuid().v4();
     final key = generateStoreKeyFor(
-        key: SecretStoreKey.MONERO_WALLET_PASSWORD, walletName: name);
+        key: SecretStoreKey.moneroWalletPassword, walletName: name);
     await secureStorage.write(key: key, value: password);
 
     final wallet = await walletsManager.restoreFromKeys(
@@ -155,7 +155,7 @@ class WalletListService {
     }
 
     final key = generateStoreKeyFor(
-        key: SecretStoreKey.MONERO_WALLET_PASSWORD, walletName: name);
+        key: SecretStoreKey.moneroWalletPassword, walletName: name);
     final password = await secureStorage.read(key: key);
     final wallet = await walletsManager.openWallet(name, password);
 
@@ -164,12 +164,12 @@ class WalletListService {
 
   Future<void> changeWalletManger({WalletType walletType}) async {
     switch (walletType) {
-      case WalletType.MONERO:
+      case WalletType.monero:
         final dbHelper = await DbHelper.getInstance();
         final db = await dbHelper.getDb();
         walletsManager = MoneroWalletsManager(db: db);
         break;
-      case WalletType.NONE:
+      case WalletType.none:
         walletsManager = null;
         break;
     }

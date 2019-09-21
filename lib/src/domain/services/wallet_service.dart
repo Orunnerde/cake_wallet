@@ -37,7 +37,7 @@ class WalletService extends Wallet {
 
   WalletService() {
     _currentWallet = null;
-    walletType = WalletType.NONE;
+    walletType = WalletType.none;
     _syncStatus = BehaviorSubject<SyncStatus>();
     _onBalanceChange = BehaviorSubject<Wallet>();
     _onWalletChanged = BehaviorSubject<Wallet>();
@@ -45,7 +45,7 @@ class WalletService extends Wallet {
 
   WalletDescription description;
 
-  WalletType getType() => WalletType.MONERO;
+  WalletType getType() => WalletType.monero;
 
   Future<String> getFilename() => _currentWallet.getFilename();
 

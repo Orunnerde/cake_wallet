@@ -1,0 +1,1 @@
+enum CryptoCurrency { xmr }
