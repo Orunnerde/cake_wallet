@@ -12,8 +12,9 @@ import 'package:cake_wallet/src/domain/common/node_list.dart';
 import 'package:cake_wallet/src/domain/services/user_service.dart';
 import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
+import 'package:cake_wallet/src/domain/services/address_book_service.dart';
 
-// MARK: Import stores 
+// MARK: Import stores
 
 import 'package:cake_wallet/src/stores/authentication/authentication_store.dart';
 import 'package:cake_wallet/src/stores/login/login_store.dart';
@@ -32,8 +33,9 @@ import 'package:cake_wallet/src/stores/wallet_list/wallet_list_store.dart';
 import 'package:cake_wallet/src/stores/wallet_restoration/wallet_restoration_store.dart';
 import 'package:cake_wallet/src/stores/wallet_seed/wallet_seed_store.dart';
 import 'package:cake_wallet/src/stores/account_list/account_list_store.dart';
+import 'package:cake_wallet/src/stores/address_book/address_book_store.dart';
 
-// MARK: Import screens 
+// MARK: Import screens
 
 import 'package:cake_wallet/src/screens/auth/auth_page.dart';
 import 'package:cake_wallet/src/screens/dashboard/dashboard_page.dart';
@@ -58,7 +60,8 @@ import 'package:cake_wallet/src/screens/seed_alert/seed_alert.dart';
 import 'package:cake_wallet/src/screens/transaction_details/transaction_details_page.dart';
 import 'package:cake_wallet/src/screens/accounts/account_page.dart';
 import 'package:cake_wallet/src/screens/accounts/account_list_page.dart';
-
+import 'package:cake_wallet/src/screens/address_book/address_book_page.dart';
+import 'package:cake_wallet/src/screens/address_book/contact_page.dart';
 
 class Router {
   static Route<dynamic> generateRoute(
@@ -299,6 +302,26 @@ class Router {
           return Provider(
               builder: (_) => AccountListStore(walletService: walletService),
               child: AccountPage());
+        });
+
+      case Routes.addressBook:
+        return MaterialPageRoute(builder: (context) {
+          return Provider(
+              builder: (_) => AccountListStore(walletService: walletService),
+              child: Provider(
+                  builder: (_) => AddressBookStore(
+                      addressBookService: AddressBookService(db: db)),
+                  child: AddressBookPage()));
+        });
+
+      case Routes.addressBookAddContact:
+        return CupertinoPageRoute(builder: (context) {
+          return Provider(
+              builder: (_) => AccountListStore(walletService: walletService),
+              child: Provider(
+                  builder: (_) => AddressBookStore(
+                      addressBookService: AddressBookService(db: db)),
+                  child: ContactPage()));
         });
 
       default:

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cake_wallet/src/domain/common/contact.dart';
 import 'package:cake_wallet/src/domain/common/node_list.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
@@ -47,6 +48,10 @@ class DbHelper {
             '${NodeList.loginColumn} TEXT,' +
             '${NodeList.passwordColumn} TEXT,' +
             '${NodeList.isDefault} NUMERIC);');
+        await db.execute('CREATE TABLE ${Contact.tableName}' +
+            '(${Contact.primaryKey} INTEGER PRIMARY KEY,' +
+            '${Contact.nameColumn} TEXT,' +
+            '${Contact.typeColumn} NUMERIC);');
       });
     }
     return _db;

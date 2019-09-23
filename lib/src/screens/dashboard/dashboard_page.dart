@@ -87,7 +87,9 @@ class DashboardPage extends BasePage {
                 CupertinoActionSheetAction(
                     child: const Text('Show keys'), onPressed: () => null),
                 CupertinoActionSheetAction(
-                    child: const Text('Address book'), onPressed: () => null),
+                    child: const Text('Address book'),
+                    onPressed: () => Navigator.of(context)
+                        .popAndPushNamed(Routes.addressBook)),
               ],
               cancelButton: CupertinoActionSheetAction(
                   child: const Text('Cancel'),
