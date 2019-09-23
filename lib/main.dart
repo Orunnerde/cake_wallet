@@ -1,4 +1,7 @@
+import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
+import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
 import 'package:cake_wallet/src/domain/common/node_list.dart';
+import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
 
 import 'package:cake_wallet/src/domain/common/wallet_type.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
@@ -6,7 +9,6 @@ import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/screens/root/root.dart';
 
 import 'package:cake_wallet/src/stores/authentication/authentication_store.dart';
-
 
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 
@@ -46,15 +48,17 @@ void main() async {
 
   final nodeList = NodeList(db: db);
   final settingsStore = await SettingsStoreBase.load(
-      nodeList: nodeList, sharedPreferences: sharedPreferences);
+      nodeList: nodeList,
+      sharedPreferences: sharedPreferences,
+      initialFiatCurrency: FiatCurrency.usd,
+      initialTransactionPriority: TransactionPriority.slow,
+      initialBalanceDisplayMode: BalanceDisplayMode.availableBalance);
 
-  reaction(
-      (_) => settingsStore.node,
-      (node) async {
-        print('Connection on node change');
-        await walletService.connectToNode(
-          uri: node.uri, login: node.login, password: node.password);
-          });
+  reaction((_) => settingsStore.node, (node) async {
+    print('Connection on node change');
+    await walletService.connectToNode(
+        uri: node.uri, login: node.login, password: node.password);
+  });
 
   // final _node = Node(uri: 'node.moneroworld.com:18089');
   // final node = await nodeList.add(node: _node);

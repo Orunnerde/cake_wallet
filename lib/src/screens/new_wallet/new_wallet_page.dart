@@ -31,33 +31,36 @@ class NewWalletPage extends BasePage {
 
   @override
   Widget body(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
-      },
-      child: Column(
-        children: <Widget>[
-          Spacer(
-            flex: 1,
-          ),
-          AspectRatio(
-            aspectRatio: _aspectRatioImage,
-            child: Container(
-              width: double.infinity,
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: _image,
+    return Container(
+      padding: EdgeInsets.all(20),
+      child: GestureDetector(
+        onTap: () {
+          SystemChannels.textInput.invokeMethod('TextInput.hide');
+        },
+        child: Column(
+          children: <Widget>[
+            Spacer(
+              flex: 1,
+            ),
+            AspectRatio(
+              aspectRatio: _aspectRatioImage,
+              child: Container(
+                width: double.infinity,
+                child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: _image,
+                ),
               ),
             ),
-          ),
-          Spacer(
-            flex: 1,
-          ),
-          Flexible(
-            flex: 8,
-            child: WalletNameForm(),
-          )
-        ],
+            Spacer(
+              flex: 1,
+            ),
+            Flexible(
+              flex: 8,
+              child: WalletNameForm(),
+            )
+          ],
+        ),
       ),
     );
   }

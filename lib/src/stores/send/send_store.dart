@@ -2,21 +2,21 @@ import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
-import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
 import 'package:cake_wallet/src/domain/common/pending_transaction.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
 import 'package:cake_wallet/src/domain/common/fetch_price.dart';
 import 'package:cake_wallet/src/domain/monero/monero_transaction_creation_credentials.dart';
 import 'package:cake_wallet/src/stores/send/sending_state.dart';
+import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 
 part 'send_store.g.dart';
 
 class SendStore = SendStoreBase with _$SendStore;
 
 abstract class SendStoreBase with Store {
-  TransactionPriority priority = TransactionPriority.DEFAULT;
   WalletService walletService;
+  SettingsStore settingsStore;
 
   @observable
   SendingState state;
@@ -32,7 +32,7 @@ abstract class SendStoreBase with Store {
   NumberFormat _cryptoNumberFormat;
   NumberFormat _fiatNumberFormat;
 
-  SendStoreBase({@required this.walletService}) {
+  SendStoreBase({@required this.walletService, @required this.settingsStore}) {
     state = SendingStateInitial();
     _pendingTransaction = null;
     _cryptoNumberFormat = NumberFormat()..maximumFractionDigits = 12;
@@ -62,12 +62,13 @@ abstract class SendStoreBase with Store {
     state = CreatingTransaction();
 
     try {
-      final amount = cryptoAmount == 'ALL' ? null : cryptoAmount.replaceAll(',', '.');
+      final amount =
+          cryptoAmount == 'ALL' ? null : cryptoAmount.replaceAll(',', '.');
       final credentials = MoneroTransactionCreationCredentials(
           address: address,
           paymentId: paymentId,
           amount: amount,
-          priority: TransactionPriority.DEFAULT);
+          priority: settingsStore.transactionPriority);
 
       _pendingTransaction = await walletService.createTransaction(credentials);
       state = TransactionCreatedSuccessfully();

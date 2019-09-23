@@ -9,7 +9,7 @@ const coinMarketCapPath = '/v2/ticker/';
 var _cachedPrices = {};
 
 Future<double> fetchPriceFor({CryptoCurrency crypto, FiatCurrency fiat}) async {
-  final fiatStringified = fiatToString(fiat);
+  final fiatStringified = fiat.toString();
 
   if (_cachedPrices[fiatStringified] != null) {
     return _cachedPrices[fiatStringified];

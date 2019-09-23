@@ -150,7 +150,10 @@ class NodeListPage extends BasePage {
                   final node = nodeList.nodes[index];
 
                   return Observer(builder: (_) {
-                    final isCurrent = node.id == settings.node.id;
+                    final isCurrent = settings.node == null
+                        ? false
+                        : node.id == settings.node.id;
+
                     final content = Container(
                         color: isCurrent ? Palette.purple : Colors.white,
                         child: ListTile(
@@ -162,9 +165,8 @@ class NodeListPage extends BasePage {
                             width: 10.0,
                             height: 10.0,
                             decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              // color: _nodes.values.elementAt(index) ? Palette.green : Palette.red
-                            ),
+                                shape: BoxShape.circle,
+                                color: isCurrent ? Palette.green : Palette.red),
                           ),
                           onTap: () async {
                             if (!isCurrent) {
@@ -184,8 +186,8 @@ class NodeListPage extends BasePage {
                                             child: const Text('Cancel')),
                                         FlatButton(
                                             onPressed: () async {
-                                              Navigator.pop(context);
-                                              await settings.setCurrent(
+                                              Navigator.of(context).pop();
+                                              await settings.setCurrentNode(
                                                   node: node);
                                             },
                                             child: const Text('Change')),

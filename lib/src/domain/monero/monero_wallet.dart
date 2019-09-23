@@ -368,8 +368,8 @@ class MoneroWallet extends Wallet {
       'address': _credentials.address,
       'paymentId': _credentials.paymentId,
       'amount': _credentials.amount,
-      'priority': _credentials.priority.index,
-      'accountIndex': 0
+      'priority': _credentials.priority.serialize(),
+      'accountIndex': _account.value.id
     };
 
     final Map transaction =

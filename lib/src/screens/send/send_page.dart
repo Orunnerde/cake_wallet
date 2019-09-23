@@ -5,8 +5,8 @@ import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:cake_wallet/palette.dart';
-import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
+import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/src/stores/balance/balance_store.dart';
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/src/stores/send/send_store.dart';
@@ -36,6 +36,7 @@ class SendFormState extends State<SendForm> {
 
   @override
   Widget build(BuildContext context) {
+    final settingsStore = Provider.of<SettingsStore>(context);
     final sendStore = Provider.of<SendStore>(context);
     final balanceStore = Provider.of<BalanceStore>(context);
     final walletStore = Provider.of<WalletStore>(context);
@@ -226,7 +227,8 @@ class SendFormState extends State<SendForm> {
                           decoration: InputDecoration(
                               prefixIcon: Padding(
                                 padding: EdgeInsets.only(top: 12),
-                                child: Text('USD:',
+                                child: Text(
+                                    '${settingsStore.transactionPriority.toString()}:',
                                     style: TextStyle(
                                         fontSize: 16,
                                         color: Color.fromRGBO(34, 40, 74, 1))),
@@ -262,7 +264,7 @@ class SendFormState extends State<SendForm> {
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                          'Currently the fee is set at ${priorityToString(sendStore.priority)} priority.\nTransaction priority can be adjusted in the settings',
+                          'Currently the fee is set at ${settingsStore.transactionPriority.toString()} priority.\nTransaction priority can be adjusted in the settings',
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,

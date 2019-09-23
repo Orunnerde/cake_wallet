@@ -1,3 +1,5 @@
+import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
+import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -114,6 +116,7 @@ class DashboardPage extends BasePage {
     final balanceStore = Provider.of<BalanceStore>(context);
     final transactionListStore = Provider.of<TransactionListStore>(context);
     final syncStore = Provider.of<SyncStore>(context);
+    final settingsStore = Provider.of<SettingsStore>(context);
 
     return NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -144,19 +147,71 @@ class DashboardPage extends BasePage {
                         padding: EdgeInsets.only(top: 54),
                         child: Column(
                           children: <Widget>[
-                            Text('XMR Full Balance',
-                                style: TextStyle(
-                                    color: Color.fromRGBO(138, 80, 255, 1),
-                                    fontSize: 16)),
-                            Observer(
-                                builder: (_) => Text(balanceStore.fullBalance,
-                                    style: TextStyle(
-                                        color: Colors.black87, fontSize: 42))),
+                            Observer(builder: (_) {
+                              final displayMode =
+                                  settingsStore.balanceDisplayMode;
+                              var title = 'XMR Hidden';
+
+                              if (displayMode.serialize() ==
+                                  BalanceDisplayMode.availableBalance
+                                      .serialize()) {
+                                title = 'XMR Available Balance';
+                              }
+
+                              if (displayMode.serialize() ==
+                                  BalanceDisplayMode.fullBalance.serialize()) {
+                                title = 'XMR Full Balance';
+                              }
+
+                              return Text(title,
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(138, 80, 255, 1),
+                                      fontSize: 16));
+                            }),
+                            Observer(builder: (_) {
+                              final displayMode =
+                                  settingsStore.balanceDisplayMode;
+                              var balance = '---';
+
+                              if (displayMode.serialize() ==
+                                  BalanceDisplayMode.availableBalance
+                                      .serialize()) {
+                                balance = balanceStore.unlockedBalance;
+                              }
+
+                              if (displayMode.serialize() ==
+                                  BalanceDisplayMode.fullBalance.serialize()) {
+                                balance = balanceStore.fullBalance;
+                              }
+
+                              return Text(balance,
+                                  style: TextStyle(
+                                      color: Colors.black87, fontSize: 42));
+                            }),
                             Padding(
                               padding: EdgeInsets.only(top: 7),
                               child: Observer(builder: (_) {
-                                return Text(
-                                    '${balanceStore.fiatFullBalance} USD',
+                                final displayMode =
+                                    settingsStore.balanceDisplayMode;
+                                final symbol =
+                                    settingsStore.fiatCurrency.toString();
+                                var balance = '---';
+
+                                if (displayMode.serialize() ==
+                                    BalanceDisplayMode.availableBalance
+                                        .serialize()) {
+                                  balance =
+                                      '${balanceStore.fiatUnlockedBalance} $symbol';
+                                }
+
+                                if (displayMode.serialize() ==
+                                    BalanceDisplayMode.fullBalance
+                                        .serialize()) {
+                                  balance =
+                                      '${balanceStore.fiatFullBalance} $symbol';
+                                }
+
+                                return Text(balance,
                                     style: TextStyle(
                                         color: Color.fromRGBO(155, 172, 197, 1),
                                         fontSize: 16));

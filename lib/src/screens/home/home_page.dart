@@ -15,6 +15,7 @@ import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/src/stores/node_list/node_list_store.dart';
 import 'package:cake_wallet/src/screens/dashboard/dashboard_page.dart';
 import 'package:cake_wallet/src/screens/nodes/nodes_list_page.dart';
+import 'package:cake_wallet/src/screens/settings/settings.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -86,7 +87,7 @@ class HomePage extends StatelessWidget {
                     settings),
                 builder: (context) => Provider(
                     builder: (_) => NodeListStore(nodeList: NodeList(db: db)),
-                    child: NodeListPage()));
+                    child: Settings('', 4, []))); //NodeListPage()
         }
 
         return null;

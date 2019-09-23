@@ -183,7 +183,7 @@ class Router {
                       builder: (_) =>
                           WalletStore(walletService: walletService)),
                   Provider(
-                      builder: (_) => SendStore(walletService: walletService))
+                      builder: (_) => SendStore(walletService: walletService)),
                 ], child: SendPage()));
 
       case Routes.receive:
