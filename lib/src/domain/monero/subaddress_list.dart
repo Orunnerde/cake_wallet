@@ -17,12 +17,12 @@ class SubaddressList {
     _subaddress = BehaviorSubject<List<Subaddress>>();
   }
 
-  Future<void> update() async {
+  Future update({int accountIndex}) async {
     if (_isUpdating) { return; }
     
     try {
       _isUpdating = true;
-      await refresh(accountIndex: 0);
+      await refresh(accountIndex: accountIndex);
       final transactions = await getAll();
       _subaddress.add(transactions);
       _isUpdating = false;
@@ -42,18 +42,18 @@ class SubaddressList {
     }
   }
 
-  Future<void> addSubaddress({int accountIndex, String label}) async {
+  Future addSubaddress({int accountIndex, String label}) async {
     try {
       final arguments = {'accountIndex': accountIndex, 'label': label};
       await _platform.invokeMethod('addSubaddress', arguments);
-      update();
+      update(accountIndex: accountIndex);
     } on PlatformException catch (e) {
       print(e);
       throw e;
     }
   }
 
-  Future<void> setLabelSubaddress(
+  Future setLabelSubaddress(
       {int accountIndex, int addressIndex, String label}) async {
     try {
       final arguments = {
@@ -69,7 +69,7 @@ class SubaddressList {
     }
   }
 
-  Future<void> refresh({int accountIndex}) async {
+  Future refresh({int accountIndex}) async {
     if (_isRefreshing) { return; }
 
     try {

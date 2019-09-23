@@ -6,6 +6,7 @@ import 'package:cake_wallet/src/domain/monero/monero_wallet.dart';
 import 'package:cake_wallet/src/domain/monero/subaddress.dart';
 import 'package:cake_wallet/src/domain/monero/subaddress_list.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
+import 'package:cake_wallet/src/domain/monero/account.dart';
 
 part 'subaddress_list_store.g.dart';
 
@@ -18,6 +19,8 @@ abstract class SubaddressListStoreBase with Store {
   SubaddressList _subaddressList;
   StreamSubscription<Wallet> _onWalletChangeSubscription;
   StreamSubscription<List<Subaddress>> _onSubaddressesChangeSubscription;
+  StreamSubscription<Account> _onAccountChangeSubscription;
+  Account _account;
 
   SubaddressListStoreBase({@required WalletService walletService}) {
     subaddresses = [];
@@ -36,12 +39,16 @@ abstract class SubaddressListStoreBase with Store {
       _onSubaddressesChangeSubscription.cancel();
     }
 
+    if (_onAccountChangeSubscription != null) {
+      _onAccountChangeSubscription.cancel();
+    }
+
     _onWalletChangeSubscription.cancel();
     super.dispose();
   }
 
-  Future _updateSubaddressList() async {
-    await _subaddressList.refresh(accountIndex: 0);
+  Future _updateSubaddressList({int accountIndex}) async {
+    await _subaddressList.refresh(accountIndex: accountIndex);
     subaddresses = await _subaddressList.getAll();
   }
 
@@ -51,10 +58,16 @@ abstract class SubaddressListStoreBase with Store {
     }
 
     if (wallet is MoneroWallet) {
+      _account = wallet.account.value;
       _subaddressList = wallet.getSubaddress();
       _onSubaddressesChangeSubscription = _subaddressList.subaddresses
           .listen((subaddress) => subaddresses = subaddress);
-      await _updateSubaddressList();
+      await _updateSubaddressList(accountIndex: _account.id);
+
+      _onAccountChangeSubscription = wallet.account.listen((account) async {
+        _account = account;
+        await _updateSubaddressList(accountIndex: account.id);
+      });
 
       return;
     }

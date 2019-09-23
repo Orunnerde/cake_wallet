@@ -135,6 +135,11 @@ public class Wallet {
         return new Subaddress(id);
     }
 
+    public Account account() {
+        long id = accountJNI();
+        return new Account(id);
+    }
+
     public void moneySpent(String txId, long amount) {
         if (walletListener != null) {
             walletListener.moneySpent(txId, amount);
@@ -198,6 +203,8 @@ public class Wallet {
     private native long transactionHistoryJNI();
 
     private native long subaddressJNI();
+
+    private native long accountJNI();
 
     private native void setRefreshFromBlockHeightJNI(long height);
 

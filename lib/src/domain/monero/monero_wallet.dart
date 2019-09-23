@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:cake_wallet/src/domain/monero/subaddress.dart';
+import 'package:cake_wallet/src/domain/monero/account.dart';
+import 'package:cake_wallet/src/domain/monero/account_list.dart';
 import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:cake_wallet/src/domain/common/wallet.dart';
@@ -109,8 +109,14 @@ class MoneroWallet extends Wallet {
 
   get syncStatus => _syncStatus.stream;
   get onBalanceChange => _onBalanceChange.stream;
+  get account => _account.stream;
+
+  set account(Account account) => _account.add(account);
+
   bool isRecovery;
   Function(int height) onHeightChange;
+
+  BehaviorSubject<Account> _account;
 
   BehaviorSubject<Wallet> _onBalanceChange;
   BehaviorSubject<SyncStatus> _syncStatus;
@@ -121,6 +127,7 @@ class MoneroWallet extends Wallet {
 
   TransactionHistory _cachedTransactionHistory;
   SubaddressList _cachedSubaddressList;
+  AccountList _cachedAccountList;
 
   MoneroWallet({this.isRecovery = false}) {
     _cachedBlockchainHeight = 0;
@@ -130,11 +137,10 @@ class MoneroWallet extends Wallet {
 
     _syncStatus = BehaviorSubject<SyncStatus>();
     _onBalanceChange = BehaviorSubject<Wallet>();
+    _account = BehaviorSubject<Account>()..add(Account(id: 0));
 
     walletHeightChannel.setMessageHandler((h) async {
       final height = h.getUint64(0);
-
-      print('height $height');
 
       if (onHeightChange != null) {
         onHeightChange(height);
@@ -152,13 +158,12 @@ class MoneroWallet extends Wallet {
     });
 
     balanceChangeChannel.setMessageHandler((_) async {
-      print('Balance changed');
       _onBalanceChange.add(this);
 
       getHistory()
           .update()
           .then((_) => print('ask to update transaction history'));
-          
+
       return '';
     });
 
@@ -197,6 +202,10 @@ class MoneroWallet extends Wallet {
 
       return platformBinaryEmptyResponse;
     });
+
+    getAccountList()
+      ..refresh()
+      ..getAll().then((account) => this.account.add(account[0]));
   }
 
   WalletType getType() => WalletType.monero;
@@ -239,7 +248,7 @@ class MoneroWallet extends Wallet {
     return getValue(key: 'getNodeHeight');
   }
 
-  Future<void> close() async {
+  Future close() async {
     try {
       await platform.invokeMethod('close');
     } on PlatformException catch (e) {
@@ -248,7 +257,7 @@ class MoneroWallet extends Wallet {
     }
   }
 
-  Future<void> connectToNode(
+  Future connectToNode(
       {String uri,
       String login,
       String password,
@@ -275,7 +284,7 @@ class MoneroWallet extends Wallet {
     }
   }
 
-  Future<void> startSync() async {
+  Future startSync() async {
     try {
       _syncStatus.value = StartingSyncStatus();
       await platform.invokeMethod('startSync');
@@ -308,7 +317,15 @@ class MoneroWallet extends Wallet {
     return _cachedSubaddressList;
   }
 
-  Future<void> askForSave() async {
+  AccountList getAccountList() {
+    if (_cachedAccountList == null) {
+      _cachedAccountList = AccountList(platform: platform);
+    }
+
+    return _cachedAccountList;
+  }
+
+  Future askForSave() async {
     final diff = DateTime.now().millisecondsSinceEpoch - _lastSaveTime;
 
     if (_lastSaveTime != 0 && diff < 120000) {
@@ -318,7 +335,11 @@ class MoneroWallet extends Wallet {
     await store();
   }
 
-  Future<void> store() async {
+  Future store() async {
+    if (_isSaving) {
+      return;
+    }
+
     try {
       _isSaving = true;
       await platform.invokeMethod('store');
@@ -356,7 +377,7 @@ class MoneroWallet extends Wallet {
     return PendingTransaction.fromMap(transaction, platform);
   }
 
-  Future<void> setRecoveringFromSeed() async {
+  Future setRecoveringFromSeed() async {
     try {
       await platform
           .invokeMethod('setRecoveringFromSeed', const {'isRecovering': true});
@@ -366,7 +387,7 @@ class MoneroWallet extends Wallet {
     }
   }
 
-  Future<void> setRefreshFromBlockHeight({int height}) async {
+  Future setRefreshFromBlockHeight({int height}) async {
     try {
       await platform.invokeMethod('setRecoveringFromSeed', {'height': height});
     } on PlatformException catch (e) {
@@ -375,7 +396,7 @@ class MoneroWallet extends Wallet {
     }
   }
 
-  Future<void> setAsRecovered() async {
+  Future setAsRecovered() async {
     final helper = await DbHelper.getInstance();
     final db = await helper.getDb();
     final name = await getName();

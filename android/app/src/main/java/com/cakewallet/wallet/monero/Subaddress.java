@@ -14,10 +14,6 @@ public class Subaddress {
         return Arrays.asList(getAllJNI());
     }
 
-    public TransactionInfo getByIndex(int index) {
-        return new TransactionInfo();
-    }
-
     public void refresh(int accountIndex) {
         refreshJNI(accountIndex);
     }

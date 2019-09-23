@@ -10,7 +10,7 @@ String formatAmount(String originAmount) {
       break;
     }
   }
-  
+
   if (lastIndex < 3) {
     lastIndex = 3;
   }
@@ -23,16 +23,21 @@ class TransactionInfo {
   final String height;
   final TransactionDirection direction;
   final DateTime date;
+  final int accountIndex;
   final String _amount;
 
-  TransactionInfo.fromMap(Map map) :
-    id = map['hash'] ?? '',
-    height = map['height'] ?? '',
-    direction = parseTransactionDirectionFromNumber(map['direction']) ?? TransactionDirection.incoming,
-    date = DateTime.fromMillisecondsSinceEpoch((int.parse(map['timestamp']) ?? 0) * 1000),
-    _amount = map['amount'];
+  TransactionInfo.fromMap(Map map)
+      : id = map['hash'] ?? '',
+        height = map['height'] ?? '',
+        direction = parseTransactionDirectionFromNumber(map['direction']) ??
+            TransactionDirection.incoming,
+        date = DateTime.fromMillisecondsSinceEpoch(
+            (int.parse(map['timestamp']) ?? 0) * 1000),
+        _amount = map['amount'],
+        accountIndex = int.parse(map['accountIndex']);
 
-  TransactionInfo(this.id, this.height, this.direction, this.date, this._amount);
+  TransactionInfo(this.id, this.height, this.direction, this.date, this._amount,
+      this.accountIndex);
 
   String amount() {
     return '${formatAmount(_amount)} XMR';

@@ -25,4 +25,6 @@ class Routes {
   static const home = '/home';
   static const login = '/login';
   static const splash = '/splash';
+  static const accountList = '/account_list';
+  static const accountCreation = '/account_new';
 }

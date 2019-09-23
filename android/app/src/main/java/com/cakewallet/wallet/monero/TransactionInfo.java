@@ -10,6 +10,7 @@ public class TransactionInfo {
     public long timestamp;
     public String paymentId;
     public String hash;
+    public int accountIndex;
 
     public String formattedAmount() {
         return Wallet.displayAmount(amount);

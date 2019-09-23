@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.cakewallet.wallet.monero.Account;
+import com.cakewallet.wallet.monero.AccountRow;
 import com.cakewallet.wallet.monero.PendingTransaction;
 import com.cakewallet.wallet.monero.Subaddress;
 import com.cakewallet.wallet.monero.SubaddressRow;
@@ -31,6 +33,7 @@ public class MoneroWalletHandler implements WalletListener {
     private static Wallet currentWallet;
     private static TransactionHistory currentTransactionHistory;
     private static Subaddress currentSubaddress;
+    private static Account currentAccount;
 
     private static final WalletManager moneroWalletsManager = new WalletManager();
 
@@ -45,6 +48,8 @@ public class MoneroWalletHandler implements WalletListener {
         return currentSubaddress;
     }
 
+    Account getAccount() { return currentAccount; }
+
     Wallet getCurrentWallet() {
         return currentWallet;
     }
@@ -53,6 +58,7 @@ public class MoneroWalletHandler implements WalletListener {
         currentWallet = wallet;
         setCurrentTransactionHistory(currentWallet.history());
         setCurrentSubaddress(currentWallet.subaddress());
+        setCurrentAccount(currentWallet.account());
     }
 
     void setCurrentTransactionHistory(TransactionHistory history) {
@@ -62,6 +68,8 @@ public class MoneroWalletHandler implements WalletListener {
     void setCurrentSubaddress(Subaddress subaddress) {
         currentSubaddress = subaddress;
     }
+
+    void setCurrentAccount(Account account) { currentAccount = account; }
 
     private BasicMessageChannel balanceChannel;
     private BasicMessageChannel<ByteBuffer> walletHeightChannel;
@@ -152,6 +160,18 @@ public class MoneroWalletHandler implements WalletListener {
                     break;
                 case "setSubaddressLabel":
                     setLabelSubaddress(call, result);
+                    break;
+                case "getAllAccounts":
+                    getAllAccounts(call, result);
+                    break;
+                case "refreshAccounts":
+                    refreshAccounts(call, result);
+                    break;
+                case "addAccount":
+                    addAccount(call, result);
+                    break;
+                case "setLabelAccount":
+                    setLabelAccount(call, result);
                     break;
                 case "setRecoveringFromSeed":
                     setRecoveringFromSeed(call, result);
@@ -372,6 +392,7 @@ public class MoneroWalletHandler implements WalletListener {
                 txMap.put("timestamp", String.valueOf(tx.timestamp));
                 txMap.put("paymentId", tx.paymentId);
                 txMap.put("hash", tx.hash);
+                txMap.put("accountIndex", String.valueOf(tx.accountIndex));
 
                 transactions.add(txMap);
             }
@@ -476,6 +497,56 @@ public class MoneroWalletHandler implements WalletListener {
             int addressIndex = call.argument("addressIndex");
             String label = call.argument("label");
             getSubaddress().setLabel(account, addressIndex, label);
+            new Handler(Looper.getMainLooper())
+                    .post(() -> result.success(null));
+        });
+    }
+
+    // MARK: Account
+
+    public void getAllAccounts(MethodCall call, MethodChannel.Result result) {
+        AsyncTask.execute(() -> {
+            List<AccountRow> _accounts = getAccount().getAll();
+            List<HashMap<String, String>> accounts = new ArrayList<HashMap<String, String>>();
+
+            for (int i = 0; i < _accounts.size(); i++) {
+                AccountRow account = _accounts.get(i);
+                HashMap<String, String> accountMap = new HashMap<String, String>();
+
+                accountMap.put("id", String.valueOf(account.id));
+                accountMap.put("label", account.label);
+                accountMap.put("address", account.address);
+
+                accounts.add(accountMap);
+            }
+
+            new Handler(Looper.getMainLooper())
+                    .post(() -> result.success(accounts));
+        });
+    }
+
+    public void refreshAccounts(MethodCall call, MethodChannel.Result result) {
+        AsyncTask.execute(() -> {
+            getAccount().refresh();
+            new Handler(Looper.getMainLooper())
+                    .post(() -> result.success(null));
+        });
+    }
+
+    public void addAccount(MethodCall call, MethodChannel.Result result) {
+        AsyncTask.execute(() -> {
+            String label = call.argument("label");
+            getAccount().add(label);
+            new Handler(Looper.getMainLooper())
+                    .post(() -> result.success(null));
+        });
+    }
+
+    public void setLabelAccount(MethodCall call, MethodChannel.Result result) {
+        AsyncTask.execute(() -> {
+            int account = call.argument("accountIndex");
+            String label = call.argument("label");
+            getAccount().setLabel(account, label);
             new Handler(Looper.getMainLooper())
                     .post(() -> result.success(null));
         });

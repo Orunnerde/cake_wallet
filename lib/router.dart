@@ -5,10 +5,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:cake_wallet/routes.dart';
+
+// MARK: Import domains
+
 import 'package:cake_wallet/src/domain/common/node_list.dart';
 import 'package:cake_wallet/src/domain/services/user_service.dart';
 import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
+
+// MARK: Import stores 
+
 import 'package:cake_wallet/src/stores/authentication/authentication_store.dart';
 import 'package:cake_wallet/src/stores/login/login_store.dart';
 import 'package:cake_wallet/src/stores/node_list/node_list_store.dart';
@@ -25,6 +31,10 @@ import 'package:cake_wallet/src/stores/wallet_creation/wallet_creation_store.dar
 import 'package:cake_wallet/src/stores/wallet_list/wallet_list_store.dart';
 import 'package:cake_wallet/src/stores/wallet_restoration/wallet_restoration_store.dart';
 import 'package:cake_wallet/src/stores/wallet_seed/wallet_seed_store.dart';
+import 'package:cake_wallet/src/stores/account_list/account_list_store.dart';
+
+// MARK: Import screens 
+
 import 'package:cake_wallet/src/screens/auth/auth_page.dart';
 import 'package:cake_wallet/src/screens/dashboard/dashboard_page.dart';
 import 'package:cake_wallet/src/screens/home/home_page.dart';
@@ -46,6 +56,9 @@ import 'package:cake_wallet/src/screens/send/send_page.dart';
 import 'package:cake_wallet/src/screens/disclaimer/disclaimer_page.dart';
 import 'package:cake_wallet/src/screens/seed_alert/seed_alert.dart';
 import 'package:cake_wallet/src/screens/transaction_details/transaction_details_page.dart';
+import 'package:cake_wallet/src/screens/accounts/account_page.dart';
+import 'package:cake_wallet/src/screens/accounts/account_list_page.dart';
+
 
 class Router {
   static Route<dynamic> generateRoute(
@@ -267,6 +280,26 @@ class Router {
                   walletService: walletService,
                   sharedPreferences: sharedPreferences,
                 )));
+
+      case Routes.accountList:
+        return MaterialPageRoute(
+            builder: (context) {
+              return MultiProvider(providers: [
+                Provider(
+                    builder: (_) =>
+                        AccountListStore(walletService: walletService)),
+                Provider(
+                    builder: (_) => WalletStore(walletService: walletService))
+              ], child: AccountListPage());
+            },
+            fullscreenDialog: true);
+
+      case Routes.accountCreation:
+        return CupertinoPageRoute(builder: (context) {
+          return Provider(
+              builder: (_) => AccountListStore(walletService: walletService),
+              child: AccountPage());
+        });
 
       default:
         return MaterialPageRoute(

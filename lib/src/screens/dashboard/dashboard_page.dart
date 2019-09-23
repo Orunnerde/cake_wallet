@@ -66,7 +66,9 @@ class DashboardPage extends BasePage {
                 CupertinoActionSheetAction(
                     child: const Text('Reconnect'), onPressed: () => null),
                 CupertinoActionSheetAction(
-                    child: const Text('Accounts'), onPressed: () => null),
+                    child: const Text('Accounts'),
+                    onPressed: () => Navigator.of(context)
+                        .popAndPushNamed(Routes.accountList)),
                 CupertinoActionSheetAction(
                     child: const Text('Wallets'),
                     onPressed: () => Navigator.of(context)
@@ -256,7 +258,9 @@ class DashboardPage extends BasePage {
         ),
       ];
     }, body: Observer(builder: (_) {
-      var items = formatTransactionsList(transactionListStore.transactions);
+      final items = transactionListStore.transactions == null
+          ? []
+          : formatTransactionsList(transactionListStore.transactions);
 
       return ListView.builder(
           padding: EdgeInsets.only(left: 25, top: 10, right: 25, bottom: 15),
