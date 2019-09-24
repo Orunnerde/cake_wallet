@@ -14,7 +14,6 @@ import 'package:cake_wallet/src/stores/transaction_list/transaction_list_store.d
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/src/stores/node_list/node_list_store.dart';
 import 'package:cake_wallet/src/screens/dashboard/dashboard_page.dart';
-import 'package:cake_wallet/src/screens/nodes/nodes_list_page.dart';
 import 'package:cake_wallet/src/screens/settings/settings.dart';
 
 class HomePage extends StatelessWidget {
@@ -29,18 +28,29 @@ class HomePage extends StatelessWidget {
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
         backgroundColor: Colors.white,
-        border: null,
-        items: const <BottomNavigationBarItem>[
+        // border: null,
+        activeColor: Color.fromRGBO(121, 201, 233, 1),
+        inactiveColor: Colors.grey,
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: const Icon(CupertinoIcons.home),
+            icon: Image.asset('assets/images/wallet_icon.png',
+                color: Colors.grey, height: 20),
+            activeIcon: Image.asset('assets/images/wallet_icon.png',
+                color: Color.fromRGBO(121, 201, 233, 1), height: 20),
             title: const Text('Wallet'),
           ),
           BottomNavigationBarItem(
-            icon: const Icon(CupertinoIcons.search),
+            icon: Image.asset('assets/images/exchange_icon.png',
+                color: Colors.grey, height: 20),
+            activeIcon: Image.asset('assets/images/exchange_icon.png',
+                color: Color.fromRGBO(121, 201, 233, 1), height: 20),
             title: const Text('Exchange'),
           ),
           BottomNavigationBarItem(
-            icon: const Icon(CupertinoIcons.shopping_cart),
+            icon: Image.asset('assets/images/settings_icon.png',
+                color: Colors.grey, height: 20),
+            activeIcon: Image.asset('assets/images/settings_icon.png',
+                color: Color.fromRGBO(121, 201, 233, 1), height: 20),
             title: const Text('Settings'),
           ),
         ],
@@ -87,7 +97,7 @@ class HomePage extends StatelessWidget {
                     settings),
                 builder: (context) => Provider(
                     builder: (_) => NodeListStore(nodeList: NodeList(db: db)),
-                    child: Settings('', 4, []))); //NodeListPage()
+                    child: Settings())); //NodeListPage()
         }
 
         return null;

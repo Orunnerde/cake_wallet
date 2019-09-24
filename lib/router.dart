@@ -1,3 +1,5 @@
+import 'package:cake_wallet/src/screens/show_keys/show_keys_page.dart';
+import 'package:cake_wallet/src/stores/wallet/wallet_keys_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -98,13 +100,22 @@ class Router {
                     sharedPreferences: sharedPreferences)));
 
       case Routes.setupPin:
+        Function(BuildContext, String) callback;
+
+        if (settings.arguments is Function(BuildContext, String)) {
+          callback = settings.arguments;
+        }
+
         return CupertinoPageRoute(
             builder: (_) => Provider(
                 builder: (_) => UserStore(
                     accountService: UserService(
                         secureStorage: FlutterSecureStorage(),
                         sharedPreferences: sharedPreferences)),
-                child: SetupPinCode(onPinCodeSetup: (_, __) => null)));
+                child: SetupPinCode(
+                    onPinCodeSetup: (context, pin) =>
+                        callback == null ? null : callback(context, pin))),
+            fullscreenDialog: true);
 
       case Routes.restoreOptions:
         return CupertinoPageRoute(builder: (_) => RestoreOptionsPage());
@@ -248,7 +259,8 @@ class Router {
                   child: AuthPage(
                       onAuthenticationSuccessful: onAuthenticationSuccessful,
                       onAuthenticationFailed: onAuthenticationFailed),
-                ));
+                ),
+            fullscreenDialog: true);
 
       case Routes.nodeList:
         return CupertinoPageRoute(builder: (context) {
@@ -306,23 +318,42 @@ class Router {
 
       case Routes.addressBook:
         return MaterialPageRoute(builder: (context) {
-          return Provider(
-              builder: (_) => AccountListStore(walletService: walletService),
-              child: Provider(
+          return MultiProvider(
+            providers: [
+              Provider(
+                  builder: (_) =>
+                      AccountListStore(walletService: walletService)),
+              Provider(
                   builder: (_) => AddressBookStore(
-                      addressBookService: AddressBookService(db: db)),
-                  child: AddressBookPage()));
+                      addressBookService: AddressBookService(db: db)))
+            ],
+            child: AddressBookPage(),
+          );
         });
 
       case Routes.addressBookAddContact:
         return CupertinoPageRoute(builder: (context) {
-          return Provider(
-              builder: (_) => AccountListStore(walletService: walletService),
-              child: Provider(
+          return MultiProvider(
+            providers: [
+              Provider(
+                builder: (_) => AccountListStore(walletService: walletService),
+              ),
+              Provider(
                   builder: (_) => AddressBookStore(
-                      addressBookService: AddressBookService(db: db)),
-                  child: ContactPage()));
+                      addressBookService: AddressBookService(db: db)))
+            ],
+            child: ContactPage(),
+          );
         });
+
+      case Routes.showKeys:
+        return MaterialPageRoute(
+            builder: (context) {
+              return Provider(
+                  builder: (_) => WalletKeysStore(walletService: walletService),
+                  child: ShowKeysPage());
+            },
+            fullscreenDialog: true);
 
       default:
         return MaterialPageRoute(

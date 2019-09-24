@@ -9,6 +9,7 @@ import 'package:cake_wallet/src/stores/wallet_seed/wallet_seed_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 
 class SeedPage extends BasePage {
+  bool get isModalBackButton => true;
   String get title => 'Seed';
 
   @override

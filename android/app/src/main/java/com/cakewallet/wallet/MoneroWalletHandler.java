@@ -17,6 +17,7 @@ import java.util.List;
 
 import com.cakewallet.wallet.monero.Account;
 import com.cakewallet.wallet.monero.AccountRow;
+import com.cakewallet.wallet.monero.MoneroWalletKeys;
 import com.cakewallet.wallet.monero.PendingTransaction;
 import com.cakewallet.wallet.monero.Subaddress;
 import com.cakewallet.wallet.monero.SubaddressRow;
@@ -185,6 +186,9 @@ public class MoneroWalletHandler implements WalletListener {
                 case "isNeedToRefresh":
                     isNeedToRefresh(call, result);
                     break;
+                case "getKeys":
+                    getKeys(call, result);
+                    break;
                 default:
                     result.notImplemented();
                     break;
@@ -290,6 +294,20 @@ public class MoneroWalletHandler implements WalletListener {
 //        AsyncTask.execute(() -> {
             String seed = getCurrentWallet().getSeed();
             result.success(seed);
+//        });
+    }
+
+    public void getKeys(MethodCall call, MethodChannel.Result result) {
+//        AsyncTask.execute(() -> {
+        MoneroWalletKeys _keys= getCurrentWallet().getKeys();
+        HashMap<String, String> keys = new HashMap<>();
+
+        keys.put("publicViewKey", String.valueOf(_keys.publicViewKey));
+        keys.put("privateViewKey", String.valueOf(_keys.privateViewKey));
+        keys.put("publicSpendKey", String.valueOf(_keys.publicSpendKey));
+        keys.put("privateSpendKey", String.valueOf(_keys.privateSpendKey));
+
+        result.success(keys);
 //        });
     }
 

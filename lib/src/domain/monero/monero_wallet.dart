@@ -248,6 +248,17 @@ class MoneroWallet extends Wallet {
     return getValue(key: 'getNodeHeight');
   }
 
+  Future<Map<String, String>> getKeys() async {
+    final map = await getValue(key: 'getKeys');
+    
+    return {
+      'publicViewKey': map['publicViewKey'],
+      'privateViewKey': map['privateViewKey'],
+      'publicSpendKey': map['publicSpendKey'],
+      'privateSpendKey': map['privateSpendKey'],
+    };
+  }
+
   Future close() async {
     try {
       await platform.invokeMethod('close');

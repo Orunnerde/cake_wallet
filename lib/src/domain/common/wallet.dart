@@ -69,6 +69,8 @@ abstract class Wallet {
 
   Future<String> getSeed();
 
+  Future<Map<String, String>> getKeys();
+
   Future<String> getFullBalance();
 
   Future<String> getUnlockedBalance();

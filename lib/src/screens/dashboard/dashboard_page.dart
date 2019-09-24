@@ -78,16 +78,25 @@ class DashboardPage extends BasePage {
                 CupertinoActionSheetAction(
                     child: const Text('Show seed'),
                     onPressed: () {
-                      Navigator.of(bodyContext)
-                          .popAndPushNamed(Routes.auth, arguments: [
-                        (auth) {
-                          Navigator.of(bodyContext)
-                              .popAndPushNamed(Routes.seed);
-                        }
-                      ]);
+                      Navigator.of(context)
+                                .popAndPushNamed(Routes.seed);
+                      // Navigator.of(context).popAndPushNamed(Routes.auth,
+                      //     arguments: [
+                      //       (auth) => Navigator.of(context)
+                      //           .popAndPushNamed(Routes.seed)
+                      //     ]);
                     }),
                 CupertinoActionSheetAction(
-                    child: const Text('Show keys'), onPressed: () => null),
+                    child: const Text('Show keys'),
+                    onPressed: () {
+                      Navigator.of(context)
+                                .popAndPushNamed(Routes.showKeys);
+                      // Navigator.of(context).popAndPushNamed(Routes.auth,
+                      //     arguments: [
+                      //       (auth) => Navigator.of(context)
+                      //           .popAndPushNamed(Routes.showKeys)
+                      //     ]);
+                    }),
                 CupertinoActionSheetAction(
                     child: const Text('Address book'),
                     onPressed: () => Navigator.of(context)

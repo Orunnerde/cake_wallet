@@ -33,6 +33,10 @@ public class Wallet {
         return getSeedJNI();
     }
 
+    public MoneroWalletKeys getKeys() {
+        return getKeysJNI();
+    }
+
     public String getFilename() {
         return getFilemameJNI();
     }
@@ -177,6 +181,8 @@ public class Wallet {
     }
 
     private native String getSeedJNI();
+
+    private native MoneroWalletKeys getKeysJNI();
 
     private native String getFilemameJNI();
 

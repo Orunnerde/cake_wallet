@@ -55,6 +55,8 @@ class WalletService extends Wallet {
 
   Future<String> getSeed() => _currentWallet.getSeed();
 
+  Future<Map<String, String>> getKeys() => _currentWallet.getKeys();
+
   Future<String> getFullBalance() => _currentWallet.getFullBalance();
 
   Future<String> getUnlockedBalance() => _currentWallet.getUnlockedBalance();

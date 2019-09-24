@@ -6,70 +6,13 @@ import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
-import 'package:cake_wallet/src/screens/settings/enter_pin_code.dart';
 import 'package:cake_wallet/src/screens/settings/change_language.dart';
 import 'package:cake_wallet/src/screens/disclaimer/disclaimer_page.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 
-const List<String> balanceList = const <String>[
-  'Full Balance',
-  'Available Balance',
-  'Hidden'
-];
-
-// const List<String> currencyList = const <String>[
-//   'AUD',
-//   'BGN',
-//   'BRL',
-//   'CAD',
-//   'CHF',
-//   'CNY',
-//   'CZK',
-//   'EUR',
-//   'DKK',
-//   'GBP',
-//   'HKD',
-//   'HRK',
-//   'HUF',
-//   'IDR',
-//   'ILS',
-//   'INR',
-//   'ISK',
-//   'JPY',
-//   'KRW',
-//   'MXN',
-//   'MYR',
-//   'NOK',
-//   'NZD',
-//   'PHP',
-//   'PLN',
-//   'RON',
-//   'RUB',
-//   'SEK',
-//   'SGD',
-//   'THB',
-//   'TRY',
-//   'USD',
-//   'ZAR',
-//   'VEF'
-// ];
-
-// const List<String> TransactionPriorityList = const <String>[
-//   'Slow',
-//   'Regular',
-//   'Fast',
-//   'Fastest'
-// ];
-
 class Settings extends StatefulWidget {
-  final String currentNode;
-  final int currentPinLength;
-  final List<int> currentPin;
-
-  const Settings(this.currentNode, this.currentPinLength, this.currentPin);
-
   @override
   createState() => SettingsState();
 }
@@ -85,12 +28,8 @@ class SettingsState extends State<Settings> {
   final _morphImage = Image.asset('assets/images/morph_icon.png');
   final _xmrBtcImage = Image.asset('assets/images/xmr_btc.png');
 
-  String _balance = balanceList[0];
-  // FiatCurrency _currency = FiatCurrency.all[0]; // currencyList[0];
-  // String _TransactionPriority = TransactionPriorityList[0];
-  bool _isSaveRecipientAddressOn = true;
+  bool _isSaveRecipientAddressOn = false;
   bool _isAllowBiometricalAuthenticationOn = false;
-  bool _isAutoBackupToCloudOn = true;
 
   @override
   void dispose() {
@@ -342,7 +281,15 @@ class SettingsState extends State<Settings> {
                         style: TextStyle(fontSize: 16.0),
                       ),
                       trailing: _cakeArrowImage,
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(Routes.auth, arguments: [
+                          (auth) => Navigator.of(context).popAndPushNamed(
+                              Routes.setupPin,
+                              arguments: (setupPinContext, _) =>
+                                  Navigator.of(context).pop())
+                        ]);
+                      },
                     ),
                     Container(
                       padding: EdgeInsets.only(
@@ -1138,8 +1085,10 @@ class SettingsState extends State<Settings> {
 
   void _setBalance(BuildContext context) async {
     final settingsStore = Provider.of<SettingsStore>(context);
-    final selectedDisplayMode = await _presentPicker(context, BalanceDisplayMode.all);
-    settingsStore.setCurrentBalanceDisplayMode(balanceDisplayMode: selectedDisplayMode);
+    final selectedDisplayMode =
+        await _presentPicker(context, BalanceDisplayMode.all);
+    settingsStore.setCurrentBalanceDisplayMode(
+        balanceDisplayMode: selectedDisplayMode);
   }
 
   void _setCurrency(BuildContext context) async {
