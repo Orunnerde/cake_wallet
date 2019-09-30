@@ -31,7 +31,7 @@ class ContactFormState extends State<ContactForm> {
   @override
   void initState() {
     super.initState();
-    _currencyTypeController.text = cryptoCurrenctToString(_selectectCrypto);
+    _currencyTypeController.text = _selectectCrypto.toString();
   }
 
   @override
@@ -54,14 +54,14 @@ class ContactFormState extends State<ContactForm> {
                   backgroundColor: Colors.white,
                   itemExtent: 45.0,
                   onSelectedItemChanged: (int index) {
-                    _selectectCrypto = cryptoCurrencies[index];
+                    _selectectCrypto = CryptoCurrency.all[index];
                     _currencyTypeController.text =
-                        cryptoCurrenctToString(cryptoCurrencies[index]);
+                        CryptoCurrency.all[index].toString();
                   },
-                  children: List.generate(cryptoCurrencies.length, (int index) {
+                  children:
+                      List.generate(CryptoCurrency.all.length, (int index) {
                     return Center(
-                      child:
-                          Text(cryptoCurrenctToString(cryptoCurrencies[index])),
+                      child: Text(CryptoCurrency.all[index].toString()),
                     );
                   })),
             ),
@@ -193,7 +193,7 @@ class ContactFormState extends State<ContactForm> {
                       _selectectCrypto = CryptoCurrency.xmr;
                       _contactNameController.text = '';
                       _currencyTypeController.text =
-                          cryptoCurrenctToString(_selectectCrypto);
+                          _selectectCrypto.toString();
                       _addressController.text = '';
                     });
                   },

@@ -41,7 +41,7 @@ class WelcomePage extends BasePage {
             height: 10.0,
           ),
           Text(
-            'The first iOS wallet\nfor Monero',
+            'Awesome wallet\nfor Monero',
             style: TextStyle(
               fontSize: 22.0,
               color: Palette.lightBlue,

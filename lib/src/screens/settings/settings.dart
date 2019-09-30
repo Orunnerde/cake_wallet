@@ -1087,21 +1087,30 @@ class SettingsState extends State<Settings> {
     final settingsStore = Provider.of<SettingsStore>(context);
     final selectedDisplayMode =
         await _presentPicker(context, BalanceDisplayMode.all);
-    settingsStore.setCurrentBalanceDisplayMode(
-        balanceDisplayMode: selectedDisplayMode);
+
+    if (selectedDisplayMode != null) {
+      settingsStore.setCurrentBalanceDisplayMode(
+          balanceDisplayMode: selectedDisplayMode);
+    }
   }
 
   void _setCurrency(BuildContext context) async {
     final settingsStore = Provider.of<SettingsStore>(context);
     final selectedCurrency = await _presentPicker(context, FiatCurrency.all);
-    settingsStore.setCurrentFiatCurrency(currency: selectedCurrency);
+
+    if (selectedCurrency != null) {
+      settingsStore.setCurrentFiatCurrency(currency: selectedCurrency);
+    }
   }
 
   void _setTransactionPriority(BuildContext context) async {
     final settingsStore = Provider.of<SettingsStore>(context);
     final selectedPriority =
         await _presentPicker(context, TransactionPriority.all);
-    settingsStore.setCurrentTransactionPriority(priority: selectedPriority);
+
+    if (selectedPriority != null) {
+      settingsStore.setCurrentTransactionPriority(priority: selectedPriority);
+    }
   }
 
   // _showBackupPasswordAlertDialog(BuildContext context) async {

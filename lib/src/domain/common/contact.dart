@@ -8,7 +8,8 @@ class Contact {
   static final String typeColumn = 'type';
 
   static Contact fromMap(Map map) {
-    return Contact(name: map['name'], type: deserializeToInt(map['type']));
+    return Contact(
+        name: map['name'], type: CryptoCurrency.deserialize(raw: map['type']));
   }
 
   final String name;
@@ -17,6 +18,6 @@ class Contact {
   Contact({@required this.name, @required this.type});
 
   Map<String, dynamic> toMap() {
-    return {nameColumn: name, typeColumn: serializeToInt(type)};
+    return {nameColumn: name, typeColumn: type.serialize()};
   }
 }

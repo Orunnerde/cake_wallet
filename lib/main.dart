@@ -1,36 +1,31 @@
-import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
-import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
-import 'package:cake_wallet/src/domain/common/node_list.dart';
-import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
-
-import 'package:cake_wallet/src/domain/common/wallet_type.dart';
-import 'package:cake_wallet/src/domain/services/wallet_service.dart';
-
-import 'package:cake_wallet/src/screens/root/root.dart';
-
-import 'package:cake_wallet/src/stores/authentication/authentication_store.dart';
-
-import 'package:cake_wallet/src/stores/settings/settings_store.dart';
-
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:cake_wallet/router.dart';
-
 import 'package:provider/provider.dart';
-
+import 'package:sqflite/sqflite.dart';
+import 'package:cake_wallet/src/screens/root/root.dart';
+import 'package:cake_wallet/src/stores/authentication/authentication_store.dart';
+import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/src/domain/services/user_service.dart';
 import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
-
-import 'package:sqflite/sqflite.dart';
+import 'package:cake_wallet/src/domain/common/core_db.dart';
+import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
+import 'package:cake_wallet/src/domain/common/default_settings_migration.dart';
+import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
+import 'package:cake_wallet/src/domain/common/node_list.dart';
+import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
+import 'package:cake_wallet/src/domain/common/wallet_type.dart';
+import 'package:cake_wallet/src/domain/common/sync_status.dart';
+import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 
 void main() async {
   final sharedPreferences = await SharedPreferences.getInstance();
 
-  final dbHelper = await DbHelper.getInstance();
+  final dbHelper = await CoreDB.getInstance();
   final db = await dbHelper.getDb();
 
   final walletService = WalletService();
@@ -47,6 +42,10 @@ void main() async {
   await walletListService.changeWalletManger(walletType: WalletType.monero);
 
   final nodeList = NodeList(db: db);
+
+  await defaultSettingsMigration(
+      version: 1, sharedPreferences: sharedPreferences, nodeList: nodeList);
+
   final settingsStore = await SettingsStoreBase.load(
       nodeList: nodeList,
       sharedPreferences: sharedPreferences,
@@ -54,40 +53,33 @@ void main() async {
       initialTransactionPriority: TransactionPriority.slow,
       initialBalanceDisplayMode: BalanceDisplayMode.availableBalance);
 
-  reaction((_) => settingsStore.node, (node) async {
-    print('Connection on node change');
-    await walletService.connectToNode(
-        uri: node.uri, login: node.login, password: node.password);
+  reaction(
+      (_) => settingsStore.node,
+      (node) async => await walletService.connectToNode(
+          uri: node.uri, login: node.login, password: node.password));
+
+  Timer.periodic(Duration(seconds: 10), (_) async {
+    if (walletService.currentWallet == null) {
+      return;
+    }
+
+    final isConnected = await walletService.isConnected();
+
+    print('isConnected $isConnected');
+
+    if (!isConnected &&
+        !(walletService.syncStatusValue is ConnectingSyncStatus ||
+            walletService.syncStatusValue is StartingSyncStatus)) {
+      print('Start to reconnect');
+      try {
+        await walletService.connectToNode(
+            uri: 'node.moneroworld.com:18089', login: '', password: '');
+      } catch (e) {
+        print('Error while reconnection');
+        print(e);
+      }
+    }
   });
-
-  // final _node = Node(uri: 'node.moneroworld.com:18089');
-  // final node = await nodeList.add(node: _node);
-  // await settingsStore.setCurrent(node: node);
-
-  // var _lastIsConnected = false;
-
-//  Timer.periodic(Duration(seconds: 10), (_) async {
-//    if (walletService.currentWallet == null) {
-//      return;
-//    }
-//
-//    final isConnected = await walletService.isConnected();
-//
-//    print('isConnected $isConnected');
-//
-//    if (!isConnected &&
-//        !(walletService.syncStatusValue is ConnectingSyncStatus ||
-//            walletService.syncStatusValue is StartingSyncStatus)) {
-//      print('Start to reconnect');
-//      try {
-//        await walletService.connectToNode(
-//            uri: 'node.moneroworld.com:18089', login: '', password: '');
-//      } catch (e) {
-//        print('Error while reconnection');
-//        print(e);
-//      }
-//    }
-//  });
 
   final authStore = AuthenticationStore(userService: userService);
   await authStore.started();
@@ -102,8 +94,7 @@ void main() async {
   });
 
   runApp(Provider(
-      builder: (_) =>
-          authStore, //AuthenticationStore(userService: userService)..started(),
+      builder: (_) => authStore,
       child: CakeWalletApp(
           sharedPreferences: sharedPreferences,
           walletService: walletService,

@@ -1,3 +1,6 @@
+import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/src/screens/exchange/exchange_page.dart';
+import 'package:cake_wallet/src/stores/exchange/exchange_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -85,7 +88,16 @@ class HomePage extends StatelessWidget {
                       ),
                     ], child: DashboardPage(walletService: walletService)));
           case 1:
-            return Container();
+            return Provider(
+                builder: (_) => ExchangeStore(
+                        initialProvider: XMRTOExchangeProvider(),
+                        initialDepositCurrency: CryptoCurrency.xmr,
+                        initialReceiveCurrency: CryptoCurrency.btc,
+                        providerList: [
+                          XMRTOExchangeProvider(),
+                          ChangeNowExchangeProvider()
+                        ]),
+                child: ExchangePage());
           case 2:
             return CupertinoTabView(
                 onGenerateRoute: (settings) => Router.generateRoute(

@@ -8,19 +8,25 @@ abstract class BasePage extends StatelessWidget {
   final _backArrowImage = Image.asset('assets/images/back_arrow.png');
   final _closeButtonImage = Image.asset('assets/images/close_button.png');
 
-  Widget leading(BuildContext context) => SizedBox(
-        height: 37,
-        width: isModalBackButton ? 37 : 10,
-        child: ButtonTheme(
-          minWidth: double.minPositive,
-          child: FlatButton(
-              highlightColor: Colors.transparent,
-              splashColor: Colors.transparent,
-              padding: EdgeInsets.all(0),
-              onPressed: () => Navigator.of(context).pop(),
-              child: isModalBackButton ? _closeButtonImage : _backArrowImage),
-        ),
-      );
+  Widget leading(BuildContext context) {
+    if (ModalRoute.of(context).isFirst) {
+      return null;
+    }
+
+    return SizedBox(
+      height: 37,
+      width: isModalBackButton ? 37 : 10,
+      child: ButtonTheme(
+        minWidth: double.minPositive,
+        child: FlatButton(
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            padding: EdgeInsets.all(0),
+            onPressed: () => Navigator.of(context).pop(),
+            child: isModalBackButton ? _closeButtonImage : _backArrowImage),
+      ),
+    );
+  }
 
   Widget middle(BuildContext context) => title == null
       ? null

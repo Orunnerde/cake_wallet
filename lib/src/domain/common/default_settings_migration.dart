@@ -1,0 +1,40 @@
+import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
+import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
+import 'package:cake_wallet/src/domain/common/node_list.dart';
+import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
+import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+Future defaultSettingsMigration(
+    {@required int version,
+    @required SharedPreferences sharedPreferences,
+    @required NodeList nodeList}) async {
+  int currentVersion =
+      sharedPreferences.getInt('current_default_settings_migration_version') ??
+          0;
+
+  if (currentVersion > version) {
+    return;
+  }
+
+  try {
+    switch (version) {
+      case 1:
+        sharedPreferences.setString(
+            'current_fiat_currency', FiatCurrency.usd.toString());
+        sharedPreferences.setInt(
+            'current_fee_priority', TransactionPriority.standart.raw);
+        sharedPreferences.setInt('current_balance_display_mode',
+            BalanceDisplayMode.availableBalance.raw);
+        sharedPreferences.setInt(
+            'current_default_settings_migration_version', 1);
+        await nodeList.resetToDefault();
+        sharedPreferences.setInt('current_node_id', 2);
+        break;
+      default:
+        break;
+    }
+  } catch (e) {
+    print('Migration error: ${e.toString()}');
+  }
+}

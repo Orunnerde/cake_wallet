@@ -90,14 +90,17 @@ class Router {
 
       case Routes.newWallet:
         return CupertinoPageRoute(
-            builder: (_) => Provider<WalletCreationStore>(
-                builder: (_) => WalletCreationStore(
-                    sharedPreferences: sharedPreferences,
-                    walletListService: walletListService),
-                child: NewWalletPage(
-                    walletsService: walletListService,
-                    walletService: walletService,
-                    sharedPreferences: sharedPreferences)));
+            builder:
+                (_) =>
+                    ProxyProvider<AuthenticationStore, WalletCreationStore>(
+                        builder: (_, authStore, __) => WalletCreationStore(
+                            authStore: authStore,
+                            sharedPreferences: sharedPreferences,
+                            walletListService: walletListService),
+                        child: NewWalletPage(
+                            walletsService: walletListService,
+                            walletService: walletService,
+                            sharedPreferences: sharedPreferences)));
 
       case Routes.setupPin:
         Function(BuildContext, String) callback;

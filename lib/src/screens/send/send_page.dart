@@ -228,7 +228,7 @@ class SendFormState extends State<SendForm> {
                               prefixIcon: Padding(
                                 padding: EdgeInsets.only(top: 12),
                                 child: Text(
-                                    '${settingsStore.transactionPriority.toString()}:',
+                                    '${settingsStore.fiatCurrency.toString()}:',
                                     style: TextStyle(
                                         fontSize: 16,
                                         color: Color.fromRGBO(34, 40, 74, 1))),

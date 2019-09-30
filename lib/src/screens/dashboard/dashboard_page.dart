@@ -78,8 +78,7 @@ class DashboardPage extends BasePage {
                 CupertinoActionSheetAction(
                     child: const Text('Show seed'),
                     onPressed: () {
-                      Navigator.of(context)
-                                .popAndPushNamed(Routes.seed);
+                      Navigator.of(context).popAndPushNamed(Routes.seed);
                       // Navigator.of(context).popAndPushNamed(Routes.auth,
                       //     arguments: [
                       //       (auth) => Navigator.of(context)
@@ -89,8 +88,7 @@ class DashboardPage extends BasePage {
                 CupertinoActionSheetAction(
                     child: const Text('Show keys'),
                     onPressed: () {
-                      Navigator.of(context)
-                                .popAndPushNamed(Routes.showKeys);
+                      Navigator.of(context).popAndPushNamed(Routes.showKeys);
                       // Navigator.of(context).popAndPushNamed(Routes.auth,
                       //     arguments: [
                       //       (auth) => Navigator.of(context)
@@ -185,12 +183,12 @@ class DashboardPage extends BasePage {
                               if (displayMode.serialize() ==
                                   BalanceDisplayMode.availableBalance
                                       .serialize()) {
-                                balance = balanceStore.unlockedBalance;
+                                balance = balanceStore.unlockedBalance ?? '0.0';
                               }
 
                               if (displayMode.serialize() ==
                                   BalanceDisplayMode.fullBalance.serialize()) {
-                                balance = balanceStore.fullBalance;
+                                balance = balanceStore.fullBalance ?? '0.0';
                               }
 
                               return Text(balance,

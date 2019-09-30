@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'package:cake_wallet/src/domain/monero/account.dart';
-import 'package:cake_wallet/src/domain/monero/account_list.dart';
-import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:cake_wallet/src/domain/common/wallet.dart';
@@ -10,6 +7,9 @@ import 'package:cake_wallet/src/domain/common/transaction_history.dart';
 import 'package:cake_wallet/src/domain/common/transaction_creation_credentials.dart';
 import 'package:cake_wallet/src/domain/common/pending_transaction.dart';
 import 'package:cake_wallet/src/domain/common/wallet_type.dart';
+import 'package:cake_wallet/src/domain/common/core_db.dart';
+import 'package:cake_wallet/src/domain/monero/account.dart';
+import 'package:cake_wallet/src/domain/monero/account_list.dart';
 import 'package:cake_wallet/src/domain/monero/subaddress_list.dart';
 import 'package:cake_wallet/src/domain/monero/monero_transaction_creation_credentials.dart';
 import 'package:cake_wallet/src/domain/monero/monero_transaction_history.dart';
@@ -250,7 +250,7 @@ class MoneroWallet extends Wallet {
 
   Future<Map<String, String>> getKeys() async {
     final map = await getValue(key: 'getKeys');
-    
+
     return {
       'publicViewKey': map['publicViewKey'],
       'privateViewKey': map['privateViewKey'],
@@ -408,7 +408,7 @@ class MoneroWallet extends Wallet {
   }
 
   Future setAsRecovered() async {
-    final helper = await DbHelper.getInstance();
+    final helper = await CoreDB.getInstance();
     final db = await helper.getDb();
     final name = await getName();
     await Wallet.updateWalletData(

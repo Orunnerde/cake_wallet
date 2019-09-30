@@ -1,62 +1,17 @@
 import 'dart:async';
-import 'package:cake_wallet/src/domain/common/contact.dart';
-import 'package:cake_wallet/src/domain/common/node_list.dart';
 import 'package:flutter/foundation.dart';
+import 'package:sqflite/sqlite_api.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:uuid/uuid.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cake_wallet/src/domain/common/core_db.dart';
 import 'package:cake_wallet/src/domain/common/wallet.dart';
 import 'package:cake_wallet/src/domain/common/wallet_description.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:cake_wallet/src/domain/common/wallets_manager.dart';
 import 'package:cake_wallet/src/domain/common/secret_store_key.dart';
 import 'package:cake_wallet/src/domain/common/wallet_type.dart';
 import 'package:cake_wallet/src/domain/monero/monero_wallets_manager.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
-
-import 'package:sqflite/sqflite.dart';
-import 'package:sqflite/sqlite_api.dart';
-
-class DbHelper {
-  static const dbName = 'cw';
-  static DbHelper _instance;
-
-  static Future<DbHelper> getInstance() async {
-    if (_instance == null) {
-      final dbPath = await getDatabasesPath();
-      final path = dbPath + dbName;
-      _instance = DbHelper(path: path);
-    }
-
-    return _instance;
-  }
-
-  final String path;
-
-  DbHelper({this.path});
-
-  Database _db;
-
-  Future<Database> getDb() async {
-    if (_db == null) {
-      _db = await openDatabase(path, version: 1,
-          onCreate: (Database db, int version) async {
-        await db.execute(
-            'CREATE TABLE Wallets (id TEXT PRIMARY KEY, name TEXT, is_recovery NUMERIC, restore_height INTEGER)');
-        await db.execute('CREATE TABLE ${NodeList.tableName}' +
-            '(${NodeList.idColumn} INTEGER PRIMARY KEY,' +
-            '${NodeList.uriColumn} TEXT KEY,' +
-            '${NodeList.loginColumn} TEXT,' +
-            '${NodeList.passwordColumn} TEXT,' +
-            '${NodeList.isDefault} NUMERIC);');
-        await db.execute('CREATE TABLE ${Contact.tableName}' +
-            '(${Contact.primaryKey} INTEGER PRIMARY KEY,' +
-            '${Contact.nameColumn} TEXT,' +
-            '${Contact.typeColumn} NUMERIC);');
-      });
-    }
-    return _db;
-  }
-}
 
 class WalletIsExistException implements Exception {
   String name;
@@ -170,7 +125,7 @@ class WalletListService {
   Future<void> changeWalletManger({WalletType walletType}) async {
     switch (walletType) {
       case WalletType.monero:
-        final dbHelper = await DbHelper.getInstance();
+        final dbHelper = await CoreDB.getInstance();
         final db = await dbHelper.getDb();
         walletsManager = MoneroWalletsManager(db: db);
         break;

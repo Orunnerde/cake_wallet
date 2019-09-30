@@ -58,11 +58,10 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
   @override
   Widget build(BuildContext context) {
     final walletRestorationStore = Provider.of<WalletRestorationStore>(context);
-    
+
     reaction((_) => walletRestorationStore.state, (state) {
       if (state is WalletRestoredSuccessfully) {
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil('/dashboard', (route) => false);
+        Navigator.of(context).popUntil((route) => route.isFirst);
       }
 
       if (state is WalletRestorationFailure) {

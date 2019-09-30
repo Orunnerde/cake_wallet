@@ -1,19 +1,16 @@
 import 'package:flutter/foundation.dart';
 
 abstract class EnumerableItem<T> {
-  T _raw;
-  String _title;
+  final T raw;
+  final String title;
 
-  EnumerableItem({@required String title, @required T raw}) {
-    this._title = title;
-    this._raw = raw;
-  }
+  const EnumerableItem({@required this.title, @required this.raw});
 
   @override
-  String toString() => _title;
+  String toString() => title;
 }
 
 mixin Serializable<T> on EnumerableItem<T> {
   static Serializable deserialize<T>({T raw}) => null;
-  T serialize() => _raw;
+  T serialize() => raw;
 }

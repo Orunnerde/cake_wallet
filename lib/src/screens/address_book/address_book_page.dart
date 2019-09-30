@@ -88,7 +88,7 @@ class AddressBookPage extends BasePage {
                                     borderRadius: BorderRadius.circular(6.0),
                                   ),
                                   child: Text(
-                                    cryptoCurrenctToString(contact.type),
+                                    contact.type.toString(),
                                     style: TextStyle(
                                       fontSize: 11.0,
                                       color:

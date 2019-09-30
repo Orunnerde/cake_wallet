@@ -81,8 +81,7 @@ class _WalletNameFormState extends State<WalletNameForm> {
 
     reaction((_) => walletCreationStore.state, (state) {
       if (state is WalletCreatedSuccessfully) {
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil('/dashboard', (_) => false);
+        Navigator.of(context).popUntil((route) => route.isFirst);
       }
 
       if (state is WalletCreationFailure) {

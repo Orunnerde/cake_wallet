@@ -23,12 +23,19 @@ abstract class SettingsStoreBase with Store {
       @required FiatCurrency initialFiatCurrency,
       @required TransactionPriority initialTransactionPriority,
       @required BalanceDisplayMode initialBalanceDisplayMode}) async {
+    final currentFiatCurrency = FiatCurrency(
+        symbol: sharedPreferences.getString(currentFiatCurrencyKey));
+    final currentTransactionPriority = TransactionPriority.deserialize(
+        raw: sharedPreferences.getInt(currentTransactionPriorityKey));
+    final currentBalanceDisplayMode = BalanceDisplayMode.deserialize(
+        raw: sharedPreferences.getInt(currentBalanceDisplayModeKey));
+
     final store = SettingsStore(
         sharedPreferences: sharedPreferences,
         nodeList: nodeList,
-        initialFiatCurrency: initialFiatCurrency,
-        initialTransactionPriority: initialTransactionPriority,
-        initialBalanceDisplayMode: initialBalanceDisplayMode);
+        initialFiatCurrency: currentFiatCurrency,
+        initialTransactionPriority: currentTransactionPriority,
+        initialBalanceDisplayMode: currentBalanceDisplayMode);
     await store.loadSettings();
 
     return store;
@@ -76,7 +83,8 @@ abstract class SettingsStoreBase with Store {
   }
 
   @action
-  Future setCurrentTransactionPriority({@required TransactionPriority priority}) async {
+  Future setCurrentTransactionPriority(
+      {@required TransactionPriority priority}) async {
     this.transactionPriority = priority;
     await _sharedPreferences.setInt(
         currentTransactionPriorityKey, priority.serialize());
