@@ -10,6 +10,9 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/screens/exchange/widgets/exchange_card.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/widgets/picker.dart';
+import 'package:cake_wallet/src/domain/exchange/xmrto/xmrto_exchange_provider.dart';
+import 'package:cake_wallet/src/stores/exchange/exchange_trade_state.dart';
+import 'package:cake_wallet/src/stores/exchange/limits_state.dart';
 
 class ExchangePage extends BasePage {
   // final depositAddressController = TextEditingController();
