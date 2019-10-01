@@ -64,6 +64,7 @@ import 'package:cake_wallet/src/screens/accounts/account_page.dart';
 import 'package:cake_wallet/src/screens/accounts/account_list_page.dart';
 import 'package:cake_wallet/src/screens/address_book/address_book_page.dart';
 import 'package:cake_wallet/src/screens/address_book/contact_page.dart';
+import 'package:cake_wallet/src/screens/exchange_trade/exchange_funds_page.dart';
 
 class Router {
   static Route<dynamic> generateRoute(
@@ -357,6 +358,11 @@ class Router {
                   child: ShowKeysPage());
             },
             fullscreenDialog: true);
+        
+      case Routes.exchangeFunds:
+        return CupertinoPageRoute(builder: (_) => ExchangeFundsPage(
+            '46BeWrHpwXmHDpDEUmZBWZfoQpdc6HaERCNmx1pEYL2rAcuwufPN9rXHHtyUA4QVy66qeFQkn6sfK8aHYjA3jk3o1Bv16em',
+            2.0, 'XMR', 'Something'));
 
       default:
         return MaterialPageRoute(
