@@ -65,6 +65,7 @@ import 'package:cake_wallet/src/screens/accounts/account_list_page.dart';
 import 'package:cake_wallet/src/screens/address_book/address_book_page.dart';
 import 'package:cake_wallet/src/screens/address_book/contact_page.dart';
 import 'package:cake_wallet/src/screens/exchange_trade/exchange_funds_page.dart';
+import 'package:cake_wallet/src/screens/exchange_trade/exchange_trade_page.dart';
 
 class Router {
   static Route<dynamic> generateRoute(
@@ -362,7 +363,22 @@ class Router {
       case Routes.exchangeFunds:
         return CupertinoPageRoute(builder: (_) => ExchangeFundsPage(
             '46BeWrHpwXmHDpDEUmZBWZfoQpdc6HaERCNmx1pEYL2rAcuwufPN9rXHHtyUA4QVy66qeFQkn6sfK8aHYjA3jk3o1Bv16em',
-            2.0, 'XMR', 'Something'));
+            2.0,
+            'XMR',
+            'Something'));
+
+      case Routes.exchangeTrade:
+        return CupertinoPageRoute(builder: (_) => ExchangeTradePage(
+            'ME3PRJGXGNME',
+            0.2244,
+            'XMR 61.613',
+            'Unpaid',
+            900,
+            '46BeWrHpwXmHDpDEUmZBWZfoQpdc6HaERCNmx1pEYL2rAcuwufPN9rXHHtyUA4QVy66qeFQkn6sfK8aHYjA3jk3o1Bv16em',
+            0.0,
+            'XMR',
+            'Apr 7',
+            'XMR.TO'));
 
       default:
         return MaterialPageRoute(

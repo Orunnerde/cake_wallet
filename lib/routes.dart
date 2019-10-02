@@ -31,4 +31,5 @@ class Routes {
   static const addressBookAddContact = '/address_book_add_contact';
   static const showKeys = '/show_keys';
   static const exchangeFunds = '/exchange_funds';
+  static const exchangeTrade = '/exchange_trade';
 }

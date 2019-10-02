@@ -118,6 +118,7 @@ class ExchangeFundsPage extends BasePage {
                        'Please press confirm to continue or go back to change '
                        'the amounts.',
                         textAlign: TextAlign.left,
+                        style: TextStyle(fontSize: 14.0),
                   )
                 ],
               ),
