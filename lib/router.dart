@@ -64,6 +64,7 @@ import 'package:cake_wallet/src/screens/accounts/account_page.dart';
 import 'package:cake_wallet/src/screens/accounts/account_list_page.dart';
 import 'package:cake_wallet/src/screens/address_book/address_book_page.dart';
 import 'package:cake_wallet/src/screens/address_book/contact_page.dart';
+import 'package:cake_wallet/src/screens/trade_history/trade_history_page.dart';
 
 class Router {
   static Route<dynamic> generateRoute(
@@ -357,6 +358,14 @@ class Router {
                   child: ShowKeysPage());
             },
             fullscreenDialog: true);
+
+      case Routes.tradeHistory:
+        return MaterialPageRoute(builder: (_) => TradeHistoryPage([
+          new DateTime(2018, 2, 10, 11, 20),
+          new DateTime(2018, 2, 10, 11, 30),
+          new DateTime(2018, 2, 10, 11, 40),
+          new DateTime(2018, 2, 10, 11, 50)
+        ]));
 
       default:
         return MaterialPageRoute(
