@@ -35,6 +35,25 @@ class ExchangeTradePage extends BasePage {
       );
 
   @override
+  Widget leading(BuildContext context) {
+    return SizedBox(
+      height: 37,
+      child: ButtonTheme(
+        minWidth: double.minPositive,
+        child: FlatButton(
+          highlightColor: Colors.transparent,
+          splashColor: Colors.transparent,
+          padding: EdgeInsets.all(0),
+          onPressed: (){print('History');},
+          child: Text('History',
+            style: TextStyle(fontSize: 16.0),
+          )
+        ),
+      ),
+    );
+  }
+
+  @override
   Widget body(BuildContext context) {
     return Column(
       children: <Widget>[
