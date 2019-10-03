@@ -1,3 +1,5 @@
+import 'package:cake_wallet/src/domain/exchange/trade.dart';
+import 'package:cake_wallet/src/domain/exchange/trade_history.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -91,16 +93,22 @@ class HomePage extends StatelessWidget {
                       ),
                     ], child: DashboardPage(walletService: walletService)));
           case 1:
-            return Provider(
-                builder: (_) => ExchangeStore(
-                        initialProvider: XMRTOExchangeProvider(),
-                        initialDepositCurrency: CryptoCurrency.xmr,
-                        initialReceiveCurrency: CryptoCurrency.btc,
-                        providerList: [
-                          XMRTOExchangeProvider(),
-                          ChangeNowExchangeProvider()
-                        ]),
-                child: ExchangePage());
+            return MultiProvider(providers: [
+              Provider(
+                  builder: (_) => ExchangeStore(
+                          initialProvider: XMRTOExchangeProvider(),
+                          initialDepositCurrency: CryptoCurrency.xmr,
+                          initialReceiveCurrency: CryptoCurrency.btc,
+                          tradeHistory: TradeHistory(db: db),
+                          providerList: [
+                            XMRTOExchangeProvider(),
+                            ChangeNowExchangeProvider()
+                          ])),
+              ProxyProvider<SettingsStore, WalletStore>(
+                  builder: (_, settingsStore, __) => WalletStore(
+                      walletService: walletService,
+                      settingsStore: settingsStore)),
+            ], child: ExchangePage());
           case 2:
             return CupertinoTabView(
                 onGenerateRoute: (settings) => Router.generateRoute(

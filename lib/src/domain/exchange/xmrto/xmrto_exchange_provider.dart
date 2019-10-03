@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cake_wallet/src/domain/exchange/exchange_provider_description.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
@@ -11,16 +12,21 @@ import 'package:cake_wallet/src/domain/exchange/trade_request.dart';
 import 'package:cake_wallet/src/domain/exchange/trade_state.dart';
 import 'package:cake_wallet/src/domain/exchange/xmrto/xmrto_trade_request.dart';
 
-
 class XMRTOExchangeProvider extends ExchangeProvider {
   static const userAgent = 'CakeWallet/XMR iOS';
   static const apiUri = 'https://xmr.to/api/v2/xmr2btc';
 
   String get title => 'XMR.TO';
+
+  ExchangeProviderDescription get description =>
+      ExchangeProviderDescription.xmrto;
+
   List<ExchangePair> pairList = [
     ExchangePair(
         from: CryptoCurrency.xmr, to: CryptoCurrency.btc, reverse: false)
   ];
+
+  double _rate = 0;
 
   Future<Limits> fetchLimits({CryptoCurrency from, CryptoCurrency to}) async {
     final url = apiUri + '/order_parameter_query';
@@ -59,7 +65,14 @@ class XMRTOExchangeProvider extends ExchangeProvider {
 
     final responseJSON = json.decode(response.body);
     final uuid = responseJSON["uuid"];
-    return findTradeById(id: uuid);
+
+    return Trade(
+        id: uuid,
+        provider: description,
+        from: _request.from,
+        to: _request.to,
+        state: TradeState.created,
+        createdAt: DateTime.now());
   }
 
   Future<Trade> findTradeById({@required String id}) async {
@@ -81,7 +94,7 @@ class XMRTOExchangeProvider extends ExchangeProvider {
 
     final address = responseJSON['xmr_receiving_integrated_address'];
     final paymentId = responseJSON['xmr_required_payment_id_short'];
-    final amount = responseJSON['xmr_amount_total'];
+    final amount = responseJSON['xmr_amount_total'].toString();
     final stateRaw = responseJSON['state'];
     final expiredAtRaw = responseJSON['expires_at'];
     final expiredAt = dateFormatter.parse(expiredAtRaw);
@@ -90,6 +103,7 @@ class XMRTOExchangeProvider extends ExchangeProvider {
 
     return Trade(
         id: id,
+        provider: description,
         from: CryptoCurrency.xmr,
         to: CryptoCurrency.btc,
         inputAddress: address,
@@ -98,5 +112,30 @@ class XMRTOExchangeProvider extends ExchangeProvider {
         amount: amount,
         state: state,
         outputTransaction: outputTransaction);
+  }
+
+  Future<double> calculateAmount(
+      {CryptoCurrency from, CryptoCurrency to, double amount}) async {
+    if (from != CryptoCurrency.xmr && to != CryptoCurrency.btc) {
+      return 0;
+    }
+
+    if (_rate == null || _rate == 0) {
+      _rate = await _fetchRates();
+    }
+
+    return _rate * amount;
+  }
+
+  Future<double> _fetchRates() async {
+    const url = apiUri + '/order_parameter_query';
+    print('url $url');
+    final response =
+        await get(url, headers: {'Content-Type': 'application/json'});
+    final responseJSON = json.decode(response.body);
+    double btcprice = responseJSON['price'];
+    double price = 1 / btcprice;
+
+    return price;
   }
 }

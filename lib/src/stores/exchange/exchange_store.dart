@@ -5,6 +5,7 @@ import 'package:cake_wallet/src/domain/exchange/trade_request.dart';
 import 'package:cake_wallet/src/domain/exchange/xmrto/xmrto_exchange_provider.dart';
 import 'package:cake_wallet/src/domain/exchange/xmrto/xmrto_trade_request.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/src/domain/exchange/trade_history.dart';
 import 'package:cake_wallet/src/stores/exchange/exchange_trade_state.dart';
 import 'package:cake_wallet/src/stores/exchange/limits_state.dart';
 
@@ -31,19 +32,24 @@ abstract class ExchangeStoreBase with Store {
   @observable
   ExchangeTradeState tradeState;
 
-  String depositAddress;
-
+  @observable
   String depositAmount;
 
-  String receiveAddress;
-
+  @observable
   String receiveAmount;
+
+  TradeHistory tradeHistory;
+
+  String depositAddress;
+
+  String receiveAddress;
 
   ExchangeStoreBase(
       {@required ExchangeProvider initialProvider,
       @required CryptoCurrency initialDepositCurrency,
       @required CryptoCurrency initialReceiveCurrency,
-      @required this.providerList}) {
+      @required this.providerList,
+      @required this.tradeHistory}) {
     provider = initialProvider;
     depositCurrency = initialDepositCurrency;
     receiveCurrency = initialReceiveCurrency;
@@ -69,6 +75,41 @@ abstract class ExchangeStoreBase with Store {
   }
 
   @action
+  void changeReceiveAmount({String amount}) {
+    receiveAmount = amount;
+
+    if (amount == null || amount.isEmpty) {
+      depositAmount = '';
+      return;
+    }
+
+    final _amount = double.parse(amount) ?? 0;
+    
+    provider
+        .calculateAmount(
+            from: depositCurrency, to: receiveCurrency, amount: _amount)
+        .then((amount) => amount.toString())
+        .then((amount) => depositAmount = amount);
+  }
+
+  @action
+  void changeDepositAmount({String amount}) {
+    depositAmount = amount;
+    
+    if (amount == null || amount.isEmpty) {
+      depositAmount = '';
+      return;
+    }
+    
+    final _amount = double.parse(amount);
+    provider
+        .calculateAmount(
+            from: depositCurrency, to: receiveCurrency, amount: _amount)
+        .then((amount) => amount.toString())
+        .then((amount) => receiveAmount = amount);
+  }
+
+  @action
   Future loadLimits() async {
     limitsState = LimitsIsLoading();
 
@@ -90,12 +131,14 @@ abstract class ExchangeStoreBase with Store {
           to: depositCurrency,
           from: receiveCurrency,
           amount: receiveAmount,
-          address: receiveAddress);
+          address: receiveAddress,
+          refundAddress: depositAddress);
     }
 
     try {
       tradeState = TradeIsCreating();
-      await provider.createTrade(request: request);
+      final trade = await provider.createTrade(request: request);
+      await tradeHistory.add(trade: trade);
       tradeState = TradeIsCreatedSuccessfully();
     } catch (e) {
       tradeState = TradeIsCreatedFailure(error: e.toString());

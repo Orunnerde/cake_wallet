@@ -5,6 +5,7 @@ import 'package:cake_wallet/src/domain/monero/account.dart';
 import 'package:cake_wallet/src/domain/monero/monero_wallet.dart';
 import 'package:cake_wallet/src/domain/monero/subaddress.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
+import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 
 part 'wallet_store.g.dart';
@@ -24,6 +25,9 @@ abstract class WalletStoreBase with Store {
   @observable
   Account account;
 
+  @observable
+  CryptoCurrency type;
+
   WalletService _walletService;
   SettingsStore _settingsStore;
   StreamSubscription<Wallet> _onWalletChangeSubscription;
@@ -32,6 +36,7 @@ abstract class WalletStoreBase with Store {
     _walletService = walletService;
     _settingsStore = settingsStore;
     name = "Monero Wallet";
+    type = CryptoCurrency.xmr;
 
     if (_walletService.currentWallet != null) {
       _onWalletChanged(_walletService.currentWallet)

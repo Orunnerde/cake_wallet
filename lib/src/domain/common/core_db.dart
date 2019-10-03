@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:cake_wallet/src/domain/common/contact.dart';
 import 'package:cake_wallet/src/domain/common/node_list.dart';
+import 'package:cake_wallet/src/domain/exchange/trade_history.dart';
 
 class CoreDB {
   static const dbName = 'cw';
@@ -39,6 +40,12 @@ class CoreDB {
             '(${Contact.primaryKey} INTEGER PRIMARY KEY,' +
             '${Contact.nameColumn} TEXT,' +
             '${Contact.typeColumn} NUMERIC);');
+        await db.execute('CREATE TABLE ${TradeHistory.tableName} ' +
+            '(${TradeHistory.idColumn} TEXT PRIMARY KEY,' +
+            '${TradeHistory.providerColumn} NUMERIC,' +
+            '${TradeHistory.fromColumn} NUMERIC,' +
+            '${TradeHistory.toColumn} NUMERIC,' +
+            '${TradeHistory.dateColumn} INTEGER);');
       });
     }
     return _db;

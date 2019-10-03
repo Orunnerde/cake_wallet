@@ -5,32 +5,62 @@ import 'package:cake_wallet/src/widgets/picker.dart';
 import 'package:cake_wallet/src/widgets/address_text_field.dart';
 
 class ExchangeCard extends StatefulWidget {
-  final TextEditingController addressController;
-  final TextEditingController amountController;
-  final CryptoCurrency selectedCurrency;
-  final String walletName;
-  final String min;
-  final String max;
-  final bool isActive;
   final List<CryptoCurrency> currencies;
   final Function(CryptoCurrency) onCurrencySelected;
+  final CryptoCurrency initialCurrency;
+  final String initialWalletName;
+  final bool initialIsActive;
 
   ExchangeCard(
-      {@required this.selectedCurrency,
-      @required this.walletName,
-      @required this.min,
-      @required this.max,
-      this.isActive = true,
+      {Key key,
+      this.initialCurrency,
+      this.initialWalletName,
+      this.initialIsActive,
       this.currencies,
-      this.onCurrencySelected,
-      this.addressController,
-      this.amountController});
+      this.onCurrencySelected})
+      : super(key: key);
 
   @override
   createState() => ExchangeCardState();
 }
 
 class ExchangeCardState extends State<ExchangeCard> {
+  final addressController = TextEditingController();
+  final amountController = TextEditingController();
+
+  String _min;
+  String _max;
+  CryptoCurrency _selectedCurrency;
+  String _walletName;
+  bool _isActive;
+
+  @override
+  void initState() {
+    _isActive = widget.initialIsActive;
+    _walletName = widget.initialWalletName;
+    _selectedCurrency = widget.initialCurrency;
+    super.initState();
+  }
+
+  void changeLimits({String min, String max}) {
+    setState(() {
+      _min = min;
+      _max = max;
+    });
+  }
+
+  void changeSelectedCurrency(CryptoCurrency currency) {
+    setState(() => _selectedCurrency = currency);
+  }
+
+  void changeWalletName(String walletName) {
+    setState(() => _walletName = walletName);
+  }
+
+  void changeIsAction(bool isActive) {
+    setState(() => _isActive = isActive);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -56,7 +86,7 @@ class ExchangeCardState extends State<ExchangeCard> {
                           Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Text(widget.selectedCurrency.toString(),
+                                Text(_selectedCurrency.toString(),
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 24)),
@@ -65,8 +95,8 @@ class ExchangeCardState extends State<ExchangeCard> {
                                   height: 8,
                                 )
                               ]),
-                          widget.walletName != null
-                              ? Text(widget.walletName,
+                          _walletName != null
+                              ? Text(_walletName,
                                   style: TextStyle(
                                       fontSize: 12,
                                       color: Color.fromRGBO(155, 172, 197, 1)))
@@ -77,9 +107,11 @@ class ExchangeCardState extends State<ExchangeCard> {
                 SizedBox(width: 36),
                 Flexible(
                   child: TextField(
-                      controller: widget.amountController,
-                      enabled: widget.isActive,
+                      controller: amountController,
+                      enabled: _isActive,
                       textAlign: TextAlign.right,
+                      keyboardType: TextInputType.numberWithOptions(
+                          signed: false, decimal: false),
                       decoration: InputDecoration(
                           hintStyle: TextStyle(
                               color: Color.fromRGBO(191, 201, 215, 1),
@@ -91,7 +123,7 @@ class ExchangeCardState extends State<ExchangeCard> {
                                   color: Palette.lightGrey, width: 2.0)),
                           enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
-                                  color: widget.isActive
+                                  color: _isActive
                                       ? Palette.deepPurple
                                       : Palette.lightGrey,
                                   width: 2.0)))),
@@ -100,18 +132,18 @@ class ExchangeCardState extends State<ExchangeCard> {
         ),
         SizedBox(height: 5),
         Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
-          widget.min != null
+          _min != null
               ? Text(
-                  'Min: ${widget.min} ${widget.selectedCurrency.toString()}',
+                  'Min: $_min ${_selectedCurrency.toString()}',
                   style: TextStyle(
                       fontSize: 10,
                       height: 1.2,
                       color: Color.fromRGBO(155, 172, 197, 1)),
                 )
               : SizedBox(),
-          widget.min != null ? SizedBox(width: 10) : SizedBox(),
-          widget.max != null
-              ? Text('Max: ${widget.max} ${widget.selectedCurrency.toString()}',
+          _min != null ? SizedBox(width: 10) : SizedBox(),
+          _max != null
+              ? Text('Max: $_max ${_selectedCurrency.toString()}',
                   style: TextStyle(
                       fontSize: 10,
                       height: 1.2,
@@ -119,7 +151,7 @@ class ExchangeCardState extends State<ExchangeCard> {
               : SizedBox(),
         ]),
         SizedBox(height: 10),
-        AddressTextField(controller: widget.addressController)
+        AddressTextField(controller: addressController)
       ]),
     );
   }
@@ -128,7 +160,7 @@ class ExchangeCardState extends State<ExchangeCard> {
     showDialog(
         builder: (_) => Picker(
             items: widget.currencies,
-            selectedAtIndex: widget.currencies.indexOf(widget.selectedCurrency),
+            selectedAtIndex: widget.currencies.indexOf(_selectedCurrency),
             title: 'Change Currency',
             onItemSelected: (item) => widget.onCurrencySelected != null
                 ? widget.onCurrencySelected(item)

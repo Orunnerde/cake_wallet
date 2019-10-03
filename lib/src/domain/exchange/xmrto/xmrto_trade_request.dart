@@ -7,10 +7,12 @@ class XMRTOTradeRequest extends TradeRequest {
   final CryptoCurrency to;
   final String amount;
   final String address;
+  final String refundAddress;
 
   XMRTOTradeRequest(
       {@required this.from,
       @required this.to,
       @required this.amount,
-      @required this.address});
+      @required this.address,
+      @required this.refundAddress});
 }

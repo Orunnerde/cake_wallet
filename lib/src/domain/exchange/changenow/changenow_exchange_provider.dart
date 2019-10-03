@@ -9,11 +9,14 @@ import 'package:cake_wallet/src/domain/exchange/trade.dart';
 import 'package:cake_wallet/src/domain/exchange/trade_request.dart';
 import 'package:cake_wallet/src/domain/exchange/trade_state.dart';
 import 'package:cake_wallet/src/domain/exchange/changenow/changenow_request.dart';
+import 'package:cake_wallet/src/domain/exchange/exchange_provider_description.dart';
 
 class ChangeNowExchangeProvider extends ExchangeProvider {
   static const apiUri = 'https://changenow.io/api/v1';
   static const apiKey = '';
   String get title => 'ChangeNOW';
+  ExchangeProviderDescription get description =>
+      ExchangeProviderDescription.changeNow;
 
   ChangeNowExchangeProvider() {
     pairList = CryptoCurrency.all
@@ -74,6 +77,7 @@ class ChangeNowExchangeProvider extends ExchangeProvider {
         id: responseJSON['id'],
         from: _request.from,
         to: _request.to,
+        provider: description,
         inputAddress: responseJSON['payinAddress'],
         refundAddress: responseJSON['refundAddress'],
         extraId: responseJSON["payinExtraId"],
@@ -90,10 +94,19 @@ class ChangeNowExchangeProvider extends ExchangeProvider {
         id: id,
         from: CryptoCurrency.fromString(responseJSON['from']),
         to: CryptoCurrency.fromString(responseJSON['to']),
+        provider: description,
         inputAddress: responseJSON['payinAddress'],
         amount: responseJSON['amountSend'],
         state: TradeState.deserialize(raw: responseJSON['status']),
         extraId: responseJSON['payinExtraId'],
         outputTransaction: responseJSON['payoutHash']);
+  }
+
+  Future<double> calculateAmount(
+      {CryptoCurrency from, CryptoCurrency to, double amount}) async {
+
+        // Implement me
+        
+    return 0;
   }
 }
