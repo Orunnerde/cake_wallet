@@ -12,14 +12,15 @@ import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/domain/exchange/changenow/changenow_exchange_provider.dart';
 import 'package:cake_wallet/src/domain/exchange/xmrto/xmrto_exchange_provider.dart';
 import 'package:cake_wallet/src/screens/exchange/exchange_page.dart';
+import 'package:cake_wallet/src/screens/dashboard/dashboard_page.dart';
+import 'package:cake_wallet/src/screens/settings/settings.dart';
 import 'package:cake_wallet/src/stores/exchange/exchange_store.dart';
 import 'package:cake_wallet/src/stores/balance/balance_store.dart';
 import 'package:cake_wallet/src/stores/sync/sync_store.dart';
 import 'package:cake_wallet/src/stores/transaction_list/transaction_list_store.dart';
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/src/stores/node_list/node_list_store.dart';
-import 'package:cake_wallet/src/screens/dashboard/dashboard_page.dart';
-import 'package:cake_wallet/src/screens/settings/settings.dart';
+import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -80,10 +81,10 @@ class HomePage extends StatelessWidget {
                         builder: (context) =>
                             BalanceStore(walletService: walletService),
                       ),
-                      Provider(
-                        builder: (context) =>
-                            WalletStore(walletService: walletService),
-                      ),
+                      ProxyProvider<SettingsStore, WalletStore>(
+                          builder: (_, settingsStore, __) => WalletStore(
+                              walletService: walletService,
+                              settingsStore: settingsStore)),
                       Provider(
                         builder: (context) =>
                             SyncStore(walletService: walletService),

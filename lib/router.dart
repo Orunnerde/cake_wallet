@@ -182,9 +182,10 @@ class Router {
                     builder: (context) =>
                         BalanceStore(walletService: walletService),
                   ),
-                  Provider(
-                      builder: (_) =>
-                          WalletStore(walletService: walletService)),
+                  ProxyProvider<SettingsStore, WalletStore>(
+                      builder: (_, settingsStore, __) => WalletStore(
+                          walletService: walletService,
+                          settingsStore: settingsStore)),
                   Provider(
                     builder: (context) =>
                         SyncStore(walletService: walletService),
@@ -198,9 +199,10 @@ class Router {
                   Provider(
                       builder: (_) =>
                           BalanceStore(walletService: walletService)),
-                  Provider(
-                      builder: (_) =>
-                          WalletStore(walletService: walletService)),
+                  ProxyProvider<SettingsStore, WalletStore>(
+                      builder: (_, settingsStore, __) => WalletStore(
+                          walletService: walletService,
+                          settingsStore: settingsStore)),
                   ProxyProvider<SettingsStore, SendStore>(
                       builder: (_, settingsStore, __) => SendStore(
                           walletService: walletService,
@@ -211,9 +213,10 @@ class Router {
         return CupertinoPageRoute(
             fullscreenDialog: true,
             builder: (_) => MultiProvider(providers: [
-                  Provider(
-                      builder: (_) =>
-                          WalletStore(walletService: walletService)),
+                  ProxyProvider<SettingsStore, WalletStore>(
+                      builder: (_, settingsStore, __) => WalletStore(
+                          walletService: walletService,
+                          settingsStore: settingsStore)),
                   Provider(
                       builder: (_) =>
                           SubaddressListStore(walletService: walletService))
@@ -313,8 +316,10 @@ class Router {
                 Provider(
                     builder: (_) =>
                         AccountListStore(walletService: walletService)),
-                Provider(
-                    builder: (_) => WalletStore(walletService: walletService))
+                ProxyProvider<SettingsStore, WalletStore>(
+                    builder: (_, settingsStore, __) => WalletStore(
+                        walletService: walletService,
+                        settingsStore: settingsStore))
               ], child: AccountListPage());
             },
             fullscreenDialog: true);
