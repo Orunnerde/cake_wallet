@@ -362,13 +362,16 @@ class Router {
             },
             fullscreenDialog: true);
         
-      case Routes.exchangeConfirm:
+      /*case Routes.exchangeConfirm:
         return MaterialPageRoute(
             builder: (context) {
               return Provider(
                   builder: (_) => ExchangeTradeStore(),
                   child: ExchangeConfirmPage());
-            });
+            });*/
+
+      case Routes.exchangeConfirm:
+        return MaterialPageRoute(builder:(_) => ExchangeConfirmPage());
 
       default:
         return MaterialPageRoute(

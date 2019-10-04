@@ -5,13 +5,15 @@ import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/stores/exhange_trade/exchange_trade_store.dart';
 import 'package:provider/provider.dart';
+import 'package:cake_wallet/src/domain/exchange/trade.dart';
 
 class ExchangeConfirmPage extends BasePage {
   String get title => 'Copy ID';
 
   @override
   Widget body(BuildContext context) {
-    final exchangeTradeStore = Provider.of<ExchangeTradeStore>(context);
+    //final exchangeTradeStore = Provider.of<ExchangeTradeStore>(context);
+    final Trade trade = ModalRoute.of(context).settings.arguments;
 
     return Column(
       children: <Widget>[
@@ -30,7 +32,7 @@ class ExchangeConfirmPage extends BasePage {
                     style: TextStyle(fontSize: 18.0),
                   ),
                   SizedBox(height: 70.0,),
-                  Text('Trade ID:\n${exchangeTradeStore.exchangeTrade.id}',
+                  Text('Trade ID:\n${trade.id}',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 18.0),
                   ),

@@ -17,7 +17,7 @@ import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/src/stores/exhange_trade/exchange_trade_store.dart';
 
-final exchangeTradeStore = ExchangeTradeStore();
+//final exchangeTradeStore = ExchangeTradeStore();
 
 class ExchangePage extends BasePage {
   String get title => 'Exchange';
@@ -255,8 +255,8 @@ class ExchangeFormState extends State<ExchangeForm> {
         });
       }
       if (state is TradeIsCreatedSuccessfully) {
-        exchangeTradeStore.setTrade(state.trade);
-        Navigator.of(context).pushNamed(Routes.exchangeConfirm);
+        //exchangeTradeStore.setTrade(state.trade);
+        Navigator.of(context).pushNamed(Routes.exchangeConfirm, arguments: state.trade);
       }
     });
 
