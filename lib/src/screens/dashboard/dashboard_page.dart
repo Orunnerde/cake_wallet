@@ -1,5 +1,6 @@
 import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
+import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -66,7 +67,11 @@ class DashboardPage extends BasePage {
             CupertinoActionSheet(
               actions: <Widget>[
                 CupertinoActionSheetAction(
-                    child: const Text('Reconnect'), onPressed: () => null),
+                    child: const Text('Reconnect'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      _presentReconnectAlert(bodyContext);
+                    }),
                 CupertinoActionSheetAction(
                     child: const Text('Accounts'),
                     onPressed: () => Navigator.of(context)
@@ -432,5 +437,32 @@ class DashboardPage extends BasePage {
             return Container();
           });
     }));
+  }
+
+  Future _presentReconnectAlert(BuildContext context) async {
+    final walletStore = Provider.of<WalletStore>(context);
+
+    await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              'Reconnection',
+              textAlign: TextAlign.center,
+            ),
+            content: Text('Are you sure to reconnect ?'),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Cancel')),
+              FlatButton(
+                  onPressed: () {
+                    walletStore.reconnect();
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'))
+            ],
+          );
+        });
   }
 }

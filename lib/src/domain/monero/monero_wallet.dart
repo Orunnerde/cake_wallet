@@ -187,6 +187,7 @@ class MoneroWallet extends Wallet {
 
       if (isRecovery && (nodeHeight - currentHeight < moneroBlockSize)) {
         await setAsRecovered();
+        _onBalanceChange.add(this);
       }
 
       final now = DateTime.now().millisecondsSinceEpoch;

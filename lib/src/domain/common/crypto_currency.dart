@@ -35,6 +35,25 @@ class CryptoCurrency extends EnumerableItem<int> with Serializable<int> {
     }
   }
 
+  static CryptoCurrency fromString(String raw) {
+    switch (raw.toLowerCase()) {
+      case 'xmr':
+        return CryptoCurrency.xmr;
+      case 'btc':
+        return CryptoCurrency.btc;
+      case 'eth':
+        return CryptoCurrency.eth;
+      case 'ltc':
+        return CryptoCurrency.ltc;
+      case 'bch':
+        return CryptoCurrency.bch;
+      case 'dash':
+        return CryptoCurrency.dash;
+      default:
+        return null;
+    }
+  }
+
   const CryptoCurrency({final String title, final int raw})
       : super(title: title, raw: raw);
 
