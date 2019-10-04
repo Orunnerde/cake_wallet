@@ -3,16 +3,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/src/stores/trade_history/trade_history_store.dart';
+import 'package:provider/provider.dart';
 
 class ExchangeConfirmPage extends BasePage {
   String get title => 'Copy ID';
 
-  final String tradeID;
-
-  ExchangeConfirmPage(this.tradeID);
-
   @override
   Widget body(BuildContext context) {
+    final tradeHistoryStore = Provider.of<TradeHistoryStore>(context);
+    String _tradeID = '';
+
+    if (tradeHistoryStore.tradeList != null){
+      _tradeID = tradeHistoryStore.tradeList[tradeHistoryStore.tradeList.length - 1].id;
+    }
+
     return Column(
       children: <Widget>[
         Expanded(
@@ -30,7 +35,7 @@ class ExchangeConfirmPage extends BasePage {
                     style: TextStyle(fontSize: 18.0),
                   ),
                   SizedBox(height: 70.0,),
-                  Text('Trade ID:\n$tradeID',
+                  Text('Trade ID:\n$_tradeID',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 18.0),
                   ),
