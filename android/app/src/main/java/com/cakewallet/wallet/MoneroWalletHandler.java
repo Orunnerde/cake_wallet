@@ -210,6 +210,7 @@ public class MoneroWalletHandler implements WalletListener {
 
             try {
                 PendingTransaction transaction = getCurrentWallet().createTransaction(address, paymentId, amount, priority, accountIndex);
+                Thread.currentThread().setPriority(8); // FIXME: Unnamed constant
                 HashMap<String, String> tx = new HashMap<String, String>();
                 tx.put("id", String.valueOf(transaction.id));
                 tx.put("amount", transaction.getAmount());

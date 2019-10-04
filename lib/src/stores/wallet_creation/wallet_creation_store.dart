@@ -20,7 +20,7 @@ abstract class WalletCreationStoreBase with Store {
   @observable
   String errorMessage;
 
-  WalletCreationStoreBase(
+  WalletCreationStoreBase( 
       {@required this.authStore,
       @required this.walletListService,
       @required this.sharedPreferences}) {

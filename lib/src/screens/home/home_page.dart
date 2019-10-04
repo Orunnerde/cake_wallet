@@ -1,6 +1,5 @@
-import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
-import 'package:cake_wallet/src/screens/exchange/exchange_page.dart';
-import 'package:cake_wallet/src/stores/exchange/exchange_store.dart';
+import 'package:cake_wallet/src/domain/exchange/trade.dart';
+import 'package:cake_wallet/src/domain/exchange/trade_history.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,13 +10,19 @@ import 'package:cake_wallet/src/domain/services/user_service.dart';
 import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
 import 'package:cake_wallet/src/domain/common/node_list.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
+import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/src/domain/exchange/changenow/changenow_exchange_provider.dart';
+import 'package:cake_wallet/src/domain/exchange/xmrto/xmrto_exchange_provider.dart';
+import 'package:cake_wallet/src/screens/exchange/exchange_page.dart';
+import 'package:cake_wallet/src/screens/dashboard/dashboard_page.dart';
+import 'package:cake_wallet/src/screens/settings/settings.dart';
+import 'package:cake_wallet/src/stores/exchange/exchange_store.dart';
 import 'package:cake_wallet/src/stores/balance/balance_store.dart';
 import 'package:cake_wallet/src/stores/sync/sync_store.dart';
 import 'package:cake_wallet/src/stores/transaction_list/transaction_list_store.dart';
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/src/stores/node_list/node_list_store.dart';
-import 'package:cake_wallet/src/screens/dashboard/dashboard_page.dart';
-import 'package:cake_wallet/src/screens/settings/settings.dart';
+import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -78,26 +83,32 @@ class HomePage extends StatelessWidget {
                         builder: (context) =>
                             BalanceStore(walletService: walletService),
                       ),
-                      Provider(
-                        builder: (context) =>
-                            WalletStore(walletService: walletService),
-                      ),
+                      ProxyProvider<SettingsStore, WalletStore>(
+                          builder: (_, settingsStore, __) => WalletStore(
+                              walletService: walletService,
+                              settingsStore: settingsStore)),
                       Provider(
                         builder: (context) =>
                             SyncStore(walletService: walletService),
                       ),
                     ], child: DashboardPage(walletService: walletService)));
           case 1:
-            return Provider(
-                builder: (_) => ExchangeStore(
-                        initialProvider: XMRTOExchangeProvider(),
-                        initialDepositCurrency: CryptoCurrency.xmr,
-                        initialReceiveCurrency: CryptoCurrency.btc,
-                        providerList: [
-                          XMRTOExchangeProvider(),
-                          ChangeNowExchangeProvider()
-                        ]),
-                child: ExchangePage());
+            return MultiProvider(providers: [
+              Provider(
+                  builder: (_) => ExchangeStore(
+                          initialProvider: XMRTOExchangeProvider(),
+                          initialDepositCurrency: CryptoCurrency.xmr,
+                          initialReceiveCurrency: CryptoCurrency.btc,
+                          tradeHistory: TradeHistory(db: db),
+                          providerList: [
+                            XMRTOExchangeProvider(),
+                            ChangeNowExchangeProvider()
+                          ])),
+              ProxyProvider<SettingsStore, WalletStore>(
+                  builder: (_, settingsStore, __) => WalletStore(
+                      walletService: walletService,
+                      settingsStore: settingsStore)),
+            ], child: ExchangePage());
           case 2:
             return CupertinoTabView(
                 onGenerateRoute: (settings) => Router.generateRoute(
@@ -109,7 +120,7 @@ class HomePage extends StatelessWidget {
                     settings),
                 builder: (context) => Provider(
                     builder: (_) => NodeListStore(nodeList: NodeList(db: db)),
-                    child: Settings())); //NodeListPage()
+                    child: Settings()));
         }
 
         return null;

@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'package:mobx/mobx.dart';
 import 'package:cake_wallet/src/domain/common/wallet.dart';
 import 'package:cake_wallet/src/domain/monero/account.dart';
 import 'package:cake_wallet/src/domain/monero/monero_wallet.dart';
 import 'package:cake_wallet/src/domain/monero/subaddress.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
-import 'package:mobx/mobx.dart';
+import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 
 part 'wallet_store.g.dart';
 
@@ -23,12 +25,18 @@ abstract class WalletStoreBase with Store {
   @observable
   Account account;
 
+  @observable
+  CryptoCurrency type;
+
   WalletService _walletService;
+  SettingsStore _settingsStore;
   StreamSubscription<Wallet> _onWalletChangeSubscription;
 
-  WalletStoreBase({WalletService walletService}) {
+  WalletStoreBase({WalletService walletService, SettingsStore settingsStore}) {
     _walletService = walletService;
+    _settingsStore = settingsStore;
     name = "Monero Wallet";
+    type = CryptoCurrency.xmr;
 
     if (_walletService.currentWallet != null) {
       _onWalletChanged(_walletService.currentWallet)
@@ -50,11 +58,19 @@ abstract class WalletStoreBase with Store {
   @action
   void setAccount(Account account) {
     final wallet = _walletService.currentWallet;
-    
+
     if (wallet is MoneroWallet) {
       this.account = account;
       wallet.account.value = account;
     }
+  }
+
+  @action
+  Future reconnect() async {
+    await _walletService.connectToNode(
+        uri: _settingsStore.node.uri,
+        login: _settingsStore.node.login,
+        password: _settingsStore.node.password);
   }
 
   Future _onWalletChanged(Wallet wallet) async {
