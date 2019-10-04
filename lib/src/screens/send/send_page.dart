@@ -364,7 +364,7 @@ class SendFormState extends State<SendForm> {
         });
       }
 
-      if (state == TransactionCreatedSuccessfully) {
+      if (state is TransactionCreatedSuccessfully) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showDialog(
               context: context,
@@ -390,7 +390,7 @@ class SendFormState extends State<SendForm> {
         });
       }
 
-      if (state == TransactionCommitted) {
+      if (state is TransactionCommitted) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showDialog(
               context: context,

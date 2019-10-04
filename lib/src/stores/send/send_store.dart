@@ -7,6 +7,7 @@ import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
 import 'package:cake_wallet/src/domain/common/fetch_price.dart';
 import 'package:cake_wallet/src/domain/monero/monero_transaction_creation_credentials.dart';
+import 'package:cake_wallet/src/domain/common/recipient_address_list.dart';
 import 'package:cake_wallet/src/stores/send/sending_state.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 
@@ -17,6 +18,7 @@ class SendStore = SendStoreBase with _$SendStore;
 abstract class SendStoreBase with Store {
   WalletService walletService;
   SettingsStore settingsStore;
+  RecipientAddressList recipientAddressList;
 
   @observable
   SendingState state;
@@ -31,8 +33,12 @@ abstract class SendStoreBase with Store {
   PendingTransaction _pendingTransaction;
   NumberFormat _cryptoNumberFormat;
   NumberFormat _fiatNumberFormat;
+  String _lastRecipientAddress;
 
-  SendStoreBase({@required this.walletService, @required this.settingsStore}) {
+  SendStoreBase(
+      {@required this.walletService,
+      @required this.settingsStore,
+      this.recipientAddressList}) {
     state = SendingStateInitial();
     _pendingTransaction = null;
     _cryptoNumberFormat = NumberFormat()..maximumFractionDigits = 12;
@@ -72,6 +78,7 @@ abstract class SendStoreBase with Store {
 
       _pendingTransaction = await walletService.createTransaction(credentials);
       state = TransactionCreatedSuccessfully();
+      _lastRecipientAddress = address;
     } catch (e) {
       state = SendingFailed(error: e.toString());
     }
@@ -80,9 +87,16 @@ abstract class SendStoreBase with Store {
   @action
   Future<void> commitTransaction() async {
     try {
+      final transactionId = _pendingTransaction.hash;
       state = TransactionCommiting();
       await _pendingTransaction.commit();
       state = TransactionCommitted();
+
+      if (settingsStore.shouldSaveRecipientAddress) {
+        await recipientAddressList.add(
+            recipientAddress: _lastRecipientAddress,
+            transactionId: transactionId);
+      }
     } catch (e) {
       state = SendingFailed(error: e.toString());
     }

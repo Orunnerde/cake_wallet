@@ -13,8 +13,10 @@ public class PendingTransaction {
 
     public String getAmount() { return Wallet.displayAmount(getAmountJNI()); }
     public String getFee() { return Wallet.displayAmount(getFeeJNI()); }
+    public String getHash() { return getHashJNI(); }
 
     private native void commitJNI();
     private native long getAmountJNI();
     private native long getFeeJNI();
+    private native String getHashJNI();
 }

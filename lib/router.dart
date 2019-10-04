@@ -1,3 +1,4 @@
+import 'package:cake_wallet/src/domain/common/recipient_address_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -206,7 +207,8 @@ class Router {
                   ProxyProvider<SettingsStore, SendStore>(
                       builder: (_, settingsStore, __) => SendStore(
                           walletService: walletService,
-                          settingsStore: settingsStore)),
+                          settingsStore: settingsStore,
+                          recipientAddressList: RecipientAddressList(db: db))),
                 ], child: SendPage()));
 
       case Routes.receive:
@@ -225,8 +227,10 @@ class Router {
       case Routes.transactionDetails:
         return CupertinoPageRoute(
             fullscreenDialog: true,
-            builder: (_) =>
-                TransactionDetailsPage(transactionInfo: settings.arguments));
+            builder: (_) => Provider(
+                builder: (_) => RecipientAddressList(db: db),
+                child: TransactionDetailsPage(
+                    transactionInfo: settings.arguments)));
 
       case Routes.newSubaddress:
         return CupertinoPageRoute(

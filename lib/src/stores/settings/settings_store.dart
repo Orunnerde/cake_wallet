@@ -12,10 +12,11 @@ part 'settings_store.g.dart';
 class SettingsStore = SettingsStoreBase with _$SettingsStore;
 
 abstract class SettingsStoreBase with Store {
-  static final currentNodeIdKey = 'current_node_id';
-  static final currentFiatCurrencyKey = 'current_fiat_currency';
-  static final currentTransactionPriorityKey = 'current_fee_priority';
-  static final currentBalanceDisplayModeKey = 'current_balance_display_mode';
+  static const currentNodeIdKey = 'current_node_id';
+  static const currentFiatCurrencyKey = 'current_fiat_currency';
+  static const currentTransactionPriorityKey = 'current_fee_priority';
+  static const currentBalanceDisplayModeKey = 'current_balance_display_mode';
+  static const shouldSaveRecipientAddressKey = 'save_recipient_address';
 
   static Future<SettingsStore> load(
       {@required SharedPreferences sharedPreferences,
@@ -29,13 +30,16 @@ abstract class SettingsStoreBase with Store {
         raw: sharedPreferences.getInt(currentTransactionPriorityKey));
     final currentBalanceDisplayMode = BalanceDisplayMode.deserialize(
         raw: sharedPreferences.getInt(currentBalanceDisplayModeKey));
+    final shouldSaveRecipientAddress =
+        sharedPreferences.getBool(shouldSaveRecipientAddressKey);
 
     final store = SettingsStore(
         sharedPreferences: sharedPreferences,
         nodeList: nodeList,
         initialFiatCurrency: currentFiatCurrency,
         initialTransactionPriority: currentTransactionPriority,
-        initialBalanceDisplayMode: currentBalanceDisplayMode);
+        initialBalanceDisplayMode: currentBalanceDisplayMode,
+        initialSaveRecipientAddress: shouldSaveRecipientAddress);
     await store.loadSettings();
 
     return store;
@@ -53,6 +57,9 @@ abstract class SettingsStoreBase with Store {
   @observable
   BalanceDisplayMode balanceDisplayMode;
 
+  @observable
+  bool shouldSaveRecipientAddress;
+
   SharedPreferences _sharedPreferences;
   NodeList _nodeList;
 
@@ -61,10 +68,12 @@ abstract class SettingsStoreBase with Store {
       @required NodeList nodeList,
       @required FiatCurrency initialFiatCurrency,
       @required TransactionPriority initialTransactionPriority,
-      @required BalanceDisplayMode initialBalanceDisplayMode}) {
+      @required BalanceDisplayMode initialBalanceDisplayMode,
+      @required bool initialSaveRecipientAddress}) {
     fiatCurrency = initialFiatCurrency;
     transactionPriority = initialTransactionPriority;
     balanceDisplayMode = initialBalanceDisplayMode;
+    shouldSaveRecipientAddress = initialSaveRecipientAddress;
     _sharedPreferences = sharedPreferences;
     _nodeList = nodeList;
   }
@@ -96,6 +105,14 @@ abstract class SettingsStoreBase with Store {
     this.balanceDisplayMode = balanceDisplayMode;
     await _sharedPreferences.setInt(
         currentBalanceDisplayModeKey, balanceDisplayMode.serialize());
+  }
+
+  @action
+  Future setSaveRecipientAddress(
+      {@required bool shouldSaveRecipientAddress}) async {
+    this.shouldSaveRecipientAddress = shouldSaveRecipientAddress;
+    await _sharedPreferences.setBool(
+        shouldSaveRecipientAddressKey, shouldSaveRecipientAddress);
   }
 
   Future loadSettings() async {

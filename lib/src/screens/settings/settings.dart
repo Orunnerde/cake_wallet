@@ -95,7 +95,6 @@ class SettingsState extends State<Settings> {
                               settingsStore.node == null
                                   ? ''
                                   : settingsStore.node.uri,
-                              // widget.currentNode,
                               style: TextStyle(
                                   fontSize: 16.0, color: Palette.wildDarkBlue),
                             )),
@@ -210,43 +209,45 @@ class SettingsState extends State<Settings> {
                           style: TextStyle(fontSize: 16.0),
                         ),
                         trailing: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _isSaveRecipientAddressOn =
-                                  !_isSaveRecipientAddressOn;
-                            });
-                          },
-                          child: AnimatedContainer(
-                            padding: EdgeInsets.only(left: 4.0, right: 4.0),
-                            alignment: _isSaveRecipientAddressOn
-                                ? Alignment.centerRight
-                                : Alignment.centerLeft,
-                            duration: Duration(milliseconds: 250),
-                            width: 55.0,
-                            height: 33.0,
-                            decoration: BoxDecoration(
-                                color: Palette.switchBackground,
-                                border: Border.all(color: Palette.switchBorder),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0))),
-                            child: Container(
-                              width: 25.0,
-                              height: 25.0,
-                              decoration: BoxDecoration(
-                                  color: _isSaveRecipientAddressOn
-                                      ? Palette.cakeGreen
-                                      : Palette.wildDarkBlue,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8.0))),
-                              child: Icon(
-                                _isSaveRecipientAddressOn
-                                    ? Icons.check
-                                    : Icons.close,
-                                color: Colors.white,
-                                size: 16.0,
-                              ),
-                            ),
-                          ),
+                          onTap: () => settingsStore.setSaveRecipientAddress(
+                              shouldSaveRecipientAddress:
+                                  !settingsStore.shouldSaveRecipientAddress),
+                          child: Observer(
+                              builder: (_) => AnimatedContainer(
+                                    padding:
+                                        EdgeInsets.only(left: 4.0, right: 4.0),
+                                    alignment:
+                                        settingsStore.shouldSaveRecipientAddress
+                                            ? Alignment.centerRight
+                                            : Alignment.centerLeft,
+                                    duration: Duration(milliseconds: 250),
+                                    width: 55.0,
+                                    height: 33.0,
+                                    decoration: BoxDecoration(
+                                        color: Palette.switchBackground,
+                                        border: Border.all(
+                                            color: Palette.switchBorder),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0))),
+                                    child: Container(
+                                      width: 25.0,
+                                      height: 25.0,
+                                      decoration: BoxDecoration(
+                                          color: settingsStore
+                                                  .shouldSaveRecipientAddress
+                                              ? Palette.cakeGreen
+                                              : Palette.wildDarkBlue,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(8.0))),
+                                      child: Icon(
+                                        settingsStore.shouldSaveRecipientAddress
+                                            ? Icons.check
+                                            : Icons.close,
+                                        color: Colors.white,
+                                        size: 16.0,
+                                      ),
+                                    ),
+                                  )),
                         )),
                   ],
                 ),

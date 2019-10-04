@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:cake_wallet/src/domain/common/contact.dart';
 import 'package:cake_wallet/src/domain/common/node_list.dart';
+import 'package:cake_wallet/src/domain/common/recipient_address_list.dart';
 import 'package:cake_wallet/src/domain/exchange/trade_history.dart';
 
 class CoreDB {
@@ -46,6 +47,10 @@ class CoreDB {
             '${TradeHistory.fromColumn} NUMERIC,' +
             '${TradeHistory.toColumn} NUMERIC,' +
             '${TradeHistory.dateColumn} INTEGER);');
+        await db.execute('CREATE TABLE ${RecipientAddressList.tableName}' +
+            '(${RecipientAddressList.idColumn} INTEGER PRIMARY KEY,' +
+            '${RecipientAddressList.recipientAddressColumn} TEXT,' +
+            '${RecipientAddressList.transactionIdColumn} TEXT KEY);');
       });
     }
     return _db;

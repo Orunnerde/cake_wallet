@@ -215,6 +215,7 @@ public class MoneroWalletHandler implements WalletListener {
                 tx.put("id", String.valueOf(transaction.id));
                 tx.put("amount", transaction.getAmount());
                 tx.put("fee", transaction.getFee());
+                tx.put("hash", transaction.getHash());
                 mainHandler.post(() -> result.success(tx));
             } catch (Exception e) {
                 mainHandler.post(() -> result.error("TRANSACTION_CREATION_ERROR", e.getMessage(), null));
