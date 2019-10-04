@@ -1,5 +1,3 @@
-import 'package:cake_wallet/src/screens/show_keys/show_keys_page.dart';
-import 'package:cake_wallet/src/stores/wallet/wallet_keys_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -36,6 +34,8 @@ import 'package:cake_wallet/src/stores/wallet_restoration/wallet_restoration_sto
 import 'package:cake_wallet/src/stores/wallet_seed/wallet_seed_store.dart';
 import 'package:cake_wallet/src/stores/account_list/account_list_store.dart';
 import 'package:cake_wallet/src/stores/address_book/address_book_store.dart';
+import 'package:cake_wallet/src/stores/settings/settings_store.dart';
+import 'package:cake_wallet/src/stores/wallet/wallet_keys_store.dart';
 
 // MARK: Import screens
 
@@ -64,6 +64,7 @@ import 'package:cake_wallet/src/screens/accounts/account_page.dart';
 import 'package:cake_wallet/src/screens/accounts/account_list_page.dart';
 import 'package:cake_wallet/src/screens/address_book/address_book_page.dart';
 import 'package:cake_wallet/src/screens/address_book/contact_page.dart';
+import 'package:cake_wallet/src/screens/show_keys/show_keys_page.dart';
 import 'package:cake_wallet/src/screens/exchange_trade/exchange_confirm_page.dart';
 
 class Router {
@@ -93,15 +94,15 @@ class Router {
         return CupertinoPageRoute(
             builder:
                 (_) =>
-                    ProxyProvider<AuthenticationStore, WalletCreationStore>(
-                        builder: (_, authStore, __) => WalletCreationStore(
-                            authStore: authStore,
-                            sharedPreferences: sharedPreferences,
-                            walletListService: walletListService),
-                        child: NewWalletPage(
-                            walletsService: walletListService,
-                            walletService: walletService,
-                            sharedPreferences: sharedPreferences)));
+                ProxyProvider<AuthenticationStore, WalletCreationStore>(
+                    builder: (_, authStore, __) => WalletCreationStore(
+                        authStore: authStore,
+                        sharedPreferences: sharedPreferences,
+                        walletListService: walletListService),
+                    child: NewWalletPage(
+                        walletsService: walletListService,
+                        walletService: walletService,
+                        sharedPreferences: sharedPreferences)));
 
       case Routes.setupPin:
         Function(BuildContext, String) callback;
@@ -118,7 +119,7 @@ class Router {
                         sharedPreferences: sharedPreferences)),
                 child: SetupPinCode(
                     onPinCodeSetup: (context, pin) =>
-                        callback == null ? null : callback(context, pin))),
+                    callback == null ? null : callback(context, pin))),
             fullscreenDialog: true);
 
       case Routes.restoreOptions:
@@ -138,7 +139,7 @@ class Router {
                     onPinCodeSetup: (context, _) => Navigator.pushNamed(
                         context, Routes.restoreWalletOptions))));
 
-      case Routes.seed: //WalletSeedInfo
+      case Routes.seed:
         return MaterialPageRoute(
             builder: (_) => Provider(
                 builder: (context) =>
@@ -147,71 +148,80 @@ class Router {
 
       case Routes.restoreWalletFromSeed:
         return CupertinoPageRoute(
-            builder: (_) => Provider(
-                builder: (_) => WalletRestorationStore(
-                    sharedPreferences: sharedPreferences,
-                    walletListService: walletListService),
-                child: RestoreWalletFromSeedPage(
-                    walletsService: walletListService,
-                    walletService: walletService,
-                    sharedPreferences: sharedPreferences)));
+            builder: (_) =>
+                ProxyProvider<AuthenticationStore, WalletRestorationStore>(
+                    builder: (_, authStore, __) => WalletRestorationStore(
+                        authStore: authStore,
+                        sharedPreferences: sharedPreferences,
+                        walletListService: walletListService),
+                    child: RestoreWalletFromSeedPage(
+                        walletsService: walletListService,
+                        walletService: walletService,
+                        sharedPreferences: sharedPreferences)));
 
       case Routes.restoreWalletFromKeys:
         return CupertinoPageRoute(
-            builder: (_) => Provider(
-                builder: (_) => WalletRestorationStore(
-                    sharedPreferences: sharedPreferences,
-                    walletListService: walletListService),
-                child: RestoreWalletFromKeysPage(
-                    walletsService: walletListService,
-                    walletService: walletService,
-                    sharedPreferences: sharedPreferences)));
+            builder: (_) =>
+                ProxyProvider<AuthenticationStore, WalletRestorationStore>(
+                    builder: (_, authStore, __) => WalletRestorationStore(
+                        authStore: authStore,
+                        sharedPreferences: sharedPreferences,
+                        walletListService: walletListService),
+                    child: RestoreWalletFromKeysPage(
+                        walletsService: walletListService,
+                        walletService: walletService,
+                        sharedPreferences: sharedPreferences)));
 
       case Routes.dashboard:
         return CupertinoPageRoute(
             builder: (_) => MultiProvider(providers: [
-                  Provider(
-                    builder: (context) =>
-                        TransactionListStore(walletService: walletService),
-                  ),
-                  Provider(
-                    builder: (context) =>
-                        BalanceStore(walletService: walletService),
-                  ),
-                  Provider(
-                      builder: (_) =>
-                          WalletStore(walletService: walletService)),
-                  Provider(
-                    builder: (context) =>
-                        SyncStore(walletService: walletService),
-                  ),
-                ], child: DashboardPage(walletService: walletService)));
+              Provider(
+                builder: (context) =>
+                    TransactionListStore(walletService: walletService),
+              ),
+              Provider(
+                builder: (context) =>
+                    BalanceStore(walletService: walletService),
+              ),
+              ProxyProvider<SettingsStore, WalletStore>(
+                  builder: (_, settingsStore, __) => WalletStore(
+                      walletService: walletService,
+                      settingsStore: settingsStore)),
+              Provider(
+                builder: (context) =>
+                    SyncStore(walletService: walletService),
+              ),
+            ], child: DashboardPage(walletService: walletService)));
 
       case Routes.send:
         return CupertinoPageRoute(
             fullscreenDialog: true,
             builder: (_) => MultiProvider(providers: [
-                  Provider(
-                      builder: (_) =>
-                          BalanceStore(walletService: walletService)),
-                  Provider(
-                      builder: (_) =>
-                          WalletStore(walletService: walletService)),
-                  Provider(
-                      builder: (_) => SendStore(walletService: walletService)),
-                ], child: SendPage()));
+              Provider(
+                  builder: (_) =>
+                      BalanceStore(walletService: walletService)),
+              ProxyProvider<SettingsStore, WalletStore>(
+                  builder: (_, settingsStore, __) => WalletStore(
+                      walletService: walletService,
+                      settingsStore: settingsStore)),
+              ProxyProvider<SettingsStore, SendStore>(
+                  builder: (_, settingsStore, __) => SendStore(
+                      walletService: walletService,
+                      settingsStore: settingsStore)),
+            ], child: SendPage()));
 
       case Routes.receive:
         return CupertinoPageRoute(
             fullscreenDialog: true,
             builder: (_) => MultiProvider(providers: [
-                  Provider(
-                      builder: (_) =>
-                          WalletStore(walletService: walletService)),
-                  Provider(
-                      builder: (_) =>
-                          SubaddressListStore(walletService: walletService))
-                ], child: ReceivePage()));
+              ProxyProvider<SettingsStore, WalletStore>(
+                  builder: (_, settingsStore, __) => WalletStore(
+                      walletService: walletService,
+                      settingsStore: settingsStore)),
+              Provider(
+                  builder: (_) =>
+                      SubaddressListStore(walletService: walletService))
+            ], child: ReceivePage()));
 
       case Routes.transactionDetails:
         return CupertinoPageRoute(
@@ -259,11 +269,11 @@ class Router {
 
         return MaterialPageRoute(
             builder: (_) => Provider(
-                  builder: (context) => AuthStore(userService: userService),
-                  child: AuthPage(
-                      onAuthenticationSuccessful: onAuthenticationSuccessful,
-                      onAuthenticationFailed: onAuthenticationFailed),
-                ),
+              builder: (context) => AuthStore(userService: userService),
+              child: AuthPage(
+                  onAuthenticationSuccessful: onAuthenticationSuccessful,
+                  onAuthenticationFailed: onAuthenticationFailed),
+            ),
             fullscreenDialog: true);
 
       case Routes.nodeList:
@@ -307,8 +317,10 @@ class Router {
                 Provider(
                     builder: (_) =>
                         AccountListStore(walletService: walletService)),
-                Provider(
-                    builder: (_) => WalletStore(walletService: walletService))
+                ProxyProvider<SettingsStore, WalletStore>(
+                    builder: (_, settingsStore, __) => WalletStore(
+                        walletService: walletService,
+                        settingsStore: settingsStore))
               ], child: AccountListPage());
             },
             fullscreenDialog: true);
@@ -365,9 +377,9 @@ class Router {
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(
-                  body: Center(
-                      child: Text('No route defined for ${settings.name}')),
-                ));
+              body: Center(
+                  child: Text('No route defined for ${settings.name}')),
+            ));
     }
   }
 }
