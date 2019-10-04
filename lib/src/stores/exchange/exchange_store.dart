@@ -139,7 +139,7 @@ abstract class ExchangeStoreBase with Store {
       tradeState = TradeIsCreating();
       final trade = await provider.createTrade(request: request);
       await tradeHistory.add(trade: trade);
-      tradeState = TradeIsCreatedSuccessfully();
+      tradeState = TradeIsCreatedSuccessfully(trade: trade);
     } catch (e) {
       tradeState = TradeIsCreatedFailure(error: e.toString());
     }

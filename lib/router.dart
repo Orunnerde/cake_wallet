@@ -38,6 +38,7 @@ import 'package:cake_wallet/src/stores/wallet_seed/wallet_seed_store.dart';
 import 'package:cake_wallet/src/stores/account_list/account_list_store.dart';
 import 'package:cake_wallet/src/stores/address_book/address_book_store.dart';
 import 'package:cake_wallet/src/stores/trade_history/trade_history_store.dart';
+import 'package:cake_wallet/src/stores/exhange_trade/exchange_trade_store.dart';
 
 // MARK: Import screens
 
@@ -365,7 +366,7 @@ class Router {
         return MaterialPageRoute(
             builder: (context) {
               return Provider(
-                  builder: (_) => TradeHistoryStore(tradeHistory: TradeHistory(db: db)),
+                  builder: (_) => ExchangeTradeStore(),
                   child: ExchangeConfirmPage());
             });
 
