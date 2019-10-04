@@ -3,18 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
-import 'package:cake_wallet/src/stores/exhange_trade/exchange_trade_store.dart';
-import 'package:provider/provider.dart';
 import 'package:cake_wallet/src/domain/exchange/trade.dart';
 
 class ExchangeConfirmPage extends BasePage {
   String get title => 'Copy ID';
 
+  final Trade trade;
+
+  ExchangeConfirmPage({@required this.trade});
+
   @override
   Widget body(BuildContext context) {
-    //final exchangeTradeStore = Provider.of<ExchangeTradeStore>(context);
-    final Trade trade = ModalRoute.of(context).settings.arguments;
-
     return Column(
       children: <Widget>[
         Expanded(

@@ -15,7 +15,6 @@ import 'package:cake_wallet/src/domain/services/user_service.dart';
 import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/domain/services/address_book_service.dart';
-import 'package:cake_wallet/src/domain/exchange/trade_history.dart';
 
 // MARK: Import stores
 
@@ -37,8 +36,6 @@ import 'package:cake_wallet/src/stores/wallet_restoration/wallet_restoration_sto
 import 'package:cake_wallet/src/stores/wallet_seed/wallet_seed_store.dart';
 import 'package:cake_wallet/src/stores/account_list/account_list_store.dart';
 import 'package:cake_wallet/src/stores/address_book/address_book_store.dart';
-import 'package:cake_wallet/src/stores/trade_history/trade_history_store.dart';
-import 'package:cake_wallet/src/stores/exhange_trade/exchange_trade_store.dart';
 
 // MARK: Import screens
 
@@ -361,17 +358,9 @@ class Router {
                   child: ShowKeysPage());
             },
             fullscreenDialog: true);
-        
-      /*case Routes.exchangeConfirm:
-        return MaterialPageRoute(
-            builder: (context) {
-              return Provider(
-                  builder: (_) => ExchangeTradeStore(),
-                  child: ExchangeConfirmPage());
-            });*/
 
       case Routes.exchangeConfirm:
-        return MaterialPageRoute(builder:(_) => ExchangeConfirmPage());
+        return MaterialPageRoute(builder:(_) => ExchangeConfirmPage(trade: settings.arguments));
 
       default:
         return MaterialPageRoute(
