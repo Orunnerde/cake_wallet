@@ -66,6 +66,7 @@ import 'package:cake_wallet/src/screens/accounts/account_list_page.dart';
 import 'package:cake_wallet/src/screens/address_book/address_book_page.dart';
 import 'package:cake_wallet/src/screens/address_book/contact_page.dart';
 import 'package:cake_wallet/src/screens/show_keys/show_keys_page.dart';
+import 'package:cake_wallet/src/screens/exchange_trade/exchange_confirm_page.dart';
 
 class Router {
   static Route<dynamic> generateRoute(
@@ -94,15 +95,15 @@ class Router {
         return CupertinoPageRoute(
             builder:
                 (_) =>
-                    ProxyProvider<AuthenticationStore, WalletCreationStore>(
-                        builder: (_, authStore, __) => WalletCreationStore(
-                            authStore: authStore,
-                            sharedPreferences: sharedPreferences,
-                            walletListService: walletListService),
-                        child: NewWalletPage(
-                            walletsService: walletListService,
-                            walletService: walletService,
-                            sharedPreferences: sharedPreferences)));
+                ProxyProvider<AuthenticationStore, WalletCreationStore>(
+                    builder: (_, authStore, __) => WalletCreationStore(
+                        authStore: authStore,
+                        sharedPreferences: sharedPreferences,
+                        walletListService: walletListService),
+                    child: NewWalletPage(
+                        walletsService: walletListService,
+                        walletService: walletService,
+                        sharedPreferences: sharedPreferences)));
 
       case Routes.setupPin:
         Function(BuildContext, String) callback;
@@ -119,7 +120,7 @@ class Router {
                         sharedPreferences: sharedPreferences)),
                 child: SetupPinCode(
                     onPinCodeSetup: (context, pin) =>
-                        callback == null ? null : callback(context, pin))),
+                    callback == null ? null : callback(context, pin))),
             fullscreenDialog: true);
 
       case Routes.restoreOptions:
@@ -175,23 +176,23 @@ class Router {
       case Routes.dashboard:
         return CupertinoPageRoute(
             builder: (_) => MultiProvider(providers: [
-                  Provider(
-                    builder: (context) =>
-                        TransactionListStore(walletService: walletService),
-                  ),
-                  Provider(
-                    builder: (context) =>
-                        BalanceStore(walletService: walletService),
-                  ),
-                  ProxyProvider<SettingsStore, WalletStore>(
-                      builder: (_, settingsStore, __) => WalletStore(
-                          walletService: walletService,
-                          settingsStore: settingsStore)),
-                  Provider(
-                    builder: (context) =>
-                        SyncStore(walletService: walletService),
-                  ),
-                ], child: DashboardPage(walletService: walletService)));
+              Provider(
+                builder: (context) =>
+                    TransactionListStore(walletService: walletService),
+              ),
+              Provider(
+                builder: (context) =>
+                    BalanceStore(walletService: walletService),
+              ),
+              ProxyProvider<SettingsStore, WalletStore>(
+                  builder: (_, settingsStore, __) => WalletStore(
+                      walletService: walletService,
+                      settingsStore: settingsStore)),
+              Provider(
+                builder: (context) =>
+                    SyncStore(walletService: walletService),
+              ),
+            ], child: DashboardPage(walletService: walletService)));
 
       case Routes.send:
         return CupertinoPageRoute(
@@ -215,14 +216,14 @@ class Router {
         return CupertinoPageRoute(
             fullscreenDialog: true,
             builder: (_) => MultiProvider(providers: [
-                  ProxyProvider<SettingsStore, WalletStore>(
-                      builder: (_, settingsStore, __) => WalletStore(
-                          walletService: walletService,
-                          settingsStore: settingsStore)),
-                  Provider(
-                      builder: (_) =>
-                          SubaddressListStore(walletService: walletService))
-                ], child: ReceivePage()));
+              ProxyProvider<SettingsStore, WalletStore>(
+                  builder: (_, settingsStore, __) => WalletStore(
+                      walletService: walletService,
+                      settingsStore: settingsStore)),
+              Provider(
+                  builder: (_) =>
+                      SubaddressListStore(walletService: walletService))
+            ], child: ReceivePage()));
 
       case Routes.transactionDetails:
         return CupertinoPageRoute(
@@ -272,11 +273,11 @@ class Router {
 
         return MaterialPageRoute(
             builder: (_) => Provider(
-                  builder: (context) => AuthStore(userService: userService),
-                  child: AuthPage(
-                      onAuthenticationSuccessful: onAuthenticationSuccessful,
-                      onAuthenticationFailed: onAuthenticationFailed),
-                ),
+              builder: (context) => AuthStore(userService: userService),
+              child: AuthPage(
+                  onAuthenticationSuccessful: onAuthenticationSuccessful,
+                  onAuthenticationFailed: onAuthenticationFailed),
+            ),
             fullscreenDialog: true);
 
       case Routes.nodeList:
@@ -374,12 +375,15 @@ class Router {
             },
             fullscreenDialog: true);
 
+      case Routes.exchangeConfirm:
+        return MaterialPageRoute(builder:(_) => ExchangeConfirmPage(trade: settings.arguments));
+
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(
-                  body: Center(
-                      child: Text('No route defined for ${settings.name}')),
-                ));
+              body: Center(
+                  child: Text('No route defined for ${settings.name}')),
+            ));
     }
   }
 }
