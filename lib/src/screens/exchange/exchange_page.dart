@@ -51,9 +51,13 @@ class ExchangePage extends BasePage {
 
   @override
   Widget leading(BuildContext context) {
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [Text('History')]);
+    return SizedBox(
+        width: 45,
+        child: FlatButton(
+          padding: EdgeInsets.all(0),
+          child: Text('History'),
+          onPressed: () => Navigator.of(context).pushNamed(Routes.tradeHistory),
+        ));
   }
 
   @override
@@ -252,7 +256,8 @@ class ExchangeFormState extends State<ExchangeForm> {
         });
       }
       if (state is TradeIsCreatedSuccessfully) {
-        Navigator.of(context).pushNamed(Routes.exchangeConfirm, arguments: state.trade);
+        Navigator.of(context)
+            .pushNamed(Routes.exchangeConfirm, arguments: state.trade);
       }
     });
 
