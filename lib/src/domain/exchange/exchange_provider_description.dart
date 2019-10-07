@@ -4,7 +4,7 @@ class ExchangeProviderDescription extends EnumerableItem<int>
     with Serializable<int> {
   static const xmrto = ExchangeProviderDescription(title: 'XMR.TO', raw: 0);
   static const changeNow =
-      ExchangeProviderDescription(title: 'ChangeNOW', raw: 0);
+      ExchangeProviderDescription(title: 'ChangeNOW', raw: 1);
 
   static ExchangeProviderDescription deserialize({int raw}) {
     switch (raw) {

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cake_wallet/src/domain/exchange/trade_not_found_exeption.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
@@ -10,10 +11,16 @@ import 'package:cake_wallet/src/domain/exchange/trade_request.dart';
 import 'package:cake_wallet/src/domain/exchange/trade_state.dart';
 import 'package:cake_wallet/src/domain/exchange/changenow/changenow_request.dart';
 import 'package:cake_wallet/src/domain/exchange/exchange_provider_description.dart';
+import 'package:cake_wallet/src/domain/exchange/trade_not_created_exeption.dart';
 
 class ChangeNowExchangeProvider extends ExchangeProvider {
   static const apiUri = 'https://changenow.io/api/v1';
-  static const apiKey = '';
+  static const apiKey =
+      'ab1e78750a63d17847a12822cd9d04d98163b9d7e5459264fcd024eca0926545';
+  static const _exchangeAmountUriSufix = '/exchange-amount/';
+  static const _transactionsUriSufix = '/transactions/';
+  static const _minAmountUriSufix = '/min-amount/';
+
   String get title => 'ChangeNOW';
   ExchangeProviderDescription get description =>
       ExchangeProviderDescription.changeNow;
@@ -39,7 +46,7 @@ class ChangeNowExchangeProvider extends ExchangeProvider {
 
   Future<Limits> fetchLimits({CryptoCurrency from, CryptoCurrency to}) async {
     final symbol = from.toString() + '_' + to.toString();
-    final url = apiUri + '/min-amount/' + symbol;
+    final url = apiUri + _minAmountUriSufix + symbol;
     final response = await get(url);
     final responseJSON = json.decode(response.body);
     final double min = responseJSON['minAmount'];
@@ -48,30 +55,28 @@ class ChangeNowExchangeProvider extends ExchangeProvider {
   }
 
   Future<Trade> createTrade({TradeRequest request}) async {
-    const url = apiUri + '/transactions/' + apiKey;
+    const url = apiUri + _transactionsUriSufix + apiKey;
     final _request = request as ChangeNowRequest;
     final body = {
       'from': _request.from.toString(),
       'to': _request.to.toString(),
       'address': _request.address,
+      'amount': _request.amount,
       'refundAddress': _request.refundAddress
     };
 
     final response = await post(url,
         headers: {'Content-Type': 'application/json'}, body: json.encode(body));
-
-    // if (response.statusCode != 200) {
-    //   // Throw error
-    //   json["error"].string {
-    //                     if error == "cannot_create_transction" {
-    //                         o.onError(ExchangerError.tradeNotCreated)
-    //                     } else {
-    //                         o.onError(ExchangerError.notCreated(error))
-    //                     }
-    //   return null;
-    // }
-
     final responseJSON = json.decode(response.body);
+
+    if (response.statusCode != 200) {
+      if (response.statusCode == 400) {
+        final error = responseJSON['message'];
+        throw TradeNotCreatedException(description, description: error);
+      }
+
+      throw TradeNotCreatedException(description);
+    }
 
     return Trade(
         id: responseJSON['id'],
@@ -81,14 +86,25 @@ class ChangeNowExchangeProvider extends ExchangeProvider {
         inputAddress: responseJSON['payinAddress'],
         refundAddress: responseJSON['refundAddress'],
         extraId: responseJSON["payinExtraId"],
+        createdAt: DateTime.now(),
         amount: _request.amount,
         state: TradeState.created);
   }
 
   Future<Trade> findTradeById({@required String id}) async {
-    final url = apiUri + '/transactions/' + id + '/' + apiKey;
+    final url = apiUri + _transactionsUriSufix + id + '/' + apiKey;
     final response = await get(url);
     final responseJSON = json.decode(response.body);
+
+    if (response.statusCode != 200) {
+      if (response.statusCode == 400) {
+        final error = responseJSON['message'];
+        throw TradeNotFoundException(id,
+            provider: description, description: error);
+      }
+
+      throw TradeNotFoundException(id, provider: description);
+    }
 
     return Trade(
         id: id,
@@ -104,9 +120,16 @@ class ChangeNowExchangeProvider extends ExchangeProvider {
 
   Future<double> calculateAmount(
       {CryptoCurrency from, CryptoCurrency to, double amount}) async {
+    final url = apiUri +
+        _exchangeAmountUriSufix +
+        amount.toString() +
+        '/' +
+        from.toString() +
+        '_' +
+        to.toString();
+    final response = await get(url);
+    final responseJSON = json.decode(response.body);
 
-        // Implement me
-        
-    return 0;
+    return responseJSON['estimatedAmount'] ?? 0;
   }
 }

@@ -11,6 +11,7 @@ import 'package:cake_wallet/src/screens/disclaimer/disclaimer_page.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -838,10 +839,13 @@ class SettingsState extends State<Settings> {
                         'Email',
                         style: TextStyle(fontSize: 14.0),
                       ),
-                      trailing: Text(
-                        'support@cakewallet.io',
-                        style:
-                            TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
+                      trailing: InkWell(
+                        onTap: () => launch('mailto:support@cakewallet.io'),
+                        child: Text(
+                          'support@cakewallet.io',
+                          style: TextStyle(
+                              fontSize: 14.0, color: Palette.cakeGreen),
+                        ),
                       ),
                     ),
                     Container(
@@ -870,10 +874,13 @@ class SettingsState extends State<Settings> {
                           )
                         ],
                       ),
-                      trailing: Text(
-                        'support@cakewallet.io',
-                        style:
-                            TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
+                      trailing: InkWell(
+                        onTap: () => launch('https://t.me/cake_wallet'),
+                        child: Text(
+                          'https://t.me/cake_wallet',
+                          style: TextStyle(
+                              fontSize: 14.0, color: Palette.cakeGreen),
+                        ),
                       ),
                     ),
                     Container(
@@ -902,10 +909,13 @@ class SettingsState extends State<Settings> {
                           )
                         ],
                       ),
-                      trailing: Text(
-                        'support@cakewallet.io',
-                        style:
-                            TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
+                      trailing: InkWell(
+                        onTap: () => launch('https://twitter.com/CakeWalletXMR'),
+                        child: Text(
+                          'https://twitter.com/CakeWalletXMR',
+                          style: TextStyle(
+                              fontSize: 14.0, color: Palette.cakeGreen),
+                        ),
                       ),
                     ),
                     Container(
@@ -934,10 +944,13 @@ class SettingsState extends State<Settings> {
                           )
                         ],
                       ),
-                      trailing: Text(
-                        'support@changenow.io',
-                        style:
-                            TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
+                      trailing: InkWell(
+                        onTap: () => launch('mailto:support@changenow.io'),
+                        child: Text(
+                          'support@changenow.io',
+                          style: TextStyle(
+                              fontSize: 14.0, color: Palette.cakeGreen),
+                        ),
                       ),
                     ),
                     Container(
@@ -950,28 +963,31 @@ class SettingsState extends State<Settings> {
                         height: 1.0,
                       ),
                     ),
-                    ListTile(
-                      contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          _morphImage,
-                          Container(
-                            padding: EdgeInsets.only(left: 10),
-                            child: Text(
-                              'Morph',
-                              style: TextStyle(
-                                  fontSize: 15.0, fontWeight: FontWeight.w500),
-                            ),
-                          )
-                        ],
-                      ),
-                      trailing: Text(
-                        'contact@morphtoken.com',
-                        style:
-                            TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
-                      ),
-                    ),
+                    // ListTile(
+                    //   contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
+                    //   title: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.start,
+                    //     children: <Widget>[
+                    //       _morphImage,
+                    //       Container(
+                    //         padding: EdgeInsets.only(left: 10),
+                    //         child: Text(
+                    //           'Morph',
+                    //           style: TextStyle(
+                    //               fontSize: 15.0, fontWeight: FontWeight.w500),
+                    //         ),
+                    //       )
+                    //     ],
+                    //   ),
+                    //   trailing: InkWell(
+                    //     onTap: () => launch('mailto:contact@morphtoken.com'),
+                    //     child: Text(
+                    //       'contact@morphtoken.com',
+                    //       style: TextStyle(
+                    //           fontSize: 14.0, color: Palette.cakeGreen),
+                    //     ),
+                    //   ),
+                    // ),
                     Container(
                       padding: EdgeInsets.only(
                         left: 20.0,
@@ -998,10 +1014,13 @@ class SettingsState extends State<Settings> {
                           )
                         ],
                       ),
-                      trailing: Text(
-                        'support@xmr.to',
-                        style:
-                            TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
+                      trailing: InkWell(
+                        onTap: () => launch('mailto:support@xmr.to'),
+                        child: Text(
+                          'support@xmr.to',
+                          style: TextStyle(
+                              fontSize: 14.0, color: Palette.cakeGreen),
+                        ),
                       ),
                     ),
                     Container(

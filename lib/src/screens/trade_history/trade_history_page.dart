@@ -1,3 +1,4 @@
+import 'package:cake_wallet/src/domain/exchange/exchange_provider_description.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
@@ -24,12 +25,12 @@ class TradeHistoryPage extends BasePage {
             ? 0
             : tradeHistoryStore.tradeList.length,
         itemBuilder: (BuildContext context, int index) {
-          final date = DateFormat("dd-MM-yyyy")
+          final date = DateFormat("dd-MM-yyyy, H:m")
               .format(tradeHistoryStore.tradeList[index].createdAt);
-          final time = DateFormat("H:m")
-              .format(tradeHistoryStore.tradeList[index].createdAt);
-          final poweredTitle =
-              tradeHistoryStore.tradeList[index].provider.title;
+          final provider =
+              tradeHistoryStore.tradeList[index].provider;
+          final poweredTitle = provider.title;
+          final imageSrc = _getPoweredImage(provider);
 
           return Container(
             child: Column(
@@ -41,13 +42,13 @@ class TradeHistoryPage extends BasePage {
                       )
                     : Offstage(),
                 ListTile(
-                    leading: _getPoweredImage(poweredTitle),
+                    leading: imageSrc,
                     title: Text(
                       '$poweredTitle',
                       style: TextStyle(fontSize: 16.0),
                     ),
                     trailing: Text(
-                      '$date, $time',
+                      date,
                       style: TextStyle(
                           fontSize: 16.0, color: Palette.wildDarkBlue),
                     )),
@@ -65,13 +66,13 @@ class TradeHistoryPage extends BasePage {
     );
   }
 
-  Image _getPoweredImage(String poweredTitle) {
+  Image _getPoweredImage(ExchangeProviderDescription provider) {
     Image image;
-    switch (poweredTitle) {
-      case 'XMR.TO':
+    switch (provider) {
+      case ExchangeProviderDescription.xmrto:
         image = Image.asset('assets/images/xmr_btc.png');
         break;
-      case 'ChangeNOW':
+      case ExchangeProviderDescription.changeNow:
         image = Image.asset('assets/images/change_now.png');
         break;
       default:

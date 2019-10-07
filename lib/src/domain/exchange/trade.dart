@@ -22,7 +22,9 @@ class Trade {
         provider: ExchangeProviderDescription.deserialize(raw: map['provider']),
         from: CryptoCurrency.deserialize(raw: map['input']),
         to: CryptoCurrency.deserialize(raw: map['output']),
-        createdAt: DateTime.fromMillisecondsSinceEpoch(map['date']));
+        createdAt: map['date'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(map['date'])
+            : null);
   }
 
   Trade(
@@ -45,7 +47,7 @@ class Trade {
       'provider': provider.serialize(),
       'input': from.serialize(),
       'output': to.serialize(),
-      'date': createdAt.millisecondsSinceEpoch
+      'date': createdAt != null ? createdAt.millisecondsSinceEpoch : null
     };
   }
 }

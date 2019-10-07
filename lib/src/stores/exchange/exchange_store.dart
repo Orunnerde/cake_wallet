@@ -1,10 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
+import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/src/domain/exchange/changenow/changenow_exchange_provider.dart';
+import 'package:cake_wallet/src/domain/exchange/changenow/changenow_request.dart';
 import 'package:cake_wallet/src/domain/exchange/exchange_provider.dart';
 import 'package:cake_wallet/src/domain/exchange/trade_request.dart';
 import 'package:cake_wallet/src/domain/exchange/xmrto/xmrto_exchange_provider.dart';
 import 'package:cake_wallet/src/domain/exchange/xmrto/xmrto_trade_request.dart';
-import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/domain/exchange/trade_history.dart';
 import 'package:cake_wallet/src/stores/exchange/exchange_trade_state.dart';
 import 'package:cake_wallet/src/stores/exchange/limits_state.dart';
@@ -84,7 +86,7 @@ abstract class ExchangeStoreBase with Store {
     }
 
     final _amount = double.parse(amount) ?? 0;
-    
+
     provider
         .calculateAmount(
             from: depositCurrency, to: receiveCurrency, amount: _amount)
@@ -95,12 +97,12 @@ abstract class ExchangeStoreBase with Store {
   @action
   void changeDepositAmount({String amount}) {
     depositAmount = amount;
-    
+
     if (amount == null || amount.isEmpty) {
       depositAmount = '';
       return;
     }
-    
+
     final _amount = double.parse(amount);
     provider
         .calculateAmount(
@@ -128,11 +130,20 @@ abstract class ExchangeStoreBase with Store {
 
     if (provider is XMRTOExchangeProvider) {
       request = XMRTOTradeRequest(
-          to: depositCurrency,
-          from: receiveCurrency,
+          to: receiveCurrency,
+          from: depositCurrency,
           amount: receiveAmount,
           address: receiveAddress,
           refundAddress: depositAddress);
+    }
+
+    if (provider is ChangeNowExchangeProvider) {
+      request = ChangeNowRequest(
+          from: depositCurrency,
+          to: receiveCurrency,
+          amount: depositAmount,
+          refundAddress: depositAddress,
+          address: receiveAddress);
     }
 
     try {
@@ -143,6 +154,17 @@ abstract class ExchangeStoreBase with Store {
     } catch (e) {
       tradeState = TradeIsCreatedFailure(error: e.toString());
     }
+  }
+
+  @action
+  void reset() {
+    depositAmount = '';
+    receiveAmount = '';
+    depositAddress = '';
+    receiveAddress = '';
+    provider = XMRTOExchangeProvider();
+    depositCurrency = CryptoCurrency.xmr;
+    receiveCurrency = CryptoCurrency.btc;
   }
 
   void _onPairChange() {

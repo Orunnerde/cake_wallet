@@ -61,6 +61,22 @@ class ExchangeCardState extends State<ExchangeCard> {
     setState(() => _isActive = isActive);
   }
 
+  void active() {
+    setState(() => _isActive = true);
+  }
+
+  void disactive() {
+    setState(() => _isActive = false);
+  }
+
+  void changeAddress({String address}) {
+    setState(() => addressController.text = address);
+  }
+
+  void changeAmount({String amount}) {
+    setState(() => amountController.text = amount);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(

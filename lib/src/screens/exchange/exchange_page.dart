@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:cake_wallet/src/domain/exchange/exchange_provider_description.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
@@ -62,12 +63,17 @@ class ExchangePage extends BasePage {
 
   @override
   Widget trailing(BuildContext context) {
-    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Text(
-        'Clear',
-        style: TextStyle(color: Color.fromRGBO(155, 172, 197, 1)),
-      )
-    ]);
+    final exchangeStore = Provider.of<ExchangeStore>(context);
+
+    return SizedBox(
+        width: 50,
+        child: FlatButton(
+            padding: EdgeInsets.all(0),
+            child: Text(
+              'Clear',
+              style: TextStyle(color: Color.fromRGBO(155, 172, 197, 1)),
+            ),
+            onPressed: () => exchangeStore.reset()));
   }
 
   @override
@@ -162,21 +168,36 @@ class ExchangeFormState extends State<ExchangeForm> {
                       onPressed: () => exchangeStore.createTrade(),
                       isLoading: exchangeStore.tradeState is TradeIsCreating,
                     )),
-            Padding(
-              padding: EdgeInsets.only(top: 20, bottom: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Image.asset('assets/images/xmr_btc.png'),
-                  SizedBox(width: 10),
-                  Text(
-                    'Powered by XMR.to',
-                    style: TextStyle(
-                        fontSize: 14, color: Color.fromRGBO(191, 201, 215, 1)),
-                  )
-                ],
-              ),
-            )
+            Observer(builder: (_) {
+              final title = exchangeStore.provider.description.title;
+              var imageSrc = '';
+
+              switch (exchangeStore.provider.description) {
+                case ExchangeProviderDescription.xmrto:
+                  imageSrc = 'assets/images/xmr_btc.png';
+                  break;
+                case ExchangeProviderDescription.changeNow:
+                  imageSrc = 'assets/images/change_now.png';
+                  break;
+              }
+
+              return Padding(
+                padding: EdgeInsets.only(top: 20, bottom: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image.asset(imageSrc),
+                    SizedBox(width: 10),
+                    Text(
+                      'Powered by $title',
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Color.fromRGBO(191, 201, 215, 1)),
+                    )
+                  ],
+                ),
+              );
+            })
           ],
         ),
       ),
@@ -234,6 +255,18 @@ class ExchangeFormState extends State<ExchangeForm> {
       if (receiveKey.currentState.amountController.text !=
           store.receiveAmount) {
         receiveKey.currentState.amountController.text = amount;
+      }
+    });
+
+    reaction((_) => store.provider, (provider) {
+      final isReversed = provider is XMRTOExchangeProvider;
+
+      if (isReversed) {
+        receiveKey.currentState.active();
+        depositKey.currentState.disactive();
+      } else {
+        receiveKey.currentState.disactive();
+        depositKey.currentState.active();
       }
     });
 
@@ -319,11 +352,10 @@ class ExchangeFormState extends State<ExchangeForm> {
     key.currentState
         .changeWalletName(isCurrentTypeWallet ? walletStore.name : null);
 
-    if (isCurrentTypeWallet) {
-      key.currentState.addressController.text = walletStore.address;
-    } else if (key.currentState.addressController.text == walletStore.address) {
-      key.currentState.addressController.text = null;
-    }
+    key.currentState
+        .changeAddress(address: isCurrentTypeWallet ? walletStore.address : '');
+
+    key.currentState.changeAmount(amount: '');
   }
 
   void _onWalletNameChange(WalletStore walletStore, CryptoCurrency currency,

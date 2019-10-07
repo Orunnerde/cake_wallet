@@ -32,4 +32,6 @@ class Routes {
   static const showKeys = '/show_keys';
   static const exchangeConfirm = '/exchange_confirm';
   static const tradeHistory = '/trade_history';
+  static const exchangeFunds = '/exchange_funds';
+  static const exchangeTrade = '/exchange_trade';
 }
