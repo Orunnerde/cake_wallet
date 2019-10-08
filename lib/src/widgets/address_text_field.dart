@@ -31,7 +31,7 @@ class AddressTextField extends StatelessWidget {
                       child: Container(
                           padding: EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                              color: Color.fromRGBO(155, 172, 197, 0.1),
+                              color: Palette.wildDarkBlueWithOpacity,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(8))),
                           child: Image.asset(
@@ -46,7 +46,7 @@ class AddressTextField extends StatelessWidget {
                       child: Container(
                           padding: EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                              color: Color.fromRGBO(155, 172, 197, 0.1),
+                              color: Palette.wildDarkBlueWithOpacity,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(8))),
                           child: Image.asset('assets/images/qr_code_icon.png')),

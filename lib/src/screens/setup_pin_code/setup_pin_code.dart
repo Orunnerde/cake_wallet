@@ -4,6 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/src/stores/user/user_store.dart';
 import 'package:cake_wallet/src/screens/pin_code/pin_code.dart';
+import 'package:provider/provider.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class SetupPinCode extends PinCodeWidget {
   final Function(BuildContext, String) onPinCodeSetup;
@@ -88,14 +91,19 @@ class _SetupPinCodeState<WidgetType extends SetupPinCode>
   @override
   Widget build(BuildContext context) {
     _userStore = Provider.of<UserStore>(context);
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
 
     return Scaffold(
         appBar: CupertinoNavigationBar(
           middle: Text('Setup PIN'),
-          backgroundColor: Colors.white,
+          backgroundColor: (_themeChanger.getTheme() == Themes.darkTheme) ?
+            Theme.of(context).backgroundColor :
+            Colors.white,
           border: null,
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: (_themeChanger.getTheme() == Themes.darkTheme) ?
+          Theme.of(context).backgroundColor :
+          Colors.white,
         body: body(context));
   }
 }

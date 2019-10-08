@@ -21,6 +21,8 @@ import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
 import 'package:cake_wallet/src/domain/common/wallet_type.dart';
 import 'package:cake_wallet/src/domain/common/sync_status.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
+import 'theme_changer.dart';
+import 'themes.dart';
 
 void main() async {
   final sharedPreferences = await SharedPreferences.getInstance();
@@ -104,7 +106,7 @@ void main() async {
           settingsStore: settingsStore)));
 }
 
-class CakeWalletApp extends StatelessWidget {
+/*class CakeWalletApp extends StatelessWidget {
   final SharedPreferences sharedPreferences;
   final WalletService walletService;
   final WalletListService walletListService;
@@ -146,4 +148,83 @@ class CakeWalletApp extends StatelessWidget {
           ], child: Root())),
     );
   }
+}*/
+
+// NEW
+
+class CakeWalletApp extends StatelessWidget {
+  final SharedPreferences sharedPreferences;
+  final WalletService walletService;
+  final WalletListService walletListService;
+  final UserService userService;
+  final Database db;
+  final SettingsStore settingsStore;
+
+  CakeWalletApp(
+      {@required this.sharedPreferences,
+        @required this.walletService,
+        @required this.walletListService,
+        @required this.userService,
+        @required this.db,
+        @required this.settingsStore});
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<ThemeChanger>(
+      builder: (_) => ThemeChanger(Themes.lightTheme),
+      child: MaterialAppWithTheme(
+          sharedPreferences: sharedPreferences,
+          walletService: walletService,
+          walletListService: walletListService,
+          userService: userService,
+          db: db,
+          settingsStore: settingsStore),
+    );
+  }
+}
+
+class MaterialAppWithTheme extends StatelessWidget {
+  final SharedPreferences sharedPreferences;
+  final WalletService walletService;
+  final WalletListService walletListService;
+  final UserService userService;
+  final Database db;
+  final SettingsStore settingsStore;
+
+  MaterialAppWithTheme(
+      {@required this.sharedPreferences,
+        @required this.walletService,
+        @required this.walletListService,
+        @required this.userService,
+        @required this.db,
+        @required this.settingsStore});
+
+  @override
+  Widget build(BuildContext context) {
+
+    final theme = Provider.of<ThemeChanger>(context);
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+      systemNavigationBarColor: Colors.black,
+      statusBarColor: Colors.white,
+    ));
+
+    return MultiProvider(
+      providers: [Provider<SettingsStore>(builder: (_) => settingsStore)],
+      child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: theme.getTheme(),
+          onGenerateRoute: (settings) => Router.generateRoute(sharedPreferences,
+              walletListService, walletService, userService, db, settings),
+          home: MultiProvider(providers: [
+            Provider(builder: (_) => sharedPreferences),
+            Provider(builder: (_) => walletService),
+            Provider(builder: (_) => walletListService),
+            Provider(builder: (_) => userService),
+            Provider(builder: (_) => settingsStore),
+            Provider(builder: (_) => db),
+          ], child: Root())),
+    );
+  }
+
 }

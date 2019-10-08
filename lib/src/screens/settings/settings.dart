@@ -10,8 +10,10 @@ import 'package:cake_wallet/src/screens/settings/change_language.dart';
 import 'package:cake_wallet/src/screens/disclaimer/disclaimer_page.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:cake_wallet/src/widgets/standart_switch.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 import 'package:share/share.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -31,6 +33,7 @@ class SettingsState extends State<Settings> {
 
   bool _isSaveRecipientAddressOn = false;
   bool _isAllowBiometricalAuthenticationOn = false;
+  bool _isDarkTheme = false;
 
   @override
   void dispose() {
@@ -41,9 +44,13 @@ class SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     final settingsStore = Provider.of<SettingsStore>(context);
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
 
     return Scaffold(
-      backgroundColor: Palette.lightGrey2,
+      backgroundColor: _isDarkTheme? Theme.of(context).backgroundColor : Palette.lightGrey2,
       resizeToAvoidBottomPadding: false,
       appBar: CupertinoNavigationBar(
         leading: Offstage(),
@@ -51,14 +58,14 @@ class SettingsState extends State<Settings> {
           'Settings',
           style: TextStyle(fontSize: 16.0),
         ),
-        backgroundColor: Palette.lightGrey2,
+        backgroundColor: _isDarkTheme? Theme.of(context).backgroundColor : Palette.lightGrey2,
         border: null,
       ),
       body: Container(
         padding: EdgeInsets.only(
-            //top: 20.0,
-            //bottom: 20.0
-            ),
+          //top: 20.0,
+          //bottom: 20.0
+        ),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -84,7 +91,7 @@ class SettingsState extends State<Settings> {
               InkWell(
                 onTap: () => Navigator.of(context).pushNamed(Routes.nodeList),
                 child: Container(
-                  color: Colors.white,
+                  color: _isDarkTheme? PaletteDark.darkThemeMidGrey : Colors.white,
                   child: ListTile(
                     contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
                     title: Text(
@@ -93,12 +100,13 @@ class SettingsState extends State<Settings> {
                     ),
                     trailing: Observer(
                         builder: (_) => Text(
-                              settingsStore.node == null
-                                  ? ''
-                                  : settingsStore.node.uri,
-                              style: TextStyle(
-                                  fontSize: 16.0, color: Palette.wildDarkBlue),
-                            )),
+                          settingsStore.node == null
+                              ? ''
+                              : settingsStore.node.uri,
+                          // widget.currentNode,
+                          style: TextStyle(
+                              fontSize: 16.0, color: Palette.wildDarkBlue),
+                        )),
                   ),
                 ),
               ),
@@ -122,7 +130,7 @@ class SettingsState extends State<Settings> {
                 height: 14.0,
               ),
               Container(
-                color: Colors.white,
+                color: _isDarkTheme? PaletteDark.darkThemeMidGrey : Colors.white,
                 child: Column(
                   children: <Widget>[
                     ListTile(
@@ -133,11 +141,11 @@ class SettingsState extends State<Settings> {
                       ),
                       trailing: Observer(
                           builder: (_) => Text(
-                                settingsStore.balanceDisplayMode.toString(),
-                                style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Palette.wildDarkBlue),
-                              )),
+                            settingsStore.balanceDisplayMode.toString(),
+                            style: TextStyle(
+                                fontSize: 16.0,
+                                color: Palette.wildDarkBlue),
+                          )),
                       onTap: () {
                         _setBalance(context);
                       },
@@ -160,11 +168,11 @@ class SettingsState extends State<Settings> {
                       ),
                       trailing: Observer(
                           builder: (_) => Text(
-                                settingsStore.fiatCurrency.toString(),
-                                style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Palette.wildDarkBlue),
-                              )),
+                            settingsStore.fiatCurrency.toString(),
+                            style: TextStyle(
+                                fontSize: 16.0,
+                                color: Palette.wildDarkBlue),
+                          )),
                       onTap: () => _setCurrency(context),
                     ),
                     Container(
@@ -185,11 +193,11 @@ class SettingsState extends State<Settings> {
                       ),
                       trailing: Observer(
                           builder: (_) => Text(
-                                settingsStore.transactionPriority.toString(),
-                                style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Palette.wildDarkBlue),
-                              )),
+                            settingsStore.transactionPriority.toString(),
+                            style: TextStyle(
+                                fontSize: 16.0,
+                                color: Palette.wildDarkBlue),
+                          )),
                       onTap: () => _setTransactionPriority(context),
                     ),
                     Container(
@@ -204,52 +212,21 @@ class SettingsState extends State<Settings> {
                     ),
                     ListTile(
                         contentPadding:
-                            EdgeInsets.only(left: 20.0, right: 20.0),
+                        EdgeInsets.only(left: 20.0, right: 20.0),
                         title: Text(
                           'Save recipient address',
                           style: TextStyle(fontSize: 16.0),
                         ),
-                        trailing: GestureDetector(
-                          onTap: () => settingsStore.setSaveRecipientAddress(
-                              shouldSaveRecipientAddress:
-                                  !settingsStore.shouldSaveRecipientAddress),
-                          child: Observer(
-                              builder: (_) => AnimatedContainer(
-                                    padding:
-                                        EdgeInsets.only(left: 4.0, right: 4.0),
-                                    alignment:
-                                        settingsStore.shouldSaveRecipientAddress
-                                            ? Alignment.centerRight
-                                            : Alignment.centerLeft,
-                                    duration: Duration(milliseconds: 250),
-                                    width: 55.0,
-                                    height: 33.0,
-                                    decoration: BoxDecoration(
-                                        color: Palette.switchBackground,
-                                        border: Border.all(
-                                            color: Palette.switchBorder),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0))),
-                                    child: Container(
-                                      width: 25.0,
-                                      height: 25.0,
-                                      decoration: BoxDecoration(
-                                          color: settingsStore
-                                                  .shouldSaveRecipientAddress
-                                              ? Palette.cakeGreen
-                                              : Palette.wildDarkBlue,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(8.0))),
-                                      child: Icon(
-                                        settingsStore.shouldSaveRecipientAddress
-                                            ? Icons.check
-                                            : Icons.close,
-                                        color: Colors.white,
-                                        size: 16.0,
-                                      ),
-                                    ),
-                                  )),
-                        )),
+                        trailing: StandartSwitch(
+                            value: _isSaveRecipientAddressOn,
+                            onTaped: () {
+                              setState(() {
+                                _isSaveRecipientAddressOn =
+                                !_isSaveRecipientAddressOn;
+                              });
+                            }
+                        )
+                    ),
                   ],
                 ),
               ),
@@ -273,7 +250,7 @@ class SettingsState extends State<Settings> {
                 height: 14.0,
               ),
               Container(
-                color: Colors.white,
+                color: _isDarkTheme? PaletteDark.darkThemeMidGrey : Colors.white,
                 child: Column(
                   children: <Widget>[
                     ListTile(
@@ -286,7 +263,7 @@ class SettingsState extends State<Settings> {
                       onTap: () {
                         Navigator.of(context)
                             .pushNamed(Routes.auth, arguments: [
-                          (auth) => Navigator.of(context).popAndPushNamed(
+                              (auth) => Navigator.of(context).popAndPushNamed(
                               Routes.setupPin,
                               arguments: (setupPinContext, _) =>
                                   Navigator.of(context).pop())
@@ -330,16 +307,26 @@ class SettingsState extends State<Settings> {
                     ),
                     ListTile(
                         contentPadding:
-                            EdgeInsets.only(left: 20.0, right: 20.0),
+                        EdgeInsets.only(left: 20.0, right: 20.0),
                         title: Text(
                           'Allow biometrical authentication',
                           style: TextStyle(fontSize: 16.0),
                         ),
-                        trailing: GestureDetector(
+                        trailing: StandartSwitch(
+                            value: _isAllowBiometricalAuthenticationOn,
+                            onTaped: () {
+                              setState(() {
+                                _isAllowBiometricalAuthenticationOn =
+                                !_isAllowBiometricalAuthenticationOn;
+                              });
+                            }
+                        )
+
+                        /*GestureDetector(
                           onTap: () {
                             setState(() {
                               _isAllowBiometricalAuthenticationOn =
-                                  !_isAllowBiometricalAuthenticationOn;
+                              !_isAllowBiometricalAuthenticationOn;
                             });
                           },
                           child: AnimatedContainer(
@@ -354,7 +341,7 @@ class SettingsState extends State<Settings> {
                                 color: Palette.switchBackground,
                                 border: Border.all(color: Palette.switchBorder),
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0))),
+                                BorderRadius.all(Radius.circular(10.0))),
                             child: Container(
                               width: 25.0,
                               height: 25.0,
@@ -363,7 +350,7 @@ class SettingsState extends State<Settings> {
                                       ? Palette.cakeGreen
                                       : Palette.wildDarkBlue,
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(8.0))),
+                                  BorderRadius.all(Radius.circular(8.0))),
                               child: Icon(
                                 _isAllowBiometricalAuthenticationOn
                                     ? Icons.check
@@ -373,7 +360,28 @@ class SettingsState extends State<Settings> {
                               ),
                             ),
                           ),
-                        )),
+                        )*/),
+                    ListTile(
+                        contentPadding:
+                        EdgeInsets.only(left: 20.0, right: 20.0),
+                        title: Text(
+                          'Dark mode',
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                        trailing: StandartSwitch(
+                            value: _isDarkTheme,
+                            onTaped: () {
+                              setState(() {
+                                _isDarkTheme = !_isDarkTheme;
+                                if (_isDarkTheme) {
+                                  _themeChanger.setTheme(Themes.darkTheme);
+                                } else {
+                                  _themeChanger.setTheme(Themes.lightTheme);
+                                }
+                              });
+                            }
+                        )
+                    )
                   ],
                 ),
               ),
@@ -830,7 +838,7 @@ class SettingsState extends State<Settings> {
                 height: 14.0,
               ),
               Container(
-                color: Colors.white,
+                color: _isDarkTheme? PaletteDark.darkThemeMidGrey : Colors.white,
                 child: Column(
                   children: <Widget>[
                     ListTile(
@@ -839,13 +847,10 @@ class SettingsState extends State<Settings> {
                         'Email',
                         style: TextStyle(fontSize: 14.0),
                       ),
-                      trailing: InkWell(
-                        onTap: () => launch('mailto:support@cakewallet.io'),
-                        child: Text(
-                          'support@cakewallet.io',
-                          style: TextStyle(
-                              fontSize: 14.0, color: Palette.cakeGreen),
-                        ),
+                      trailing: Text(
+                        'support@cakewallet.io',
+                        style:
+                        TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
                       ),
                     ),
                     Container(
@@ -874,13 +879,10 @@ class SettingsState extends State<Settings> {
                           )
                         ],
                       ),
-                      trailing: InkWell(
-                        onTap: () => launch('https://t.me/cake_wallet'),
-                        child: Text(
-                          'https://t.me/cake_wallet',
-                          style: TextStyle(
-                              fontSize: 14.0, color: Palette.cakeGreen),
-                        ),
+                      trailing: Text(
+                        'support@cakewallet.io',
+                        style:
+                        TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
                       ),
                     ),
                     Container(
@@ -909,13 +911,10 @@ class SettingsState extends State<Settings> {
                           )
                         ],
                       ),
-                      trailing: InkWell(
-                        onTap: () => launch('https://twitter.com/CakeWalletXMR'),
-                        child: Text(
-                          'https://twitter.com/CakeWalletXMR',
-                          style: TextStyle(
-                              fontSize: 14.0, color: Palette.cakeGreen),
-                        ),
+                      trailing: Text(
+                        'support@cakewallet.io',
+                        style:
+                        TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
                       ),
                     ),
                     Container(
@@ -944,13 +943,10 @@ class SettingsState extends State<Settings> {
                           )
                         ],
                       ),
-                      trailing: InkWell(
-                        onTap: () => launch('mailto:support@changenow.io'),
-                        child: Text(
-                          'support@changenow.io',
-                          style: TextStyle(
-                              fontSize: 14.0, color: Palette.cakeGreen),
-                        ),
+                      trailing: Text(
+                        'support@changenow.io',
+                        style:
+                        TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
                       ),
                     ),
                     Container(
@@ -963,31 +959,28 @@ class SettingsState extends State<Settings> {
                         height: 1.0,
                       ),
                     ),
-                    // ListTile(
-                    //   contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
-                    //   title: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.start,
-                    //     children: <Widget>[
-                    //       _morphImage,
-                    //       Container(
-                    //         padding: EdgeInsets.only(left: 10),
-                    //         child: Text(
-                    //           'Morph',
-                    //           style: TextStyle(
-                    //               fontSize: 15.0, fontWeight: FontWeight.w500),
-                    //         ),
-                    //       )
-                    //     ],
-                    //   ),
-                    //   trailing: InkWell(
-                    //     onTap: () => launch('mailto:contact@morphtoken.com'),
-                    //     child: Text(
-                    //       'contact@morphtoken.com',
-                    //       style: TextStyle(
-                    //           fontSize: 14.0, color: Palette.cakeGreen),
-                    //     ),
-                    //   ),
-                    // ),
+                    ListTile(
+                      contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          _morphImage,
+                          Container(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text(
+                              'Morph',
+                              style: TextStyle(
+                                  fontSize: 15.0, fontWeight: FontWeight.w500),
+                            ),
+                          )
+                        ],
+                      ),
+                      trailing: Text(
+                        'contact@morphtoken.com',
+                        style:
+                        TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
+                      ),
+                    ),
                     Container(
                       padding: EdgeInsets.only(
                         left: 20.0,
@@ -1014,13 +1007,10 @@ class SettingsState extends State<Settings> {
                           )
                         ],
                       ),
-                      trailing: InkWell(
-                        onTap: () => launch('mailto:support@xmr.to'),
-                        child: Text(
-                          'support@xmr.to',
-                          style: TextStyle(
-                              fontSize: 14.0, color: Palette.cakeGreen),
-                        ),
+                      trailing: Text(
+                        'support@xmr.to',
+                        style:
+                        TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
                       ),
                     ),
                     Container(
@@ -1079,17 +1069,18 @@ class SettingsState extends State<Settings> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Please select:'),
+            backgroundColor: _isDarkTheme? Theme.of(context).backgroundColor : Colors.white,
             content: Container(
               height: 150.0,
               child: CupertinoPicker(
-                  backgroundColor: Colors.white,
+                  backgroundColor: _isDarkTheme? Theme.of(context).backgroundColor : Colors.white,
                   itemExtent: 45.0,
                   onSelectedItemChanged: (int index) => _value = list[index],
                   children: List.generate(
                       list.length,
-                      (index) => Center(
-                            child: Text(list[index].toString()),
-                          ))),
+                          (index) => Center(
+                        child: Text(list[index].toString()),
+                      ))),
             ),
             actions: <Widget>[
               FlatButton(
@@ -1106,7 +1097,7 @@ class SettingsState extends State<Settings> {
   void _setBalance(BuildContext context) async {
     final settingsStore = Provider.of<SettingsStore>(context);
     final selectedDisplayMode =
-        await _presentPicker(context, BalanceDisplayMode.all);
+    await _presentPicker(context, BalanceDisplayMode.all);
 
     if (selectedDisplayMode != null) {
       settingsStore.setCurrentBalanceDisplayMode(
@@ -1126,35 +1117,35 @@ class SettingsState extends State<Settings> {
   void _setTransactionPriority(BuildContext context) async {
     final settingsStore = Provider.of<SettingsStore>(context);
     final selectedPriority =
-        await _presentPicker(context, TransactionPriority.all);
+    await _presentPicker(context, TransactionPriority.all);
 
     if (selectedPriority != null) {
       settingsStore.setCurrentTransactionPriority(priority: selectedPriority);
     }
   }
 
-  // _showBackupPasswordAlertDialog(BuildContext context) async {
-  //   await showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: Text(
-  //             'Backup password',
-  //             textAlign: TextAlign.center,
-  //           ),
-  //           actions: <Widget>[
-  //             FlatButton(
-  //                 onPressed: () {
-  //                   Navigator.pop(context);
-  //                 },
-  //                 child: Text('Cancel')),
-  //             FlatButton(
-  //                 onPressed: () {
-  //                   Navigator.pop(context);
-  //                 },
-  //                 child: Text('Copy')),
-  //           ],
-  //         );
-  //       });
-  // }
+// _showBackupPasswordAlertDialog(BuildContext context) async {
+//   await showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+//           title: Text(
+//             'Backup password',
+//             textAlign: TextAlign.center,
+//           ),
+//           actions: <Widget>[
+//             FlatButton(
+//                 onPressed: () {
+//                   Navigator.pop(context);
+//                 },
+//                 child: Text('Cancel')),
+//             FlatButton(
+//                 onPressed: () {
+//                   Navigator.pop(context);
+//                 },
+//                 child: Text('Copy')),
+//           ],
+//         );
+//       });
+// }
 }

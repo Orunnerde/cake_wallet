@@ -42,13 +42,13 @@ abstract class BasePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).backgroundColor,
         resizeToAvoidBottomPadding: false,
         appBar: CupertinoNavigationBar(
           leading: leading(context),
           middle: middle(context),
           trailing: trailing(context),
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).backgroundColor,
           border: null,
         ),
         body: SafeArea(child: body(context)));

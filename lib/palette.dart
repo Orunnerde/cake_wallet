@@ -27,3 +27,18 @@ class Palette {
   static const Color green = Color.fromRGBO(39, 206, 80, 1.0);
   static const Color red = Color.fromRGBO(255, 51, 51, 1.0);
 }
+
+class PaletteDark {
+  static const Color darkThemeBackground = Color.fromRGBO(39, 41, 50, 1.0);
+  static const Color darkThemePurpleButton = Color.fromRGBO(182, 143, 255, 0.1);
+  static const Color violet = Color.fromRGBO(138, 80, 255, 1.0);
+  static const Color darkThemeIndigoButton = Color.fromRGBO(216, 223, 246, 0.1);
+  static const Color darkThemeIndigoButtonBorder = Color.fromRGBO(196, 206, 237, 0.4);
+  static const Color darkThemeButtonTextColor = Color.fromRGBO(155, 172, 197, 0.1);
+  static const Color darkThemeBlueButton = Color.fromRGBO(151, 226, 255, 0.1);
+  static const Color darkThemeBlueButtonBorder = Color.fromRGBO(62, 190, 240, 0.6);
+  static const Color darkThemeCloseButton = Color.fromRGBO(34, 40, 74, 1.0);
+  static const Color darkThemeMidGrey = Color.fromRGBO(20, 26, 38, 1.0);
+  static const Color darkThemePinButton = Color.fromRGBO(136, 155, 183, 0.1);
+  static const Color darkThemePinDigitButton = Color.fromRGBO(100, 115, 137, 0.34);
+}
