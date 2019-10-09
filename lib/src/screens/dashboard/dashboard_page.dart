@@ -288,11 +288,15 @@ class DashboardPage extends BasePage {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
-                                  left: 30, right: 30, top: 40),
+                                  left: 50, right: 50, top: 40),
                               child: Row(
                                 children: <Widget>[
                                   Expanded(
-                                      child: PrimaryButton(
+                                      child: PrimaryImageButton(
+                                    image: Image.asset(
+                                        'assets/images/send_icon.png',
+                                        height: 25,
+                                        width: 25),
                                     text: 'Send',
                                     onPressed: () => Navigator.of(context,
                                             rootNavigator: true)
@@ -303,7 +307,11 @@ class DashboardPage extends BasePage {
                                   )),
                                   SizedBox(width: 10),
                                   Expanded(
-                                      child: PrimaryButton(
+                                      child: PrimaryImageButton(
+                                    image: Image.asset(
+                                        'assets/images/receive_icon.png',
+                                        height: 25,
+                                        width: 25),
                                     text: 'Receive',
                                     onPressed: () => Navigator.of(context,
                                             rootNavigator: true)
@@ -365,7 +373,7 @@ class DashboardPage extends BasePage {
                 child: Center(
                     child: Text(title,
                         style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 16,
                             color: Color.fromRGBO(155, 172, 197, 1)))),
               );
             }
@@ -388,9 +396,12 @@ class DashboardPage extends BasePage {
                     ),
                   ),
                   child: Row(children: <Widget>[
-                    Image.asset(item.direction == TransactionDirection.incoming
-                        ? 'assets/images/transaction_incoming.png'
-                        : 'assets/images/transaction_outgoing.png'),
+                    Image.asset(
+                        item.direction == TransactionDirection.incoming
+                            ? 'assets/images/transaction_incoming.png'
+                            : 'assets/images/transaction_outgoing.png',
+                        height: 25,
+                        width: 25),
                     Expanded(
                         child: Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10),
@@ -405,10 +416,10 @@ class DashboardPage extends BasePage {
                                         ? 'Received'
                                         : 'Sent',
                                     style: const TextStyle(
-                                        fontSize: 14, color: Colors.black)),
+                                        fontSize: 16, color: Colors.black)),
                                 Text(item.amount(),
                                     style: const TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 16,
                                         color: Color.fromRGBO(84, 92, 139, 1)))
                               ]),
                           SizedBox(height: 6),
@@ -417,12 +428,12 @@ class DashboardPage extends BasePage {
                               children: <Widget>[
                                 Text(transactionDateFormat.format(item.date),
                                     style: const TextStyle(
-                                        fontSize: 11,
+                                        fontSize: 13,
                                         color:
                                             Color.fromRGBO(103, 107, 141, 1))),
                                 Text(item.fiatAmount(),
                                     style: const TextStyle(
-                                        fontSize: 12,
+                                        fontSize: 14,
                                         color:
                                             Color.fromRGBO(103, 107, 141, 1)))
                               ]),

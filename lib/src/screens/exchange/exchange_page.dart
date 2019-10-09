@@ -27,6 +27,8 @@ class ExchangePage extends BasePage {
     return InkWell(
       onTap: () => _presentProviderPicker(context),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -53,10 +55,14 @@ class ExchangePage extends BasePage {
   @override
   Widget leading(BuildContext context) {
     return SizedBox(
-        width: 45,
+        width: 55,
         child: FlatButton(
           padding: EdgeInsets.all(0),
-          child: Text('History'),
+          child: Text('History',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16)),
           onPressed: () => Navigator.of(context).pushNamed(Routes.tradeHistory),
         ));
   }
@@ -71,7 +77,10 @@ class ExchangePage extends BasePage {
             padding: EdgeInsets.all(0),
             child: Text(
               'Clear',
-              style: TextStyle(color: Color.fromRGBO(155, 172, 197, 1)),
+              style: TextStyle(
+                  color: Color.fromRGBO(155, 172, 197, 1),
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16),
             ),
             onPressed: () => exchangeStore.reset()));
   }
@@ -141,6 +150,8 @@ class ExchangeFormState extends State<ExchangeForm> {
                 initialWalletName: depositWalletName,
                 initialIsActive:
                     !(exchangeStore.provider is XMRTOExchangeProvider),
+                isAmountEstimated:
+                    exchangeStore.provider is XMRTOExchangeProvider,
                 currencies: CryptoCurrency.all,
                 onCurrencySelected: (currency) =>
                     exchangeStore.changeDepositCurrency(currency: currency)),
@@ -158,6 +169,8 @@ class ExchangeFormState extends State<ExchangeForm> {
                 initialWalletName: receiveWalletName,
                 initialIsActive:
                     exchangeStore.provider is XMRTOExchangeProvider,
+                isAmountEstimated:
+                    !(exchangeStore.provider is XMRTOExchangeProvider),
                 currencies: CryptoCurrency.all,
                 onCurrencySelected: (currency) =>
                     exchangeStore.changeReceiveCurrency(currency: currency)),
@@ -248,7 +261,9 @@ class ExchangeFormState extends State<ExchangeForm> {
         (currency) => _onCurrencyChange(currency, walletStore, depositKey));
 
     reaction((_) => store.depositAmount, (amount) {
-      depositKey.currentState.amountController.text = amount;
+      if (depositKey.currentState.amountController.text != amount) {
+        depositKey.currentState.amountController.text = amount;
+      }
     });
 
     reaction((_) => store.receiveAmount, (amount) {
@@ -268,6 +283,9 @@ class ExchangeFormState extends State<ExchangeForm> {
         receiveKey.currentState.disactive();
         depositKey.currentState.active();
       }
+
+      depositKey.currentState.changeIsAmountEstimated(isReversed);
+      receiveKey.currentState.changeIsAmountEstimated(!isReversed);
     });
 
     reaction((_) => store.tradeState, (state) {

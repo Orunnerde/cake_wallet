@@ -44,6 +44,7 @@ abstract class ExchangeTradeStoreBase with Store {
     try {
       final updatedTrade = await _provider.findTradeById(id: trade.id);
       trade = updatedTrade;
+      print('Trade updated');
     } catch (e) {
       print(e.toString());
     }

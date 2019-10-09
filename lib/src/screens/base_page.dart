@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:cake_wallet/src/widgets/nav_bar.dart';
 
 abstract class BasePage extends StatelessWidget {
   String get title => null;
   bool get isModalBackButton => false;
+
+  Color get backgroundColor => Colors.white;
 
   final _backArrowImage = Image.asset('assets/images/back_arrow.png');
   final _closeButtonImage = Image.asset('assets/images/close_button.png');
@@ -32,7 +35,13 @@ abstract class BasePage extends StatelessWidget {
       ? null
       : Text(
           title,
-          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 16.0,
+              height: 1.2,
+              fontWeight: FontWeight.w600,
+              fontFamily: 'Lato',
+              color: Colors.black),
         );
 
   Widget trailing(BuildContext context) => null;
@@ -42,15 +51,13 @@ abstract class BasePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: backgroundColor,
         resizeToAvoidBottomPadding: false,
-        appBar: CupertinoNavigationBar(
-          leading: leading(context),
-          middle: middle(context),
-          trailing: trailing(context),
-          backgroundColor: Colors.white,
-          border: null,
-        ),
+        appBar: NavBar(
+            leading: leading(context),
+            middle: middle(context),
+            trailing: trailing(context),
+            backgroundColor: backgroundColor),
         body: SafeArea(child: body(context)));
   }
 }

@@ -50,9 +50,12 @@ class BlockchainHeightState extends State<BlockchainHeightWidget> {
             ))
           ],
         ),
-        Text(
-          'or',
-          style: TextStyle(fontSize: 16.0),
+        Padding(
+          padding: EdgeInsets.only(top: 15, bottom: 15),
+          child: Text(
+            'or',
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+          ),
         ),
         Row(
           children: <Widget>[

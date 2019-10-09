@@ -67,16 +67,18 @@ class ChangeNowExchangeProvider extends ExchangeProvider {
 
     final response = await post(url,
         headers: {'Content-Type': 'application/json'}, body: json.encode(body));
-    final responseJSON = json.decode(response.body);
 
     if (response.statusCode != 200) {
       if (response.statusCode == 400) {
+        final responseJSON = json.decode(response.body);
         final error = responseJSON['message'];
         throw TradeNotCreatedException(description, description: error);
       }
 
       throw TradeNotCreatedException(description);
     }
+
+    final responseJSON = json.decode(response.body);
 
     return Trade(
         id: responseJSON['id'],
@@ -94,10 +96,10 @@ class ChangeNowExchangeProvider extends ExchangeProvider {
   Future<Trade> findTradeById({@required String id}) async {
     final url = apiUri + _transactionsUriSufix + id + '/' + apiKey;
     final response = await get(url);
-    final responseJSON = json.decode(response.body);
 
     if (response.statusCode != 200) {
       if (response.statusCode == 400) {
+        final responseJSON = json.decode(response.body);
         final error = responseJSON['message'];
         throw TradeNotFoundException(id,
             provider: description, description: error);
@@ -105,6 +107,8 @@ class ChangeNowExchangeProvider extends ExchangeProvider {
 
       throw TradeNotFoundException(id, provider: description);
     }
+
+    final responseJSON = json.decode(response.body);
 
     return Trade(
         id: id,

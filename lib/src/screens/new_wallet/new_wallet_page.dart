@@ -107,27 +107,30 @@ class _WalletNameFormState extends State<WalletNameForm> {
         key: _formKey,
         child: Column(
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: TextFormField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                        hintStyle: TextStyle(color: Palette.lightBlue),
-                        hintText: 'Wallet name',
-                        focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Palette.lightGrey, width: 2.0)),
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Palette.lightGrey, width: 2.0))),
-                    validator: (value) {
-                      if (value.isEmpty) return 'Please enter a wallet name';
-                      return null;
-                    },
-                  ),
-                )
-              ],
+            Padding(
+              padding: EdgeInsets.only(left: 13, right: 13),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: TextFormField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                          hintStyle: TextStyle(color: Palette.lightBlue),
+                          hintText: 'Wallet name',
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Palette.lightGrey, width: 2.0)),
+                          enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Palette.lightGrey, width: 2.0))),
+                      validator: (value) {
+                        if (value.isEmpty) return 'Please enter a wallet name';
+                        return null;
+                      },
+                    ),
+                  )
+                ],
+              ),
             ),
             Expanded(
                 child: Container(

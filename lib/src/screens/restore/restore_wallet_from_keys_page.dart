@@ -76,128 +76,134 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
         SystemChannels.textInput.invokeMethod('TextInput.hide');
       },
       child: Container(
-          padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Flexible(
-                        child: Container(
-                      padding: EdgeInsets.only(top: 20.0),
-                      child: TextFormField(
-                        controller: _nameController,
-                        decoration: InputDecoration(
-                            hintStyle: TextStyle(color: Palette.lightBlue),
-                            hintText: 'Wallet name',
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0)),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0))),
-                        validator: (value) {
-                          return null;
-                        },
-                      ),
-                    ))
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Flexible(
-                        child: Container(
-                      padding: EdgeInsets.only(top: 20.0),
-                      child: TextFormField(
-                        controller: _addressController,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        decoration: InputDecoration(
-                            hintStyle: TextStyle(color: Palette.lightBlue),
-                            hintText: 'Address',
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0)),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0))),
-                        validator: (value) {
-                          return null;
-                        },
-                      ),
-                    ))
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Flexible(
-                        child: Container(
-                      padding: EdgeInsets.only(top: 20.0),
-                      child: TextFormField(
-                        controller: _viewKeyController,
-                        decoration: InputDecoration(
-                            hintStyle: TextStyle(color: Palette.lightBlue),
-                            hintText: 'View key (private)',
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0)),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0))),
-                        validator: (value) {
-                          return null;
-                        },
-                      ),
-                    ))
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Flexible(
-                        child: Container(
-                      padding: EdgeInsets.only(top: 20.0),
-                      child: TextFormField(
-                        controller: _spendKeyController,
-                        decoration: InputDecoration(
-                            hintStyle: TextStyle(color: Palette.lightBlue),
-                            hintText: 'Spend key (private)',
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0)),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0))),
-                        validator: (value) {
-                          return null;
-                        },
-                      ),
-                    ))
-                  ],
-                ),
-                BlockchainHeightWidget(key: _blockchainHeightKey),
-                Flexible(
-                    child: Container(
-                        alignment: Alignment.bottomCenter,
-                        child: Observer(builder: (_) {
-                          return LoadingPrimaryButton(
-                              onPressed: () {
-                                if (_formKey.currentState.validate()) {
-                                  walletRestorationStore.restoreFromKeys(
-                                      name: _nameController.text,
-                                      address: _addressController.text,
-                                      viewKey: _viewKeyController.text,
-                                      spendKey: _spendKeyController.text,
-                                      restoreHeight: _blockchainHeightKey
-                                          .currentState.height);
-                                }
-                              },
-                              text: 'Recover');
-                        })))
-              ],
-            ),
-          )),
+        padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(left: 13, right: 13),
+                child: Column(children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Flexible(
+                          child: Container(
+                        padding: EdgeInsets.only(top: 20.0),
+                        child: TextFormField(
+                          controller: _nameController,
+                          decoration: InputDecoration(
+                              hintStyle: TextStyle(color: Palette.lightBlue),
+                              hintText: 'Wallet name',
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Palette.lightGrey, width: 2.0)),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Palette.lightGrey, width: 2.0))),
+                          validator: (value) {
+                            return null;
+                          },
+                        ),
+                      ))
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Flexible(
+                          child: Container(
+                        padding: EdgeInsets.only(top: 20.0),
+                        child: TextFormField(
+                          controller: _addressController,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          decoration: InputDecoration(
+                              hintStyle: TextStyle(color: Palette.lightBlue),
+                              hintText: 'Address',
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Palette.lightGrey, width: 2.0)),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Palette.lightGrey, width: 2.0))),
+                          validator: (value) {
+                            return null;
+                          },
+                        ),
+                      ))
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Flexible(
+                          child: Container(
+                        padding: EdgeInsets.only(top: 20.0),
+                        child: TextFormField(
+                          controller: _viewKeyController,
+                          decoration: InputDecoration(
+                              hintStyle: TextStyle(color: Palette.lightBlue),
+                              hintText: 'View key (private)',
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Palette.lightGrey, width: 2.0)),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Palette.lightGrey, width: 2.0))),
+                          validator: (value) {
+                            return null;
+                          },
+                        ),
+                      ))
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Flexible(
+                          child: Container(
+                        padding: EdgeInsets.only(top: 20.0),
+                        child: TextFormField(
+                          controller: _spendKeyController,
+                          decoration: InputDecoration(
+                              hintStyle: TextStyle(color: Palette.lightBlue),
+                              hintText: 'Spend key (private)',
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Palette.lightGrey, width: 2.0)),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Palette.lightGrey, width: 2.0))),
+                          validator: (value) {
+                            return null;
+                          },
+                        ),
+                      ))
+                    ],
+                  ),
+                  BlockchainHeightWidget(key: _blockchainHeightKey),
+                ]),
+              ),
+              Flexible(
+                  child: Container(
+                      alignment: Alignment.bottomCenter,
+                      child: Observer(builder: (_) {
+                        return LoadingPrimaryButton(
+                            onPressed: () {
+                              if (_formKey.currentState.validate()) {
+                                walletRestorationStore.restoreFromKeys(
+                                    name: _nameController.text,
+                                    address: _addressController.text,
+                                    viewKey: _viewKeyController.text,
+                                    spendKey: _spendKeyController.text,
+                                    restoreHeight: _blockchainHeightKey
+                                        .currentState.height);
+                              }
+                            },
+                            text: 'Recover');
+                      })))
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

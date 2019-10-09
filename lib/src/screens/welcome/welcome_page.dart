@@ -13,7 +13,7 @@ class WelcomePage extends BasePage {
   @override
   Widget body(BuildContext context) {
     final _screenWidth = MediaQuery.of(context).size.width;
-    final textScaleFactor = _screenWidth < _baseWidth ? 0.76 : 1;
+    final textScaleFactor = _screenWidth < _baseWidth ? 0.76 : 1.0;
 
     return Column(children: <Widget>[
       Stack(
