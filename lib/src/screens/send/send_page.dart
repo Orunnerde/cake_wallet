@@ -12,6 +12,8 @@ import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/src/stores/send/send_store.dart';
 import 'package:cake_wallet/src/stores/send/sending_state.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class SendPage extends BasePage {
   String get title => 'Send Monero';
@@ -41,13 +43,19 @@ class SendFormState extends State<SendForm> {
     final balanceStore = Provider.of<BalanceStore>(context);
     final walletStore = Provider.of<WalletStore>(context);
 
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     _setEffects(context);
 
     return Column(children: <Widget>[
       Container(
         padding: EdgeInsets.only(left: 38, right: 30),
         decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).backgroundColor,
             boxShadow: [
               BoxShadow(
                 color: Color.fromRGBO(132, 141, 198, 0.14),
@@ -79,7 +87,7 @@ class SendFormState extends State<SendForm> {
                       Text(walletStore.name,
                           style: TextStyle(
                               fontSize: 18,
-                              color: Color.fromRGBO(34, 40, 74, 1),
+                              color: _isDarkTheme ? Colors.white : Palette.nightBlue,
                               height: 1.25)),
                     ]);
               }),
@@ -90,11 +98,11 @@ class SendFormState extends State<SendForm> {
                       Text('XMR Balance',
                           style: TextStyle(
                               fontSize: 12,
-                              color: Color.fromRGBO(34, 40, 74, 1))),
+                              color: _isDarkTheme ? Colors.white : Palette.nightBlue,)),
                       Text(balanceStore.unlockedBalance,
                           style: TextStyle(
                               fontSize: 20,
-                              color: Color.fromRGBO(34, 40, 74, 1),
+                              color: _isDarkTheme ? Colors.white : Palette.nightBlue,
                               height: 1.1)),
                     ]);
               })
@@ -148,8 +156,7 @@ class SendFormState extends State<SendForm> {
                                     child: Container(
                                         padding: EdgeInsets.all(8),
                                         decoration: BoxDecoration(
-                                            color: Color.fromRGBO(
-                                                155, 172, 197, 0.1),
+                                            color: Palette.wildDarkBlueWithOpacity,
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(8))),
                                         child: Image.asset(
@@ -193,7 +200,7 @@ class SendFormState extends State<SendForm> {
                                 child: Text('XMR:',
                                     style: TextStyle(
                                         fontSize: 16,
-                                        color: Color.fromRGBO(34, 40, 74, 1))),
+                                        color: _isDarkTheme ? Colors.white : Palette.nightBlue,)),
                               ),
                               suffixIcon: Container(
                                 width: 1,
@@ -231,7 +238,7 @@ class SendFormState extends State<SendForm> {
                                     '${settingsStore.fiatCurrency.toString()}:',
                                     style: TextStyle(
                                         fontSize: 16,
-                                        color: Color.fromRGBO(34, 40, 74, 1))),
+                                        color: _isDarkTheme ? Colors.white : Palette.nightBlue,)),
                               ),
                               hintStyle: TextStyle(color: Palette.lightBlue),
                               hintText: '0.00',
@@ -252,12 +259,12 @@ class SendFormState extends State<SendForm> {
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
-                                  color: Color.fromRGBO(34, 40, 75, 1))),
+                                  color: _isDarkTheme ? Colors.white : Palette.nightBlue,)),
                           Text('XMR 0.00003121',
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
-                                  color: Color.fromRGBO(34, 40, 75, 1)))
+                                  color: _isDarkTheme ? Colors.white : Palette.nightBlue,))
                         ],
                       ),
                     ),
@@ -300,8 +307,10 @@ class SendFormState extends State<SendForm> {
                               });
                         },
                         text: 'Send',
-                        color: Color.fromRGBO(216, 223, 246, 0.7),
-                        borderColor: Color.fromRGBO(196, 206, 237, 1),
+                        color: _isDarkTheme ? PaletteDark.darkThemeIndigoButton
+                            : Palette.indigo,
+                        borderColor: _isDarkTheme ? PaletteDark.darkThemeIndigoButtonBorder
+                            : Palette.deepIndigo,
                         isLoading: sendStore.state is CreatingTransaction ||
                             sendStore.state is TransactionCommitted);
                   })

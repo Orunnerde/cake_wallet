@@ -14,6 +14,8 @@ import 'package:cake_wallet/src/stores/exchange_trade/exchange_trade_store.dart'
 import 'package:cake_wallet/src/stores/send/send_store.dart';
 import 'package:cake_wallet/src/stores/send/sending_state.dart';
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class ExchangeTradePage extends BasePage {
   String get title => 'Exchange';
@@ -38,6 +40,12 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
     final tradeStore = Provider.of<ExchangeTradeStore>(context);
     final sendStore = Provider.of<SendStore>(context);
     final walletStore = Provider.of<WalletStore>(context);
+
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
 
     _setEffects(context);
 
@@ -208,7 +216,12 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                                 //   backgroundColor: Palette.purple,
                                 // ));
                               },
-                              text: 'Copy Address'),
+                              text: 'Copy Address',
+                              color: _isDarkTheme ? PaletteDark.darkThemeIndigoButton
+                                  : Palette.indigo,
+                              borderColor: _isDarkTheme ? PaletteDark.darkThemeIndigoButtonBorder
+                                  : Palette.deepIndigo,
+                          ),
                         )),
                         Flexible(
                             child: Container(
@@ -226,7 +239,12 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                                 //   backgroundColor: Palette.purple,
                                 // ));
                               },
-                              text: 'Copy ID'),
+                              text: 'Copy ID',
+                              color: _isDarkTheme ? PaletteDark.darkThemeIndigoButton
+                                  : Palette.indigo,
+                              borderColor: _isDarkTheme ? PaletteDark.darkThemeIndigoButtonBorder
+                                  : Palette.deepIndigo,
+                          ),
                         ))
                       ],
                     ),
@@ -258,7 +276,12 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                     child: PrimaryButton(
                         onPressed: () => sendStore.createTransaction(
                             address: tradeStore.trade.inputAddress),
-                        text: 'Confirm'),
+                        text: 'Confirm',
+                        color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
+                            : Palette.purple,
+                        borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet
+                            : Palette.deepPink,
+                    ),
                   )
                 : Container()
           ],

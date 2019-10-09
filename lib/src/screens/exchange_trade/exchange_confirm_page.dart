@@ -6,6 +6,9 @@ import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/domain/exchange/trade.dart';
+import 'package:provider/provider.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class ExchangeConfirmPage extends BasePage {
   String get title => 'Copy ID';
@@ -16,6 +19,13 @@ class ExchangeConfirmPage extends BasePage {
 
   @override
   Widget body(BuildContext context) {
+
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return Column(
       children: <Widget>[
         Expanded(
@@ -49,14 +59,19 @@ class ExchangeConfirmPage extends BasePage {
                             content: Text(
                               'Copied to Clipboard',
                               textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.black),
+                              style: TextStyle(
+                                color: _isDarkTheme ? Colors.white : Colors.black
+                              ),
                             ),
-                            backgroundColor: Palette.purple,
+                            backgroundColor: _isDarkTheme ? PaletteDark.darkThemeViolet
+                                : Palette.purple,
                           ));
                         },
                         text: 'Copy ID',
-                        color: Palette.brightBlue,
-                        borderColor: Palette.cloudySky,
+                        color: _isDarkTheme ? PaletteDark.darkThemeBlueButton
+                            : Palette.brightBlue,
+                        borderColor: _isDarkTheme ? PaletteDark.darkThemeBlueButtonBorder
+                            : Palette.cloudySky,
                       )
                     ],
                   ),
@@ -66,7 +81,10 @@ class ExchangeConfirmPage extends BasePage {
           child: PrimaryButton(
               onPressed: () => Navigator.of(context)
                   .pushReplacementNamed(Routes.exchangeTrade, arguments: trade),
-              text: "I've saved the trade ID"),
+              text: "I've saved the trade ID",
+              color: _isDarkTheme ? PaletteDark.darkThemePurpleButton : Palette.purple,
+              borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet : Palette.deepPink,
+          ),
         )
       ],
     );

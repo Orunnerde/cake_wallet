@@ -7,6 +7,8 @@ import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/stores/wallet_seed/wallet_seed_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class SeedPage extends BasePage {
   bool get isModalBackButton => true;
@@ -16,6 +18,12 @@ class SeedPage extends BasePage {
   Widget body(BuildContext context) {
     final walletSeedStore = Provider.of<WalletSeedStore>(context);
     String _seed;
+
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
 
     return Form(
         child: GestureDetector(
@@ -82,8 +90,10 @@ class SeedPage extends BasePage {
                             padding: EdgeInsets.only(right: 15.0),
                             child: PrimaryButton(
                                 onPressed: () {},
-                                color: Palette.indigo,
-                                borderColor: Palette.deepIndigo,
+                                color: _isDarkTheme ? PaletteDark.darkThemeIndigoButton
+                                    : Palette.indigo,
+                                borderColor: _isDarkTheme ? PaletteDark.darkThemeIndigoButtonBorder
+                                    : Palette.deepIndigo,
                                 text: 'Save'),
                           )),
                           Flexible(
@@ -100,7 +110,12 @@ class SeedPage extends BasePage {
                                     ),
                                   );
                                 },
-                                text: 'Copy'),
+                                text: 'Copy',
+                                color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
+                                    : Palette.purple,
+                                borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet
+                                    : Palette.deepPink,
+                            ),
                           ))
                         ],
                       ),

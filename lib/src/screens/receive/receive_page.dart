@@ -9,6 +9,8 @@ import 'package:cake_wallet/src/stores/subaddress_list/subaddress_list_store.dar
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/src/screens/receive/qr_image.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class ReceivePage extends BasePage {
   bool get isModalBackButton => true;
@@ -32,6 +34,21 @@ class ReceiveBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final walletStore = Provider.of<WalletStore>(context);
     final subaddressListStore = Provider.of<SubaddressListStore>(context);
+
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    Color _currentColor, _notCurrentColor;
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) {
+      _currentColor = PaletteDark.darkThemeViolet;
+      _notCurrentColor = Colors.black;
+      _isDarkTheme = true;
+    }
+    else {
+      _currentColor = Palette.purple;
+      _notCurrentColor = Colors.white;
+      _isDarkTheme = false;
+    }
 
     return SafeArea(
         child: SingleChildScrollView(
@@ -77,9 +94,12 @@ class ReceiveBody extends StatelessWidget {
                               content: Text(
                                 'Copied to Clipboard',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.black),
+                                style: TextStyle(
+                                    color: _isDarkTheme ? Colors.white : Colors.black
+                                ),
                               ),
-                              backgroundColor: Palette.purple,
+                              backgroundColor: _isDarkTheme ? PaletteDark.darkThemeViolet
+                                  : Palette.purple,
                             ));
                           },
                           child: Text(
@@ -122,7 +142,7 @@ class ReceiveBody extends StatelessWidget {
           children: <Widget>[
             Expanded(
                 child: Container(
-              color: Palette.lightGrey2,
+              color: _isDarkTheme ? Colors.black : Palette.lightGrey2,
               child: Column(
                 children: <Widget>[
                   ListTile(
@@ -134,7 +154,9 @@ class ReceiveBody extends StatelessWidget {
                       width: 28.0,
                       height: 28.0,
                       decoration: BoxDecoration(
-                          color: Palette.purple, shape: BoxShape.circle),
+                          color: _isDarkTheme ? PaletteDark.darkThemeViolet : Palette.purple,
+                          shape: BoxShape.circle
+                      ),
                       child: InkWell(
                         onTap: () => Navigator.of(context)
                             .pushNamed(Routes.newSubaddress),
@@ -176,7 +198,7 @@ class ReceiveBody extends StatelessWidget {
                     : subaddress.address;
 
                 return Container(
-                  color: isCurrent ? Palette.purple : Palette.lightGrey2,
+                  color: isCurrent ? _currentColor : _notCurrentColor,
                   child: Column(
                     children: <Widget>[
                       ListTile(

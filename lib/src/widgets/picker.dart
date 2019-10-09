@@ -1,5 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class Picker<Item extends Object> extends StatelessWidget {
   final int selectedAtIndex;
@@ -15,6 +18,13 @@ class Picker<Item extends Object> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return GestureDetector(
       onTap: () => Navigator.of(context).pop(),
       child: Container(
@@ -31,7 +41,7 @@ class Picker<Item extends Object> extends StatelessWidget {
                   child: Container(
                       width: double.infinity,
                       height: 300,
-                      color: Colors.white,
+                      color: Theme.of(context).backgroundColor,
                       child: ListView.separated(
                         itemCount: items.length + 1,
                         separatorBuilder: (_, index) => index == 0
@@ -44,7 +54,7 @@ class Picker<Item extends Object> extends StatelessWidget {
                             return Container(
                               height: 100,
                               width: double.infinity,
-                              color: Colors.white,
+                              color: Theme.of(context).backgroundColor,
                               child: Center(
                                 child: Text(
                                   title,
@@ -53,7 +63,8 @@ class Picker<Item extends Object> extends StatelessWidget {
                                       fontSize: 16,
                                       fontWeight: FontWeight.normal,
                                       decoration: TextDecoration.none,
-                                      color: Colors.black),
+                                      //color: Colors.black
+                                  ),
                                 ),
                               ),
                             );
@@ -79,7 +90,8 @@ class Picker<Item extends Object> extends StatelessWidget {
                                         fontWeight: FontWeight.normal,
                                         color: index == selectedAtIndex
                                             ? Color.fromRGBO(138, 80, 255, 1)
-                                            : Colors.black),
+                                            : _isDarkTheme ? Colors.white : Colors.black
+                                    ),
                                   )),
                             ),
                           );

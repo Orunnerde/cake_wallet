@@ -7,6 +7,8 @@ import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/stores/address_book/address_book_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class AddressBookPage extends BasePage {
   bool get isModalBackButton => true;
@@ -15,12 +17,20 @@ class AddressBookPage extends BasePage {
   @override
   Widget trailing(BuildContext context) {
     final addressBookStore = Provider.of<AddressBookStore>(context);
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
 
     return Container(
         width: 28.0,
         height: 28.0,
         decoration:
-            BoxDecoration(shape: BoxShape.circle, color: Palette.purple),
+            BoxDecoration(
+                shape: BoxShape.circle,
+                color: _isDarkTheme ? PaletteDark.darkThemeViolet : Palette.purple
+            ),
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
@@ -44,6 +54,11 @@ class AddressBookPage extends BasePage {
   @override
   Widget body(BuildContext context) {
     final addressBookStore = Provider.of<AddressBookStore>(context);
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
 
     return Column(
       children: <Widget>[
@@ -55,7 +70,8 @@ class AddressBookPage extends BasePage {
               height: 10.0,
               decoration: BoxDecoration(
                   gradient: LinearGradient(
-                colors: [Palette.lightGrey2, Colors.white],
+                colors: _isDarkTheme ? [Theme.of(context).backgroundColor, Theme.of(context).backgroundColor]
+                    : [Palette.lightGrey2, Colors.white],
                 begin: FractionalOffset(0.0, 0.0),
                 end: FractionalOffset(0.0, 1.0),
               )),

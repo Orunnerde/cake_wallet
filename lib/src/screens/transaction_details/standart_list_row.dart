@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cake_wallet/palette.dart';
 
 class StandartListRow extends StatelessWidget {
   final String title;
@@ -22,7 +23,7 @@ class StandartListRow extends StatelessWidget {
               child: Text(value,
                   style: TextStyle(
                       fontSize: 14,
-                      color: const Color.fromRGBO(155, 172, 197, 1))),
+                      color: Palette.wildDarkBlue)),
             )
           ]),
     );

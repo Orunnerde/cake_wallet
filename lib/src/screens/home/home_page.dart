@@ -23,6 +23,8 @@ import 'package:cake_wallet/src/stores/transaction_list/transaction_list_store.d
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/src/stores/node_list/node_list_store.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -33,9 +35,15 @@ class HomePage extends StatelessWidget {
     final walletService = Provider.of<WalletService>(context);
     final walletListService = Provider.of<WalletListService>(context);
 
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
-        backgroundColor: Colors.white,
+        backgroundColor: _isDarkTheme ? Colors.black : Colors.white,
         // border: null,
         activeColor: Color.fromRGBO(121, 201, 233, 1),
         inactiveColor: Colors.grey,

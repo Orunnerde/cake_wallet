@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class EnterPinCode extends StatefulWidget{
 
@@ -50,8 +53,15 @@ class EnterPinCodeState extends State<EnterPinCode>{
 
   @override
   Widget build(BuildContext context) {
+
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: CupertinoNavigationBar(
         leading: ButtonTheme(
           minWidth: double.minPositive,
@@ -60,7 +70,7 @@ class EnterPinCodeState extends State<EnterPinCode>{
             child: closeButtonImage
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).backgroundColor,
         border: null,
       ),
       body: SafeArea(
@@ -111,7 +121,8 @@ class EnterPinCodeState extends State<EnterPinCode>{
                               margin: EdgeInsets.all(5.0),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Palette.darkGrey,
+                                color: _isDarkTheme ? PaletteDark.darkThemePinButton
+                                    : Palette.darkGrey,
                               ),
                             );
                           } else if (index == 10) {
@@ -121,7 +132,8 @@ class EnterPinCodeState extends State<EnterPinCode>{
                               margin: EdgeInsets.all(5.0),
                               child: FlatButton(
                                 onPressed: () { _pop(); },
-                                color: Palette.darkGrey,
+                                color: _isDarkTheme ? PaletteDark.darkThemePinButton
+                                    : Palette.darkGrey,
                                 shape: CircleBorder(),
                                 child: deleteIconImage,
                               ),
@@ -134,7 +146,8 @@ class EnterPinCodeState extends State<EnterPinCode>{
                             margin: EdgeInsets.all(5.0),
                             child: FlatButton(
                               onPressed: () { _push(index); },
-                              color: Palette.creamyGrey,
+                              color: _isDarkTheme ? PaletteDark.darkThemePinDigitButton
+                                  : Palette.creamyGrey,
                               shape: CircleBorder(),
                               child: Text(
                                   '$index',

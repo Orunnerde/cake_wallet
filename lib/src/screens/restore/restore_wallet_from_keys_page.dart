@@ -13,6 +13,8 @@ import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/widgets/blockchain_height_widget.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class RestoreWalletFromKeysPage extends BasePage {
   final WalletListService walletsService;
@@ -46,6 +48,12 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
   @override
   Widget build(BuildContext context) {
     final walletRestorationStore = Provider.of<WalletRestorationStore>(context);
+
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
 
     reaction((_) => walletRestorationStore.state, (state) {
       if (state is WalletRestoredSuccessfully) {
@@ -193,7 +201,12 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                                           .currentState.height);
                                 }
                               },
-                              text: 'Recover');
+                              text: 'Recover',
+                            color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
+                                : Palette.purple,
+                            borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet
+                                : Palette.deepPink,
+                          );
                         })))
               ],
             ),

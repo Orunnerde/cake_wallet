@@ -3,6 +3,9 @@ import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:provider/provider.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class WelcomePage extends BasePage {
   static const _aspectRatioImage = 1.26;
@@ -14,6 +17,13 @@ class WelcomePage extends BasePage {
   Widget body(BuildContext context) {
     final _screenWidth = MediaQuery.of(context).size.width;
     final textScaleFactor = _screenWidth < _baseWidth ? 0.76 : 1;
+
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+    Color _backgroundColor = Theme.of(context).backgroundColor;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
 
     return Column(children: <Widget>[
       Stack(
@@ -74,14 +84,20 @@ class WelcomePage extends BasePage {
                 Navigator.pushNamed(context, Routes.newWalletFromWelcome);
               },
               text: 'Create New',
+              color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
+                  : Palette.purple,
+              borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet
+                  : Palette.deepPink,
             ),
             SizedBox(height: 10),
             PrimaryButton(
               onPressed: () {
                 Navigator.pushNamed(context, Routes.restoreOptions);
               },
-              color: Palette.brightBlue,
-              borderColor: Palette.cloudySky,
+              color: _isDarkTheme ? PaletteDark.darkThemeBlueButton
+                  : Palette.brightBlue,
+              borderColor: _isDarkTheme ? PaletteDark.darkThemeBlueButtonBorder
+                  : Palette.cloudySky,
               text: 'Restore wallet',
             )
           ]))

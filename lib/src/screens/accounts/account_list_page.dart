@@ -8,6 +8,8 @@ import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/src/stores/account_list/account_list_store.dart';
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/theme_changer.dart';
 
 class AccountListPage extends BasePage {
   bool get isModalBackButton => true;
@@ -18,11 +20,20 @@ class AccountListPage extends BasePage {
   Widget trailing(BuildContext context) {
     final accountListStore = Provider.of<AccountListStore>(context);
 
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return Container(
         width: 28.0,
         height: 28.0,
         decoration:
-            BoxDecoration(shape: BoxShape.circle, color: Palette.purple),
+            BoxDecoration(
+                shape: BoxShape.circle,
+                color: _isDarkTheme ? PaletteDark.darkThemeViolet : Palette.purple
+            ),
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
@@ -48,6 +59,18 @@ class AccountListPage extends BasePage {
     final accountListStore = Provider.of<AccountListStore>(context);
     final walletStore = Provider.of<WalletStore>(context);
 
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    Color _currentColor, _notCurrentColor;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) {
+      _currentColor = PaletteDark.darkThemeViolet;
+      _notCurrentColor = Theme.of(context).backgroundColor;
+    }
+    else {
+      _currentColor = Palette.purple;
+      _notCurrentColor = Colors.white;
+    }
+
     return Container(
       padding: EdgeInsets.only(top: 10, bottom: 20),
       child: Observer(
@@ -65,7 +88,7 @@ class AccountListPage extends BasePage {
                   key: Key(account.id.toString()),
                   actionPane: SlidableDrawerActionPane(),
                   child: Container(
-                    color: isCurrent ? Palette.purple : Colors.white,
+                    color: isCurrent ? _currentColor : _notCurrentColor,
                     child: Column(
                       children: <Widget>[
                         ListTile(

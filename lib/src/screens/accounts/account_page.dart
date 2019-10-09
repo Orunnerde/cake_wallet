@@ -5,6 +5,8 @@ import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:provider/provider.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class AccountPage extends BasePage {
   String get title => 'Account';
@@ -31,6 +33,11 @@ class AccountFormState extends State<AccountForm> {
   @override
   Widget build(BuildContext context) {
     final accountListStore = Provider.of<AccountListStore>(context);
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
 
     return Form(
       key: _formKey,
@@ -72,7 +79,10 @@ class AccountFormState extends State<AccountForm> {
                       label: _textController.text);
                   Navigator.pop(context, _textController.text);
                 },
-                text: 'Add')
+                text: 'Add',
+              color: _isDarkTheme ? PaletteDark.darkThemePurpleButton : Palette.purple,
+              borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet : Palette.deepPink,
+            )
           ],
         ),
       ),

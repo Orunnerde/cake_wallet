@@ -12,6 +12,8 @@ import 'package:cake_wallet/src/stores/wallet_creation/wallet_creation_state.dar
 import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class NewWalletPage extends BasePage {
   static const _aspectRatioImage = 1.54;
@@ -79,6 +81,12 @@ class _WalletNameFormState extends State<WalletNameForm> {
   Widget build(BuildContext context) {
     final walletCreationStore = Provider.of<WalletCreationStore>(context);
 
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     reaction((_) => walletCreationStore.state, (state) {
       if (state is WalletCreatedSuccessfully) {
         Navigator.of(context).popUntil((route) => route.isFirst);
@@ -142,6 +150,10 @@ class _WalletNameFormState extends State<WalletNameForm> {
                             }
                           },
                           text: 'Continue',
+                          color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
+                              : Palette.purple,
+                          borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet
+                              : Palette.deepPink,
                           isLoading:
                               walletCreationStore.state is WalletIsCreating,
                         );

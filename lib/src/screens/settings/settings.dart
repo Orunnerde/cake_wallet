@@ -321,46 +321,17 @@ class SettingsState extends State<Settings> {
                               });
                             }
                         )
-
-                        /*GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _isAllowBiometricalAuthenticationOn =
-                              !_isAllowBiometricalAuthenticationOn;
-                            });
-                          },
-                          child: AnimatedContainer(
-                            padding: EdgeInsets.only(left: 4.0, right: 4.0),
-                            alignment: _isAllowBiometricalAuthenticationOn
-                                ? Alignment.centerRight
-                                : Alignment.centerLeft,
-                            duration: Duration(milliseconds: 250),
-                            width: 55.0,
-                            height: 33.0,
-                            decoration: BoxDecoration(
-                                color: Palette.switchBackground,
-                                border: Border.all(color: Palette.switchBorder),
-                                borderRadius:
-                                BorderRadius.all(Radius.circular(10.0))),
-                            child: Container(
-                              width: 25.0,
-                              height: 25.0,
-                              decoration: BoxDecoration(
-                                  color: _isAllowBiometricalAuthenticationOn
-                                      ? Palette.cakeGreen
-                                      : Palette.wildDarkBlue,
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(8.0))),
-                              child: Icon(
-                                _isAllowBiometricalAuthenticationOn
-                                    ? Icons.check
-                                    : Icons.close,
-                                color: Colors.white,
-                                size: 16.0,
-                              ),
-                            ),
-                          ),
-                        )*/),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                        left: 20.0,
+                        right: 20.0,
+                      ),
+                      child: Divider(
+                        color: Palette.lightGrey,
+                        height: 1.0,
+                      ),
+                    ),
                     ListTile(
                         contentPadding:
                         EdgeInsets.only(left: 20.0, right: 20.0),

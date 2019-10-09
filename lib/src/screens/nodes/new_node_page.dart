@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/stores/node_list/node_list_store.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class NewNodePage extends StatefulWidget {
   @override
@@ -33,8 +35,14 @@ class NewNodeState extends State<NewNodePage> {
   Widget build(BuildContext context) {
     final nodeList = Provider.of<NodeListStore>(context);
 
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       resizeToAvoidBottomPadding: false,
       appBar: CupertinoNavigationBar(
         leading: ButtonTheme(
@@ -49,7 +57,7 @@ class NewNodeState extends State<NewNodePage> {
           'New Node',
           style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).backgroundColor,
         border: null,
       ),
       body: SafeArea(
@@ -200,8 +208,10 @@ class NewNodeState extends State<NewNodePage> {
                               _passwordController.text = '';
                             },
                             text: 'Reset',
-                            color: Palette.indigo,
-                            borderColor: Palette.deepIndigo,
+                            color: _isDarkTheme ? PaletteDark.darkThemeIndigoButton
+                                : Palette.indigo,
+                            borderColor: _isDarkTheme ? PaletteDark.darkThemeIndigoButtonBorder
+                                : Palette.deepIndigo,
                           ),
                         )),
                         Flexible(
@@ -260,7 +270,12 @@ class NewNodeState extends State<NewNodePage> {
                                 // }
                                 // }
                               },
-                              text: 'Save'),
+                              text: 'Save',
+                              color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
+                                  : Palette.purple,
+                              borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet
+                                  : Palette.deepPink,
+                          ),
                         )),
                       ],
                     ),

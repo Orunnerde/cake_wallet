@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cake_wallet/palette.dart';
 
 class PrimaryButton extends StatelessWidget {
 
@@ -12,8 +11,8 @@ class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
     @required this.onPressed,
     @required this.text,
-    this.color = Palette.purple,
-    this.borderColor = Palette.deepPink});
+    @required this.color,
+    @required this.borderColor});
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +40,8 @@ class LoadingPrimaryButton extends StatelessWidget {
   const LoadingPrimaryButton({
     @required this.onPressed,
     @required this.text,
-    this.color = Palette.purple,
-    this.borderColor = Palette.deepPink,
+    @required this.color,
+    @required this.borderColor,
     this.isLoading = false});
 
   @override
@@ -67,15 +66,17 @@ class PrimaryIconButton extends StatelessWidget {
   final Color color;
   final Color borderColor;
   final Color iconColor;
+  final Color iconBackgroundColor;
   final String text;
 
   const PrimaryIconButton({
     @required this.onPressed,
     @required this.iconData,
     @required this.text,
-    this.color = Palette.purple,
-    this.borderColor = Palette.deepPink,
-    this.iconColor = Colors.black
+    @required this.color,
+    @required this.borderColor,
+    @required this.iconColor,
+    @required this.iconBackgroundColor,
   });
 
   @override
@@ -97,7 +98,7 @@ class PrimaryIconButton extends StatelessWidget {
                     height: 56.0,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white
+                      color: iconBackgroundColor
                     ),
                     child: Icon(iconData, color: iconColor, size: 20.0),
                   ),

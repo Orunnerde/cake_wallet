@@ -17,6 +17,9 @@ import 'package:cake_wallet/src/stores/sync/sync_store.dart';
 import 'package:cake_wallet/src/stores/transaction_list/transaction_list_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/screens/dashboard/date_section_item.dart';
+import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/palette.dart';
 
 class DashboardPage extends BasePage {
   static final transactionDateFormat = DateFormat("dd.MM.yyyy, HH:mm");
@@ -115,13 +118,22 @@ class DashboardPage extends BasePage {
   }
 
   @override
-  Widget leading(BuildContext context) => SizedBox(
+  Widget leading(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
+    return SizedBox(
       width: 30,
       child: FlatButton(
           padding: EdgeInsets.all(0),
           onPressed: () => presentWalletMenu(context),
           child: Image.asset('assets/images/more.png',
-              color: Colors.black, width: 30)));
+              color: _isDarkTheme ? Colors.white : Colors.black,
+              width: 30)));
+  }
 
   @override
   Widget body(BuildContext context) {
@@ -129,6 +141,11 @@ class DashboardPage extends BasePage {
     final transactionListStore = Provider.of<TransactionListStore>(context);
     final syncStore = Provider.of<SyncStore>(context);
     final settingsStore = Provider.of<SettingsStore>(context);
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
 
     return NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -137,12 +154,14 @@ class DashboardPage extends BasePage {
           expandedHeight: 363.0,
           floating: false,
           pinned: true,
-          backgroundColor: Colors.white,
+          backgroundColor: _isDarkTheme ? Theme.of(context).backgroundColor : Colors.white,
           flexibleSpace: FlexibleSpaceBar(
             background: Container(
               padding: EdgeInsets.only(bottom: 20),
               child: Container(
-                decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                decoration: BoxDecoration(
+                  color: _isDarkTheme ? Theme.of(context).backgroundColor : Colors.white,
+                  boxShadow: [
                   BoxShadow(
                     color: Color.fromRGBO(132, 141, 198, 0.05),
                     blurRadius: 10,
@@ -177,7 +196,7 @@ class DashboardPage extends BasePage {
 
                               return Text(title,
                                   style: TextStyle(
-                                      color: Color.fromRGBO(138, 80, 255, 1),
+                                      color: Palette.violet,
                                       fontSize: 16));
                             }),
                             Observer(builder: (_) {
@@ -198,7 +217,8 @@ class DashboardPage extends BasePage {
 
                               return Text(balance,
                                   style: TextStyle(
-                                      color: Colors.black87, fontSize: 42));
+                                      color: _isDarkTheme ? Colors.white : Colors.black87,
+                                      fontSize: 42));
                             }),
                             Padding(
                               padding: EdgeInsets.only(top: 7),
@@ -225,7 +245,7 @@ class DashboardPage extends BasePage {
 
                                 return Text(balance,
                                     style: TextStyle(
-                                        color: Color.fromRGBO(155, 172, 197, 1),
+                                        color: Palette.wildDarkBlue,
                                         fontSize: 16));
                               }),
                             ),
@@ -252,8 +272,7 @@ class DashboardPage extends BasePage {
                                                 'BLOCKS REMAINING ${syncStore.status.toString()}',
                                                 style: TextStyle(
                                                     fontSize: 8,
-                                                    color: Color.fromRGBO(
-                                                        155, 172, 197, 1)))
+                                                    color: Palette.wildDarkBlue))
                                           ]);
                                     }
 
@@ -281,8 +300,7 @@ class DashboardPage extends BasePage {
                                       child: Text(text,
                                           style: TextStyle(
                                               fontSize: 9,
-                                              color: Color.fromRGBO(
-                                                  155, 172, 197, 1))),
+                                              color: Palette.wildDarkBlue)),
                                     );
                                   })),
                             ),
@@ -297,9 +315,11 @@ class DashboardPage extends BasePage {
                                     onPressed: () => Navigator.of(context,
                                             rootNavigator: true)
                                         .pushNamed(Routes.send),
-                                    color: Color.fromRGBO(227, 212, 255, 0.7),
-                                    borderColor:
-                                        Color.fromRGBO(209, 194, 243, 1),
+                                    color: _isDarkTheme ? PaletteDark.darkThemeBlueButton
+                                        : Palette.brightBlue,
+                                    borderColor: _isDarkTheme ?
+                                        PaletteDark.darkThemeBlueButtonBorder
+                                        : Palette.cloudySky,
                                   )),
                                   SizedBox(width: 10),
                                   Expanded(
@@ -308,9 +328,8 @@ class DashboardPage extends BasePage {
                                     onPressed: () => Navigator.of(context,
                                             rootNavigator: true)
                                         .pushNamed(Routes.receive),
-                                    color: Color.fromRGBO(151, 226, 255, 0.5),
-                                    borderColor:
-                                        Color.fromRGBO(121, 201, 233, 0.9),
+                                    color: _isDarkTheme ? PaletteDark.darkThemePurpleButton : Palette.purple,
+                                    borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet : Palette.deepPink,
                                   ))
                                 ],
                               ),
@@ -366,7 +385,7 @@ class DashboardPage extends BasePage {
                     child: Text(title,
                         style: TextStyle(
                             fontSize: 14,
-                            color: Color.fromRGBO(155, 172, 197, 1)))),
+                            color: Palette.wildDarkBlue))),
               );
             }
 
@@ -405,7 +424,7 @@ class DashboardPage extends BasePage {
                                         ? 'Received'
                                         : 'Sent',
                                     style: const TextStyle(
-                                        fontSize: 14, color: Colors.black)),
+                                        fontSize: 14)),
                                 Text(item.amount(),
                                     style: const TextStyle(
                                         fontSize: 14,
@@ -419,12 +438,12 @@ class DashboardPage extends BasePage {
                                     style: const TextStyle(
                                         fontSize: 11,
                                         color:
-                                            Color.fromRGBO(103, 107, 141, 1))),
+                                            Palette.blueGrey)),
                                 Text(item.fiatAmount(),
                                     style: const TextStyle(
                                         fontSize: 12,
                                         color:
-                                            Color.fromRGBO(103, 107, 141, 1)))
+                                            Palette.blueGrey))
                               ]),
                         ],
                       ),

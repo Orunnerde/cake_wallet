@@ -3,6 +3,9 @@ import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/widgets/picker.dart';
 import 'package:cake_wallet/src/widgets/address_text_field.dart';
+import 'package:provider/provider.dart';
+import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/theme_changer.dart';
 
 class ExchangeCard extends StatefulWidget {
   final List<CryptoCurrency> currencies;
@@ -79,11 +82,17 @@ class ExchangeCardState extends State<ExchangeCard> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return Container(
       padding: EdgeInsets.all(22),
       width: double.infinity,
       decoration: BoxDecoration(
-          color: Color.fromRGBO(249, 250, 253, 1),
+          color: _isDarkTheme ? PaletteDark.darkThemeMidGrey : Color.fromRGBO(249, 250, 253, 1),
           borderRadius: BorderRadius.all(Radius.circular(12))),
       child: Column(children: <Widget>[
         Container(
@@ -115,7 +124,7 @@ class ExchangeCardState extends State<ExchangeCard> {
                               ? Text(_walletName,
                                   style: TextStyle(
                                       fontSize: 12,
-                                      color: Color.fromRGBO(155, 172, 197, 1)))
+                                      color: Palette.wildDarkBlue))
                               : SizedBox(),
                         ]),
                   ),
@@ -154,7 +163,7 @@ class ExchangeCardState extends State<ExchangeCard> {
                   style: TextStyle(
                       fontSize: 10,
                       height: 1.2,
-                      color: Color.fromRGBO(155, 172, 197, 1)),
+                      color: Palette.wildDarkBlue),
                 )
               : SizedBox(),
           _min != null ? SizedBox(width: 10) : SizedBox(),
@@ -163,7 +172,7 @@ class ExchangeCardState extends State<ExchangeCard> {
                   style: TextStyle(
                       fontSize: 10,
                       height: 1.2,
-                      color: Color.fromRGBO(155, 172, 197, 1)))
+                      color: Palette.wildDarkBlue))
               : SizedBox(),
         ]),
         SizedBox(height: 10),

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:provider/provider.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 const List<String> languagesList = const <String>[
   'English',
@@ -29,8 +32,15 @@ class ChangeLanguageState extends State<ChangeLanguage>{
 
   @override
   Widget build(BuildContext context) {
+
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: CupertinoNavigationBar(
         leading: ButtonTheme(
           minWidth: double.minPositive,
@@ -42,7 +52,7 @@ class ChangeLanguageState extends State<ChangeLanguage>{
         middle: Text('Change language',
           style: TextStyle(fontSize: 16.0),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).backgroundColor,
         border: null,
       ),
       body: SafeArea(
@@ -59,7 +69,7 @@ class ChangeLanguageState extends State<ChangeLanguage>{
                   top: 10.0,
                   bottom: 10.0
                 ),
-                color: Palette.lightGrey2,
+                color: _isDarkTheme ? PaletteDark.darkThemeMidGrey : Palette.lightGrey2,
                 child: ListTile(
                   title: Text(languagesList[index],
                     style: TextStyle(fontSize: 16.0),
