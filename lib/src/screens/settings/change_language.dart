@@ -51,7 +51,10 @@ class ChangeLanguageState extends State<ChangeLanguage>{
           ),
         ),
         middle: Text('Change language',
-          style: TextStyle(fontSize: 16.0),
+          style: TextStyle(
+            fontSize: 16.0,
+            color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
+          ),
         ),
         backgroundColor: Theme.of(context).backgroundColor,
         border: null,
@@ -73,7 +76,10 @@ class ChangeLanguageState extends State<ChangeLanguage>{
                 color: _isDarkTheme ? PaletteDark.darkThemeMidGrey : Palette.lightGrey2,
                 child: ListTile(
                   title: Text(languagesList[index],
-                    style: TextStyle(fontSize: 16.0),
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
+                    ),
                   ),
                 ),
               );

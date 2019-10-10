@@ -56,7 +56,10 @@ class SettingsState extends State<Settings> {
         leading: Offstage(),
         middle: Text(
           'Settings',
-          style: TextStyle(fontSize: 16.0),
+          style: TextStyle(
+            fontSize: 16.0,
+            color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
+          ),
         ),
         backgroundColor: _isDarkTheme? Theme.of(context).backgroundColor : Palette.lightGrey2,
         border: null,
@@ -96,7 +99,11 @@ class SettingsState extends State<Settings> {
                     contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
                     title: Text(
                       'Current node',
-                      style: TextStyle(fontSize: 16.0),
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: _isDarkTheme ? PaletteDark.darkThemeTitle
+                            : Colors.black
+                      ),
                     ),
                     trailing: Observer(
                         builder: (_) => Text(
@@ -105,7 +112,10 @@ class SettingsState extends State<Settings> {
                               : settingsStore.node.uri,
                           // widget.currentNode,
                           style: TextStyle(
-                              fontSize: 16.0, color: Palette.wildDarkBlue),
+                              fontSize: 16.0,
+                              color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                  : Palette.wildDarkBlue
+                          ),
                         )),
                   ),
                 ),
@@ -137,14 +147,20 @@ class SettingsState extends State<Settings> {
                       contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
                       title: Text(
                         'Display balance as',
-                        style: TextStyle(fontSize: 16.0),
+                        style: TextStyle(
+                            fontSize: 16.0,
+                            color: _isDarkTheme ? PaletteDark.darkThemeTitle
+                                : Colors.black
+                        ),
                       ),
                       trailing: Observer(
                           builder: (_) => Text(
                             settingsStore.balanceDisplayMode.toString(),
                             style: TextStyle(
                                 fontSize: 16.0,
-                                color: Palette.wildDarkBlue),
+                                color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                    : Palette.wildDarkBlue
+                            ),
                           )),
                       onTap: () {
                         _setBalance(context);
@@ -156,7 +172,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: Palette.lightGrey,
+                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                            : Palette.lightGrey,
                         height: 1.0,
                       ),
                     ),
@@ -164,14 +181,20 @@ class SettingsState extends State<Settings> {
                       contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
                       title: Text(
                         'Currency',
-                        style: TextStyle(fontSize: 16.0),
+                        style: TextStyle(
+                            fontSize: 16.0,
+                            color: _isDarkTheme ? PaletteDark.darkThemeTitle
+                                : Colors.black
+                        ),
                       ),
                       trailing: Observer(
                           builder: (_) => Text(
                             settingsStore.fiatCurrency.toString(),
                             style: TextStyle(
                                 fontSize: 16.0,
-                                color: Palette.wildDarkBlue),
+                                color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                    : Palette.wildDarkBlue
+                            ),
                           )),
                       onTap: () => _setCurrency(context),
                     ),
@@ -181,7 +204,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: Palette.lightGrey,
+                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                            : Palette.lightGrey,
                         height: 1.0,
                       ),
                     ),
@@ -189,14 +213,20 @@ class SettingsState extends State<Settings> {
                       contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
                       title: Text(
                         'Fee priority',
-                        style: TextStyle(fontSize: 16.0),
+                        style: TextStyle(
+                            fontSize: 16.0,
+                            color: _isDarkTheme ? PaletteDark.darkThemeTitle
+                                : Colors.black
+                        ),
                       ),
                       trailing: Observer(
                           builder: (_) => Text(
                             settingsStore.transactionPriority.toString(),
                             style: TextStyle(
                                 fontSize: 16.0,
-                                color: Palette.wildDarkBlue),
+                                color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                    : Palette.wildDarkBlue
+                            ),
                           )),
                       onTap: () => _setTransactionPriority(context),
                     ),
@@ -206,7 +236,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: Palette.lightGrey,
+                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                            : Palette.lightGrey,
                         height: 1.0,
                       ),
                     ),
@@ -215,7 +246,11 @@ class SettingsState extends State<Settings> {
                         EdgeInsets.only(left: 20.0, right: 20.0),
                         title: Text(
                           'Save recipient address',
-                          style: TextStyle(fontSize: 16.0),
+                          style: TextStyle(
+                              fontSize: 16.0,
+                              color: _isDarkTheme ? PaletteDark.darkThemeTitle
+                                  : Colors.black
+                          ),
                         ),
                         trailing: StandartSwitch(
                             value: _isSaveRecipientAddressOn,
@@ -257,7 +292,11 @@ class SettingsState extends State<Settings> {
                       contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
                       title: Text(
                         'Change PIN',
-                        style: TextStyle(fontSize: 16.0),
+                        style: TextStyle(
+                            fontSize: 16.0,
+                            color: _isDarkTheme ? PaletteDark.darkThemeTitle
+                                : Colors.black
+                        ),
                       ),
                       trailing: _cakeArrowImage,
                       onTap: () {
@@ -276,7 +315,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: Palette.lightGrey,
+                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                            : Palette.lightGrey,
                         height: 1.0,
                       ),
                     ),
@@ -284,7 +324,11 @@ class SettingsState extends State<Settings> {
                       contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
                       title: Text(
                         'Change language',
-                        style: TextStyle(fontSize: 16.0),
+                        style: TextStyle(
+                            fontSize: 16.0,
+                            color: _isDarkTheme ? PaletteDark.darkThemeTitle
+                                : Colors.black
+                        ),
                       ),
                       trailing: _cakeArrowImage,
                       onTap: () {
@@ -301,7 +345,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: Palette.lightGrey,
+                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                            : Palette.lightGrey,
                         height: 1.0,
                       ),
                     ),
@@ -310,7 +355,11 @@ class SettingsState extends State<Settings> {
                         EdgeInsets.only(left: 20.0, right: 20.0),
                         title: Text(
                           'Allow biometrical authentication',
-                          style: TextStyle(fontSize: 16.0),
+                          style: TextStyle(
+                              fontSize: 16.0,
+                              color: _isDarkTheme ? PaletteDark.darkThemeTitle
+                                  : Colors.black
+                          ),
                         ),
                         trailing: StandartSwitch(
                             value: _isAllowBiometricalAuthenticationOn,
@@ -328,7 +377,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: Palette.lightGrey,
+                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                            : Palette.lightGrey,
                         height: 1.0,
                       ),
                     ),
@@ -337,7 +387,11 @@ class SettingsState extends State<Settings> {
                         EdgeInsets.only(left: 20.0, right: 20.0),
                         title: Text(
                           'Dark mode',
-                          style: TextStyle(fontSize: 16.0),
+                          style: TextStyle(
+                              fontSize: 16.0,
+                              color: _isDarkTheme ? PaletteDark.darkThemeTitle
+                                  : Colors.black
+                          ),
                         ),
                         trailing: StandartSwitch(
                             value: _isDarkTheme,
@@ -816,7 +870,12 @@ class SettingsState extends State<Settings> {
                       contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
                       title: Text(
                         'Email',
-                        style: TextStyle(fontSize: 14.0),
+                        style: TextStyle(
+                            fontSize: 14.0,
+                            color: _isDarkTheme ? PaletteDark.darkThemeTitle
+                                : Colors.black
+
+                        ),
                       ),
                       trailing: Text(
                         'support@cakewallet.io',
@@ -830,7 +889,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: Palette.lightGrey,
+                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                            : Palette.lightGrey,
                         height: 1.0,
                       ),
                     ),
@@ -845,7 +905,11 @@ class SettingsState extends State<Settings> {
                             child: Text(
                               'Telegram',
                               style: TextStyle(
-                                  fontSize: 15.0, fontWeight: FontWeight.w500),
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.w500,
+                                  color: _isDarkTheme ? PaletteDark.darkThemeTitle
+                                      : Colors.black
+                              ),
                             ),
                           )
                         ],
@@ -862,7 +926,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: Palette.lightGrey,
+                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                            : Palette.lightGrey,
                         height: 1.0,
                       ),
                     ),
@@ -877,7 +942,11 @@ class SettingsState extends State<Settings> {
                             child: Text(
                               'Twitter',
                               style: TextStyle(
-                                  fontSize: 15.0, fontWeight: FontWeight.w500),
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.w500,
+                                  color: _isDarkTheme ? PaletteDark.darkThemeTitle
+                                      : Colors.black
+                              ),
                             ),
                           )
                         ],
@@ -894,7 +963,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: Palette.lightGrey,
+                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                            : Palette.lightGrey,
                         height: 1.0,
                       ),
                     ),
@@ -909,7 +979,11 @@ class SettingsState extends State<Settings> {
                             child: Text(
                               'ChangeNow',
                               style: TextStyle(
-                                  fontSize: 15.0, fontWeight: FontWeight.w500),
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.w500,
+                                  color: _isDarkTheme ? PaletteDark.darkThemeTitle
+                                      : Colors.black
+                              ),
                             ),
                           )
                         ],
@@ -926,7 +1000,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: Palette.lightGrey,
+                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                            : Palette.lightGrey,
                         height: 1.0,
                       ),
                     ),
@@ -941,7 +1016,11 @@ class SettingsState extends State<Settings> {
                             child: Text(
                               'Morph',
                               style: TextStyle(
-                                  fontSize: 15.0, fontWeight: FontWeight.w500),
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.w500,
+                                  color: _isDarkTheme ? PaletteDark.darkThemeTitle
+                                      : Colors.black
+                              ),
                             ),
                           )
                         ],
@@ -958,7 +1037,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: Palette.lightGrey,
+                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                            : Palette.lightGrey,
                         height: 1.0,
                       ),
                     ),
@@ -973,7 +1053,11 @@ class SettingsState extends State<Settings> {
                             child: Text(
                               'Xmr->BTC',
                               style: TextStyle(
-                                  fontSize: 15.0, fontWeight: FontWeight.w500),
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.w500,
+                                  color: _isDarkTheme ? PaletteDark.darkThemeTitle
+                                      : Colors.black
+                              ),
                             ),
                           )
                         ],
@@ -990,7 +1074,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: Palette.lightGrey,
+                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                            : Palette.lightGrey,
                         height: 1.0,
                       ),
                     ),
@@ -998,7 +1083,11 @@ class SettingsState extends State<Settings> {
                       contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
                       title: Text(
                         'Terms and conditions',
-                        style: TextStyle(fontSize: 14.0),
+                        style: TextStyle(
+                            fontSize: 14.0,
+                            color: _isDarkTheme ? PaletteDark.darkThemeTitle
+                                : Colors.black
+                        ),
                       ),
                       trailing: _cakeArrowImage,
                       onTap: () {
@@ -1015,7 +1104,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: Palette.lightGrey,
+                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                            : Palette.lightGrey,
                       ),
                     ),
                   ],
@@ -1040,11 +1130,11 @@ class SettingsState extends State<Settings> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Please select:'),
-            backgroundColor: _isDarkTheme? Theme.of(context).backgroundColor : Colors.white,
+            backgroundColor: Theme.of(context).backgroundColor,
             content: Container(
               height: 150.0,
               child: CupertinoPicker(
-                  backgroundColor: _isDarkTheme? Theme.of(context).backgroundColor : Colors.white,
+                  backgroundColor: Theme.of(context).backgroundColor,
                   itemExtent: 45.0,
                   onSelectedItemChanged: (int index) => _value = list[index],
                   children: List.generate(
