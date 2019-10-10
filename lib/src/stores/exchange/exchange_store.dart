@@ -57,6 +57,7 @@ abstract class ExchangeStoreBase with Store {
     receiveCurrency = initialReceiveCurrency;
     limitsState = LimitsInitialState();
     tradeState = ExchangeTradeStateInitial();
+    loadLimits();
   }
 
   @action

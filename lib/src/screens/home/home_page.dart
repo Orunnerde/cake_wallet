@@ -94,16 +94,16 @@ class HomePage extends StatelessWidget {
                     ], child: DashboardPage(walletService: walletService)));
           case 1:
             return MultiProvider(providers: [
-              Provider(
-                  builder: (_) => ExchangeStore(
-                          initialProvider: XMRTOExchangeProvider(),
-                          initialDepositCurrency: CryptoCurrency.xmr,
-                          initialReceiveCurrency: CryptoCurrency.btc,
-                          tradeHistory: TradeHistory(db: db),
-                          providerList: [
-                            XMRTOExchangeProvider(),
-                            ChangeNowExchangeProvider()
-                          ])),
+              Provider(builder: (_) {
+                final xmrtoprovider = XMRTOExchangeProvider();
+                
+                return ExchangeStore(
+                    initialProvider: xmrtoprovider,
+                    initialDepositCurrency: CryptoCurrency.xmr,
+                    initialReceiveCurrency: CryptoCurrency.btc,
+                    tradeHistory: TradeHistory(db: db),
+                    providerList: [xmrtoprovider, ChangeNowExchangeProvider()]);
+              }),
               ProxyProvider<SettingsStore, WalletStore>(
                   builder: (_, settingsStore, __) => WalletStore(
                       walletService: walletService,
