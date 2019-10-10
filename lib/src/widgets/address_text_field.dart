@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:provider/provider.dart';
+import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/theme_changer.dart';
 
 class AddressTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -14,6 +17,13 @@ class AddressTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return TextField(
         controller: controller,
         decoration: InputDecoration(
@@ -54,12 +64,21 @@ class AddressTextField extends StatelessWidget {
               ],
             ),
           ),
-          hintStyle: TextStyle(color: Palette.lightBlue),
+          hintStyle: TextStyle(
+              color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                  : Palette.lightBlue
+          ),
           hintText: placeholder,
           focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Palette.lightGrey, width: 2.0)),
+              borderSide: BorderSide(
+                  color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                      : Palette.lightGrey,
+                  width: 1.0)),
           enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Palette.lightGrey, width: 2.0)),
+              borderSide: BorderSide(
+                  color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                      : Palette.lightGrey,
+                  width: 1.0)),
         ));
   }
 
