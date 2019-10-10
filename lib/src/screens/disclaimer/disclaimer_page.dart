@@ -18,7 +18,8 @@ class DisclaimerState extends State<DisclaimerPage>{
   static const url1 = 'https://xmr.to/app_static/html/tos.html';
   static const url2 = 'https://www.morphtoken.com/terms/';
 
-  static final backArrowImage = Image.asset('assets/images/back_arrow.png');
+  final _backArrowImage = Image.asset('assets/images/back_arrow.png');
+  final _backArrowImageDarkTheme = Image.asset('assets/images/back_arrow_dark_theme.png');
 
   bool _isAccepted;
   bool _checked = false;
@@ -86,7 +87,7 @@ class DisclaimerState extends State<DisclaimerPage>{
           minWidth: double.minPositive,
           child: FlatButton(
               onPressed: (){Navigator.pop(context);},
-              child: backArrowImage
+              child: _isDarkTheme ? _backArrowImageDarkTheme : _backArrowImage
           ),
         ),
         middle: Text('Terms and conditions',

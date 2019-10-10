@@ -1,16 +1,32 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:provider/provider.dart';
 
 abstract class BasePage extends StatelessWidget {
   String get title => null;
   bool get isModalBackButton => false;
 
   final _backArrowImage = Image.asset('assets/images/back_arrow.png');
+  final _backArrowImageDarkTheme = Image.asset('assets/images/back_arrow_dark_theme.png');
   final _closeButtonImage = Image.asset('assets/images/close_button.png');
+  final _closeButtonImageDarkTheme = Image.asset('assets/images/close_button_dark_theme.png');
 
   Widget leading(BuildContext context) {
     if (ModalRoute.of(context).isFirst) {
       return null;
+    }
+
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    Image _closeButton, _backButton;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme){
+      _backButton = _backArrowImageDarkTheme;
+      _closeButton = _closeButtonImageDarkTheme;
+    } else {
+      _backButton = _backArrowImage;
+      _closeButton = _closeButtonImage;
     }
 
     return SizedBox(
@@ -23,7 +39,7 @@ abstract class BasePage extends StatelessWidget {
             splashColor: Colors.transparent,
             padding: EdgeInsets.all(0),
             onPressed: () => Navigator.of(context).pop(),
-            child: isModalBackButton ? _closeButtonImage : _backArrowImage),
+            child: isModalBackButton ? _closeButton : _backButton),
       ),
     );
   }

@@ -42,4 +42,5 @@ class PaletteDark {
   static const Color darkThemeMidGrey = Color.fromRGBO(20, 26, 38, 1.0);
   static const Color darkThemePinButton = Color.fromRGBO(136, 155, 183, 0.1);
   static const Color darkThemePinDigitButton = Color.fromRGBO(100, 115, 137, 0.34);
+  static const Color switchBackground = Color.fromRGBO(100, 115, 137, 0.4);
 }

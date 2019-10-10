@@ -21,7 +21,8 @@ class EnterPinCode extends StatefulWidget{
 class EnterPinCodeState extends State<EnterPinCode>{
   GlobalKey _gridViewKey = GlobalKey();
 
-  static final closeButtonImage = Image.asset('assets/images/close_button.png');
+  final _closeButtonImage = Image.asset('assets/images/close_button.png');
+  final _closeButtonImageDarkTheme = Image.asset('assets/images/close_button_dark_theme.png');
   static final deleteIconImage = Image.asset('assets/images/delete_icon.png');
   final int pinLength;
   final List<int> currentPin;
@@ -67,7 +68,7 @@ class EnterPinCodeState extends State<EnterPinCode>{
           minWidth: double.minPositive,
           child: FlatButton(
             onPressed: (){ Navigator.pop(context, false); },
-            child: closeButtonImage
+            child: _isDarkTheme ? _closeButtonImageDarkTheme : _closeButtonImage
           ),
         ),
         backgroundColor: Theme.of(context).backgroundColor,

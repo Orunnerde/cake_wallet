@@ -150,8 +150,6 @@ void main() async {
   }
 }*/
 
-// NEW
-
 class CakeWalletApp extends StatelessWidget {
   final SharedPreferences sharedPreferences;
   final WalletService walletService;

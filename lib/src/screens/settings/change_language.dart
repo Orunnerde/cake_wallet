@@ -28,7 +28,8 @@ class ChangeLanguage extends StatefulWidget{
 
 class ChangeLanguageState extends State<ChangeLanguage>{
 
-  static final backArrowImage = Image.asset('assets/images/back_arrow.png');
+  final _backArrowImage = Image.asset('assets/images/back_arrow.png');
+  final _backArrowImageDarkTheme = Image.asset('assets/images/back_arrow_dark_theme.png');
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,7 @@ class ChangeLanguageState extends State<ChangeLanguage>{
           minWidth: double.minPositive,
           child: FlatButton(
             onPressed: (){Navigator.pop(context);},
-            child: backArrowImage
+            child: _isDarkTheme ? _backArrowImageDarkTheme : _backArrowImage
           ),
         ),
         middle: Text('Change language',

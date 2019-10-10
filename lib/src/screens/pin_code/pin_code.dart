@@ -25,7 +25,6 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
   static const sixPinLength = 6;
   static const fourPinLength = 4;
   static final deleteIconImage = Image.asset('assets/images/delete_icon.png');
-  static final backArrowImage = Image.asset('assets/images/back_arrow.png');
   GlobalKey _gridViewKey = GlobalKey();
 
   int pinLength = defaultPinLength;
@@ -89,7 +88,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
 
     return SafeArea(
       child: Container(
-        color: _isDarkTheme ? Theme.of(context).backgroundColor : Colors.white,
+        color: Theme.of(context).backgroundColor,
         padding: EdgeInsets.only(left: 40.0, right: 40.0, bottom: 40.0),
         child: Column(
             children: <Widget>[

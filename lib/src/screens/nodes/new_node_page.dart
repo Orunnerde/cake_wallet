@@ -15,6 +15,7 @@ class NewNodePage extends StatefulWidget {
 class NewNodeState extends State<NewNodePage> {
   final _formKey = GlobalKey<FormState>();
   final _backArrowImage = Image.asset('assets/images/back_arrow.png');
+  final _backArrowImageDarkTheme = Image.asset('assets/images/back_arrow_dark_theme.png');
   final _nodeAddressController = TextEditingController();
   final _nodePortController = TextEditingController();
   final _loginController = TextEditingController();
@@ -51,7 +52,7 @@ class NewNodeState extends State<NewNodePage> {
               onPressed: () {
                 Navigator.pop(context, _isSaved ? _nodeAddress : null);
               },
-              child: _backArrowImage),
+              child: _isDarkTheme ? _backArrowImageDarkTheme : _backArrowImage),
         ),
         middle: Text(
           'New Node',
