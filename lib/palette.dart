@@ -17,9 +17,11 @@ class Palette {
   static const Color brightBlue = Color.fromRGBO(151, 226, 255, 0.6);
   static const Color cloudySky = Color.fromRGBO(121, 201, 233, 0.8);
   static const Color darkGrey = Color.fromRGBO(136, 155, 183, 0.21);
+  static const Color shadowGrey = Color.fromRGBO(132, 141, 198, 0.14);
   static const Color blueGrey = Color.fromRGBO(103, 107, 141, 1.0);
   static const Color lightGrey2 = Color.fromRGBO(249, 249, 249, 1.0);
   static const Color violet = Color.fromRGBO(138, 80, 255, 1.0);
+  static const Color lightViolet = Color.fromRGBO(131, 87, 255, 1);
   static const Color cakeGreen = Color.fromRGBO(41, 187, 244, 1.0);
   static const Color cakeGreenWithOpacity = Color.fromRGBO(41, 187, 244, 0.2);
   static const Color switchBackground = Color.fromRGBO(228, 231, 240, 1.0);
@@ -28,11 +30,12 @@ class Palette {
   static const Color red = Color.fromRGBO(255, 51, 51, 1.0);
   static const Color nightBlue = Color.fromRGBO(34, 40, 75, 1.0);
   static const Color lavender = Color.fromRGBO(249, 250, 253, 1);
+  static const Color lightLavender = Color.fromRGBO(242, 244, 247, 1);
   static const Color cadetBlue = Color.fromRGBO(191, 201, 215, 1);
+  static const Color manatee = Color.fromRGBO(138, 153, 175, 1);
 }
 
 class PaletteDark {
-  // General
   static const Color darkThemeTitle = Color.fromRGBO(132, 154, 186, 1.0);
   static const Color darkThemeTitleViolet = Color.fromRGBO(121, 92, 190, 1.0);
   static const Color darkThemeGrey = Color.fromRGBO(100, 115, 137, 1.0);
@@ -44,7 +47,6 @@ class PaletteDark {
   static const Color darkThemeBackgroundDark = Color.fromRGBO(9, 12, 18, 1.0);
   static const Color darkThemeDarkGrey = Color.fromRGBO(218, 228, 243, 0.06);
   static const Color darkThemeBlackWithOpacity = Color.fromRGBO(0, 0, 0, 0.2);
-
   static const Color darkThemeViolet = Color.fromRGBO(131, 87, 255, 0.2);
   static const Color darkThemeIndigoButton = Color.fromRGBO(216, 223, 246, 0.1);
   static const Color darkThemeIndigoButtonBorder = Color.fromRGBO(196, 206, 237, 0.4);
