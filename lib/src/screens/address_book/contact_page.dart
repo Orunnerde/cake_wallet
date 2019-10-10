@@ -109,16 +109,27 @@ class ContactFormState extends State<ContactForm> {
                     children: <Widget>[
                       Expanded(
                         child: TextFormField(
-                          style: TextStyle(fontSize: 14.0),
+                          style: TextStyle(
+                              fontSize: 14.0,
+                              color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                  : Colors.black
+                          ),
                           decoration: InputDecoration(
-                              hintStyle: TextStyle(color: Palette.wildDarkBlue),
+                              hintStyle: TextStyle(
+                                  color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                      : Palette.wildDarkBlue
+                              ),
                               hintText: 'Contact Name',
                               focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: Palette.lightGrey, width: 2.0)),
+                                      color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                          : Palette.lightGrey,
+                                      width: 1.0)),
                               enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: Palette.lightGrey, width: 2.0))),
+                                      color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                          : Palette.lightGrey,
+                                      width: 1.0))),
                           controller: _contactNameController,
                           validator: (value) {
                             String p = '[^ ]';
@@ -133,7 +144,7 @@ class ContactFormState extends State<ContactForm> {
                     ],
                   ),
                   SizedBox(
-                    height: 20.0,
+                    height: 14.0,
                   ),
                   Row(
                     children: <Widget>[
@@ -143,16 +154,22 @@ class ContactFormState extends State<ContactForm> {
                           onTap: () => _setCurrencyType(context),
                           child: IgnorePointer(
                             child: TextFormField(
-                              style: TextStyle(fontSize: 14.0),
+                              style: TextStyle(
+                                  fontSize: 14.0,
+                                  color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                      : Colors.black
+                              ),
                               decoration: InputDecoration(
                                   focusedBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: Palette.lightGrey,
-                                          width: 2.0)),
+                                          color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                              : Palette.lightGrey,
+                                          width: 1.0)),
                                   enabledBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: Palette.lightGrey,
-                                          width: 2.0))),
+                                          color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                              : Palette.lightGrey,
+                                          width: 1.0))),
                               controller: _currencyTypeController,
                               validator: (value) => null, // ??
                             ),
@@ -168,16 +185,27 @@ class ContactFormState extends State<ContactForm> {
                     children: <Widget>[
                       Expanded(
                         child: TextFormField(
-                          style: TextStyle(fontSize: 14.0),
+                          style: TextStyle(
+                              fontSize: 14.0,
+                              color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                  : Colors.black
+                          ),
                           decoration: InputDecoration(
-                              hintStyle: TextStyle(color: Palette.wildDarkBlue),
+                              hintStyle: TextStyle(
+                                  color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                      : Palette.wildDarkBlue
+                              ),
                               hintText: 'Address',
                               focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: Palette.lightGrey, width: 2.0)),
+                                      color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                                          : Palette.lightGrey,
+                                      width: 1.0)),
                               enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: Palette.lightGrey, width: 2.0))),
+                                      color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                                          : Palette.lightGrey,
+                                      width: 1.0))),
                           controller: _addressController,
                           validator: (value) => null, // ??
                         ),
@@ -248,7 +276,7 @@ class ContactFormState extends State<ContactForm> {
                     },
                     text: 'Save',
                     color: _isDarkTheme ? PaletteDark.darkThemePurpleButton : Palette.purple,
-                    borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet : Palette.deepPink,
+                    borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder : Palette.deepPink,
                 ),
               )),
             ],

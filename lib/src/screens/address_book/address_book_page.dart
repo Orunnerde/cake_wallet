@@ -34,7 +34,7 @@ class AddressBookPage extends BasePage {
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
-            Icon(Icons.add, color: Palette.violet, size: 20.0),
+            Icon(Icons.add, color: Palette.violet, size: 22.0),
             ButtonTheme(
               minWidth: 28.0,
               height: 28.0,
@@ -49,6 +49,28 @@ class AddressBookPage extends BasePage {
             )
           ],
         ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
+    return Scaffold(
+        backgroundColor: _isDarkTheme ? PaletteDark.darkThemeBlackWithOpacity
+            : Colors.white,
+        resizeToAvoidBottomPadding: false,
+        appBar: CupertinoNavigationBar(
+          leading: leading(context),
+          middle: middle(context),
+          trailing: trailing(context),
+          backgroundColor: Theme.of(context).backgroundColor,
+          border: null,
+        ),
+        body: SafeArea(child: body(context)));
   }
 
   @override
@@ -70,7 +92,7 @@ class AddressBookPage extends BasePage {
               height: 10.0,
               decoration: BoxDecoration(
                   gradient: LinearGradient(
-                colors: _isDarkTheme ? [Theme.of(context).backgroundColor, Theme.of(context).backgroundColor]
+                colors: _isDarkTheme ? [PaletteDark.darkThemeBlackWithOpacity, PaletteDark.darkThemeBlackWithOpacity]
                     : [Palette.lightGrey2, Colors.white],
                 begin: FractionalOffset(0.0, 0.0),
                 end: FractionalOffset(0.0, 1.0),
@@ -81,8 +103,9 @@ class AddressBookPage extends BasePage {
                 child: Observer(
                   builder: (_) => ListView.separated(
                       separatorBuilder: (_, __) => Divider(
-                            color: Palette.lightGrey,
-                            height: 3.0,
+                            color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                                : Palette.lightGrey,
+                            height: 1.0,
                           ),
                       itemCount: addressBookStore.contactList == null
                           ? 0
@@ -116,6 +139,8 @@ class AddressBookPage extends BasePage {
                                   contact.name,
                                   style: TextStyle(
                                     fontSize: 16.0,
+                                    color: _isDarkTheme ? PaletteDark.darkThemeTitle
+                                        : Colors.black
                                   ),
                                 ),
                               )
