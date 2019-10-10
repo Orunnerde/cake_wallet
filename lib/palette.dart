@@ -40,8 +40,10 @@ class PaletteDark {
   static const Color darkThemeMidGrey = Color.fromRGBO(20, 26, 38, 1.0);
   static const Color darkThemePurpleButton = Color.fromRGBO(182, 143, 255, 0.1);
   static const Color darkThemePurpleButtonBorder = Color.fromRGBO(161, 120, 255, 0.7);
-
   static const Color darkThemeBackground = Color.fromRGBO(39, 41, 50, 1.0);
+  static const Color darkThemeBackgroundDark = Color.fromRGBO(9, 12, 18, 1.0);
+
+
   static const Color darkThemeViolet = Color.fromRGBO(131, 87, 255, 0.2);
   static const Color darkThemeIndigoButton = Color.fromRGBO(216, 223, 246, 0.1);
   static const Color darkThemeIndigoButtonBorder = Color.fromRGBO(196, 206, 237, 0.4);
@@ -52,7 +54,4 @@ class PaletteDark {
   static const Color darkThemePinButton = Color.fromRGBO(136, 155, 183, 0.1);
   static const Color darkThemePinDigitButton = Color.fromRGBO(100, 115, 137, 0.34);
   static const Color switchBackground = Color.fromRGBO(100, 115, 137, 0.4);
-
-  //Exchange page
-  static const Color exchangeBackground = Color.fromRGBO(9, 12, 18, 1.0);
 }

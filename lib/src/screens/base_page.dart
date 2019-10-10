@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:provider/provider.dart';
+import 'package:cake_wallet/palette.dart';
 
 abstract class BasePage extends StatelessWidget {
   String get title => null;
@@ -44,12 +45,24 @@ abstract class BasePage extends StatelessWidget {
     );
   }
 
-  Widget middle(BuildContext context) => title == null
-      ? null
-      : Text(
-          title,
-          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
-        );
+  Widget middle(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
+    return title == null
+        ? null
+        : Text(
+      title,
+      style: TextStyle(
+          fontSize: 16.0,
+          fontWeight: FontWeight.w600,
+          color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
+      ),
+    );
+  }
 
   Widget trailing(BuildContext context) => null;
 

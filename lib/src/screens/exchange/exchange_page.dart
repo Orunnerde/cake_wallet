@@ -129,14 +129,14 @@ class ExchangePage extends BasePage {
     else _isDarkTheme = false;
 
     return Scaffold(
-        backgroundColor: _isDarkTheme ? PaletteDark.exchangeBackground
+        backgroundColor: _isDarkTheme ? PaletteDark.darkThemeBackgroundDark
             : Colors.white,
         resizeToAvoidBottomPadding: false,
         appBar: CupertinoNavigationBar(
           leading: leading(context),
           middle: middle(context),
           trailing: trailing(context),
-          backgroundColor: _isDarkTheme ? PaletteDark.exchangeBackground
+          backgroundColor: _isDarkTheme ? PaletteDark.darkThemeBackgroundDark
               : Colors.white,
           border: null,
         ),
