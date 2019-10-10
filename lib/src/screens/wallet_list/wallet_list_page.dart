@@ -102,7 +102,7 @@ class WalletListBody extends StatelessWidget {
                     builder: (_) => ListView.separated(
                         separatorBuilder: (_, index) {
                           return Divider(
-                              color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                              color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
                                   : Palette.lightGrey,
                               height: 1.0
                           );

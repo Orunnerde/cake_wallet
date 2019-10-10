@@ -13,6 +13,7 @@ import 'package:cake_wallet/themes.dart';
 class SeedPage extends BasePage {
   bool get isModalBackButton => true;
   String get title => 'Seed';
+  static final image = Image.asset('assets/images/seed_image.png');
 
   @override
   Widget body(BuildContext context) {
@@ -36,9 +37,10 @@ class SeedPage extends BasePage {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
+              image,
               Container(
                 margin: EdgeInsets.only(
-                    left: 30.0, top: 30.0, right: 30.0, bottom: 30.0),
+                    left: 30.0, top: 10.0, right: 30.0, bottom: 20.0),
                 child: Observer(builder: (_) {
                   _seed = walletSeedStore.seed;
                   return Column(
@@ -50,19 +52,32 @@ class SeedPage extends BasePage {
                             decoration: BoxDecoration(
                                 border: Border(
                                     bottom: BorderSide(
-                                        width: 1.0, color: Palette.lightGrey))),
+                                        width: 1.0,
+                                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                                            : Palette.lightGrey))),
                             padding: EdgeInsets.only(bottom: 20.0),
                             margin: EdgeInsets.only(bottom: 10.0),
                             child: Text(
                               walletSeedStore.name,
                               textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                color: _isDarkTheme ? Palette.wildDarkBlue : Colors.black
+                              ),
                             ),
                           ))
                         ],
                       ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
                       Text(
                         walletSeedStore.seed,
                         textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
+                        ),
                       )
                     ],
                   );
@@ -72,7 +87,7 @@ class SeedPage extends BasePage {
                 margin: EdgeInsets.only(top: 30.0, bottom: 30.0),
                 child: Column(
                   children: <Widget>[
-                    Text(
+                    /*Text(
                       'Please share, copy, or write down your seed. The seed '
                       'is used to recover your wallet. This is your PRIVATE '
                       'seed. DO NOT SHARE this seed with other people!',
@@ -80,25 +95,25 @@ class SeedPage extends BasePage {
                       style: TextStyle(
                         color: Palette.lightBlue,
                       ),
-                    ),
+                    ),*/
                     Container(
-                      padding: EdgeInsets.only(top: 20.0),
+                      //padding: EdgeInsets.only(top: 20.0),
                       child: Row(
                         children: <Widget>[
                           Flexible(
                               child: Container(
-                            padding: EdgeInsets.only(right: 15.0),
+                            padding: EdgeInsets.only(right: 8.0),
                             child: PrimaryButton(
                                 onPressed: () {},
-                                color: _isDarkTheme ? PaletteDark.darkThemeIndigoButton
-                                    : Palette.indigo,
-                                borderColor: _isDarkTheme ? PaletteDark.darkThemeIndigoButtonBorder
-                                    : Palette.deepIndigo,
+                                color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
+                                    : Palette.purple,
+                                borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
+                                    : Palette.deepPink,
                                 text: 'Save'),
                           )),
                           Flexible(
                               child: Container(
-                            padding: EdgeInsets.only(left: 15.0),
+                            padding: EdgeInsets.only(left: 8.0),
                             child: PrimaryButton(
                                 onPressed: () {
                                   Clipboard.setData(ClipboardData(text: _seed));
@@ -111,10 +126,10 @@ class SeedPage extends BasePage {
                                   );
                                 },
                                 text: 'Copy',
-                                color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
-                                    : Palette.purple,
-                                borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet
-                                    : Palette.deepPink,
+                                color: _isDarkTheme ? PaletteDark.darkThemeBlueButton
+                                    : Palette.brightBlue,
+                                borderColor: _isDarkTheme ? PaletteDark.darkThemeBlueButtonBorder
+                                    : Palette.cloudySky,
                             ),
                           ))
                         ],
