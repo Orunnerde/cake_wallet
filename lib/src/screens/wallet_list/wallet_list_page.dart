@@ -13,10 +13,33 @@ import 'package:cake_wallet/themes.dart';
 
 class WalletListPage extends BasePage {
   bool get isModalBackButton => true;
-  String get title => 'Wallet list';
+  String get title => 'Monero Wallet';
 
   @override
   Widget body(BuildContext context) => WalletListBody();
+
+  @override
+  Widget build(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
+    return Scaffold(
+        backgroundColor: _isDarkTheme ? PaletteDark.darkThemeBackgroundDark
+            : Colors.white,
+        resizeToAvoidBottomPadding: false,
+        appBar: CupertinoNavigationBar(
+          leading: leading(context),
+          middle: middle(context),
+          trailing: trailing(context),
+          backgroundColor: _isDarkTheme ? PaletteDark.darkThemeBackgroundDark
+              : Colors.white,
+          border: null,
+        ),
+        body: SafeArea(child: body(context)));
+  }
 }
 
 class WalletListBody extends StatelessWidget {
@@ -46,7 +69,7 @@ class WalletListBody extends StatelessWidget {
 
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
-    Color _backgroundColor = Theme.of(context).backgroundColor;
+    Color _backgroundColor = PaletteDark.darkThemeBackgroundDark;
 
     if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
     else _isDarkTheme = false;
@@ -78,7 +101,11 @@ class WalletListBody extends StatelessWidget {
                       child: Observer(
                     builder: (_) => ListView.separated(
                         separatorBuilder: (_, index) {
-                          return Divider(color: Palette.lightGrey, height: 3.0);
+                          return Divider(
+                              color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                  : Palette.lightGrey,
+                              height: 1.0
+                          );
                         },
                         itemCount: _walletListStore.wallets.length,
                         itemBuilder: (__, index) {
@@ -90,6 +117,10 @@ class WalletListBody extends StatelessWidget {
                               onTap: () => presetMenuForWallet(
                                   wallet, isCurrentWallet, context),
                               child: Container(
+                                  padding: EdgeInsets.only(
+                                    left: 10.0,
+                                    right: 10.0
+                                  ),
                                   child: ListTile(
                                       title: Text(
                                         wallet.name,
@@ -97,7 +128,7 @@ class WalletListBody extends StatelessWidget {
                                             color: isCurrentWallet
                                                 ? Palette.cakeGreen
                                                 : _isDarkTheme
-                                                ? Palette.wildDarkBlue
+                                                ? PaletteDark.darkThemeGrey
                                                 : Colors.black,
                                             fontSize: 18.0,
                                             fontWeight: FontWeight.w600),
@@ -120,7 +151,7 @@ class WalletListBody extends StatelessWidget {
                       iconData: Icons.add,
                       color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
                           : Palette.purple,
-                      borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet
+                      borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
                           : Palette.deepPink,
                       iconColor: Palette.violet,
                       iconBackgroundColor: _isDarkTheme ? PaletteDark.darkThemeViolet
