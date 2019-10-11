@@ -8,6 +8,9 @@ import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/src/screens/transaction_details/standart_list_item.dart';
 import 'package:cake_wallet/src/screens/transaction_details/standart_list_row.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class TransactionDetailsPage extends BasePage {
   bool get isModalBackButton => true;
@@ -76,12 +79,19 @@ class TransactionDetailsFormState extends State<TransactionDetailsForm> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return Container(
       padding: EdgeInsets.only(left: 20, right: 15, top: 10, bottom: 10),
       child: ListView.separated(
           separatorBuilder: (context, index) => Container(
                 height: 1,
-                color: Color.fromRGBO(240, 241, 244, 1),
+                color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                    : Palette.separator,
               ),
           padding: EdgeInsets.only(left: 25, top: 10, right: 25, bottom: 15),
           itemCount: _items.length,

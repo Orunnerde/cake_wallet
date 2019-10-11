@@ -33,6 +33,7 @@ class Palette {
   static const Color lightLavender = Color.fromRGBO(242, 244, 247, 1);
   static const Color cadetBlue = Color.fromRGBO(191, 201, 215, 1);
   static const Color manatee = Color.fromRGBO(138, 153, 175, 1);
+  static const Color separator = Color.fromRGBO(240, 241, 244, 1);
 }
 
 class PaletteDark {
