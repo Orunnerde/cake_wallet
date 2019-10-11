@@ -134,6 +134,7 @@ class ExchangeCardState extends State<ExchangeCard> {
                 SizedBox(width: 36),
                 Flexible(
                   child: TextField(
+                      style: TextStyle(fontSize: 23, height: 1.21),
                       controller: amountController,
                       enabled: _isActive,
                       textAlign: TextAlign.right,
