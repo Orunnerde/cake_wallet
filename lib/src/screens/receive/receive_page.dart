@@ -27,6 +27,29 @@ class ReceivePage extends BasePage {
   @override
   Widget body(BuildContext context) =>
       SingleChildScrollView(child: ReceiveBody());
+
+  @override
+  Widget build(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
+    return Scaffold(
+        backgroundColor: _isDarkTheme ? PaletteDark.darkThemeBackgroundDark
+            : Colors.white,
+        resizeToAvoidBottomPadding: false,
+        appBar: CupertinoNavigationBar(
+          leading: leading(context),
+          middle: middle(context),
+          trailing: trailing(context),
+          backgroundColor: _isDarkTheme ? PaletteDark.darkThemeBackgroundDark
+              : Colors.white,
+          border: null,
+        ),
+        body: SafeArea(child: body(context)));
+  }
 }
 
 class ReceiveBody extends StatelessWidget {
@@ -41,7 +64,7 @@ class ReceiveBody extends StatelessWidget {
 
     if (_themeChanger.getTheme() == Themes.darkTheme) {
       _currentColor = PaletteDark.darkThemeViolet;
-      _notCurrentColor = Colors.black;
+      _notCurrentColor = PaletteDark.darkThemeBlack;
       _isDarkTheme = true;
     }
     else {
@@ -95,18 +118,21 @@ class ReceiveBody extends StatelessWidget {
                                 'Copied to Clipboard',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    color: _isDarkTheme ? Colors.white : Colors.black
+                                    color: Colors.white
                                 ),
                               ),
-                              backgroundColor: _isDarkTheme ? PaletteDark.darkThemeViolet
-                                  : Palette.purple,
+                              backgroundColor: Colors.green,
                             ));
                           },
                           child: Text(
                             walletStore.subaddress.address,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontSize: 14.0, fontWeight: FontWeight.w600),
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w600,
+                                color: _isDarkTheme ? PaletteDark.darkThemeTitle
+                                    : Colors.black
+                            ),
                           ),
                         ),
                       ),
@@ -120,15 +146,26 @@ class ReceiveBody extends StatelessWidget {
                       child: TextField(
                     keyboardType:
                         TextInputType.numberWithOptions(decimal: true),
+                    style: TextStyle(
+                      fontSize: 14.0,
+                    ),
                     decoration: InputDecoration(
-                        hintStyle: TextStyle(color: Palette.lightBlue),
+                        hintStyle: TextStyle(
+                            fontSize: 14.0,
+                            color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                : Palette.lightBlue
+                        ),
                         hintText: 'Amount',
                         focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
-                                color: Palette.lightGrey, width: 2.0)),
+                                color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                    : Palette.lightGrey,
+                                width: 1.0)),
                         enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
-                                color: Palette.lightGrey, width: 2.0))),
+                                color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                    : Palette.lightGrey,
+                                width: 1.0))),
                     onSubmitted: (value) {
                       // _validateAmount(value);
                     },
@@ -142,13 +179,17 @@ class ReceiveBody extends StatelessWidget {
           children: <Widget>[
             Expanded(
                 child: Container(
-              color: _isDarkTheme ? Colors.black : Palette.lightGrey2,
+              color: _isDarkTheme ? PaletteDark.darkThemeBlack : Palette.lightGrey2,
               child: Column(
                 children: <Widget>[
                   ListTile(
                     title: Text(
                       'Subaddresses',
-                      style: TextStyle(fontSize: 16.0),
+                      style: TextStyle(
+                          fontSize: 16.0,
+                          color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                              : Colors.black
+                      ),
                     ),
                     trailing: Container(
                       width: 28.0,
@@ -164,13 +205,14 @@ class ReceiveBody extends StatelessWidget {
                         child: Icon(
                           Icons.add,
                           color: Palette.violet,
-                          size: 20.0,
+                          size: 22.0,
                         ),
                       ),
                     ),
                   ),
                   Divider(
-                    color: Palette.lightGrey,
+                    color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                        : Palette.lightGrey,
                     height: 1.0,
                   )
                 ],
@@ -185,7 +227,8 @@ class ReceiveBody extends StatelessWidget {
               itemCount: subaddressListStore.subaddresses.length,
               separatorBuilder: (context, i) {
                 return Divider(
-                  color: Palette.lightGrey,
+                  color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                      : Palette.lightGrey,
                   height: 1.0,
                 );
               },
@@ -204,7 +247,11 @@ class ReceiveBody extends StatelessWidget {
                       ListTile(
                         title: Text(
                           label,
-                          style: TextStyle(fontSize: 16.0),
+                          style: TextStyle(
+                              fontSize: 16.0,
+                              color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                  : Colors.black
+                          ),
                         ),
                         onTap: () => walletStore.subaddress = subaddress,
                       ),
