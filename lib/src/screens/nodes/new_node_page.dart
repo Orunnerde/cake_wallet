@@ -56,7 +56,11 @@ class NewNodeState extends State<NewNodePage> {
         ),
         middle: Text(
           'New Node',
-          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+          style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+              color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
+          ),
         ),
         backgroundColor: Theme.of(context).backgroundColor,
         border: null,
@@ -80,16 +84,20 @@ class NewNodeState extends State<NewNodePage> {
                                   style: TextStyle(fontSize: 14.0),
                                   decoration: InputDecoration(
                                       hintStyle: TextStyle(
-                                          color: Palette.wildDarkBlue),
+                                          fontSize: 14.0,
+                                          color: Palette.wildDarkBlue,
+                                      ),
                                       hintText: 'Node Address',
                                       focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
-                                              color: Palette.lightGrey,
-                                              width: 2.0)),
+                                              color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                                  : Palette.lightGrey,
+                                              width: 1.0)),
                                       enabledBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
-                                              color: Palette.lightGrey,
-                                              width: 2.0))),
+                                              color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                                  : Palette.lightGrey,
+                                              width: 1.0))),
                                   controller: _nodeAddressController,
                                   validator: (value) {
                                     String p = '[^ ]';
@@ -115,16 +123,19 @@ class NewNodeState extends State<NewNodePage> {
                                       signed: false, decimal: false),
                                   decoration: InputDecoration(
                                       hintStyle: TextStyle(
+                                          fontSize: 14.0,
                                           color: Palette.wildDarkBlue),
                                       hintText: 'Node port',
                                       focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
-                                              color: Palette.lightGrey,
-                                              width: 2.0)),
+                                              color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                                  : Palette.lightGrey,
+                                              width: 1.0)),
                                       enabledBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
-                                              color: Palette.lightGrey,
-                                              width: 2.0))),
+                                              color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                                  : Palette.lightGrey,
+                                              width: 1.0))),
                                   controller: _nodePortController,
                                   validator: (value) {
                                     return null;
@@ -143,16 +154,19 @@ class NewNodeState extends State<NewNodePage> {
                                   style: TextStyle(fontSize: 14.0),
                                   decoration: InputDecoration(
                                       hintStyle: TextStyle(
+                                          fontSize: 14.0,
                                           color: Palette.wildDarkBlue),
                                       hintText: 'Login',
                                       focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
-                                              color: Palette.lightGrey,
-                                              width: 2.0)),
+                                              color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                                  : Palette.lightGrey,
+                                              width: 1.0)),
                                       enabledBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
-                                              color: Palette.lightGrey,
-                                              width: 2.0))),
+                                              color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                                  : Palette.lightGrey,
+                                              width: 1.0))),
                                   controller: _loginController,
                                   validator: (value) {
                                     return null;
@@ -171,16 +185,19 @@ class NewNodeState extends State<NewNodePage> {
                                   style: TextStyle(fontSize: 14.0),
                                   decoration: InputDecoration(
                                       hintStyle: TextStyle(
+                                          fontSize: 14.0,
                                           color: Palette.wildDarkBlue),
                                       hintText: 'Password',
                                       focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
-                                              color: Palette.lightGrey,
-                                              width: 2.0)),
+                                              color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                                  : Palette.lightGrey,
+                                              width: 1.0)),
                                       enabledBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
-                                              color: Palette.lightGrey,
-                                              width: 2.0))),
+                                              color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                                  : Palette.lightGrey,
+                                              width: 1.0))),
                                   controller: _passwordController,
                                   validator: (value) {
                                     return null;
@@ -274,7 +291,7 @@ class NewNodeState extends State<NewNodePage> {
                               text: 'Save',
                               color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
                                   : Palette.purple,
-                              borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet
+                              borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
                                   : Palette.deepPink,
                           ),
                         )),

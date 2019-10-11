@@ -65,7 +65,7 @@ class NodeListPage extends BasePage {
               child: Text(
                 'Reset',
                 style: TextStyle(fontSize: 16.0,
-                    color: _isDarkTheme ? Palette.violet : Palette.wildDarkBlue
+                    color: _isDarkTheme ? PaletteDark.darkThemeGrey : Palette.wildDarkBlue
                 ),
               )),
         ),
@@ -80,7 +80,7 @@ class NodeListPage extends BasePage {
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[
-                Icon(Icons.add, color: Palette.violet, size: 20.0),
+                Icon(Icons.add, color: Palette.violet, size: 22.0),
                 ButtonTheme(
                   minWidth: 28.0,
                   height: 28.0,
@@ -96,6 +96,28 @@ class NodeListPage extends BasePage {
             )),
       ],
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
+    return Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
+        resizeToAvoidBottomPadding: false,
+        appBar: CupertinoNavigationBar(
+          leading: leading(context),
+          middle: middle(context),
+          trailing: trailing(context),
+          backgroundColor: _isDarkTheme ? PaletteDark.darkThemeAppBarBlack
+              : Colors.white,
+          border: null,
+        ),
+        body: SafeArea(child: body(context)));
   }
 
   @override
@@ -130,7 +152,10 @@ class NodeListPage extends BasePage {
                 child: ListTile(
                     title: Text(
                       'Auto switch node',
-                      style: TextStyle(fontSize: 16.0),
+                      style: TextStyle(
+                          fontSize: 16.0,
+                          color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
+                      ),
                     ),
                     trailing: StandartSwitch(
                         value: _isOn,
@@ -146,7 +171,9 @@ class NodeListPage extends BasePage {
           Expanded(child: Observer(builder: (context) {
             return ListView.separated(
                 separatorBuilder: (_, __) =>
-                    Divider(color: Palette.lightGrey, height: 1),
+                    Divider(
+                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey : Palette.lightGrey,
+                        height: 1),
                 itemCount: nodeList.nodes.length,
                 itemBuilder: (BuildContext context, int index) {
                   final node = nodeList.nodes[index];
@@ -161,7 +188,10 @@ class NodeListPage extends BasePage {
                         child: ListTile(
                           title: Text(
                             node.uri,
-                            style: TextStyle(fontSize: 16.0),
+                            style: TextStyle(
+                                fontSize: 16.0,
+                                color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
+                            ),
                           ),
                           trailing: Container(
                             width: 10.0,

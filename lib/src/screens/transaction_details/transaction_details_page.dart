@@ -14,7 +14,7 @@ import 'package:cake_wallet/themes.dart';
 
 class TransactionDetailsPage extends BasePage {
   bool get isModalBackButton => true;
-  String get title => 'Transaction details';
+  String get title => 'Transaction Details';
 
   final TransactionInfo transactionInfo;
 
