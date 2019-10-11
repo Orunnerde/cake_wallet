@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
-import 'package:provider/provider.dart';
-import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/theme_changer.dart';
 
 abstract class PinCodeWidget extends StatefulWidget {
   Function(List<int> pin, PinCodeState state) onPinCodeEntered;
@@ -25,6 +22,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
   static const sixPinLength = 6;
   static const fourPinLength = 4;
   static final deleteIconImage = Image.asset('assets/images/delete_icon.png');
+  static final backArrowImage = Image.asset('assets/images/back_arrow.png');
   GlobalKey _gridViewKey = GlobalKey();
 
   int pinLength = defaultPinLength;
@@ -53,14 +51,13 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
     });
   }
 
-  _getCurrentAspectRatio(){
+  _getCurrentAspectRatio() {
     final RenderBox renderBox = _gridViewKey.currentContext.findRenderObject();
 
-    double cellWidth = renderBox.size.width/3;
-    double cellHeight = renderBox.size.height/4;
-    if (cellWidth > 0 && cellHeight > 0) _aspectRatio = cellWidth/cellHeight;
-    setState(() {
-    });
+    double cellWidth = renderBox.size.width / 3;
+    double cellHeight = renderBox.size.height / 4;
+    if (cellWidth > 0 && cellHeight > 0) _aspectRatio = cellWidth / cellHeight;
+    setState(() {});
   }
 
   @override
@@ -79,85 +76,80 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
   }
 
   Widget body(BuildContext context) {
-
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
-
     return SafeArea(
-      child: Container(
-        color: Theme.of(context).backgroundColor,
-        padding: EdgeInsets.only(left: 40.0, right: 40.0, bottom: 40.0),
-        child: Column(
-            children: <Widget>[
-              Spacer(flex: 2),
-              Text(
-                  title,
-                  style: TextStyle(
-                      fontSize: 24,
-                      color: Palette.wildDarkBlue
-                  )
-              ),
-              Spacer(flex: 3),
-              Container(
-                width: 180,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List.generate(pinLength, (index) {
-                    const size = 10.0;
-                    final isFilled = pin[index] != null;
+        child: Container(
+      color: Colors.white,
+      padding: EdgeInsets.only(left: 40.0, right: 40.0, bottom: 40.0),
+      child: Column(children: <Widget>[
+        Spacer(flex: 2),
+        Text(title,
+            style: TextStyle(fontSize: 24, color: Palette.wildDarkBlue)),
+        Spacer(flex: 3),
+        Container(
+          width: 180,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(pinLength, (index) {
+              const size = 10.0;
+              final isFilled = pin[index] != null;
 
-                    return Container(
-                        width: size,
-                        height: size,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: isFilled ? Palette.deepPurple : Colors.transparent,
-                          border: Border.all(color: Palette.wildDarkBlue),
-                        ));
-                  }),
-                ),
-              ),
-              Spacer(flex: 2),
-              if (widget.hasLengthSwitcher)
-              ...[FlatButton(
-                  onPressed: (){ changePinLength(pinLength == PinCodeState.fourPinLength ? PinCodeState.sixPinLength : PinCodeState.fourPinLength); },
-                  child: Text(_changePinLengthText(),
-                    style: TextStyle(
-                        fontSize: 16.0,
-                        color: Palette.wildDarkBlue
-                    ),
-                  )
-              )],
-              Spacer(flex: 1),
-              Flexible(
-                  flex: 24,
-                  child: Container(
-                      key: _gridViewKey,
-                      child: _aspectRatio > 0 ? GridView.count(
+              return Container(
+                  width: size,
+                  height: size,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isFilled ? Palette.deepPurple : Colors.transparent,
+                    border: Border.all(color: Palette.wildDarkBlue),
+                  ));
+            }),
+          ),
+        ),
+        Spacer(flex: 2),
+        if (widget.hasLengthSwitcher) ...[
+          FlatButton(
+              onPressed: () {
+                changePinLength(pinLength == PinCodeState.fourPinLength
+                    ? PinCodeState.sixPinLength
+                    : PinCodeState.fourPinLength);
+              },
+              child: Text(
+                _changePinLengthText(),
+                style: TextStyle(fontSize: 16.0, color: Palette.wildDarkBlue),
+              ))
+        ],
+        Spacer(flex: 1),
+        Flexible(
+            flex: 24,
+            child: Container(
+                key: _gridViewKey,
+                child: _aspectRatio > 0
+                    ? GridView.count(
+                        shrinkWrap: true,
                         crossAxisCount: 3,
                         childAspectRatio: _aspectRatio,
                         physics: const NeverScrollableScrollPhysics(),
                         children: List.generate(12, (index) {
+                          const double marginRight = 15;
+                          const double marginLeft = 15;
 
                           if (index == 9) {
                             return Container(
-                              margin: EdgeInsets.all(5.0),
+                              margin: EdgeInsets.only(
+                                  left: marginLeft, right: marginRight),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: _isDarkTheme ? PaletteDark.darkThemePinButton : Palette.darkGrey,
+                                color: Palette.darkGrey,
                               ),
                             );
                           } else if (index == 10) {
                             index = 0;
                           } else if (index == 11) {
                             return Container(
-                              margin: EdgeInsets.all(5.0),
+                              margin: EdgeInsets.only(
+                                  left: marginLeft, right: marginRight),
                               child: FlatButton(
-                                onPressed: () { _pop(); },
-                                color: _isDarkTheme ? PaletteDark.darkThemePinButton : Palette.darkGrey,
+                                onPressed: () => _pop(),
+                                color: Palette.darkGrey,
                                 shape: CircleBorder(),
                                 child: deleteIconImage,
                               ),
@@ -167,28 +159,22 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
                           }
 
                           return Container(
-                            margin: EdgeInsets.all(5.0),
+                            margin: EdgeInsets.only(
+                                left: marginLeft, right: marginRight),
                             child: FlatButton(
-                              onPressed: () { _push(index); },
-                              color: _isDarkTheme ? PaletteDark.darkThemePinDigitButton : Palette.creamyGrey,
+                              onPressed: () => _push(index),
+                              color: Palette.creamyGrey,
                               shape: CircleBorder(),
-                              child: Text(
-                                  '$index',
+                              child: Text('$index',
                                   style: TextStyle(
-                                      fontSize: 23.0,
-                                      color: Palette.blueGrey
-                                  )
-                              ),
+                                      fontSize: 23.0, color: Palette.blueGrey)),
                             ),
                           );
                         }),
-                      ) : null
-                  )
-              )
-            ]
-        ),
-      )
-    );
+                      )
+                    : null))
+      ]),
+    ));
   }
 
   void _push(int num) {
@@ -215,7 +201,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
 
     for (var i = pin.length - 1; i >= 0; i--) {
       if (pin[i] != null) {
-        setState(()  => pin[i] = null);
+        setState(() => pin[i] = null);
         break;
       }
     }
@@ -232,8 +218,10 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
   }
 
   String _changePinLengthText() {
-    return 'Use '
-        + (pinLength == PinCodeState.fourPinLength ? '${PinCodeState.sixPinLength}' : '${PinCodeState.fourPinLength}')
-        + '-digit Pin';
+    return 'Use ' +
+        (pinLength == PinCodeState.fourPinLength
+            ? '${PinCodeState.sixPinLength}'
+            : '${PinCodeState.fourPinLength}') +
+        '-digit Pin';
   }
 }

@@ -13,8 +13,6 @@ import 'package:cake_wallet/src/stores/wallet_restoration/wallet_restoration_sto
 import 'package:cake_wallet/src/stores/wallet_restoration/wallet_restoration_state.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/widgets/blockchain_height_widget.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 
 class RestoreWalletFromSeedPage extends BasePage {
   final WalletListService walletsService;
@@ -47,12 +45,6 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
   Widget build(BuildContext context) {
     final walletRestorationStore = Provider.of<WalletRestorationStore>(context);
 
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
-
     reaction((_) => walletRestorationStore.state, (state) {
       if (state is WalletRestoredSuccessfully) {
         Navigator.of(context).popUntil((route) => route.isFirst);
@@ -82,102 +74,88 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
         SystemChannels.textInput.invokeMethod('TextInput.hide');
       },
       child: Container(
-          padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Flexible(
-                        child: Container(
-                      padding: EdgeInsets.only(top: 20.0),
-                      child: TextFormField(
-                        style: TextStyle(fontSize: 14.0),
-                        controller: _nameController,
-                        decoration: InputDecoration(
-                            hintStyle: TextStyle(
-                                color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                                    : Palette.lightBlue),
-                            hintText: 'Wallet name',
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                        : Palette.lightGrey,
-                                    width: 1.0)),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                        : Palette.lightGrey,
-                                    width: 1.0))),
-                        validator: (value) {
-                          return null;
-                        },
-                      ),
-                    ))
-                  ],
-                ),
-                BlockchainHeightWidget(key: _blockchainHeightKey),
-                Row(
-                  children: <Widget>[
-                    Flexible(
-                        child: Container(
-                      padding: EdgeInsets.only(top: 20.0),
-                      child: TextFormField(
-                        style: TextStyle(fontSize: 14.0),
-                        controller: _seedController,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        textInputAction: TextInputAction.done,
-                        decoration: InputDecoration(
-                            hintStyle: TextStyle(
-                                color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                                    : Palette.lightBlue),
-                            hintText: 'Seed',
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                        : Palette.lightGrey,
-                                    width: 1.0)),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                        : Palette.lightGrey,
-                                    width: 1.0))),
-                        validator: (value) {
-                          return null;
-                        },
-                      ),
-                    ))
-                  ],
-                ),
-                Flexible(
-                    child: Container(
-                        alignment: Alignment.bottomCenter,
-                        child: Observer(builder: (_) {
-                          return LoadingPrimaryButton(
-                              onPressed: () {
-                                if (_formKey.currentState.validate()) {
-                                  walletRestorationStore.restoreFromSeed(
-                                      name: _nameController.text,
-                                      seed: _seedController.text,
-                                      restoreHeight: _blockchainHeightKey
-                                          .currentState.height);
-                                }
-                              },
-                              isLoading: walletRestorationStore.state
-                                  is WalletIsRestoring,
-                              text: 'Recover',
-                            color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
-                                : Palette.purple,
-                            borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
-                                : Palette.deepPink,
-                          );
-                        })))
-              ],
-            ),
-          )),
+        padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                  padding: EdgeInsets.only(left: 13, right: 13),
+                  child: Column(children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Flexible(
+                            child: Container(
+                          padding: EdgeInsets.only(top: 20.0),
+                          child: TextFormField(
+                            controller: _nameController,
+                            decoration: InputDecoration(
+                                hintStyle: TextStyle(color: Palette.lightBlue),
+                                hintText: 'Wallet name',
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Palette.lightGrey, width: 2.0)),
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Palette.lightGrey, width: 2.0))),
+                            validator: (value) {
+                              return null;
+                            },
+                          ),
+                        ))
+                      ],
+                    ),
+                    BlockchainHeightWidget(key: _blockchainHeightKey),
+                    Row(
+                      children: <Widget>[
+                        Flexible(
+                            child: Container(
+                          padding: EdgeInsets.only(top: 20.0),
+                          child: TextFormField(
+                            controller: _seedController,
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            textInputAction: TextInputAction.done,
+                            decoration: InputDecoration(
+                                hintStyle: TextStyle(color: Palette.lightBlue),
+                                hintText: 'Seed',
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Palette.lightGrey, width: 2.0)),
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Palette.lightGrey, width: 2.0))),
+                            validator: (value) {
+                              return null;
+                            },
+                          ),
+                        ))
+                      ],
+                    ),
+                  ])),
+              Flexible(
+                  child: Container(
+                      alignment: Alignment.bottomCenter,
+                      child: Observer(builder: (_) {
+                        return LoadingPrimaryButton(
+                            onPressed: () {
+                              if (_formKey.currentState.validate()) {
+                                walletRestorationStore.restoreFromSeed(
+                                    name: _nameController.text,
+                                    seed: _seedController.text,
+                                    restoreHeight: _blockchainHeightKey
+                                        .currentState.height);
+                              }
+                            },
+                            isLoading: walletRestorationStore.state
+                                is WalletIsRestoring,
+                            text: 'Recover');
+                      })))
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

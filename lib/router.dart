@@ -94,7 +94,7 @@ class Router {
                     accountService: UserService(
                         secureStorage: FlutterSecureStorage(),
                         sharedPreferences: sharedPreferences)),
-                child: SetupPinCode(
+                child: SetupPinCodePage(
                     onPinCodeSetup: (context, _) =>
                         Navigator.pushNamed(context, Routes.newWallet))));
 
@@ -125,7 +125,7 @@ class Router {
                     accountService: UserService(
                         secureStorage: FlutterSecureStorage(),
                         sharedPreferences: sharedPreferences)),
-                child: SetupPinCode(
+                child: SetupPinCodePage(
                     onPinCodeSetup: (context, pin) =>
                         callback == null ? null : callback(context, pin))),
             fullscreenDialog: true);
@@ -143,7 +143,7 @@ class Router {
                     accountService: UserService(
                         secureStorage: FlutterSecureStorage(),
                         sharedPreferences: sharedPreferences)),
-                child: SetupPinCode(
+                child: SetupPinCodePage(
                     onPinCodeSetup: (context, _) => Navigator.pushNamed(
                         context, Routes.restoreWalletOptions))));
 

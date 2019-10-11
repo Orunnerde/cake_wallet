@@ -135,9 +135,9 @@ class SendFormState extends State<SendForm> {
       ),
       Expanded(
         child: Container(
-            padding: EdgeInsets.only(left: 38, right: 33),
+            padding: EdgeInsets.only(left: 38, right: 33, top: 30, bottom: 30),
             child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Column(children: <Widget>[
                     TextFormField(

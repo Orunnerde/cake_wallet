@@ -50,6 +50,7 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
     _setEffects(context);
 
     return Observer(builder: (_) {
+      print('Redraw');
       final trade = tradeStore.trade;
       final walletName = walletStore.name;
 

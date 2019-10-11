@@ -8,7 +8,8 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 class RestoreOptionsPage extends BasePage {
   static const _aspectRatioImage = 2.086;
 
-  String get title => 'Restore';
+  String get title => 'Restore Wallet';
+  Color get backgroundColor => Palette.creamyGrey;
 
   final _imageSeedKeys = Image.asset('assets/images/seedKeys.png');
   final _imageRestoreSeed = Image.asset('assets/images/restoreSeed.png');
@@ -29,7 +30,7 @@ class RestoreOptionsPage extends BasePage {
                 image: _imageSeedKeys,
                 aspectRatioImage: _aspectRatioImage,
                 title: 'Restore from seed/keys',
-                description: 'Restore your wallet from your seed or keys',
+                description: "Get back your wallet from seed/keys that you've saved to secure place",
                 textButton: 'Next',
               ),
             ),
@@ -38,10 +39,11 @@ class RestoreOptionsPage extends BasePage {
               onPressed: () {},
               image: _imageRestoreSeed,
               aspectRatioImage: _aspectRatioImage,
-              color: Palette.lightGreen,
+              titleColor: Color.fromRGBO(41, 187, 244, 1),
+              color: Color.fromRGBO(41, 187, 244, 1),
               title: 'Restore from a back-up file',
               description:
-                  'Restore the whole Cake Wallet app from\nyour back-up file',
+                  'You can restore the whole Cake Wallet app from\nyour back-up file',
               textButton: 'Next',
             ))
           ],

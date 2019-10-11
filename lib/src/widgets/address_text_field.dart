@@ -28,10 +28,11 @@ class AddressTextField extends StatelessWidget {
         controller: controller,
         decoration: InputDecoration(
           suffixIcon: SizedBox(
-            width: 78,
+            width: 90,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                SizedBox(width: 5),
                 Container(
                     width: 34,
                     height: 34,

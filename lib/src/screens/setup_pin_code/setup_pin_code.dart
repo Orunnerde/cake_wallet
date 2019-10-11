@@ -4,21 +4,33 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/src/stores/user/user_store.dart';
 import 'package:cake_wallet/src/screens/pin_code/pin_code.dart';
-import 'package:provider/provider.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/src/screens/base_page.dart';
 
-class SetupPinCode extends PinCodeWidget {
+class SetupPinCodePage extends BasePage {
   final Function(BuildContext, String) onPinCodeSetup;
-  final bool hasLengthSwitcher = true;
-
-  SetupPinCode({@required this.onPinCodeSetup});
 
   @override
-  _SetupPinCodeState createState() => _SetupPinCodeState();
+  String get title => 'Setup PIN';
+
+  SetupPinCodePage({this.onPinCodeSetup});
+
+  @override
+  Widget body(BuildContext context) =>
+      SetupPinCodeForm(onPinCodeSetup: onPinCodeSetup, hasLengthSwitcher: true);
 }
 
-class _SetupPinCodeState<WidgetType extends SetupPinCode>
+class SetupPinCodeForm extends PinCodeWidget {
+  final Function(BuildContext, String) onPinCodeSetup;
+  final bool hasLengthSwitcher;
+
+  SetupPinCodeForm(
+      {@required this.onPinCodeSetup, @required this.hasLengthSwitcher});
+
+  @override
+  _SetupPinCodeFormState createState() => _SetupPinCodeFormState();
+}
+
+class _SetupPinCodeFormState<WidgetType extends SetupPinCodeForm>
     extends PinCodeState<WidgetType> {
   static final backArrowImage = Image.asset('assets/images/back_arrow.png');
 
@@ -27,7 +39,7 @@ class _SetupPinCodeState<WidgetType extends SetupPinCode>
   List<int> _originalPin = [];
   UserStore _userStore;
 
-  _SetupPinCodeState() {
+  _SetupPinCodeFormState() {
     title = "Enter your pin";
   }
 
@@ -91,19 +103,7 @@ class _SetupPinCodeState<WidgetType extends SetupPinCode>
   @override
   Widget build(BuildContext context) {
     _userStore = Provider.of<UserStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
 
-    return Scaffold(
-        appBar: CupertinoNavigationBar(
-          middle: Text('Setup PIN'),
-          backgroundColor: (_themeChanger.getTheme() == Themes.darkTheme) ?
-            Theme.of(context).backgroundColor :
-            Colors.white,
-          border: null,
-        ),
-        backgroundColor: (_themeChanger.getTheme() == Themes.darkTheme) ?
-          Theme.of(context).backgroundColor :
-          Colors.white,
-        body: body(context));
+    return body(context);
   }
 }

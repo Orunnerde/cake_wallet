@@ -18,7 +18,7 @@ class XMRTOExchangeProvider extends ExchangeProvider {
   static const originalApiUri = 'https://xmr.to/api/v2/xmr2btc';
   static const proxyApiUri = 'https://xmrproxy.net/api/v2/xmr2btc';
   static const _orderParameterUriSufix = '/order_parameter_query';
-  static const _orderStatusUriSufix = '/order_status_query';
+  static const _orderStatusUriSufix = '/order_status_query/';
   static const _orderCreateUriSufix = '/order_create/';
   static String _apiUri = '';
   
@@ -103,10 +103,10 @@ class XMRTOExchangeProvider extends ExchangeProvider {
     final url = await getApiUri() + _orderStatusUriSufix;
     final body = {'uuid': id};
     final response = await post(url, headers: headers, body: json.encode(body));
-    final responseJSON = json.decode(response.body);
 
     if (response.statusCode != 200) {
       if (response.statusCode == 400) {
+        final responseJSON = json.decode(response.body);
         final error = responseJSON['error_msg'];
         throw TradeNotFoundException(id,
             provider: description, description: error);
@@ -114,7 +114,8 @@ class XMRTOExchangeProvider extends ExchangeProvider {
 
       throw TradeNotFoundException(id, provider: description);
     }
-
+    
+    final responseJSON = json.decode(response.body);
     final address = responseJSON['xmr_receiving_integrated_address'];
     final paymentId = responseJSON['xmr_required_payment_id_short'];
     final amount = responseJSON['xmr_amount_total'].toString();
