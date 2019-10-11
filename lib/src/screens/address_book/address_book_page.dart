@@ -66,12 +66,12 @@ class AddressBookPage extends BasePage {
         Expanded(
             child: Stack(
           children: <Widget>[
-            Container(
+            _isDarkTheme ? Container(height: 10.0,)
+              : Container(
               height: 10.0,
               decoration: BoxDecoration(
                   gradient: LinearGradient(
-                colors: _isDarkTheme ? [PaletteDark.darkThemeBlackWithOpacity, PaletteDark.darkThemeBlackWithOpacity]
-                    : [Palette.lightGrey2, Colors.white],
+                colors: [Palette.lightGrey2, Colors.white],
                 begin: FractionalOffset(0.0, 0.0),
                 end: FractionalOffset(0.0, 1.0),
               )),

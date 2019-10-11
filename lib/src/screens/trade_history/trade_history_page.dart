@@ -15,28 +15,6 @@ class TradeHistoryPage extends BasePage {
   bool get isModalBackButton => true;
 
   @override
-  Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
-
-    return Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
-        resizeToAvoidBottomPadding: false,
-        appBar: CupertinoNavigationBar(
-          leading: leading(context),
-          middle: middle(context),
-          trailing: trailing(context),
-          backgroundColor: _isDarkTheme ? PaletteDark.darkThemeAppBarBlack
-              : Colors.white,
-          border: null,
-        ),
-        body: SafeArea(child: body(context)));
-  }
-
-  @override
   Widget body(BuildContext context) {
     final tradeHistoryStore = Provider.of<TradeHistoryStore>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
