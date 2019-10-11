@@ -16,7 +16,7 @@ import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
 
 class NewWalletPage extends BasePage {
-  static const _aspectRatioImage = 1.54;
+  static const _aspectRatioImage = 1.95;
   static final _image = Image.asset('assets/images/bitmap.png');
   static final backArrowImage = Image.asset('assets/images/back_arrow.png');
 
@@ -24,7 +24,7 @@ class NewWalletPage extends BasePage {
   final WalletService walletService;
   final SharedPreferences sharedPreferences;
 
-  String get title => 'New wallet';
+  String get title => 'New Wallet';
 
   NewWalletPage(
       {@required this.walletsService,
@@ -115,27 +115,43 @@ class _WalletNameFormState extends State<WalletNameForm> {
         key: _formKey,
         child: Column(
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: TextFormField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                        hintStyle: TextStyle(color: Palette.lightBlue),
-                        hintText: 'Wallet name',
-                        focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Palette.lightGrey, width: 2.0)),
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Palette.lightGrey, width: 2.0))),
-                    validator: (value) {
-                      if (value.isEmpty) return 'Please enter a wallet name';
-                      return null;
-                    },
-                  ),
-                )
-              ],
+            Container(
+              padding: EdgeInsets.only(left: 10.0, right: 10.0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: TextFormField(
+                      style: TextStyle(
+                          fontSize: 24.0,
+                          color: _isDarkTheme ? PaletteDark.wildDarkBlueWithOpacity
+                              : Colors.black
+                      ),
+                      controller: nameController,
+                      decoration: InputDecoration(
+                          hintStyle: TextStyle(
+                              fontSize: 24.0,
+                              color: _isDarkTheme ? PaletteDark.wildDarkBlueWithOpacity
+                                  : Palette.lightBlue
+                          ),
+                          hintText: 'Wallet name',
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                      : Palette.lightGrey,
+                                  width: 1.0)),
+                          enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                      : Palette.lightGrey,
+                                  width: 1.0))),
+                      validator: (value) {
+                        if (value.isEmpty) return 'Please enter a wallet name';
+                        return null;
+                      },
+                    ),
+                  )
+                ],
+              ),
             ),
             Expanded(
                 child: Container(
@@ -152,7 +168,7 @@ class _WalletNameFormState extends State<WalletNameForm> {
                           text: 'Continue',
                           color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
                               : Palette.purple,
-                          borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet
+                          borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
                               : Palette.deepPink,
                           isLoading:
                               walletCreationStore.state is WalletIsCreating,
