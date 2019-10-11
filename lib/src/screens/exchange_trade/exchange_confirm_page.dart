@@ -38,7 +38,9 @@ class ExchangeConfirmPage extends BasePage {
                       Text(
                         'Please copy or write down the trade ID to continue.',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 18.0),
+                        style: TextStyle(fontSize: 18.0,
+                          color: _isDarkTheme ? Palette.wildDarkBlue : Colors.black
+                        ),
                       ),
                       SizedBox(
                         height: 70.0,
@@ -46,7 +48,9 @@ class ExchangeConfirmPage extends BasePage {
                       Text(
                         'Trade ID:\n${trade.id}',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 18.0),
+                        style: TextStyle(fontSize: 18.0,
+                            color: _isDarkTheme ? Palette.wildDarkBlue : Colors.black
+                        ),
                       ),
                       SizedBox(
                         height: 70.0,
@@ -60,11 +64,10 @@ class ExchangeConfirmPage extends BasePage {
                               'Copied to Clipboard',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: _isDarkTheme ? Colors.white : Colors.black
+                                color: Colors.white
                               ),
                             ),
-                            backgroundColor: _isDarkTheme ? PaletteDark.darkThemeViolet
-                                : Palette.purple,
+                            backgroundColor: Colors.green,
                           ));
                         },
                         text: 'Copy ID',
@@ -83,7 +86,7 @@ class ExchangeConfirmPage extends BasePage {
                   .pushReplacementNamed(Routes.exchangeTrade, arguments: trade),
               text: "I've saved the trade ID",
               color: _isDarkTheme ? PaletteDark.darkThemePurpleButton : Palette.purple,
-              borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet : Palette.deepPink,
+              borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder : Palette.deepPink,
           ),
         )
       ],

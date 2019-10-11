@@ -21,13 +21,6 @@ class ExchangeFundsPage extends BasePage {
 
   @override
   Widget trailing(BuildContext context) {
-
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
-
     return ButtonTheme(
       minWidth: double.minPositive,
       child: FlatButton(
@@ -35,7 +28,7 @@ class ExchangeFundsPage extends BasePage {
         child: Text('Clear',
           style: TextStyle(
             fontSize: 16.0,
-            color: _isDarkTheme ? Palette.violet : Palette.wildDarkBlue
+            color: Palette.wildDarkBlue
           ),
         )
       ),
@@ -93,7 +86,7 @@ class ExchangeFundsPage extends BasePage {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14.0,
-                color: Palette.violet
+                color: Palette.lightViolet
               ),
             ),
           ),
@@ -143,7 +136,10 @@ class ExchangeFundsPage extends BasePage {
                        'Please press confirm to continue or go back to change '
                        'the amounts.',
                         textAlign: TextAlign.left,
-                        style: TextStyle(fontSize: 14.0),
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: _isDarkTheme ? Palette.wildDarkBlue : Colors.black
+                        ),
                   )
                 ],
               ),
@@ -160,7 +156,7 @@ class ExchangeFundsPage extends BasePage {
               style: TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.w500,
-                color: Palette.wildDarkBlue
+                color: _isDarkTheme ? PaletteDark.wildDarkBlue : Palette.wildDarkBlue
               ),
             ),
           ),
@@ -169,7 +165,7 @@ class ExchangeFundsPage extends BasePage {
             text: 'Confirm',
             color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
                 : Palette.purple,
-            borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet
+            borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
                 : Palette.deepPink,
           )
         ],

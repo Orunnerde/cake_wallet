@@ -79,14 +79,18 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                                   style: TextStyle(
                                       height: 2,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 14.0),
+                                      fontSize: 14.0,
+                                      color: _isDarkTheme ? Palette.wildDarkBlue
+                                          : Colors.black
+                                  ),
                                 ),
                                 Text(
                                   '${trade.id ?? fetchingLabel}',
                                   style: TextStyle(
                                       fontSize: 14.0,
                                       height: 2,
-                                      color: Palette.wildDarkBlue),
+                                      color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                          : Palette.wildDarkBlue),
                                 )
                               ],
                             ),
@@ -98,14 +102,18 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                                   style: TextStyle(
                                       height: 2,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 14.0),
+                                      fontSize: 14.0,
+                                      color: _isDarkTheme ? Palette.wildDarkBlue
+                                          : Colors.black
+                                  ),
                                 ),
                                 Text(
                                   '${trade.amount ?? fetchingLabel}',
                                   style: TextStyle(
                                       fontSize: 14.0,
                                       height: 2,
-                                      color: Palette.wildDarkBlue),
+                                      color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                          : Palette.wildDarkBlue),
                                 )
                               ],
                             ),
@@ -118,14 +126,18 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                                         style: TextStyle(
                                             height: 2,
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 14.0),
+                                            fontSize: 14.0,
+                                            color: _isDarkTheme ? Palette.wildDarkBlue
+                                                : Colors.black
+                                        ),
                                       ),
                                       Text(
                                         '${trade.extraId ?? fetchingLabel}',
                                         style: TextStyle(
                                             fontSize: 14.0,
                                             height: 2,
-                                            color: Palette.wildDarkBlue),
+                                            color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                                : Palette.wildDarkBlue),
                                       )
                                     ],
                                   )
@@ -138,6 +150,8 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                                   style: TextStyle(
                                       fontSize: 14.0,
                                       fontWeight: FontWeight.bold,
+                                      color: _isDarkTheme ? Palette.wildDarkBlue
+                                          : Colors.black,
                                       height: 2),
                                 ),
                                 Text(
@@ -145,7 +159,8 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                                   style: TextStyle(
                                       fontSize: 14.0,
                                       height: 2,
-                                      color: Palette.wildDarkBlue),
+                                      color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                          : Palette.wildDarkBlue),
                                 )
                               ],
                             ),
@@ -155,10 +170,14 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                                     children: <Widget>[
                                       Text(
                                         'Offer expires in: ',
-                                        style: TextStyle(fontSize: 14.0),
+                                        style: TextStyle(fontSize: 14.0,
+                                            color: _isDarkTheme ? Palette.wildDarkBlue
+                                                : Colors.black
+                                        ),
                                       ),
                                       TimerWidget(trade.expiredAt,
-                                          color: Palette.wildDarkBlue)
+                                          color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                              : Palette.wildDarkBlue)
                                     ],
                                   )
                                 : Container(),
@@ -183,7 +202,9 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                       'This trade is powered by ${trade.provider != null ? trade.provider.title : fetchingLabel}',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontSize: 14.0, fontWeight: FontWeight.bold),
+                          fontSize: 14.0, fontWeight: FontWeight.bold,
+                          color: _isDarkTheme ? PaletteDark.darkThemeGrey : Colors.black
+                      ),
                     ),
                   ),
                   Container(
@@ -192,7 +213,8 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                       child: Text(
                         trade.inputAddress ?? fetchingLabel,
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 14.0, color: Palette.violet),
+                        style: TextStyle(fontSize: 14.0,
+                            color: Palette.lightViolet),
                       ),
                     ),
                   ),
@@ -261,13 +283,16 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                               '\n\n'
                           : 'Please send ${trade.amount ?? fetchingLabel} ${trade.from} to the address shown above.\n\n',
                       textAlign: TextAlign.left,
-                      style: TextStyle(fontSize: 13.0),
+                      style: TextStyle(fontSize: 13.0,
+                        color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
+                      ),
                     ),
                   ),
                   Text(
                     '*Please copy or write down your ID shown above.',
                     textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 11.0, color: Colors.grey),
+                    style: TextStyle(fontSize: 13.0,
+                        color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.grey),
                   )
                 ])),
             tradeStore.isSendable
@@ -279,7 +304,7 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                         text: 'Confirm',
                         color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
                             : Palette.purple,
-                        borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet
+                        borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
                             : Palette.deepPink,
                     ),
                   )
