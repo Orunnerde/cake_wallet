@@ -52,28 +52,6 @@ class AddressBookPage extends BasePage {
   }
 
   @override
-  Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
-
-    return Scaffold(
-        backgroundColor: _isDarkTheme ? PaletteDark.darkThemeBlackWithOpacity
-            : Colors.white,
-        resizeToAvoidBottomPadding: false,
-        appBar: CupertinoNavigationBar(
-          leading: leading(context),
-          middle: middle(context),
-          trailing: trailing(context),
-          backgroundColor: Theme.of(context).backgroundColor,
-          border: null,
-        ),
-        body: SafeArea(child: body(context)));
-  }
-
-  @override
   Widget body(BuildContext context) {
     final addressBookStore = Provider.of<AddressBookStore>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
@@ -103,7 +81,7 @@ class AddressBookPage extends BasePage {
                 child: Observer(
                   builder: (_) => ListView.separated(
                       separatorBuilder: (_, __) => Divider(
-                            color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                            color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
                                 : Palette.lightGrey,
                             height: 1.0,
                           ),

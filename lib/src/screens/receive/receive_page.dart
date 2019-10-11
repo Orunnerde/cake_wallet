@@ -27,29 +27,6 @@ class ReceivePage extends BasePage {
   @override
   Widget body(BuildContext context) =>
       SingleChildScrollView(child: ReceiveBody());
-
-  @override
-  Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
-
-    return Scaffold(
-        backgroundColor: _isDarkTheme ? PaletteDark.darkThemeBackgroundDark
-            : Colors.white,
-        resizeToAvoidBottomPadding: false,
-        appBar: CupertinoNavigationBar(
-          leading: leading(context),
-          middle: middle(context),
-          trailing: trailing(context),
-          backgroundColor: _isDarkTheme ? PaletteDark.darkThemeBackgroundDark
-              : Colors.white,
-          border: null,
-        ),
-        body: SafeArea(child: body(context)));
-  }
 }
 
 class ReceiveBody extends StatelessWidget {
@@ -211,7 +188,7 @@ class ReceiveBody extends StatelessWidget {
                     ),
                   ),
                   Divider(
-                    color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                    color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
                         : Palette.lightGrey,
                     height: 1.0,
                   )
@@ -227,7 +204,7 @@ class ReceiveBody extends StatelessWidget {
               itemCount: subaddressListStore.subaddresses.length,
               separatorBuilder: (context, i) {
                 return Divider(
-                  color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                  color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
                       : Palette.lightGrey,
                   height: 1.0,
                 );

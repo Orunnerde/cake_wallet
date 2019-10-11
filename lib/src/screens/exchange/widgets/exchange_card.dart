@@ -3,6 +3,9 @@ import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/widgets/picker.dart';
 import 'package:cake_wallet/src/widgets/address_text_field.dart';
+import 'package:provider/provider.dart';
+import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/theme_changer.dart';
 
 class ExchangeCard extends StatefulWidget {
   final List<CryptoCurrency> currencies;
@@ -11,6 +14,7 @@ class ExchangeCard extends StatefulWidget {
   final String initialWalletName;
   final bool initialIsActive;
   final bool isAmountEstimated;
+  final Image imageArrow;
 
   ExchangeCard(
       {Key key,
@@ -19,7 +23,8 @@ class ExchangeCard extends StatefulWidget {
       this.initialIsActive,
       this.isAmountEstimated,
       this.currencies,
-      this.onCurrencySelected})
+      this.onCurrencySelected,
+      this.imageArrow})
       : super(key: key);
 
   @override
@@ -87,11 +92,17 @@ class ExchangeCardState extends State<ExchangeCard> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return Container(
       padding: EdgeInsets.fromLTRB(22, 30, 22, 30),
       width: double.infinity,
       decoration: BoxDecoration(
-          color: Color.fromRGBO(249, 250, 253, 1),
+          color: _isDarkTheme ? PaletteDark.darkThemeMidGrey : Palette.lavender,
           borderRadius: BorderRadius.all(Radius.circular(12))),
       child: Column(children: <Widget>[
         Container(
@@ -112,17 +123,18 @@ class ExchangeCardState extends State<ExchangeCard> {
                           children: <Widget>[
                             Text(_selectedCurrency.toString(),
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 24)),
-                            Image.asset(
-                              'assets/images/arrow_bottom_purple_icon.png',
-                              height: 8,
-                            )
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24,
+                                    color: _isDarkTheme ? PaletteDark.darkThemeTitle
+                                        : Colors.black
+                                )),
+                            widget.imageArrow
                           ]),
                       _walletName != null
                           ? Text(_walletName,
                               style: TextStyle(
                                   fontSize: 12,
-                                  color: Color.fromRGBO(155, 172, 197, 1)))
+                                  color: Palette.wildDarkBlue))
                           : SizedBox(),
                     ]),
               ),
@@ -132,6 +144,7 @@ class ExchangeCardState extends State<ExchangeCard> {
               child: Column(
                 children: [
                   TextField(
+                      style: TextStyle(fontSize: 23, height: 1.21),
                       controller: amountController,
                       enabled: _isActive,
                       textAlign: TextAlign.right,
@@ -165,19 +178,21 @@ class ExchangeCardState extends State<ExchangeCard> {
                                 )
                               : null,
                           hintStyle: TextStyle(
-                              color: Color.fromRGBO(191, 201, 215, 1),
+                              color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                  : Palette.cadetBlue,
                               fontSize: 23,
                               height: 1.21),
                           hintText: '0.00000000',
                           focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Palette.lightGrey, width: 2.0)),
+                                  color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                      : Palette.lightGrey,
+                                  width: 1.0)),
                           enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
-                                  color: _isActive
-                                      ? Palette.deepPurple
+                                  color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
                                       : Palette.lightGrey,
-                                  width: 2.0)))),
+                                  width: 1.0)))),
                   SizedBox(height: 5),
                   SizedBox(
                     height: 15,
@@ -192,8 +207,8 @@ class ExchangeCardState extends State<ExchangeCard> {
                                     style: TextStyle(
                                         fontSize: 10,
                                         height: 1.2,
-                                        color:
-                                            Color.fromRGBO(155, 172, 197, 1)),
+                                        color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                            : Palette.wildDarkBlue),
                                   )
                                 : SizedBox(),
                             _min != null ? SizedBox(width: 10) : SizedBox(),
@@ -203,8 +218,8 @@ class ExchangeCardState extends State<ExchangeCard> {
                                     style: TextStyle(
                                         fontSize: 10,
                                         height: 1.2,
-                                        color:
-                                            Color.fromRGBO(155, 172, 197, 1)))
+                                        color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                            : Palette.wildDarkBlue))
                                 : SizedBox(),
                           ]),
                     ),

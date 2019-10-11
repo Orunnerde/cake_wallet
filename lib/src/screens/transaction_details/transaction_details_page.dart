@@ -90,7 +90,7 @@ class TransactionDetailsFormState extends State<TransactionDetailsForm> {
       child: ListView.separated(
           separatorBuilder: (context, index) => Container(
                 height: 1,
-                color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
                     : Palette.separator,
               ),
           padding: EdgeInsets.only(left: 25, top: 10, right: 25, bottom: 15),

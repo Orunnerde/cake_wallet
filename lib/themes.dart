@@ -12,7 +12,7 @@ class Themes {
   static final ThemeData darkTheme = ThemeData(
     fontFamily: 'Lato',
     brightness: Brightness.dark,
-    backgroundColor: PaletteDark.darkThemeBackground,
+    backgroundColor: PaletteDark.darkThemeBackgroundDark
   );
 
 }

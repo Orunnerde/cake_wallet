@@ -99,28 +99,6 @@ class NodeListPage extends BasePage {
   }
 
   @override
-  Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
-
-    return Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
-        resizeToAvoidBottomPadding: false,
-        appBar: CupertinoNavigationBar(
-          leading: leading(context),
-          middle: middle(context),
-          trailing: trailing(context),
-          backgroundColor: _isDarkTheme ? PaletteDark.darkThemeAppBarBlack
-              : Colors.white,
-          border: null,
-        ),
-        body: SafeArea(child: body(context)));
-  }
-
-  @override
   Widget body(context) {
     final nodeList = Provider.of<NodeListStore>(context);
     final settings = Provider.of<SettingsStore>(context);

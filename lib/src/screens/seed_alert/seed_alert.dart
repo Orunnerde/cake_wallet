@@ -90,7 +90,7 @@ class SeedAlert extends StatelessWidget{
                 text: 'I understand',
                 color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
                     : Palette.purple,
-                borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet
+                borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
                     : Palette.deepPink,
               ),
             ],

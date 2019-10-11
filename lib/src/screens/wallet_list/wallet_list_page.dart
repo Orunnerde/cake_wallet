@@ -17,29 +17,6 @@ class WalletListPage extends BasePage {
 
   @override
   Widget body(BuildContext context) => WalletListBody();
-
-  @override
-  Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
-
-    return Scaffold(
-        backgroundColor: _isDarkTheme ? PaletteDark.darkThemeBackgroundDark
-            : Colors.white,
-        resizeToAvoidBottomPadding: false,
-        appBar: CupertinoNavigationBar(
-          leading: leading(context),
-          middle: middle(context),
-          trailing: trailing(context),
-          backgroundColor: _isDarkTheme ? PaletteDark.darkThemeBackgroundDark
-              : Colors.white,
-          border: null,
-        ),
-        body: SafeArea(child: body(context)));
-  }
 }
 
 class WalletListBody extends StatelessWidget {
@@ -69,7 +46,7 @@ class WalletListBody extends StatelessWidget {
 
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
-    Color _backgroundColor = PaletteDark.darkThemeBackgroundDark;
+    Color _backgroundColor = Theme.of(context).backgroundColor;
 
     if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
     else _isDarkTheme = false;
@@ -102,7 +79,7 @@ class WalletListBody extends StatelessWidget {
                     builder: (_) => ListView.separated(
                         separatorBuilder: (_, index) {
                           return Divider(
-                              color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                              color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
                                   : Palette.lightGrey,
                               height: 1.0
                           );

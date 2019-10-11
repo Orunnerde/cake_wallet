@@ -53,29 +53,6 @@ class AccountListPage extends BasePage {
   }
 
   @override
-  Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
-
-    return Scaffold(
-        backgroundColor: _isDarkTheme ? PaletteDark.darkThemeBackgroundDark
-            : Colors.white,
-        resizeToAvoidBottomPadding: false,
-        appBar: CupertinoNavigationBar(
-          leading: leading(context),
-          middle: middle(context),
-          trailing: trailing(context),
-          backgroundColor: _isDarkTheme ? PaletteDark.darkThemeBackgroundDark
-              : Colors.white,
-          border: null,
-        ),
-        body: SafeArea(child: body(context)));
-  }
-
-  @override
   Widget body(BuildContext context) {
     final accountListStore = Provider.of<AccountListStore>(context);
     final walletStore = Provider.of<WalletStore>(context);
