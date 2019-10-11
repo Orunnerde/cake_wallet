@@ -96,16 +96,23 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                         child: Container(
                       padding: EdgeInsets.only(top: 20.0),
                       child: TextFormField(
+                        style: TextStyle(fontSize: 14.0),
                         controller: _nameController,
                         decoration: InputDecoration(
-                            hintStyle: TextStyle(color: Palette.lightBlue),
+                            hintStyle: TextStyle(
+                                color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                    : Palette.lightBlue),
                             hintText: 'Wallet name',
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0)),
+                                    color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                        : Palette.lightGrey,
+                                    width: 1.0)),
                             enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0))),
+                                    color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                        : Palette.lightGrey,
+                                    width: 1.0))),
                         validator: (value) {
                           return null;
                         },
@@ -119,18 +126,25 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                         child: Container(
                       padding: EdgeInsets.only(top: 20.0),
                       child: TextFormField(
+                        style: TextStyle(fontSize: 14.0),
                         controller: _addressController,
                         keyboardType: TextInputType.multiline,
                         maxLines: null,
                         decoration: InputDecoration(
-                            hintStyle: TextStyle(color: Palette.lightBlue),
+                            hintStyle: TextStyle(
+                                color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                    : Palette.lightBlue),
                             hintText: 'Address',
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0)),
+                                    color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                        : Palette.lightGrey,
+                                    width: 1.0)),
                             enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0))),
+                                    color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                        : Palette.lightGrey,
+                                    width: 1.0))),
                         validator: (value) {
                           return null;
                         },
@@ -144,16 +158,23 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                         child: Container(
                       padding: EdgeInsets.only(top: 20.0),
                       child: TextFormField(
+                        style: TextStyle(fontSize: 14.0),
                         controller: _viewKeyController,
                         decoration: InputDecoration(
-                            hintStyle: TextStyle(color: Palette.lightBlue),
+                            hintStyle: TextStyle(
+                                color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                    : Palette.lightBlue),
                             hintText: 'View key (private)',
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0)),
+                                    color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                        : Palette.lightGrey,
+                                    width: 1.0)),
                             enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0))),
+                                    color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                        : Palette.lightGrey,
+                                    width: 1.0))),
                         validator: (value) {
                           return null;
                         },
@@ -167,16 +188,23 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                         child: Container(
                       padding: EdgeInsets.only(top: 20.0),
                       child: TextFormField(
+                        style: TextStyle(fontSize: 14.0),
                         controller: _spendKeyController,
                         decoration: InputDecoration(
-                            hintStyle: TextStyle(color: Palette.lightBlue),
+                            hintStyle: TextStyle(
+                                color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                    : Palette.lightBlue),
                             hintText: 'Spend key (private)',
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0)),
+                                    color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                        : Palette.lightGrey,
+                                    width: 1.0)),
                             enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0))),
+                                    color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                        : Palette.lightGrey,
+                                    width: 1.0))),
                         validator: (value) {
                           return null;
                         },
@@ -204,7 +232,7 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                               text: 'Recover',
                             color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
                                 : Palette.purple,
-                            borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet
+                            borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
                                 : Palette.deepPink,
                           );
                         })))

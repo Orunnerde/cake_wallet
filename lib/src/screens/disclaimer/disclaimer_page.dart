@@ -216,7 +216,7 @@ class DisclaimerState extends State<DisclaimerPage>{
                         ],
                       ),
                     ),
-                    _isDarkTheme ? Offstage() : Container(
+                    Container(
                       alignment: Alignment.bottomCenter,
                       child: Container(
                         height: 12.0,
@@ -227,8 +227,10 @@ class DisclaimerState extends State<DisclaimerPage>{
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    Colors.white.withOpacity(0.0),
-                                    Colors.white,
+                                    _isDarkTheme ? Theme.of(context).backgroundColor.withOpacity(0.0)
+                                        : Colors.white.withOpacity(0.0),
+                                    _isDarkTheme ? Theme.of(context).backgroundColor
+                                        : Colors.white,
                                   ],
                                   begin: FractionalOffset.topCenter,
                                   end: FractionalOffset.bottomCenter,
@@ -297,7 +299,7 @@ class DisclaimerState extends State<DisclaimerPage>{
                   onPressed: _checked ? (){} : null,
                   text: 'Accept',
                   color: _isDarkTheme ? PaletteDark.darkThemePurpleButton : Palette.purple,
-                  borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet : Palette.deepPink,
+                  borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder : Palette.deepPink,
               ),
             ) : Offstage(),
             _isAccepted ? SizedBox(

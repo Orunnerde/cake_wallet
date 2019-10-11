@@ -63,10 +63,10 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
                   hintText: 'Label name',
                   focusedBorder: UnderlineInputBorder(
                       borderSide:
-                          BorderSide(color: Palette.lightGrey, width: 2.0)),
+                          BorderSide(color: Palette.lightGrey, width: 1.0)),
                   enabledBorder: UnderlineInputBorder(
                       borderSide:
-                          BorderSide(color: Palette.lightGrey, width: 2.0))),
+                          BorderSide(color: Palette.lightGrey, width: 1.0))),
               validator: (value) => null),
         ),
       ),

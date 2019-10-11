@@ -94,16 +94,23 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
                         child: Container(
                       padding: EdgeInsets.only(top: 20.0),
                       child: TextFormField(
+                        style: TextStyle(fontSize: 14.0),
                         controller: _nameController,
                         decoration: InputDecoration(
-                            hintStyle: TextStyle(color: Palette.lightBlue),
+                            hintStyle: TextStyle(
+                                color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                    : Palette.lightBlue),
                             hintText: 'Wallet name',
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0)),
+                                    color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                        : Palette.lightGrey,
+                                    width: 1.0)),
                             enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0))),
+                                    color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                        : Palette.lightGrey,
+                                    width: 1.0))),
                         validator: (value) {
                           return null;
                         },
@@ -118,19 +125,26 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
                         child: Container(
                       padding: EdgeInsets.only(top: 20.0),
                       child: TextFormField(
+                        style: TextStyle(fontSize: 14.0),
                         controller: _seedController,
                         keyboardType: TextInputType.multiline,
                         maxLines: null,
                         textInputAction: TextInputAction.done,
                         decoration: InputDecoration(
-                            hintStyle: TextStyle(color: Palette.lightBlue),
+                            hintStyle: TextStyle(
+                                color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                    : Palette.lightBlue),
                             hintText: 'Seed',
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0)),
+                                    color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                        : Palette.lightGrey,
+                                    width: 1.0)),
                             enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0))),
+                                    color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                        : Palette.lightGrey,
+                                    width: 1.0))),
                         validator: (value) {
                           return null;
                         },
@@ -157,7 +171,7 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
                               text: 'Recover',
                             color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
                                 : Palette.purple,
-                            borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet
+                            borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
                                 : Palette.deepPink,
                           );
                         })))

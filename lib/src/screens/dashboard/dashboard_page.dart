@@ -329,7 +329,7 @@ class DashboardPage extends BasePage {
                                             rootNavigator: true)
                                         .pushNamed(Routes.receive),
                                     color: _isDarkTheme ? PaletteDark.darkThemePurpleButton : Palette.purple,
-                                    borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet : Palette.deepPink,
+                                    borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder : Palette.deepPink,
                                   ))
                                 ],
                               ),

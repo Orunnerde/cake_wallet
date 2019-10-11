@@ -86,7 +86,7 @@ class WelcomePage extends BasePage {
               text: 'Create New',
               color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
                   : Palette.purple,
-              borderColor: _isDarkTheme ? PaletteDark.darkThemeViolet
+              borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
                   : Palette.deepPink,
             ),
             SizedBox(height: 10),
