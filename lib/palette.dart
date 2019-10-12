@@ -18,6 +18,7 @@ class Palette {
   static const Color cloudySky = Color.fromRGBO(121, 201, 233, 0.8);
   static const Color darkGrey = Color.fromRGBO(136, 155, 183, 0.21);
   static const Color shadowGrey = Color.fromRGBO(132, 141, 198, 0.14);
+  static const Color shadowGreyWithOpacity = Color.fromRGBO(132, 141, 198, 0.05);
   static const Color blueGrey = Color.fromRGBO(103, 107, 141, 1.0);
   static const Color lightGrey2 = Color.fromRGBO(249, 249, 249, 1.0);
   static const Color violet = Color.fromRGBO(138, 80, 255, 1.0);
@@ -34,6 +35,8 @@ class Palette {
   static const Color cadetBlue = Color.fromRGBO(191, 201, 215, 1);
   static const Color manatee = Color.fromRGBO(138, 153, 175, 1);
   static const Color separator = Color.fromRGBO(240, 241, 244, 1);
+  static const Color containerLavender = Color.fromRGBO(226, 235, 238, 0.4);
+  static const Color purpleBlue = Color.fromRGBO(84, 92, 139, 1);
 }
 
 class PaletteDark {
@@ -47,6 +50,7 @@ class PaletteDark {
   static const Color darkThemeBackground = Color.fromRGBO(39, 41, 50, 1.0);
   static const Color darkThemeBackgroundDark = Color.fromRGBO(9, 12, 18, 1.0);
   static const Color darkThemeDarkGrey = Color.fromRGBO(218, 228, 243, 0.06);
+  static const Color darkGrey = Color.fromRGBO(218, 228, 243, 0.4);
   static const Color darkThemeBlackWithOpacity = Color.fromRGBO(0, 0, 0, 0.2);
   static const Color darkThemeBlack = Color.fromRGBO(7, 10, 14, 1.0);
   static const Color darkThemeAppBarBlack = Color.fromRGBO(4, 5, 7, 1.0);

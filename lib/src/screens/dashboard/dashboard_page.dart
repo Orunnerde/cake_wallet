@@ -164,7 +164,7 @@ class DashboardPage extends BasePage {
                   color: _isDarkTheme ? Theme.of(context).backgroundColor : Colors.white,
                   boxShadow: [
                   BoxShadow(
-                    color: Color.fromRGBO(132, 141, 198, 0.05),
+                    color: Palette.shadowGreyWithOpacity,
                     blurRadius: 10,
                     offset: Offset(
                       0,
@@ -253,7 +253,7 @@ class DashboardPage extends BasePage {
                             Container(
                               margin: EdgeInsets.only(top: 45),
                               decoration: BoxDecoration(
-                                  color: Color.fromRGBO(226, 235, 238, 0.4),
+                                  color: Palette.containerLavender,
                                   borderRadius: BorderRadius.circular(5)),
                               padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
                               child: SizedBox(
@@ -273,8 +273,7 @@ class DashboardPage extends BasePage {
                                                 'BLOCKS REMAINING ${syncStore.status.toString()}',
                                                 style: TextStyle(
                                                     fontSize: 8,
-                                                    color: Color.fromRGBO(
-                                                        155, 172, 197, 1)))
+                                                    color: Palette.wildDarkBlue))
                                           ]);
                                     }
 
@@ -302,8 +301,7 @@ class DashboardPage extends BasePage {
                                       child: Text(text,
                                           style: TextStyle(
                                               fontSize: 9,
-                                              color: Color.fromRGBO(
-                                                  155, 172, 197, 1))),
+                                              color: Palette.wildDarkBlue)),
                                     );
                                   })),
                             ),
@@ -415,8 +413,8 @@ class DashboardPage extends BasePage {
                   decoration: BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
-                        color: Color.fromRGBO(218, 228, 243, 0.4),
-                        width: 1,
+                        color: PaletteDark.darkGrey,
+                        width: 0.5,
                         style: BorderStyle.solid,
                       ),
                     ),
@@ -441,12 +439,14 @@ class DashboardPage extends BasePage {
                                             TransactionDirection.incoming
                                         ? 'Received'
                                         : 'Sent',
-                                    style: const TextStyle(
-                                        fontSize: 16, color: Colors.black)),
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: _isDarkTheme ? Palette.blueGrey
+                                            : Colors.black)),
                                 Text(item.amount(),
                                     style: const TextStyle(
                                         fontSize: 16,
-                                        color: Color.fromRGBO(84, 92, 139, 1)))
+                                        color: Palette.purpleBlue))
                               ]),
                           SizedBox(height: 6),
                           Row(
