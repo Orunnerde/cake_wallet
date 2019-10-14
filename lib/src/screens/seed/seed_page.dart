@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/stores/wallet_seed/wallet_seed_store.dart';
@@ -23,8 +24,10 @@ class SeedPage extends BasePage {
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
 
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    if (_themeChanger.getTheme() == Themes.darkTheme)
+      _isDarkTheme = true;
+    else
+      _isDarkTheme = false;
 
     return Form(
         child: GestureDetector(
@@ -53,7 +56,8 @@ class SeedPage extends BasePage {
                                 border: Border(
                                     bottom: BorderSide(
                                         width: 1.0,
-                                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                                        color: _isDarkTheme
+                                            ? PaletteDark.darkThemeDarkGrey
                                             : Palette.lightGrey))),
                             padding: EdgeInsets.only(bottom: 20.0),
                             margin: EdgeInsets.only(bottom: 10.0),
@@ -61,9 +65,10 @@ class SeedPage extends BasePage {
                               walletSeedStore.name,
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 18.0,
-                                color: _isDarkTheme ? Palette.wildDarkBlue : Colors.black
-                              ),
+                                  fontSize: 18.0,
+                                  color: _isDarkTheme
+                                      ? Palette.wildDarkBlue
+                                      : Colors.black),
                             ),
                           ))
                         ],
@@ -75,9 +80,10 @@ class SeedPage extends BasePage {
                         walletSeedStore.seed,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 14.0,
-                          color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
-                        ),
+                            fontSize: 14.0,
+                            color: _isDarkTheme
+                                ? PaletteDark.darkThemeTitle
+                                : Colors.black),
                       )
                     ],
                   );
@@ -97,17 +103,19 @@ class SeedPage extends BasePage {
                       ),
                     ),*/
                     Container(
-                      //padding: EdgeInsets.only(top: 20.0),
                       child: Row(
                         children: <Widget>[
                           Flexible(
                               child: Container(
                             padding: EdgeInsets.only(right: 8.0),
                             child: PrimaryButton(
-                                onPressed: () {},
-                                color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
+                                onPressed: () => Share.text(
+                                    'Share seed', _seed, 'text/plain'),
+                                color: _isDarkTheme
+                                    ? PaletteDark.darkThemePurpleButton
                                     : Palette.purple,
-                                borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
+                                borderColor: _isDarkTheme
+                                    ? PaletteDark.darkThemePurpleButtonBorder
                                     : Palette.deepPink,
                                 text: 'Save'),
                           )),
@@ -115,21 +123,23 @@ class SeedPage extends BasePage {
                               child: Container(
                             padding: EdgeInsets.only(left: 8.0),
                             child: PrimaryButton(
-                                onPressed: () {
-                                  Clipboard.setData(ClipboardData(text: _seed));
-                                  Scaffold.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('Copied to Clipboard'),
-                                      backgroundColor: Colors.green,
-                                      duration: Duration(milliseconds: 1500),
-                                    ),
-                                  );
-                                },
-                                text: 'Copy',
-                                color: _isDarkTheme ? PaletteDark.darkThemeBlueButton
-                                    : Palette.brightBlue,
-                                borderColor: _isDarkTheme ? PaletteDark.darkThemeBlueButtonBorder
-                                    : Palette.cloudySky,
+                              onPressed: () {
+                                Clipboard.setData(ClipboardData(text: _seed));
+                                Scaffold.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Copied to Clipboard'),
+                                    backgroundColor: Colors.green,
+                                    duration: Duration(milliseconds: 1500),
+                                  ),
+                                );
+                              },
+                              text: 'Copy',
+                              color: _isDarkTheme
+                                  ? PaletteDark.darkThemeBlueButton
+                                  : Palette.brightBlue,
+                              borderColor: _isDarkTheme
+                                  ? PaletteDark.darkThemeBlueButtonBorder
+                                  : Palette.cloudySky,
                             ),
                           ))
                         ],

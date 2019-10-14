@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/stores/subaddress_list/subaddress_list_store.dart';
@@ -20,10 +21,17 @@ class ReceivePage extends BasePage {
   final _shareButtonImage = Image.asset('assets/images/share_button.png');
 
   @override
-  Widget trailing(BuildContext context) => ButtonTheme(
-        minWidth: double.minPositive,
-        child: FlatButton(onPressed: () {}, child: _shareButtonImage),
-      );
+  Widget trailing(BuildContext context) {
+    final walletStore = Provider.of<WalletStore>(context);
+
+    return ButtonTheme(
+      minWidth: double.minPositive,
+      child: FlatButton(
+          onPressed: () => Share.text(
+              'Share address', walletStore.subaddress.address, 'text/plain'),
+          child: _shareButtonImage),
+    );
+  }
 
   @override
   Widget body(BuildContext context) =>
