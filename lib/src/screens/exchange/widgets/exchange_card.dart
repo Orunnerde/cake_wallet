@@ -98,8 +98,10 @@ class ExchangeCardState extends State<ExchangeCard> {
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
 
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    if (_themeChanger.getTheme() == Themes.darkTheme)
+      _isDarkTheme = true;
+    else
+      _isDarkTheme = false;
 
     return Container(
       padding: EdgeInsets.fromLTRB(22, 30, 22, 30),
@@ -127,16 +129,15 @@ class ExchangeCardState extends State<ExchangeCard> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 24,
-                                    color: _isDarkTheme ? PaletteDark.darkThemeTitle
-                                        : Colors.black
-                                )),
+                                    color: _isDarkTheme
+                                        ? PaletteDark.darkThemeTitle
+                                        : Colors.black)),
                             widget.imageArrow
                           ]),
                       _walletName != null
                           ? Text(_walletName,
                               style: TextStyle(
-                                  fontSize: 12,
-                                  color: Palette.wildDarkBlue))
+                                  fontSize: 12, color: Palette.wildDarkBlue))
                           : SizedBox(),
                     ]),
               ),
@@ -180,19 +181,22 @@ class ExchangeCardState extends State<ExchangeCard> {
                                 )
                               : null,
                           hintStyle: TextStyle(
-                              color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                              color: _isDarkTheme
+                                  ? PaletteDark.darkThemeGrey
                                   : Palette.cadetBlue,
                               fontSize: 23,
                               height: 1.21),
                           hintText: '0.00000000',
                           focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
-                                  color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                  color: _isDarkTheme
+                                      ? PaletteDark.darkThemeGreyWithOpacity
                                       : Palette.lightGrey,
                                   width: 1.0)),
                           enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
-                                  color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                  color: _isDarkTheme
+                                      ? PaletteDark.darkThemeGreyWithOpacity
                                       : Palette.lightGrey,
                                   width: 1.0)))),
                   SizedBox(height: 5),
@@ -209,7 +213,8 @@ class ExchangeCardState extends State<ExchangeCard> {
                                     style: TextStyle(
                                         fontSize: 10,
                                         height: 1.2,
-                                        color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                        color: _isDarkTheme
+                                            ? PaletteDark.darkThemeGrey
                                             : Palette.wildDarkBlue),
                                   )
                                 : SizedBox(),
@@ -220,7 +225,8 @@ class ExchangeCardState extends State<ExchangeCard> {
                                     style: TextStyle(
                                         fontSize: 10,
                                         height: 1.2,
-                                        color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                        color: _isDarkTheme
+                                            ? PaletteDark.darkThemeGrey
                                             : Palette.wildDarkBlue))
                                 : SizedBox(),
                           ]),
@@ -232,7 +238,20 @@ class ExchangeCardState extends State<ExchangeCard> {
           ]),
         ),
         SizedBox(height: 10),
-        AddressTextField(controller: addressController, isActive: _isActive)
+        AddressTextField(
+          controller: addressController,
+          isActive: _isActive,
+          options: _walletName != null
+              ? [
+                  AddressTextFieldOption.qrCode,
+                  AddressTextFieldOption.addressBook,
+                  AddressTextFieldOption.subaddressList
+                ]
+              : [
+                  AddressTextFieldOption.qrCode,
+                  AddressTextFieldOption.addressBook,
+                ],
+        )
       ]),
     );
   }

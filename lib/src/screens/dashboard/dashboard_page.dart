@@ -21,7 +21,6 @@ import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/palette.dart';
 
-
 class DashboardPage extends BasePage {
   static final transactionDateFormat = DateFormat("dd.MM.yyyy, HH:mm");
   static final dateSectionDateFormat = DateFormat("d MMM");
@@ -82,22 +81,22 @@ class DashboardPage extends BasePage {
                 CupertinoActionSheetAction(
                     child: const Text('Show seed'),
                     onPressed: () {
-                      Navigator.of(context).popAndPushNamed(Routes.seed);
-                      // Navigator.of(context).popAndPushNamed(Routes.auth,
-                      //     arguments: [
-                      //       (auth) => Navigator.of(context)
-                      //           .popAndPushNamed(Routes.seed)
-                      //     ]);
+                      Navigator.of(context).popAndPushNamed(Routes.auth,
+                          arguments: [
+                            (auth, authContext) => Navigator.of(authContext)
+                                .popAndPushNamed(Routes.seed)
+                          ]);
                     }),
                 CupertinoActionSheetAction(
                     child: const Text('Show keys'),
                     onPressed: () {
-                      Navigator.of(context).popAndPushNamed(Routes.showKeys);
-                      // Navigator.of(context).popAndPushNamed(Routes.auth,
-                      //     arguments: [
-                      //       (auth) => Navigator.of(context)
-                      //           .popAndPushNamed(Routes.showKeys)
-                      //     ]);
+                      Navigator.of(context).pop();
+
+                      Navigator.of(context).pushNamed(Routes.auth,
+                          arguments: [
+                            (auth, authContext) => Navigator.of(authContext)
+                                .popAndPushNamed(Routes.showKeys)
+                          ]);
                     }),
                 CupertinoActionSheetAction(
                     child: const Text('Address book'),
@@ -118,8 +117,10 @@ class DashboardPage extends BasePage {
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
 
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    if (_themeChanger.getTheme() == Themes.darkTheme)
+      _isDarkTheme = true;
+    else
+      _isDarkTheme = false;
 
     return SizedBox(
         width: 30,
@@ -127,8 +128,7 @@ class DashboardPage extends BasePage {
             padding: EdgeInsets.all(0),
             onPressed: () => presentWalletMenu(context),
             child: Image.asset('assets/images/more.png',
-                color: _isDarkTheme ? Colors.white : Colors.black,
-                width: 30)));
+                color: _isDarkTheme ? Colors.white : Colors.black, width: 30)));
   }
 
   @override
@@ -143,9 +143,7 @@ class DashboardPage extends BasePage {
             SizedBox(height: 5),
             Text(
               walletStore.account != null ? walletStore.account.label : '',
-              style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 10),
+              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 10),
             ),
           ]);
     });
@@ -160,8 +158,10 @@ class DashboardPage extends BasePage {
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
 
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    if (_themeChanger.getTheme() == Themes.darkTheme)
+      _isDarkTheme = true;
+    else
+      _isDarkTheme = false;
 
     return NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -170,23 +170,26 @@ class DashboardPage extends BasePage {
           expandedHeight: 363.0,
           floating: false,
           pinned: true,
-          backgroundColor: _isDarkTheme ? Theme.of(context).backgroundColor : Colors.white,
+          backgroundColor:
+              _isDarkTheme ? Theme.of(context).backgroundColor : Colors.white,
           flexibleSpace: FlexibleSpaceBar(
             background: Container(
               padding: EdgeInsets.only(bottom: 20),
               child: Container(
                 decoration: BoxDecoration(
-                  color: _isDarkTheme ? Theme.of(context).backgroundColor : Colors.white,
-                  boxShadow: [
-                  BoxShadow(
-                    color: Palette.shadowGreyWithOpacity,
-                    blurRadius: 10,
-                    offset: Offset(
-                      0,
-                      12,
-                    ),
-                  )
-                ]),
+                    color: _isDarkTheme
+                        ? Theme.of(context).backgroundColor
+                        : Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Palette.shadowGreyWithOpacity,
+                        blurRadius: 10,
+                        offset: Offset(
+                          0,
+                          12,
+                        ),
+                      )
+                    ]),
                 child: Center(
                   child: Column(
                     children: <Widget>[
@@ -212,8 +215,7 @@ class DashboardPage extends BasePage {
 
                               return Text(title,
                                   style: TextStyle(
-                                      color: Palette.violet,
-                                      fontSize: 16));
+                                      color: Palette.violet, fontSize: 16));
                             }),
                             Observer(builder: (_) {
                               final displayMode =
@@ -233,7 +235,9 @@ class DashboardPage extends BasePage {
 
                               return Text(balance,
                                   style: TextStyle(
-                                      color: _isDarkTheme ? Colors.white : Colors.black87,
+                                      color: _isDarkTheme
+                                          ? Colors.white
+                                          : Colors.black87,
                                       fontSize: 42));
                             }),
                             Padding(
@@ -288,7 +292,8 @@ class DashboardPage extends BasePage {
                                                 'BLOCKS REMAINING ${syncStore.status.toString()}',
                                                 style: TextStyle(
                                                     fontSize: 8,
-                                                    color: Palette.wildDarkBlue))
+                                                    color:
+                                                        Palette.wildDarkBlue))
                                           ]);
                                     }
 
@@ -312,11 +317,13 @@ class DashboardPage extends BasePage {
                                       text = 'STARTINT SYNC';
                                     }
 
-                                    if (syncStore.status is ConnectingSyncStatus) {
+                                    if (syncStore.status
+                                        is ConnectingSyncStatus) {
                                       text = 'Connecting';
                                     }
 
-                                    if (syncStore.status is ConnectedSyncStatus) {
+                                    if (syncStore.status
+                                        is ConnectedSyncStatus) {
                                       text = 'Connected';
                                     }
 
@@ -343,12 +350,13 @@ class DashboardPage extends BasePage {
                                     onPressed: () => Navigator.of(context,
                                             rootNavigator: true)
                                         .pushNamed(Routes.send),
-                                        color: _isDarkTheme
-                                            ? PaletteDark.darkThemePurpleButton
-                                            : Palette.purple,
-                                        borderColor: _isDarkTheme
-                                            ? PaletteDark.darkThemePurpleButtonBorder
-                                            : Palette.deepPink,
+                                    color: _isDarkTheme
+                                        ? PaletteDark.darkThemePurpleButton
+                                        : Palette.purple,
+                                    borderColor: _isDarkTheme
+                                        ? PaletteDark
+                                            .darkThemePurpleButtonBorder
+                                        : Palette.deepPink,
                                   )),
                                   SizedBox(width: 10),
                                   Expanded(
@@ -361,11 +369,12 @@ class DashboardPage extends BasePage {
                                     onPressed: () => Navigator.of(context,
                                             rootNavigator: true)
                                         .pushNamed(Routes.receive),
-                                        color: _isDarkTheme ? PaletteDark.darkThemeBlueButton
-                                            : Palette.brightBlue,
-                                        borderColor: _isDarkTheme ?
-                                        PaletteDark.darkThemeBlueButtonBorder
-                                            : Palette.cloudySky,
+                                    color: _isDarkTheme
+                                        ? PaletteDark.darkThemeBlueButton
+                                        : Palette.brightBlue,
+                                    borderColor: _isDarkTheme
+                                        ? PaletteDark.darkThemeBlueButtonBorder
+                                        : Palette.cloudySky,
                                   ))
                                 ],
                               ),
@@ -420,8 +429,7 @@ class DashboardPage extends BasePage {
                 child: Center(
                     child: Text(title,
                         style: TextStyle(
-                            fontSize: 16,
-                            color: Palette.wildDarkBlue))),
+                            fontSize: 16, color: Palette.wildDarkBlue))),
               );
             }
 
@@ -464,7 +472,8 @@ class DashboardPage extends BasePage {
                                         : 'Sent',
                                     style: TextStyle(
                                         fontSize: 16,
-                                        color: _isDarkTheme ? Palette.blueGrey
+                                        color: _isDarkTheme
+                                            ? Palette.blueGrey
                                             : Colors.black)),
                                 Text(item.amount(),
                                     style: const TextStyle(
@@ -477,12 +486,10 @@ class DashboardPage extends BasePage {
                               children: <Widget>[
                                 Text(transactionDateFormat.format(item.date),
                                     style: const TextStyle(
-                                        fontSize: 13,
-                                        color: Palette.blueGrey)),
+                                        fontSize: 13, color: Palette.blueGrey)),
                                 Text(item.fiatAmount(),
                                     style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Palette.blueGrey))
+                                        fontSize: 14, color: Palette.blueGrey))
                               ]),
                         ],
                       ),

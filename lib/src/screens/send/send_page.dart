@@ -175,7 +175,12 @@ class SendFormState extends State<SendForm> {
                           _addressController.text = address;
                           _cryptoAmountController.text = amount;
                           _paymentIdController.text = paymentId;
-                        }),
+                        },
+                        options: [
+                          AddressTextFieldOption.qrCode,
+                          AddressTextFieldOption.addressBook,
+                          AddressTextFieldOption.subaddressList
+                        ]),
                     Padding(
                       padding: const EdgeInsets.only(top: 20),
                       child: TextFormField(

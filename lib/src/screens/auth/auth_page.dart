@@ -10,8 +10,8 @@ import 'package:cake_wallet/themes.dart';
 
 class AuthPage extends StatelessWidget {
   final _key = GlobalKey<ScaffoldState>();
-  final Function(AuthPage) onAuthenticationSuccessful;
-  final Function(AuthPage) onAuthenticationFailed;
+  final Function(AuthPage, BuildContext) onAuthenticationSuccessful;
+  final Function(AuthPage, BuildContext) onAuthenticationFailed;
 
   AuthPage({this.onAuthenticationSuccessful, this.onAuthenticationFailed});
 
@@ -41,9 +41,9 @@ class AuthPage extends StatelessWidget {
       if (state is AuthenticatedSuccessfully) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (onAuthenticationSuccessful != null) {
-            onAuthenticationSuccessful(this);
+            onAuthenticationSuccessful(this, context);
           } else {
-            Scaffold.of(context).showSnackBar(
+            _key.currentState.showSnackBar(
               SnackBar(
                 content: Text('Authenticated'),
                 backgroundColor: Colors.green,
@@ -55,7 +55,7 @@ class AuthPage extends StatelessWidget {
 
       if (state is AuthenticationInProgress) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          Scaffold.of(context).showSnackBar(
+          _key.currentState.showSnackBar(
             SnackBar(
               content: Text('Authentication'),
               backgroundColor: Colors.green,
@@ -67,9 +67,9 @@ class AuthPage extends StatelessWidget {
       if (state is AuthenticationFailure) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (onAuthenticationSuccessful != null) {
-            onAuthenticationFailed(this);
+            onAuthenticationFailed(this, context);
           } else {
-            Scaffold.of(context).showSnackBar(
+            _key.currentState.showSnackBar(
               SnackBar(
                 content: Text('Failed authentication. ${state.error}'),
                 backgroundColor: Colors.red,

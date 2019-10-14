@@ -35,4 +35,5 @@ class Routes {
   static const tradeHistory = '/trade_history';
   static const exchangeFunds = '/exchange_funds';
   static const exchangeTrade = '/exchange_trade';
+  static const subaddressList = '/subaddress_list';
 }
