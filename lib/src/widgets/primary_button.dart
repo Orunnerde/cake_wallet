@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/palette.dart';
 
 class PrimaryButton extends StatelessWidget {
@@ -12,11 +15,17 @@ class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
     @required this.onPressed,
     @required this.text,
-    this.color = Palette.purple,
-    this.borderColor = Palette.deepPink});
+    @required this.color,
+    @required this.borderColor});
 
   @override
   Widget build(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return ButtonTheme(
       minWidth: double.infinity,
       height: 56.0,
@@ -24,7 +33,12 @@ class PrimaryButton extends StatelessWidget {
         onPressed: onPressed,
         color: color,
         shape: RoundedRectangleBorder(side: BorderSide(color: borderColor), borderRadius: BorderRadius.circular(10.0)),
-        child: Text(text, style: TextStyle(fontSize: 18.0)),
+        child: Text(text,
+            style: TextStyle(
+              fontSize: 16.0,
+              color: _isDarkTheme ? Palette.wildDarkBlue : Colors.black
+            )
+        ),
       )
     );
   }
@@ -41,12 +55,18 @@ class LoadingPrimaryButton extends StatelessWidget {
   const LoadingPrimaryButton({
     @required this.onPressed,
     @required this.text,
-    this.color = Palette.purple,
-    this.borderColor = Palette.deepPink,
+    @required this.color,
+    @required this.borderColor,
     this.isLoading = false});
 
   @override
   Widget build(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return ButtonTheme(
       minWidth: double.infinity,
       height: 56.0,
@@ -54,7 +74,12 @@ class LoadingPrimaryButton extends StatelessWidget {
         onPressed: onPressed,
         color: color,
         shape: RoundedRectangleBorder(side: BorderSide(color: borderColor), borderRadius: BorderRadius.circular(10.0)),
-        child: isLoading ? CupertinoActivityIndicator(animating: true) : Text(text, style: TextStyle(fontSize: 18.0)),
+        child: isLoading ? CupertinoActivityIndicator(animating: true)
+            : Text(text,
+            style: TextStyle(
+                fontSize: 16.0,
+                color: _isDarkTheme ? Palette.wildDarkBlue : Colors.black
+            )),
       )
     );
   }
@@ -67,19 +92,27 @@ class PrimaryIconButton extends StatelessWidget {
   final Color color;
   final Color borderColor;
   final Color iconColor;
+  final Color iconBackgroundColor;
   final String text;
 
   const PrimaryIconButton({
     @required this.onPressed,
     @required this.iconData,
     @required this.text,
-    this.color = Palette.purple,
-    this.borderColor = Palette.deepPink,
-    this.iconColor = Colors.black
+    @required this.color,
+    @required this.borderColor,
+    @required this.iconColor,
+    @required this.iconBackgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return ButtonTheme(
         minWidth: double.infinity,
         height: 56.0,
@@ -97,16 +130,21 @@ class PrimaryIconButton extends StatelessWidget {
                     height: 56.0,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white
+                      color: iconBackgroundColor
                     ),
-                    child: Icon(iconData, color: iconColor, size: 20.0),
+                    child: Icon(iconData, color: iconColor, size: 22.0),
                   ),
                 ],
               ),
               Container(
                 height: 56.0,
                 child: Center(
-                  child: Text(text, style: TextStyle(fontSize: 18.0)),
+                  child: Text(text,
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: _isDarkTheme ? Palette.wildDarkBlue : Colors.black
+                      )
+                  ),
                 ),
               )
             ],

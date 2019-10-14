@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cake_wallet/palette.dart';
 
 class CopyButton extends StatelessWidget {
 
@@ -12,8 +11,8 @@ class CopyButton extends StatelessWidget {
   const CopyButton({
     @required this.onPressed,
     @required this.text,
-    this.color = Palette.indigo,
-    this.borderColor = Palette.deepIndigo});
+    @required this.color,
+    @required this.borderColor});
 
   @override
   Widget build(BuildContext context) {

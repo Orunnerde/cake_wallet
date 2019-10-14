@@ -8,6 +8,8 @@ import 'package:cake_wallet/src/stores/subaddress_creation/subaddress_creation_s
 import 'package:cake_wallet/src/stores/subaddress_creation/subaddress_creation_store.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class NewSubaddressPage extends BasePage {
   String get title => 'New subaddress';
@@ -44,6 +46,12 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
     final subaddressCreationStore =
         Provider.of<SubadrressCreationStore>(context);
 
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return Stack(children: <Widget>[
       Center(
         child: Padding(
@@ -55,10 +63,10 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
                   hintText: 'Label name',
                   focusedBorder: UnderlineInputBorder(
                       borderSide:
-                          BorderSide(color: Palette.lightGrey, width: 2.0)),
+                          BorderSide(color: Palette.lightGrey, width: 1.0)),
                   enabledBorder: UnderlineInputBorder(
                       borderSide:
-                          BorderSide(color: Palette.lightGrey, width: 2.0))),
+                          BorderSide(color: Palette.lightGrey, width: 1.0))),
               validator: (value) => null),
         ),
       ),
@@ -71,8 +79,10 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
                 onPressed: () async =>
                     subaddressCreationStore.add(label: _labelController.text),
                 text: 'Create',
-                color: Color.fromRGBO(216, 223, 246, 0.7),
-                borderColor: Color.fromRGBO(196, 206, 237, 1),
+                color: _isDarkTheme ? PaletteDark.darkThemeIndigoButton
+                    : Palette.indigo,
+                borderColor: _isDarkTheme ? PaletteDark.darkThemeIndigoButtonBorder
+                    : Palette.deepIndigo,
                 isLoading:
                     subaddressCreationStore.state is SubaddressIsCreating),
           ))

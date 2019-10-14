@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:provider/provider.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 const List<String> languagesList = const <String>[
   'English',
@@ -25,24 +28,35 @@ class ChangeLanguage extends StatefulWidget{
 
 class ChangeLanguageState extends State<ChangeLanguage>{
 
-  static final backArrowImage = Image.asset('assets/images/back_arrow.png');
+  final _backArrowImage = Image.asset('assets/images/back_arrow.png');
+  final _backArrowImageDarkTheme = Image.asset('assets/images/back_arrow_dark_theme.png');
 
   @override
   Widget build(BuildContext context) {
+
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: CupertinoNavigationBar(
         leading: ButtonTheme(
           minWidth: double.minPositive,
           child: FlatButton(
             onPressed: (){Navigator.pop(context);},
-            child: backArrowImage
+            child: _isDarkTheme ? _backArrowImageDarkTheme : _backArrowImage
           ),
         ),
         middle: Text('Change language',
-          style: TextStyle(fontSize: 16.0),
+          style: TextStyle(
+            fontSize: 16.0,
+            color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
+          ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).backgroundColor,
         border: null,
       ),
       body: SafeArea(
@@ -59,10 +73,13 @@ class ChangeLanguageState extends State<ChangeLanguage>{
                   top: 10.0,
                   bottom: 10.0
                 ),
-                color: Palette.lightGrey2,
+                color: _isDarkTheme ? PaletteDark.darkThemeMidGrey : Palette.lightGrey2,
                 child: ListTile(
                   title: Text(languagesList[index],
-                    style: TextStyle(fontSize: 16.0),
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
+                    ),
                   ),
                 ),
               );

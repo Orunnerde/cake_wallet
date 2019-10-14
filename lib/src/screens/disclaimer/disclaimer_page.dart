@@ -5,6 +5,9 @@ import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:flutter/services.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:provider/provider.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class DisclaimerPage extends StatefulWidget{
   @override
@@ -15,7 +18,8 @@ class DisclaimerState extends State<DisclaimerPage>{
   static const url1 = 'https://xmr.to/app_static/html/tos.html';
   static const url2 = 'https://www.morphtoken.com/terms/';
 
-  static final backArrowImage = Image.asset('assets/images/back_arrow.png');
+  final _backArrowImage = Image.asset('assets/images/back_arrow.png');
+  final _backArrowImageDarkTheme = Image.asset('assets/images/back_arrow_dark_theme.png');
 
   bool _isAccepted;
   bool _checked = false;
@@ -70,21 +74,26 @@ class DisclaimerState extends State<DisclaimerPage>{
 
   @override
   Widget build(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: _isAccepted ? CupertinoNavigationBar(
         leading: ButtonTheme(
           minWidth: double.minPositive,
           child: FlatButton(
               onPressed: (){Navigator.pop(context);},
-              child: backArrowImage
+              child: _isDarkTheme ? _backArrowImageDarkTheme : _backArrowImage
           ),
         ),
         middle: Text('Terms and conditions',
           style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).backgroundColor,
         border: null,
       ) : null,
       body: SafeArea(
@@ -218,8 +227,10 @@ class DisclaimerState extends State<DisclaimerPage>{
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    Colors.white.withOpacity(0.0),
-                                    Colors.white,
+                                    _isDarkTheme ? Theme.of(context).backgroundColor.withOpacity(0.0)
+                                        : Colors.white.withOpacity(0.0),
+                                    _isDarkTheme ? Theme.of(context).backgroundColor
+                                        : Colors.white,
                                   ],
                                   begin: FractionalOffset.topCenter,
                                   end: FractionalOffset.bottomCenter,
@@ -261,7 +272,7 @@ class DisclaimerState extends State<DisclaimerPage>{
                               decoration: BoxDecoration(
                                   border: Border.all(color: Palette.lightGrey, width: 1.0),
                                   borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                                  color: Colors.white
+                                  color: Theme.of(context).backgroundColor
                               ),
                               child: _checked ? Icon(Icons.check, color: Colors.blue, size: 20.0,): null,
                             ),
@@ -286,7 +297,9 @@ class DisclaimerState extends State<DisclaimerPage>{
               ),
               child: PrimaryButton(
                   onPressed: _checked ? (){} : null,
-                  text: 'Accept'
+                  text: 'Accept',
+                  color: _isDarkTheme ? PaletteDark.darkThemePurpleButton : Palette.purple,
+                  borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder : Palette.deepPink,
               ),
             ) : Offstage(),
             _isAccepted ? SizedBox(

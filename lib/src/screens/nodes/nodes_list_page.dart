@@ -7,9 +7,12 @@ import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/stores/node_list/node_list_store.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/src/widgets/standart_switch.dart';
 
 class NodeListPage extends BasePage {
-  final _isOn = true;
+  final bool _isOn = true;
   NodeListPage();
 
   String get title => 'Nodes';
@@ -17,6 +20,12 @@ class NodeListPage extends BasePage {
   @override
   Widget trailing(context) {
     final nodeList = Provider.of<NodeListStore>(context);
+
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -55,18 +64,23 @@ class NodeListPage extends BasePage {
               },
               child: Text(
                 'Reset',
-                style: TextStyle(fontSize: 16.0, color: Palette.wildDarkBlue),
+                style: TextStyle(fontSize: 16.0,
+                    color: _isDarkTheme ? PaletteDark.darkThemeGrey : Palette.wildDarkBlue
+                ),
               )),
         ),
         Container(
             width: 28.0,
             height: 28.0,
             decoration:
-                BoxDecoration(shape: BoxShape.circle, color: Palette.purple),
+                BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _isDarkTheme ? PaletteDark.darkThemeViolet : Palette.purple
+                ),
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[
-                Icon(Icons.add, color: Palette.violet, size: 20.0),
+                Icon(Icons.add, color: Palette.violet, size: 22.0),
                 ButtonTheme(
                   minWidth: 28.0,
                   height: 28.0,
@@ -89,6 +103,21 @@ class NodeListPage extends BasePage {
     final nodeList = Provider.of<NodeListStore>(context);
     final settings = Provider.of<SettingsStore>(context);
 
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    Color _currentColor, _notCurrentColor;
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) {
+      _currentColor = PaletteDark.darkThemeViolet;
+      _notCurrentColor = Theme.of(context).backgroundColor;
+      _isDarkTheme = true;
+    }
+    else {
+      _currentColor = Palette.purple;
+      _notCurrentColor = Colors.white;
+      _isDarkTheme = false;
+    }
+
     return Container(
       padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
       child: Column(
@@ -97,44 +126,20 @@ class NodeListPage extends BasePage {
             children: <Widget>[
               Expanded(
                   child: Container(
-                color: Palette.lightGrey2,
+                color: _isDarkTheme ? Theme.of(context).backgroundColor : Palette.lightGrey2,
                 child: ListTile(
                     title: Text(
                       'Auto switch node',
-                      style: TextStyle(fontSize: 16.0),
-                    ),
-                    trailing: GestureDetector(
-                      onTap: () => null,
-                      child: AnimatedContainer(
-                        padding: EdgeInsets.only(left: 4.0, right: 4.0),
-                        alignment: _isOn
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        duration: Duration(milliseconds: 250),
-                        width: 55.0,
-                        height: 33.0,
-                        decoration: BoxDecoration(
-                            color: Palette.switchBackground,
-                            border: Border.all(color: Palette.switchBorder),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0))),
-                        child: Container(
-                          width: 25.0,
-                          height: 25.0,
-                          decoration: BoxDecoration(
-                              color: _isOn
-                                  ? Palette.cakeGreen
-                                  : Palette.wildDarkBlue,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8.0))),
-                          child: Icon(
-                            _isOn ? Icons.check : Icons.close,
-                            color: Colors.white,
-                            size: 16.0,
-                          ),
-                        ),
+                      style: TextStyle(
+                          fontSize: 16.0,
+                          color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
                       ),
-                    )),
+                    ),
+                    trailing: StandartSwitch(
+                        value: _isOn,
+                        onTaped: () => null
+                    )
+                    ),
               ))
             ],
           ),
@@ -144,7 +149,9 @@ class NodeListPage extends BasePage {
           Expanded(child: Observer(builder: (context) {
             return ListView.separated(
                 separatorBuilder: (_, __) =>
-                    Divider(color: Palette.lightGrey, height: 1),
+                    Divider(
+                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey : Palette.lightGrey,
+                        height: 1),
                 itemCount: nodeList.nodes.length,
                 itemBuilder: (BuildContext context, int index) {
                   final node = nodeList.nodes[index];
@@ -155,11 +162,14 @@ class NodeListPage extends BasePage {
                         : node.id == settings.node.id;
 
                     final content = Container(
-                        color: isCurrent ? Palette.purple : Colors.white,
+                        color: isCurrent ? _currentColor : _notCurrentColor,
                         child: ListTile(
                           title: Text(
                             node.uri,
-                            style: TextStyle(fontSize: 16.0),
+                            style: TextStyle(
+                                fontSize: 16.0,
+                                color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
+                            ),
                           ),
                           trailing: Container(
                             width: 10.0,

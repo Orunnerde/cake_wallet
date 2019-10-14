@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:provider/provider.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class RestoreButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -15,18 +18,25 @@ class RestoreButton extends StatelessWidget {
       {@required this.onPressed,
       @required this.image,
       @required this.aspectRatioImage,
-      this.color = Palette.darkPurple,
-      this.titleColor = Palette.darkPurple,
+      @required this.color,
+      @required this.titleColor,
       this.title = '',
       this.description = '',
       this.textButton = ''});
 
   @override
   Widget build(BuildContext context) {
+
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return Container(
       margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
       decoration: BoxDecoration(
-          color: Colors.white,
+          color: _isDarkTheme ? PaletteDark.darkThemeMidGrey : Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
           boxShadow: [
             BoxShadow(
@@ -62,7 +72,7 @@ class RestoreButton extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: titleColor,
-                        fontSize: 22.0,
+                        fontSize: 18.0,
                         fontWeight: FontWeight.bold),
                   ),
                   Padding(
@@ -71,7 +81,10 @@ class RestoreButton extends StatelessWidget {
                       description,
                       textAlign: TextAlign.center,
                       style:
-                          TextStyle(color: Palette.lightBlue, fontSize: 16.0, height: 1.4),
+                          TextStyle(
+                              color: _isDarkTheme ? Palette.wildDarkBlue : Palette.lightBlue,
+                              fontSize: 14.0,
+                              height: 1.4),
                     ),
                   )
                 ],
@@ -83,7 +96,9 @@ class RestoreButton extends StatelessWidget {
                   height: 56.0,
                   decoration: BoxDecoration(
                     border: Border(
-                        top: BorderSide(color: Palette.darkGrey, width: 1.15)),
+                        top: BorderSide(
+                            color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey : Palette.darkGrey,
+                            width: 1.15)),
                     color: Colors.transparent,
                   ),
                   child: Center(
@@ -91,7 +106,7 @@ class RestoreButton extends StatelessWidget {
                       textButton,
                       style: TextStyle(
                           color: color,
-                          fontSize: 18.0,
+                          fontSize: 16.0,
                           fontWeight: FontWeight.bold),
                     ),
                   ))

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:cake_wallet/palette.dart';
+import 'package:provider/provider.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class StandartListRow extends StatelessWidget {
   final String title;
@@ -8,6 +12,12 @@ class StandartListRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return Padding(
       padding: const EdgeInsets.only(top: 10, bottom: 10),
       child: Column(
@@ -15,14 +25,16 @@ class StandartListRow extends StatelessWidget {
           children: <Widget>[
             Text(title,
                 style: TextStyle(
-                    fontSize: 14, color: const Color.fromRGBO(34, 40, 75, 1)),
+                    fontSize: 14,
+                    color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                        : PaletteDark.darkThemeCloseButton),
                 textAlign: TextAlign.left),
             Padding(
               padding: const EdgeInsets.only(top: 5),
               child: Text(value,
                   style: TextStyle(
                       fontSize: 14,
-                      color: const Color.fromRGBO(155, 172, 197, 1))),
+                      color: Palette.wildDarkBlue)),
             )
           ]),
     );

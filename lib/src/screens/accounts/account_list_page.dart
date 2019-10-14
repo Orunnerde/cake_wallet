@@ -8,25 +8,34 @@ import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/src/stores/account_list/account_list_store.dart';
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/theme_changer.dart';
 
 class AccountListPage extends BasePage {
-  bool get isModalBackButton => true;
-
   String get title => 'Accounts';
 
   @override
   Widget trailing(BuildContext context) {
     final accountListStore = Provider.of<AccountListStore>(context);
 
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return Container(
         width: 28.0,
         height: 28.0,
         decoration:
-            BoxDecoration(shape: BoxShape.circle, color: Palette.purple),
+            BoxDecoration(
+                shape: BoxShape.circle,
+                color: _isDarkTheme ? PaletteDark.darkThemeViolet : Palette.purple
+            ),
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
-            Icon(Icons.add, color: Palette.violet, size: 20.0),
+            Icon(Icons.add, color: Palette.violet, size: 22.0),
             ButtonTheme(
               minWidth: 28.0,
               height: 28.0,
@@ -48,6 +57,21 @@ class AccountListPage extends BasePage {
     final accountListStore = Provider.of<AccountListStore>(context);
     final walletStore = Provider.of<WalletStore>(context);
 
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    Color _currentColor, _notCurrentColor;
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) {
+      _currentColor = PaletteDark.darkThemeViolet;
+      _notCurrentColor = Theme.of(context).backgroundColor;
+      _isDarkTheme = true;
+    }
+    else {
+      _currentColor = Palette.purple;
+      _notCurrentColor = Colors.white;
+      _isDarkTheme = false;
+    }
+
     return Container(
       padding: EdgeInsets.only(top: 10, bottom: 20),
       child: Observer(
@@ -65,13 +89,24 @@ class AccountListPage extends BasePage {
                   key: Key(account.id.toString()),
                   actionPane: SlidableDrawerActionPane(),
                   child: Container(
-                    color: isCurrent ? Palette.purple : Colors.white,
+                    color: isCurrent ? _currentColor : _notCurrentColor,
                     child: Column(
                       children: <Widget>[
                         ListTile(
                           title: Text(
                             account.label,
-                            style: TextStyle(fontSize: 16.0),
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                  : Colors.black
+                            ),
+                          ),
+                          trailing: Container(
+                            width: 10.0,
+                            height: 10.0,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Palette.green),
                           ),
                           onTap: () {
                             if (isCurrent) {
@@ -83,7 +118,8 @@ class AccountListPage extends BasePage {
                           },
                         ),
                         Divider(
-                          color: Palette.lightGrey,
+                          color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                              : Palette.lightGrey,
                           height: 1.0,
                         )
                       ],

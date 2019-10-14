@@ -5,9 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
-import 'package:cake_wallet/src/domain/common/contact.dart';
 import 'package:cake_wallet/src/stores/address_book/address_book_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class AddressBookPage extends BasePage {
   bool get isModalBackButton => true;
@@ -23,16 +24,24 @@ class AddressBookPage extends BasePage {
     }
 
     final addressBookStore = Provider.of<AddressBookStore>(context);
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme)
+      _isDarkTheme = true;
+    else
+      _isDarkTheme = false;
 
     return Container(
         width: 28.0,
         height: 28.0,
-        decoration:
-            BoxDecoration(shape: BoxShape.circle, color: Palette.purple),
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: _isDarkTheme ? PaletteDark.darkThemeViolet : Palette.purple),
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
-            Icon(Icons.add, color: Palette.violet, size: 20.0),
+            Icon(Icons.add, color: Palette.violet, size: 22.0),
             ButtonTheme(
               minWidth: 28.0,
               height: 28.0,
@@ -52,6 +61,13 @@ class AddressBookPage extends BasePage {
   @override
   Widget body(BuildContext context) {
     final addressBookStore = Provider.of<AddressBookStore>(context);
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme)
+      _isDarkTheme = true;
+    else
+      _isDarkTheme = false;
 
     return Column(
       children: <Widget>[
@@ -59,22 +75,28 @@ class AddressBookPage extends BasePage {
         Expanded(
             child: Stack(
           children: <Widget>[
-            Container(
-              height: 10.0,
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                colors: [Palette.lightGrey2, Colors.white],
-                begin: FractionalOffset(0.0, 0.0),
-                end: FractionalOffset(0.0, 1.0),
-              )),
-            ),
+            _isDarkTheme
+                ? Container(
+                    height: 10.0,
+                  )
+                : Container(
+                    height: 10.0,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                      colors: [Palette.lightGrey2, Colors.white],
+                      begin: FractionalOffset(0.0, 0.0),
+                      end: FractionalOffset(0.0, 1.0),
+                    )),
+                  ),
             Container(
                 padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
                 child: Observer(
                   builder: (_) => ListView.separated(
                       separatorBuilder: (_, __) => Divider(
-                            color: Palette.lightGrey,
-                            height: 3.0,
+                            color: _isDarkTheme
+                                ? PaletteDark.darkThemeGreyWithOpacity
+                                : Palette.lightGrey,
+                            height: 1.0,
                           ),
                       itemCount: addressBookStore.contactList == null
                           ? 0
@@ -111,8 +133,10 @@ class AddressBookPage extends BasePage {
                                   title: Text(
                                     contact.name,
                                     style: TextStyle(
-                                      fontSize: 16.0,
-                                    ),
+                                        fontSize: 16.0,
+                                        color: _isDarkTheme
+                                            ? PaletteDark.darkThemeTitle
+                                            : Colors.black),
                                   ),
                                 )
                               ],

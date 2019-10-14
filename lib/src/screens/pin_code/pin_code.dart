@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:provider/provider.dart';
+import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/theme_changer.dart';
 
 abstract class PinCodeWidget extends StatefulWidget {
   Function(List<int> pin, PinCodeState state) onPinCodeEntered;
@@ -76,9 +79,16 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
   }
 
   Widget body(BuildContext context) {
+
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return SafeArea(
         child: Container(
-      color: Colors.white,
+      color: Theme.of(context).backgroundColor,
       padding: EdgeInsets.only(left: 40.0, right: 40.0, bottom: 40.0),
       child: Column(children: <Widget>[
         Spacer(flex: 2),
@@ -138,7 +148,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
                                   left: marginLeft, right: marginRight),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Palette.darkGrey,
+                                color: _isDarkTheme ? PaletteDark.darkThemePinButton : Palette.darkGrey,
                               ),
                             );
                           } else if (index == 10) {
@@ -149,7 +159,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
                                   left: marginLeft, right: marginRight),
                               child: FlatButton(
                                 onPressed: () => _pop(),
-                                color: Palette.darkGrey,
+                                color: _isDarkTheme ? PaletteDark.darkThemePinButton : Palette.darkGrey,
                                 shape: CircleBorder(),
                                 child: deleteIconImage,
                               ),
@@ -163,7 +173,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
                                 left: marginLeft, right: marginRight),
                             child: FlatButton(
                               onPressed: () => _push(index),
-                              color: Palette.creamyGrey,
+                              color: _isDarkTheme ? PaletteDark.darkThemePinDigitButton : Palette.creamyGrey,
                               shape: CircleBorder(),
                               child: Text('$index',
                                   style: TextStyle(

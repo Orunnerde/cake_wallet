@@ -5,6 +5,9 @@ import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/exchange_trade/widgets/copy_button.dart';
 import 'package:cake_wallet/src/screens/receive/qr_image.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:provider/provider.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class ExchangeFundsPage extends BasePage {
   String get title => 'Exchange funds';
@@ -34,6 +37,13 @@ class ExchangeFundsPage extends BasePage {
 
   @override
   Widget body(BuildContext context) {
+
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return Container(
       padding: EdgeInsets.only(
         left: 20.0,
@@ -76,7 +86,7 @@ class ExchangeFundsPage extends BasePage {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14.0,
-                color: Palette.violet
+                color: Palette.lightViolet
               ),
             ),
           ),
@@ -96,7 +106,11 @@ class ExchangeFundsPage extends BasePage {
                           padding: EdgeInsets.only(right: 5.0),
                           child: CopyButton(
                             onPressed: (){},
-                            text: 'Copy Address'
+                            text: 'Copy Address',
+                            color: _isDarkTheme ? PaletteDark.darkThemeIndigoButton
+                                : Palette.indigo,
+                            borderColor: _isDarkTheme ? PaletteDark.darkThemeIndigoButtonBorder
+                                : Palette.deepIndigo,
                           ),
                         )
                       ),
@@ -105,7 +119,11 @@ class ExchangeFundsPage extends BasePage {
                           padding: EdgeInsets.only(left: 5.0),
                           child: CopyButton(
                             onPressed: (){},
-                            text: 'Copy ID'
+                            text: 'Copy ID',
+                            color: _isDarkTheme ? PaletteDark.darkThemeIndigoButton
+                                : Palette.indigo,
+                            borderColor: _isDarkTheme ? PaletteDark.darkThemeIndigoButtonBorder
+                                : Palette.deepIndigo,
                           ),
                         )
                       )
@@ -118,7 +136,10 @@ class ExchangeFundsPage extends BasePage {
                        'Please press confirm to continue or go back to change '
                        'the amounts.',
                         textAlign: TextAlign.left,
-                        style: TextStyle(fontSize: 14.0),
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: _isDarkTheme ? Palette.wildDarkBlue : Colors.black
+                        ),
                   )
                 ],
               ),
@@ -135,13 +156,17 @@ class ExchangeFundsPage extends BasePage {
               style: TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.w500,
-                color: Palette.wildDarkBlue
+                color: _isDarkTheme ? PaletteDark.wildDarkBlue : Palette.wildDarkBlue
               ),
             ),
           ),
           PrimaryButton(
             onPressed: (){},
-            text: 'Confirm'
+            text: 'Confirm',
+            color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
+                : Palette.purple,
+            borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
+                : Palette.deepPink,
           )
         ],
       ),
