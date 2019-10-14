@@ -168,7 +168,7 @@ class WalletListBody extends StatelessWidget {
           child: const Text('Load wallet'),
           onPressed: () async {
             Navigator.of(context).popAndPushNamed(Routes.auth, arguments: [
-              (auth) async {
+              (auth, _) async {
                 try {
                   auth.changeProcessText('Loading ${wallet.name} wallet');
                   await _walletListStore.loadWallet(wallet);

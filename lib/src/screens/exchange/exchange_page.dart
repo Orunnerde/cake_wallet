@@ -212,7 +212,9 @@ class ExchangeFormState extends State<ExchangeForm> {
               initialAddress: exchangeStore.depositCurrency == walletStore.type
                   ? walletStore.address
                   : null,
-              initialIsActive:
+              initialIsAmountEditable:
+                  !(exchangeStore.provider is XMRTOExchangeProvider),
+              initialIsAddressEditable:
                   !(exchangeStore.provider is XMRTOExchangeProvider),
               isAmountEstimated:
                   exchangeStore.provider is XMRTOExchangeProvider,
@@ -234,21 +236,26 @@ class ExchangeFormState extends State<ExchangeForm> {
                           ? PaletteDark.darkThemeTitle
                           : Colors.black),
                 )),
-            ExchangeCard(
-              key: receiveKey,
-              initialCurrency: exchangeStore.receiveCurrency,
-              initialWalletName: receiveWalletName,
-              initialAddress: exchangeStore.receiveCurrency == walletStore.type
-                  ? walletStore.address
-                  : null,
-              initialIsActive: exchangeStore.provider is XMRTOExchangeProvider,
-              isAmountEstimated:
-                  !(exchangeStore.provider is XMRTOExchangeProvider),
-              currencies: CryptoCurrency.all,
-              onCurrencySelected: (currency) =>
-                  exchangeStore.changeReceiveCurrency(currency: currency),
-              imageArrow: arrowBottomCakeGreen,
-            ),
+            Observer(
+                builder: (_) => ExchangeCard(
+                      key: receiveKey,
+                      initialCurrency: exchangeStore.receiveCurrency,
+                      initialWalletName: receiveWalletName,
+                      initialAddress:
+                          exchangeStore.receiveCurrency == walletStore.type
+                              ? walletStore.address
+                              : null,
+                      initialIsAmountEditable:
+                          exchangeStore.provider is XMRTOExchangeProvider,
+                      initialIsAddressEditable:
+                          exchangeStore.provider is XMRTOExchangeProvider,
+                      isAmountEstimated:
+                          !(exchangeStore.provider is XMRTOExchangeProvider),
+                      currencies: CryptoCurrency.all,
+                      onCurrencySelected: (currency) => exchangeStore
+                          .changeReceiveCurrency(currency: currency),
+                      imageArrow: arrowBottomCakeGreen,
+                    )),
             Padding(
               padding: EdgeInsets.only(top: 35, bottom: 15),
               child: Observer(builder: (_) {
@@ -372,11 +379,15 @@ class ExchangeFormState extends State<ExchangeForm> {
       final isReversed = provider is XMRTOExchangeProvider;
 
       if (isReversed) {
-        receiveKey.currentState.active();
-        depositKey.currentState.disactive();
+        receiveKey.currentState.isAddressEditable(isEditable: true);
+        receiveKey.currentState.isAmountEditable(isEditable: true);
+        depositKey.currentState.isAddressEditable(isEditable: false);
+        depositKey.currentState.isAmountEditable(isEditable: false);
       } else {
-        receiveKey.currentState.disactive();
-        depositKey.currentState.active();
+        receiveKey.currentState.isAddressEditable(isEditable: true);
+        receiveKey.currentState.isAmountEditable(isEditable: false);
+        depositKey.currentState.isAddressEditable(isEditable: true);
+        depositKey.currentState.isAmountEditable(isEditable: true);
       }
 
       depositKey.currentState.changeIsAmountEstimated(isReversed);
@@ -451,6 +462,16 @@ class ExchangeFormState extends State<ExchangeForm> {
     receiveAmountController.addListener(() {
       if (receiveAmountController.text != store.receiveAmount) {
         store.changeReceiveAmount(amount: receiveAmountController.text);
+      }
+    });
+
+    reaction((_) => walletStore.address, (address) {
+      if (store.depositCurrency == CryptoCurrency.xmr) {
+        depositKey.currentState.changeAddress(address: address);
+      }
+
+      if (store.receiveCurrency == CryptoCurrency.xmr) {
+        receiveKey.currentState.changeAddress(address: address);
       }
     });
 

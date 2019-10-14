@@ -13,7 +13,8 @@ class ExchangeCard extends StatefulWidget {
   final CryptoCurrency initialCurrency;
   final String initialWalletName;
   final String initialAddress;
-  final bool initialIsActive;
+  final bool initialIsAmountEditable;
+  final bool initialIsAddressEditable;
   final bool isAmountEstimated;
   final Image imageArrow;
 
@@ -22,7 +23,8 @@ class ExchangeCard extends StatefulWidget {
       this.initialCurrency,
       this.initialAddress,
       this.initialWalletName,
-      this.initialIsActive,
+      this.initialIsAmountEditable,
+      this.initialIsAddressEditable,
       this.isAmountEstimated,
       this.currencies,
       this.onCurrencySelected,
@@ -41,16 +43,18 @@ class ExchangeCardState extends State<ExchangeCard> {
   String _max;
   CryptoCurrency _selectedCurrency;
   String _walletName;
-  bool _isActive;
+  bool _isAmountEditable;
+  bool _isAddressEditable;
   bool _isAmountEstimated;
 
   @override
   void initState() {
-    _isActive = widget.initialIsActive;
+    _isAmountEditable = widget.initialIsAmountEditable;
+    _isAddressEditable = widget.initialIsAddressEditable;
     _walletName = widget.initialWalletName;
     _selectedCurrency = widget.initialCurrency;
     _isAmountEstimated = widget.isAmountEstimated;
-    changeAddress(address: widget.initialAddress);
+    addressController.text = widget.initialAddress;
     super.initState();
   }
 
@@ -70,15 +74,15 @@ class ExchangeCardState extends State<ExchangeCard> {
   }
 
   void changeIsAction(bool isActive) {
-    setState(() => _isActive = isActive);
+    setState(() => _isAmountEditable = isActive);
   }
 
-  void active() {
-    setState(() => _isActive = true);
+  void isAmountEditable({bool isEditable = true}) {
+    setState(() => _isAmountEditable = isEditable);
   }
 
-  void disactive() {
-    setState(() => _isActive = false);
+  void isAddressEditable({bool isEditable = true}) {
+    setState(() => _isAddressEditable = isEditable);
   }
 
   void changeAddress({String address}) {
@@ -149,7 +153,7 @@ class ExchangeCardState extends State<ExchangeCard> {
                   TextField(
                       style: TextStyle(fontSize: 23, height: 1.21),
                       controller: amountController,
-                      enabled: _isActive,
+                      enabled: _isAmountEditable,
                       textAlign: TextAlign.right,
                       keyboardType: TextInputType.numberWithOptions(
                           signed: false, decimal: false),
@@ -240,17 +244,19 @@ class ExchangeCardState extends State<ExchangeCard> {
         SizedBox(height: 10),
         AddressTextField(
           controller: addressController,
-          isActive: _isActive,
-          options: _walletName != null
-              ? [
-                  AddressTextFieldOption.qrCode,
-                  AddressTextFieldOption.addressBook,
-                  AddressTextFieldOption.subaddressList
-                ]
-              : [
-                  AddressTextFieldOption.qrCode,
-                  AddressTextFieldOption.addressBook,
-                ],
+          isActive: _isAddressEditable,
+          options: _isAddressEditable
+              ? _walletName != null
+                  ? [
+                      AddressTextFieldOption.qrCode,
+                      AddressTextFieldOption.addressBook,
+                      AddressTextFieldOption.subaddressList
+                    ]
+                  : [
+                      AddressTextFieldOption.qrCode,
+                      AddressTextFieldOption.addressBook,
+                    ]
+              : [],
         )
       ]),
     );

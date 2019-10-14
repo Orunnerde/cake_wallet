@@ -49,7 +49,7 @@ class TransactionInfo {
   }
 
   String fiatAmount() {
-    return '$_fiatAmount';
+    return _fiatAmount ?? '';
   }
 
   void changeFiatAmount(String amount) {

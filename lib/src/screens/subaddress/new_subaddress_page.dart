@@ -49,8 +49,10 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
 
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    if (_themeChanger.getTheme() == Themes.darkTheme)
+      _isDarkTheme = true;
+    else
+      _isDarkTheme = false;
 
     return Stack(children: <Widget>[
       Center(
@@ -76,12 +78,17 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
           right: 20,
           child: Observer(
             builder: (_) => LoadingPrimaryButton(
-                onPressed: () async =>
-                    subaddressCreationStore.add(label: _labelController.text),
+                onPressed: () async {
+                  await subaddressCreationStore.add(
+                      label: _labelController.text);
+                  Navigator.of(context).pop();
+                },
                 text: 'Create',
-                color: _isDarkTheme ? PaletteDark.darkThemeIndigoButton
+                color: _isDarkTheme
+                    ? PaletteDark.darkThemeIndigoButton
                     : Palette.indigo,
-                borderColor: _isDarkTheme ? PaletteDark.darkThemeIndigoButtonBorder
+                borderColor: _isDarkTheme
+                    ? PaletteDark.darkThemeIndigoButtonBorder
                     : Palette.deepIndigo,
                 isLoading:
                     subaddressCreationStore.state is SubaddressIsCreating),

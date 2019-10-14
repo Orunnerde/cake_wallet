@@ -28,9 +28,10 @@ class MoneroWalletsManager extends WalletsManager {
 
       print('Created monero wallet with ID: $walletID, name: $name');
 
-      return await MoneroWallet.createdWallet(
-          db: db, name: name, isRecovery: isRecovery)
-        ..updateInfo();
+      final wallet = await MoneroWallet.createdWallet(
+          db: db, name: name, isRecovery: isRecovery);
+      await wallet.updateInfo();
+      return wallet;
     } on PlatformException catch (e) {
       print('MoneroWalletsManager Error: $e');
       throw e;
@@ -107,8 +108,9 @@ class MoneroWalletsManager extends WalletsManager {
 
       print('Opened monero wallet with ID: $walletID, name: $name');
 
-      return await MoneroWallet.load(db, name, type)
-        ..updateInfo();
+      final wallet = await MoneroWallet.load(db, name, type);
+      await wallet.updateInfo();
+      return wallet;
     } on PlatformException catch (e) {
       print('MoneroWalletsManager Error: $e');
       throw e;

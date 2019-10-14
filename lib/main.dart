@@ -106,50 +106,6 @@ void main() async {
           settingsStore: settingsStore)));
 }
 
-/*class CakeWalletApp extends StatelessWidget {
-  final SharedPreferences sharedPreferences;
-  final WalletService walletService;
-  final WalletListService walletListService;
-  final UserService userService;
-  final Database db;
-  final SettingsStore settingsStore;
-
-  CakeWalletApp(
-      {@required this.sharedPreferences,
-      @required this.walletService,
-      @required this.walletListService,
-      @required this.userService,
-      @required this.db,
-      @required this.settingsStore});
-
-  @override
-  Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-      systemNavigationBarColor: Colors.black,
-      statusBarColor: Colors.white,
-    ));
-
-    return MultiProvider(
-      providers: [Provider<SettingsStore>(builder: (_) => settingsStore)],
-      child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            fontFamily: 'Lato',
-          ),
-          onGenerateRoute: (settings) => Router.generateRoute(sharedPreferences,
-              walletListService, walletService, userService, db, settings),
-          home: MultiProvider(providers: [
-            Provider(builder: (_) => sharedPreferences),
-            Provider(builder: (_) => walletService),
-            Provider(builder: (_) => walletListService),
-            Provider(builder: (_) => userService),
-            Provider(builder: (_) => settingsStore),
-            Provider(builder: (_) => db),
-          ], child: Root())),
-    );
-  }
-}*/
-
 class CakeWalletApp extends StatelessWidget {
   final SharedPreferences sharedPreferences;
   final WalletService walletService;

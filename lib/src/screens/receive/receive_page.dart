@@ -256,20 +256,23 @@ class ReceiveBody extends StatelessWidget {
                       ? subaddress.label
                       : subaddress.address;
 
-                  return Container(
-                    color: isCurrent ? _currentColor : _notCurrentColor,
-                    child: Column(children: <Widget>[
-                      ListTile(
-                        title: Text(
-                          label,
-                          style: TextStyle(
-                              fontSize: 16.0,
-                              color: _isDarkTheme
-                                  ? PaletteDark.darkThemeGrey
-                                  : Colors.black),
-                        ),
-                      )
-                    ]),
+                  return InkWell(
+                    onTap: () => walletStore.setSubaddress(subaddress),
+                    child: Container(
+                      color: isCurrent ? _currentColor : _notCurrentColor,
+                      child: Column(children: <Widget>[
+                        ListTile(
+                          title: Text(
+                            label,
+                            style: TextStyle(
+                                fontSize: 16.0,
+                                color: _isDarkTheme
+                                    ? PaletteDark.darkThemeGrey
+                                    : Colors.black),
+                          ),
+                        )
+                      ]),
+                    ),
                   );
                 });
               });
