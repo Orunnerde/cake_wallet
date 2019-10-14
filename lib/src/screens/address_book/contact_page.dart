@@ -214,6 +214,7 @@ class ContactFormState extends State<ContactForm> {
                       try {
                         final contact = Contact(
                             name: _contactNameController.text,
+                            address: _addressController.text,
                             type: _selectectCrypto);
 
                         await addressBookStore.add(contact: contact);

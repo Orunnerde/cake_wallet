@@ -9,12 +9,14 @@ class ExchangeCard extends StatefulWidget {
   final Function(CryptoCurrency) onCurrencySelected;
   final CryptoCurrency initialCurrency;
   final String initialWalletName;
+  final String initialAddress;
   final bool initialIsActive;
   final bool isAmountEstimated;
 
   ExchangeCard(
       {Key key,
       this.initialCurrency,
+      this.initialAddress,
       this.initialWalletName,
       this.initialIsActive,
       this.isAmountEstimated,
@@ -43,6 +45,7 @@ class ExchangeCardState extends State<ExchangeCard> {
     _walletName = widget.initialWalletName;
     _selectedCurrency = widget.initialCurrency;
     _isAmountEstimated = widget.isAmountEstimated;
+    changeAddress(address: widget.initialAddress);
     super.initState();
   }
 
@@ -95,7 +98,6 @@ class ExchangeCardState extends State<ExchangeCard> {
           borderRadius: BorderRadius.all(Radius.circular(12))),
       child: Column(children: <Widget>[
         Container(
-          // color: Colors.red,
           child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: <
               Widget>[
             Container(
@@ -215,7 +217,7 @@ class ExchangeCardState extends State<ExchangeCard> {
           ]),
         ),
         SizedBox(height: 10),
-        AddressTextField(controller: addressController)
+        AddressTextField(controller: addressController, isActive: _isActive)
       ]),
     );
   }

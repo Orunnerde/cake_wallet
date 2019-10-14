@@ -1,3 +1,4 @@
+import 'package:cake_wallet/src/widgets/address_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -87,7 +88,7 @@ class SendFormState extends State<SendForm> {
                 return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text('XMR Balance',
+                      Text('XMR Available Balance',
                           style: TextStyle(
                               fontSize: 12,
                               color: Color.fromRGBO(34, 40, 74, 1))),
@@ -109,63 +110,26 @@ class SendFormState extends State<SendForm> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Column(children: <Widget>[
-                    TextFormField(
+                    AddressTextField(
                         controller: _addressController,
-                        decoration: InputDecoration(
-                            suffixIcon: Container(
-                                width: 34,
-                                height: 34,
-                                padding: EdgeInsets.only(top: 0),
-                                child: FlatButton(
-                                  padding: EdgeInsets.all(0),
-                                  child: InkWell(
-                                    onTap: () async {
-                                      try {
-                                        String code =
-                                            await BarcodeScanner.scan();
-                                        var uri = Uri.parse(code);
-                                        var address = '';
-                                        var amount = '';
-                                        var paymentId = '';
+                        placeholder: 'Monero address',
+                        onURIScanned: (uri) {
+                          var address = '';
+                          var amount = '';
+                          var paymentId = '';
 
-                                        if (uri != null) {
-                                          address = uri.path;
-                                          amount =
-                                              uri.queryParameters['tx_amount'];
-                                          paymentId = uri
-                                              .queryParameters['tx_payment_id'];
-                                        } else {
-                                          address = code;
-                                        }
+                          if (uri != null) {
+                            address = uri.path;
+                            amount = uri.queryParameters['tx_amount'];
+                            paymentId = uri.queryParameters['tx_payment_id'];
+                          } else {
+                            address = uri.toString();
+                          }
 
-                                        _addressController.text = address;
-                                        _cryptoAmountController.text = amount;
-                                        _paymentIdController.text = paymentId;
-                                      } catch (e) {
-                                        print('Error $e');
-                                      }
-                                    },
-                                    child: Container(
-                                        padding: EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                            color: Color.fromRGBO(
-                                                155, 172, 197, 0.1),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(8))),
-                                        child: Image.asset(
-                                            'assets/images/qr_code_icon.png')),
-                                  ),
-                                  onPressed: () {},
-                                )),
-                            hintStyle: TextStyle(color: Palette.lightBlue),
-                            hintText: 'Monero address',
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0)),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Palette.lightGrey, width: 2.0))),
-                        validator: (value) => null),
+                          _addressController.text = address;
+                          _cryptoAmountController.text = amount;
+                          _paymentIdController.text = paymentId;
+                        }),
                     Padding(
                       padding: const EdgeInsets.only(top: 20),
                       child: TextFormField(

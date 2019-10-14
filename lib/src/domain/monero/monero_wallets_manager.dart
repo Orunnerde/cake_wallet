@@ -29,7 +29,8 @@ class MoneroWalletsManager extends WalletsManager {
       print('Created monero wallet with ID: $walletID, name: $name');
 
       return await MoneroWallet.createdWallet(
-          db: db, name: name, isRecovery: isRecovery);
+          db: db, name: name, isRecovery: isRecovery)
+        ..updateInfo();
     } on PlatformException catch (e) {
       print('MoneroWalletsManager Error: $e');
       throw e;
@@ -56,7 +57,8 @@ class MoneroWalletsManager extends WalletsManager {
           db: db,
           name: name,
           isRecovery: isRecovery,
-          restoreHeight: restoreHeight);
+          restoreHeight: restoreHeight)
+        ..updateInfo();
     } on PlatformException catch (e) {
       print('MoneroWalletsManager Error: $e');
       throw e;
@@ -90,7 +92,8 @@ class MoneroWalletsManager extends WalletsManager {
           db: db,
           name: name,
           isRecovery: isRecovery,
-          restoreHeight: restoreHeight);
+          restoreHeight: restoreHeight)
+        ..updateInfo();
     } on PlatformException catch (e) {
       print('MoneroWalletsManager Error: $e');
       throw e;
@@ -104,7 +107,8 @@ class MoneroWalletsManager extends WalletsManager {
 
       print('Opened monero wallet with ID: $walletID, name: $name');
 
-      return MoneroWallet.load(db, name, type);
+      return await MoneroWallet.load(db, name, type)
+        ..updateInfo();
     } on PlatformException catch (e) {
       print('MoneroWalletsManager Error: $e');
       throw e;
@@ -143,7 +147,9 @@ class MoneroWalletsManager extends WalletsManager {
       await addressFile.delete();
     }
 
-    final id = walletTypeToString(wallet.type).toLowerCase() + '_' + wallet.name;
-    await db.delete(Wallet.walletsTable, where: '${Wallet.idColumn} = ?', whereArgs: [id]);
+    final id =
+        walletTypeToString(wallet.type).toLowerCase() + '_' + wallet.name;
+    await db.delete(Wallet.walletsTable,
+        where: '${Wallet.idColumn} = ?', whereArgs: [id]);
   }
 }

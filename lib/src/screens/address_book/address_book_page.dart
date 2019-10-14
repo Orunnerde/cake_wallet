@@ -5,15 +5,23 @@ import 'package:provider/provider.dart';
 import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/src/domain/common/contact.dart';
 import 'package:cake_wallet/src/stores/address_book/address_book_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 
 class AddressBookPage extends BasePage {
   bool get isModalBackButton => true;
   String get title => 'Address Book';
+  final bool isEditable;
+
+  AddressBookPage({this.isEditable = true});
 
   @override
   Widget trailing(BuildContext context) {
+    if (!isEditable) {
+      return null;
+    }
+
     final addressBookStore = Provider.of<AddressBookStore>(context);
 
     return Container(
@@ -74,36 +82,41 @@ class AddressBookPage extends BasePage {
                       itemBuilder: (BuildContext context, int index) {
                         final contact = addressBookStore.contactList[index];
 
-                        return Container(
-                          child: Column(
-                            children: <Widget>[
-                              ListTile(
-                                leading: Container(
-                                  height: 25.0,
-                                  width: 48.0,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: _getCurrencyBackgroundColor(
-                                        contact.type),
-                                    borderRadius: BorderRadius.circular(6.0),
-                                  ),
-                                  child: Text(
-                                    contact.type.toString(),
-                                    style: TextStyle(
-                                      fontSize: 11.0,
-                                      color:
-                                          _getCurrencyTextColor(contact.type),
+                        return InkWell(
+                          onTap: () => !isEditable
+                              ? Navigator.of(context).pop(contact)
+                              : null,
+                          child: Container(
+                            child: Column(
+                              children: <Widget>[
+                                ListTile(
+                                  leading: Container(
+                                    height: 25.0,
+                                    width: 48.0,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: _getCurrencyBackgroundColor(
+                                          contact.type),
+                                      borderRadius: BorderRadius.circular(6.0),
+                                    ),
+                                    child: Text(
+                                      contact.type.toString(),
+                                      style: TextStyle(
+                                        fontSize: 11.0,
+                                        color:
+                                            _getCurrencyTextColor(contact.type),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                title: Text(
-                                  contact.name,
-                                  style: TextStyle(
-                                    fontSize: 16.0,
+                                  title: Text(
+                                    contact.name,
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                    ),
                                   ),
-                                ),
-                              )
-                            ],
+                                )
+                              ],
+                            ),
                           ),
                         );
                       }),

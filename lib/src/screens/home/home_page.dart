@@ -1,11 +1,10 @@
-import 'package:cake_wallet/src/domain/exchange/trade.dart';
-import 'package:cake_wallet/src/domain/exchange/trade_history.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:cake_wallet/router.dart';
+import 'package:cake_wallet/src/domain/exchange/trade_history.dart';
 import 'package:cake_wallet/src/domain/services/user_service.dart';
 import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
 import 'package:cake_wallet/src/domain/common/node_list.dart';
@@ -91,7 +90,7 @@ class HomePage extends StatelessWidget {
                         builder: (context) =>
                             SyncStore(walletService: walletService),
                       ),
-                    ], child: DashboardPage(walletService: walletService)));
+                    ], child: DashboardPage()));
           case 1:
             return MultiProvider(providers: [
               Provider(builder: (_) {

@@ -46,7 +46,7 @@ class ExchangePage extends BasePage {
           Observer(
               builder: (_) => Text(exchangeStore.provider.title,
                   style:
-                      TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400)))
+                      TextStyle(fontSize: 10.0, fontWeight: FontWeight.w400)))
         ],
       ),
     );
@@ -148,6 +148,10 @@ class ExchangeFormState extends State<ExchangeForm> {
                 key: depositKey,
                 initialCurrency: exchangeStore.depositCurrency,
                 initialWalletName: depositWalletName,
+                initialAddress:
+                    exchangeStore.depositCurrency == walletStore.type
+                        ? walletStore.address
+                        : null,
                 initialIsActive:
                     !(exchangeStore.provider is XMRTOExchangeProvider),
                 isAmountEstimated:
@@ -167,6 +171,10 @@ class ExchangeFormState extends State<ExchangeForm> {
                 key: receiveKey,
                 initialCurrency: exchangeStore.receiveCurrency,
                 initialWalletName: receiveWalletName,
+                initialAddress:
+                    exchangeStore.receiveCurrency == walletStore.type
+                        ? walletStore.address
+                        : null,
                 initialIsActive:
                     exchangeStore.provider is XMRTOExchangeProvider,
                 isAmountEstimated:
@@ -174,10 +182,24 @@ class ExchangeFormState extends State<ExchangeForm> {
                 currencies: CryptoCurrency.all,
                 onCurrencySelected: (currency) =>
                     exchangeStore.changeReceiveCurrency(currency: currency)),
-            SizedBox(height: 35),
+            Padding(
+              padding: EdgeInsets.only(top: 35, bottom: 15),
+              child: Observer(builder: (_) {
+                final description =
+                    exchangeStore.provider is XMRTOExchangeProvider
+                        ? 'The receive amount is guaranteed'
+                        : 'The receive amount is an estimate';
+                return Center(
+                  child: Text(
+                    description,
+                    style: TextStyle(color: Palette.blueGrey, fontSize: 12),
+                  ),
+                );
+              }),
+            ),
             Observer(
                 builder: (_) => LoadingPrimaryButton(
-                      text: 'Create exchange',
+                      text: 'Exchange',
                       onPressed: () => exchangeStore.createTrade(),
                       isLoading: exchangeStore.tradeState is TradeIsCreating,
                     )),

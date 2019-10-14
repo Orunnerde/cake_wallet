@@ -18,6 +18,9 @@ class WalletService extends Wallet {
 
   get walletType => _currentWallet.walletType;
 
+  Observable<String> get address => _currentWallet.address;
+  Observable<String> get name => _currentWallet.name;
+
   get currentWallet => _currentWallet;
 
   set currentWallet(Wallet wallet) {
@@ -80,4 +83,6 @@ class WalletService extends Wallet {
 
   Future<PendingTransaction> createTransaction(TransactionCreationCredentials credentials) =>
       _currentWallet.createTransaction(credentials);
+
+  Future updateInfo() async => _currentWallet.updateInfo();
 }

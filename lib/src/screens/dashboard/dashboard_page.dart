@@ -1,3 +1,4 @@
+import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
@@ -11,7 +12,6 @@ import 'package:cake_wallet/src/domain/common/transaction_info.dart';
 import 'package:cake_wallet/src/domain/common/transaction_direction.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/domain/common/sync_status.dart';
-import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/stores/balance/balance_store.dart';
 import 'package:cake_wallet/src/stores/sync/sync_store.dart';
 import 'package:cake_wallet/src/stores/transaction_list/transaction_list_store.dart';
@@ -22,11 +22,6 @@ class DashboardPage extends BasePage {
   static final transactionDateFormat = DateFormat("dd.MM.yyyy, HH:mm");
   static final dateSectionDateFormat = DateFormat("d MMM");
   static final nowDate = DateTime.now();
-  final WalletService walletService;
-
-  String get title => 'Wallet';
-
-  DashboardPage({@required this.walletService});
 
   static List<Object> formatTransactionsList(
       List<TransactionInfo> transactions) {
@@ -122,6 +117,26 @@ class DashboardPage extends BasePage {
           onPressed: () => presentWalletMenu(context),
           child: Image.asset('assets/images/more.png',
               color: Colors.black, width: 30)));
+
+  @override
+  Widget middle(BuildContext context) {
+    final walletStore = Provider.of<WalletStore>(context);
+
+    return Observer(builder: (_) {
+      return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(walletStore.name),
+            SizedBox(height: 5),
+            Text(
+              walletStore.account != null ? walletStore.account.label : '',
+              style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 10),
+            ),
+          ]);
+    });
+  }
 
   @override
   Widget body(BuildContext context) {
@@ -275,6 +290,14 @@ class DashboardPage extends BasePage {
                                     if (syncStore.status
                                         is StartingSyncStatus) {
                                       text = 'STARTINT SYNC';
+                                    }
+
+                                    if (syncStore.status is ConnectingSyncStatus) {
+                                      text = 'Connecting';
+                                    }
+
+                                    if (syncStore.status is ConnectedSyncStatus) {
+                                      text = 'Connected';
                                     }
 
                                     return Center(

@@ -199,7 +199,7 @@ class Router {
                     builder: (context) =>
                         SyncStore(walletService: walletService),
                   ),
-                ], child: DashboardPage(walletService: walletService)));
+                ], child: DashboardPage()));
 
       case Routes.send:
         return CupertinoPageRoute(
@@ -358,6 +358,21 @@ class Router {
           );
         });
 
+      case Routes.pickerAddressBook:
+        return MaterialPageRoute(builder: (context) {
+          return MultiProvider(
+            providers: [
+              Provider(
+                  builder: (_) =>
+                      AccountListStore(walletService: walletService)),
+              Provider(
+                  builder: (_) => AddressBookStore(
+                      addressBookService: AddressBookService(db: db)))
+            ],
+            child: AddressBookPage(isEditable:  false),
+          );
+        });
+
       case Routes.addressBookAddContact:
         return CupertinoPageRoute(builder: (context) {
           return MultiProvider(
@@ -404,8 +419,8 @@ class Router {
                     ),
                     ProxyProvider<SettingsStore, WalletStore>(
                       builder: (_, settingsStore, __) => WalletStore(
-                              walletService: WalletService(),
-                              settingsStore: settingsStore),
+                          walletService: WalletService(),
+                          settingsStore: settingsStore),
                     ),
                     ProxyProvider<SettingsStore, SendStore>(
                         builder: (_, settingsStore, __) => SendStore(

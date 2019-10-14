@@ -168,27 +168,29 @@ class ReceiveBody extends StatelessWidget {
                 );
               },
               itemBuilder: (context, i) {
-                final subaddress = subaddressListStore.subaddresses[i];
-                final isCurrent =
-                    walletStore.subaddress.address == subaddress.address;
-                final label = subaddress.label.isNotEmpty
-                    ? subaddress.label
-                    : subaddress.address;
+                return Observer(builder: (_) {
+                  final subaddress = subaddressListStore.subaddresses[i];
+                  final isCurrent =
+                      walletStore.subaddress.address == subaddress.address;
+                  final label = subaddress.label.isNotEmpty
+                      ? subaddress.label
+                      : subaddress.address;
 
-                return Container(
-                  color: isCurrent ? Palette.purple : Palette.lightGrey2,
-                  child: Column(
-                    children: <Widget>[
-                      ListTile(
-                        title: Text(
-                          label,
-                          style: TextStyle(fontSize: 16.0),
+                  return Container(
+                    color: isCurrent ? Palette.purple : Palette.lightGrey2,
+                    child: Column(
+                      children: <Widget>[
+                        ListTile(
+                          title: Text(
+                            label,
+                            style: TextStyle(fontSize: 16.0),
+                          ),
+                          onTap: () => walletStore.setSubaddress(subaddress),
                         ),
-                        onTap: () => walletStore.subaddress = subaddress,
-                      ),
-                    ],
-                  ),
-                );
+                      ],
+                    ),
+                  );
+                });
               });
         })
       ],
