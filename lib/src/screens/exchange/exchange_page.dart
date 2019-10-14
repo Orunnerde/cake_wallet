@@ -4,13 +4,14 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/src/domain/exchange/exchange_provider_description.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/src/domain/exchange/xmrto/xmrto_exchange_provider.dart';
 import 'package:cake_wallet/src/stores/exchange/exchange_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/screens/exchange/widgets/exchange_card.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/widgets/picker.dart';
-import 'package:cake_wallet/src/domain/exchange/xmrto/xmrto_exchange_provider.dart';
 import 'package:cake_wallet/src/stores/exchange/exchange_trade_state.dart';
 import 'package:cake_wallet/src/stores/exchange/limits_state.dart';
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
@@ -263,17 +264,6 @@ class ExchangeFormState extends State<ExchangeForm> {
                 );
               }),
             ),
-            Padding(
-                padding: EdgeInsets.only(bottom: 20),
-                child: Text(
-                  'Exchange amount is guaranteed',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: _isDarkTheme
-                          ? PaletteDark.darkThemeGrey
-                          : Colors.black),
-                )),
             Observer(
                 builder: (_) => LoadingPrimaryButton(
                       text: 'Exchange',
@@ -286,8 +276,7 @@ class ExchangeFormState extends State<ExchangeForm> {
                           : Palette.deepPink,
                       isLoading: exchangeStore.tradeState is TradeIsCreating,
                     )),
-            SizedBox(height: 35),
-            /*Observer(builder: (_) {
+            Observer(builder: (_) {
               final title = exchangeStore.provider.description.title;
               var imageSrc = '';
 
@@ -316,7 +305,7 @@ class ExchangeFormState extends State<ExchangeForm> {
                   ],
                 ),
               );
-            })*/
+            })
           ],
         ),
       ),
