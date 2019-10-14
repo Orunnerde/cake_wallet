@@ -37,8 +37,10 @@ class HomePage extends StatelessWidget {
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
 
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    if (_themeChanger.getTheme() == Themes.darkTheme)
+      _isDarkTheme = true;
+    else
+      _isDarkTheme = false;
 
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
@@ -82,9 +84,10 @@ class HomePage extends StatelessWidget {
                     db,
                     settings),
                 builder: (context) => MultiProvider(providers: [
-                      Provider(
-                        builder: (context) =>
-                            TransactionListStore(walletService: walletService),
+                      ProxyProvider<SettingsStore, TransactionListStore>(
+                        builder: (_, settingsStore, __) => TransactionListStore(
+                            walletService: walletService,
+                            settingsStore: settingsStore),
                       ),
                       Provider(
                         builder: (context) =>
@@ -103,7 +106,7 @@ class HomePage extends StatelessWidget {
             return MultiProvider(providers: [
               Provider(builder: (_) {
                 final xmrtoprovider = XMRTOExchangeProvider();
-                
+
                 return ExchangeStore(
                     initialProvider: xmrtoprovider,
                     initialDepositCurrency: CryptoCurrency.xmr,

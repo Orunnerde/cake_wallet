@@ -25,6 +25,7 @@ class TransactionInfo {
   final DateTime date;
   final int accountIndex;
   final String _amount;
+  String _fiatAmount;
 
   TransactionInfo.fromMap(Map map)
       : id = map['hash'] ?? '',
@@ -39,11 +40,19 @@ class TransactionInfo {
   TransactionInfo(this.id, this.height, this.direction, this.date, this._amount,
       this.accountIndex);
 
+  double amountRaw() {
+    return double.parse(_amount);
+  }
+
   String amount() {
     return '${formatAmount(_amount)} XMR';
   }
 
   String fiatAmount() {
-    return '0 USD';
+    return '$_fiatAmount';
+  }
+
+  void changeFiatAmount(String amount) {
+    _fiatAmount = amount;
   }
 }

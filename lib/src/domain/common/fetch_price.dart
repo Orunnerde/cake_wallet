@@ -17,7 +17,6 @@ Future<double> fetchPriceFor({CryptoCurrency crypto, FiatCurrency fiat}) async {
 
   final uri = Uri.https(coinMarketCapAuthority, coinMarketCapPath,
       {'structure': 'array', 'convert': fiatStringified});
-
   final response = await get(uri.toString());
 
   if (response.statusCode != 200) {

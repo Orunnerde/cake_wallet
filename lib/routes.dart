@@ -17,6 +17,7 @@ class Routes {
   static const receive = '/receive';
   static const newSubaddress = '/new_subaddress';
   static const disclaimer = '/disclaimer';
+  static const readDisclaimer = '/read_disclaimer';
   static const seedAlert = '/seed_alert';
   static const walletList = '/wallet_list';
   static const auth = '/auth';

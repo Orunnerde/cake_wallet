@@ -23,7 +23,7 @@ class ShowKeysPage extends BasePage {
     else _isDarkTheme = false;
 
     return Container(
-        padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+        padding: EdgeInsets.only(top: 20.0, bottom: 20.0, left: 20, right: 20),
         child: Observer(
           builder: (_) {
             Map<String, String> keysMap = {

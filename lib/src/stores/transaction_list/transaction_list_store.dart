@@ -7,6 +7,9 @@ import 'package:cake_wallet/src/domain/common/transaction_info.dart';
 import 'package:cake_wallet/src/domain/common/wallet.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/domain/monero/monero_wallet.dart';
+import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/src/domain/common/fetch_price.dart';
+import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 
 part 'transaction_list_store.g.dart';
 
@@ -18,13 +21,19 @@ abstract class TransactionListBase with Store {
 
   WalletService _walletService;
   TransactionHistory _history;
+  SettingsStore _settingsStore;
   Account _account;
   StreamSubscription<Wallet> _onWalletChangeSubscription;
   StreamSubscription<List<TransactionInfo>> _onTransactionsChangeSubscription;
   StreamSubscription<Account> _onAccountChangeSubscription;
+  double _price;
 
-  TransactionListBase({@required WalletService walletService}) {
+  TransactionListBase(
+      {@required WalletService walletService,
+      @required SettingsStore settingsStore}) {
     _walletService = walletService;
+    _settingsStore = settingsStore;
+    _price = 0;
 
     if (walletService.currentWallet != null) {
       _onWalletChanged(walletService.currentWallet);
@@ -32,6 +41,9 @@ abstract class TransactionListBase with Store {
 
     _onWalletChangeSubscription =
         walletService.onWalletChange.listen(_onWalletChanged);
+
+    fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: _settingsStore.fiatCurrency)
+        .then((price) => _price = price);
   }
 
   @override
@@ -51,7 +63,7 @@ abstract class TransactionListBase with Store {
   Future _updateTransactionsList() async {
     await _history.refresh();
     final _transactions = await _history.getAll();
-    _setTransactions(_transactions);
+    await _setTransactions(_transactions);
   }
 
   Future _onWalletChanged(Wallet wallet) async {
@@ -78,8 +90,8 @@ abstract class TransactionListBase with Store {
     await _updateTransactionsList();
   }
 
-  void _setTransactions(List<TransactionInfo> transactions) {
-    var _transactions;
+  Future _setTransactions(List<TransactionInfo> transactions) async {
+    List<TransactionInfo> _transactions;
 
     final wallet = _walletService.currentWallet;
 
@@ -90,6 +102,12 @@ abstract class TransactionListBase with Store {
       _transactions = transactions;
     }
 
-    this.transactions = _transactions;
+    this.transactions = _transactions.map((tx) {
+      final amount = _price * tx.amountRaw();
+      final fiatAmount =
+          '${amount.toStringAsFixed(2)} ${_settingsStore.fiatCurrency}';
+      tx.changeFiatAmount(fiatAmount);
+      return tx;
+    }).toList();
   }
 }

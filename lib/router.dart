@@ -183,9 +183,10 @@ class Router {
       case Routes.dashboard:
         return CupertinoPageRoute(
             builder: (_) => MultiProvider(providers: [
-                  Provider(
-                    builder: (context) =>
-                        TransactionListStore(walletService: walletService),
+                  ProxyProvider<SettingsStore, TransactionListStore>(
+                    builder: (_, settingsStore, __) => TransactionListStore(
+                        walletService: walletService,
+                        settingsStore: settingsStore),
                   ),
                   Provider(
                     builder: (context) =>
@@ -250,6 +251,9 @@ class Router {
       case Routes.disclaimer:
         return CupertinoPageRoute(builder: (_) => DisclaimerPage());
 
+      case Routes.readDisclaimer:
+        return CupertinoPageRoute(builder: (_) => DisclaimerPage(isReadOnly: true));
+
       case Routes.seedAlert:
         return CupertinoPageRoute(builder: (_) => SeedAlert());
 
@@ -267,7 +271,8 @@ class Router {
         void Function(AuthPage, BuildContext) onAuthenticationFailed;
 
         if (settings.arguments is List<void Function(AuthPage, BuildContext)>) {
-          final args = settings.arguments as List<void Function(AuthPage, BuildContext)>;
+          final args =
+              settings.arguments as List<void Function(AuthPage, BuildContext)>;
 
           if (args.length > 0) {
             onAuthenticationSuccessful = args[0];
