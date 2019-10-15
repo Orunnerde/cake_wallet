@@ -196,9 +196,18 @@ class DashboardPage extends BasePage {
                             child: Column(
                               children: <Widget>[
                                 Observer(builder: (_) {
-                                  final displayMode =
+                                  final savedDisplayMode =
                                       settingsStore.balanceDisplayMode;
                                   var title = 'XMR Hidden';
+                                  BalanceDisplayMode displayMode = balanceStore
+                                          .isReversing
+                                      ? (savedDisplayMode.serialize() ==
+                                              BalanceDisplayMode
+                                                  .availableBalance
+                                                  .serialize()
+                                          ? BalanceDisplayMode.fullBalance
+                                          : BalanceDisplayMode.availableBalance)
+                                      : savedDisplayMode;
 
                                   if (displayMode.serialize() ==
                                       BalanceDisplayMode.availableBalance
@@ -217,9 +226,18 @@ class DashboardPage extends BasePage {
                                           color: Palette.violet, fontSize: 16));
                                 }),
                                 Observer(builder: (_) {
-                                  final displayMode =
+                                  final savedDisplayMode =
                                       settingsStore.balanceDisplayMode;
                                   var balance = '---';
+                                  BalanceDisplayMode displayMode = balanceStore
+                                          .isReversing
+                                      ? (savedDisplayMode.serialize() ==
+                                              BalanceDisplayMode
+                                                  .availableBalance
+                                                  .serialize()
+                                          ? BalanceDisplayMode.fullBalance
+                                          : BalanceDisplayMode.availableBalance)
+                                      : savedDisplayMode;
 
                                   if (displayMode.serialize() ==
                                       BalanceDisplayMode.availableBalance
@@ -234,12 +252,18 @@ class DashboardPage extends BasePage {
                                     balance = balanceStore.fullBalance ?? '0.0';
                                   }
 
-                                  return Text(balance,
-                                      style: TextStyle(
-                                          color: _isDarkTheme
-                                              ? Colors.white
-                                              : Colors.black87,
-                                          fontSize: 42));
+                                  return GestureDetector(
+                                    onTapUp: (_) =>
+                                        balanceStore.isReversing = false,
+                                    onTapDown: (_) =>
+                                        balanceStore.isReversing = true,
+                                    child: Text(balance,
+                                        style: TextStyle(
+                                            color: _isDarkTheme
+                                                ? Colors.white
+                                                : Colors.black87,
+                                            fontSize: 42)),
+                                  );
                                 }),
                                 Padding(
                                   padding: EdgeInsets.only(top: 7),
