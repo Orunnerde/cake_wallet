@@ -197,6 +197,7 @@ class PrimaryImageButton extends StatelessWidget {
                   ),
                 ],
               ),
+              SizedBox(width: 20),
               Container(
                 height: 56.0,
                 child: Center(

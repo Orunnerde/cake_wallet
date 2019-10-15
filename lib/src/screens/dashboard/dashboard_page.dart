@@ -91,11 +91,10 @@ class DashboardPage extends BasePage {
                     onPressed: () {
                       Navigator.of(context).pop();
 
-                      Navigator.of(context).pushNamed(Routes.auth,
-                          arguments: [
-                            (auth, authContext) => Navigator.of(authContext)
-                                .popAndPushNamed(Routes.showKeys)
-                          ]);
+                      Navigator.of(context).pushNamed(Routes.auth, arguments: [
+                        (auth, authContext) => Navigator.of(authContext)
+                            .popAndPushNamed(Routes.showKeys)
+                      ]);
                     }),
                 CupertinoActionSheetAction(
                     child: const Text('Address book'),
@@ -162,242 +161,242 @@ class DashboardPage extends BasePage {
     else
       _isDarkTheme = false;
 
-    return NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-      return <Widget>[
-        SliverAppBar(
-          expandedHeight: 363.0,
-          floating: false,
-          pinned: true,
-          backgroundColor:
-              _isDarkTheme ? Theme.of(context).backgroundColor : Colors.white,
-          flexibleSpace: FlexibleSpaceBar(
-            background: Container(
-              padding: EdgeInsets.only(bottom: 20),
-              child: Container(
-                decoration: BoxDecoration(
-                    color: _isDarkTheme
-                        ? Theme.of(context).backgroundColor
-                        : Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Palette.shadowGreyWithOpacity,
-                        blurRadius: 10,
-                        offset: Offset(
-                          0,
-                          12,
-                        ),
-                      )
-                    ]),
-                child: Center(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.only(top: 54),
-                        child: Column(
-                          children: <Widget>[
-                            Observer(builder: (_) {
-                              final displayMode =
-                                  settingsStore.balanceDisplayMode;
-                              var title = 'XMR Hidden';
-
-                              if (displayMode.serialize() ==
-                                  BalanceDisplayMode.availableBalance
-                                      .serialize()) {
-                                title = 'XMR Available Balance';
-                              }
-
-                              if (displayMode.serialize() ==
-                                  BalanceDisplayMode.fullBalance.serialize()) {
-                                title = 'XMR Full Balance';
-                              }
-
-                              return Text(title,
-                                  style: TextStyle(
-                                      color: Palette.violet, fontSize: 16));
-                            }),
-                            Observer(builder: (_) {
-                              final displayMode =
-                                  settingsStore.balanceDisplayMode;
-                              var balance = '---';
-
-                              if (displayMode.serialize() ==
-                                  BalanceDisplayMode.availableBalance
-                                      .serialize()) {
-                                balance = balanceStore.unlockedBalance ?? '0.0';
-                              }
-
-                              if (displayMode.serialize() ==
-                                  BalanceDisplayMode.fullBalance.serialize()) {
-                                balance = balanceStore.fullBalance ?? '0.0';
-                              }
-
-                              return Text(balance,
-                                  style: TextStyle(
-                                      color: _isDarkTheme
-                                          ? Colors.white
-                                          : Colors.black87,
-                                      fontSize: 42));
-                            }),
-                            Padding(
-                              padding: EdgeInsets.only(top: 7),
-                              child: Observer(builder: (_) {
-                                final displayMode =
-                                    settingsStore.balanceDisplayMode;
-                                final symbol =
-                                    settingsStore.fiatCurrency.toString();
-                                var balance = '---';
-
-                                if (displayMode.serialize() ==
-                                    BalanceDisplayMode.availableBalance
-                                        .serialize()) {
-                                  balance =
-                                      '${balanceStore.fiatUnlockedBalance} $symbol';
-                                }
-
-                                if (displayMode.serialize() ==
-                                    BalanceDisplayMode.fullBalance
-                                        .serialize()) {
-                                  balance =
-                                      '${balanceStore.fiatFullBalance} $symbol';
-                                }
-
-                                return Text(balance,
-                                    style: TextStyle(
-                                        color: Palette.wildDarkBlue,
-                                        fontSize: 16));
-                              }),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 45),
-                              decoration: BoxDecoration(
-                                  color: Palette.containerLavender,
-                                  borderRadius: BorderRadius.circular(5)),
-                              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                              child: SizedBox(
-                                  width: 125,
-                                  child: Observer(builder: (_) {
-                                    if (syncStore.status is SyncingSyncStatus) {
-                                      return Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Image.asset(
-                                              'assets/images/refresh_icon.png',
-                                              width: 10,
-                                              height: 10,
-                                            ),
-                                            Text(
-                                                'BLOCKS REMAINING ${syncStore.status.toString()}',
-                                                style: TextStyle(
-                                                    fontSize: 8,
-                                                    color:
-                                                        Palette.wildDarkBlue))
-                                          ]);
-                                    }
-
-                                    var text = '';
-
-                                    if (syncStore.status is SyncedSyncStatus) {
-                                      text = 'SYNCRONIZED';
-                                    }
-
-                                    if (syncStore.status
-                                        is NotConnectedSyncStatus) {
-                                      text = 'NOT CONNECTED';
-                                    }
-
-                                    if (syncStore.status is FailedSyncStatus) {
-                                      text = 'FAILED CONNECT TO THE NODE';
-                                    }
-
-                                    if (syncStore.status
-                                        is StartingSyncStatus) {
-                                      text = 'STARTINT SYNC';
-                                    }
-
-                                    if (syncStore.status
-                                        is ConnectingSyncStatus) {
-                                      text = 'Connecting';
-                                    }
-
-                                    if (syncStore.status
-                                        is ConnectedSyncStatus) {
-                                      text = 'Connected';
-                                    }
-
-                                    return Center(
-                                      child: Text(text,
-                                          style: TextStyle(
-                                              fontSize: 9,
-                                              color: Palette.wildDarkBlue)),
-                                    );
-                                  })),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 50, right: 50, top: 40),
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                      child: PrimaryImageButton(
-                                    image: Image.asset(
-                                        'assets/images/send_icon.png',
-                                        height: 25,
-                                        width: 25),
-                                    text: 'Send',
-                                    onPressed: () => Navigator.of(context,
-                                            rootNavigator: true)
-                                        .pushNamed(Routes.send),
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemePurpleButton
-                                        : Palette.purple,
-                                    borderColor: _isDarkTheme
-                                        ? PaletteDark
-                                            .darkThemePurpleButtonBorder
-                                        : Palette.deepPink,
-                                  )),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                      child: PrimaryImageButton(
-                                    image: Image.asset(
-                                        'assets/images/receive_icon.png',
-                                        height: 25,
-                                        width: 25),
-                                    text: 'Receive',
-                                    onPressed: () => Navigator.of(context,
-                                            rootNavigator: true)
-                                        .pushNamed(Routes.receive),
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeBlueButton
-                                        : Palette.brightBlue,
-                                    borderColor: _isDarkTheme
-                                        ? PaletteDark.darkThemeBlueButtonBorder
-                                        : Palette.cloudySky,
-                                  ))
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ];
-    }, body: Observer(builder: (_) {
+    return Observer(builder: (_) {
       final items = transactionListStore.transactions == null
           ? []
           : formatTransactionsList(transactionListStore.transactions);
 
       return ListView.builder(
-          padding: EdgeInsets.only(left: 25, top: 10, right: 25, bottom: 15),
-          itemCount: items.length,
+          padding: EdgeInsets.only(top: 10, bottom: 15),
+          itemCount: items.length + 1,
           itemBuilder: (context, index) {
+            if (index == 0) {
+              return Container(
+                child: Container(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: _isDarkTheme
+                            ? Theme.of(context).backgroundColor
+                            : Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Palette.shadowGreyWithOpacity,
+                            blurRadius: 10,
+                            offset: Offset(
+                              0,
+                              12,
+                            ),
+                          )
+                        ]),
+                    child: Center(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.only(top: 54),
+                            child: Column(
+                              children: <Widget>[
+                                Observer(builder: (_) {
+                                  final displayMode =
+                                      settingsStore.balanceDisplayMode;
+                                  var title = 'XMR Hidden';
+
+                                  if (displayMode.serialize() ==
+                                      BalanceDisplayMode.availableBalance
+                                          .serialize()) {
+                                    title = 'XMR Available Balance';
+                                  }
+
+                                  if (displayMode.serialize() ==
+                                      BalanceDisplayMode.fullBalance
+                                          .serialize()) {
+                                    title = 'XMR Full Balance';
+                                  }
+
+                                  return Text(title,
+                                      style: TextStyle(
+                                          color: Palette.violet, fontSize: 16));
+                                }),
+                                Observer(builder: (_) {
+                                  final displayMode =
+                                      settingsStore.balanceDisplayMode;
+                                  var balance = '---';
+
+                                  if (displayMode.serialize() ==
+                                      BalanceDisplayMode.availableBalance
+                                          .serialize()) {
+                                    balance =
+                                        balanceStore.unlockedBalance ?? '0.0';
+                                  }
+
+                                  if (displayMode.serialize() ==
+                                      BalanceDisplayMode.fullBalance
+                                          .serialize()) {
+                                    balance = balanceStore.fullBalance ?? '0.0';
+                                  }
+
+                                  return Text(balance,
+                                      style: TextStyle(
+                                          color: _isDarkTheme
+                                              ? Colors.white
+                                              : Colors.black87,
+                                          fontSize: 42));
+                                }),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 7),
+                                  child: Observer(builder: (_) {
+                                    final displayMode =
+                                        settingsStore.balanceDisplayMode;
+                                    final symbol =
+                                        settingsStore.fiatCurrency.toString();
+                                    var balance = '---';
+
+                                    if (displayMode.serialize() ==
+                                        BalanceDisplayMode.availableBalance
+                                            .serialize()) {
+                                      balance =
+                                          '${balanceStore.fiatUnlockedBalance} $symbol';
+                                    }
+
+                                    if (displayMode.serialize() ==
+                                        BalanceDisplayMode.fullBalance
+                                            .serialize()) {
+                                      balance =
+                                          '${balanceStore.fiatFullBalance} $symbol';
+                                    }
+
+                                    return Text(balance,
+                                        style: TextStyle(
+                                            color: Palette.wildDarkBlue,
+                                            fontSize: 16));
+                                  }),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(top: 45),
+                                  decoration: BoxDecoration(
+                                      color: Palette.containerLavender,
+                                      borderRadius: BorderRadius.circular(5)),
+                                  padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                  child: SizedBox(
+                                      width: 125,
+                                      child: Observer(builder: (_) {
+                                        if (syncStore.status
+                                            is SyncingSyncStatus) {
+                                          return Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                Image.asset(
+                                                  'assets/images/refresh_icon.png',
+                                                  width: 10,
+                                                  height: 10,
+                                                ),
+                                                Text(
+                                                    'BLOCKS REMAINING ${syncStore.status.toString()}',
+                                                    style: TextStyle(
+                                                        fontSize: 8,
+                                                        color: Palette
+                                                            .wildDarkBlue))
+                                              ]);
+                                        }
+
+                                        var text = '';
+
+                                        if (syncStore.status
+                                            is SyncedSyncStatus) {
+                                          text = 'SYNCRONIZED';
+                                        }
+
+                                        if (syncStore.status
+                                            is NotConnectedSyncStatus) {
+                                          text = 'NOT CONNECTED';
+                                        }
+
+                                        if (syncStore.status
+                                            is FailedSyncStatus) {
+                                          text = 'FAILED CONNECT TO THE NODE';
+                                        }
+
+                                        if (syncStore.status
+                                            is StartingSyncStatus) {
+                                          text = 'STARTING SYNC';
+                                        }
+
+                                        if (syncStore.status
+                                            is ConnectingSyncStatus) {
+                                          text = 'CONNECTING';
+                                        }
+
+                                        if (syncStore.status
+                                            is ConnectedSyncStatus) {
+                                          text = 'CONNECTED';
+                                        }
+
+                                        return Center(
+                                          child: Text(text,
+                                              style: TextStyle(
+                                                  fontSize: 9,
+                                                  color: Palette.wildDarkBlue)),
+                                        );
+                                      })),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 50, right: 50, top: 40, bottom: 20),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                          child: PrimaryImageButton(
+                                        image: Image.asset(
+                                            'assets/images/send_icon.png',
+                                            height: 25,
+                                            width: 25),
+                                        text: 'Send',
+                                        onPressed: () => Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pushNamed(Routes.send),
+                                        color: _isDarkTheme
+                                            ? PaletteDark.darkThemePurpleButton
+                                            : Palette.purple,
+                                        borderColor: _isDarkTheme
+                                            ? PaletteDark
+                                                .darkThemePurpleButtonBorder
+                                            : Palette.deepPink,
+                                      )),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                          child: PrimaryImageButton(
+                                        image: Image.asset(
+                                            'assets/images/receive_icon.png',
+                                            height: 25,
+                                            width: 25),
+                                        text: 'Receive',
+                                        onPressed: () => Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pushNamed(Routes.receive),
+                                        color: _isDarkTheme
+                                            ? PaletteDark.darkThemeBlueButton
+                                            : Palette.brightBlue,
+                                        borderColor: _isDarkTheme
+                                            ? PaletteDark
+                                                .darkThemeBlueButtonBorder
+                                            : Palette.cloudySky,
+                                      ))
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
+
+            index -= 1;
             final item = items[index];
 
             if (item is DateSectionItem) {
@@ -439,7 +438,8 @@ class DashboardPage extends BasePage {
                       .pushNamed(Routes.transactionDetails, arguments: item);
                 },
                 child: Container(
-                  padding: EdgeInsets.only(top: 14, bottom: 14),
+                  padding:
+                      EdgeInsets.only(top: 14, bottom: 14, left: 20, right: 20),
                   decoration: BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
@@ -500,7 +500,7 @@ class DashboardPage extends BasePage {
 
             return Container();
           });
-    }));
+    });
   }
 
   Future _presentReconnectAlert(BuildContext context) async {

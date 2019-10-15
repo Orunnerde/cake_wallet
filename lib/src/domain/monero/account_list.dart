@@ -35,8 +35,15 @@ class AccountList {
   }
 
   Future<List<Account>> getAll() async {
-    List subaddresses = await _platform.invokeMethod('getAllAccounts');
-    return subaddresses.map((tx) => Account.fromMap(tx)).toList();
+    List accounts = await _platform.invokeMethod('getAllAccounts');
+    return accounts.map((acc) {
+      // Replace label of first account from Primary account to Primary
+      if (acc['id'] == "0" && acc['label'] == "Primary account") {
+        acc['label'] = 'Primary';
+      }
+
+      return Account.fromMap(acc);
+    }).toList();
   }
 
   Future addAccount({String label}) async {
