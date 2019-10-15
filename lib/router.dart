@@ -1,3 +1,4 @@
+import 'package:cake_wallet/src/screens/trade_history/trade_details_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -252,7 +253,8 @@ class Router {
         return CupertinoPageRoute(builder: (_) => DisclaimerPage());
 
       case Routes.readDisclaimer:
-        return CupertinoPageRoute(builder: (_) => DisclaimerPage(isReadOnly: true));
+        return CupertinoPageRoute(
+            builder: (_) => DisclaimerPage(isReadOnly: true));
 
       case Routes.seedAlert:
         return CupertinoPageRoute(builder: (_) => SeedAlert());
@@ -438,6 +440,19 @@ class Router {
               builder: (_) =>
                   TradeHistoryStore(tradeHistory: TradeHistory(db: db)),
               child: TradeHistoryPage());
+        });
+
+      case Routes.tradeDetails:
+        return MaterialPageRoute(builder: (context) {
+          return MultiProvider(providers: [
+            ProxyProvider<SettingsStore, ExchangeTradeStore>(
+              builder: (_, settingsStore, __) => ExchangeTradeStore(
+                  trade: settings.arguments,
+                  walletStore: WalletStore(
+                      walletService: WalletService(),
+                      settingsStore: settingsStore)),
+            )
+          ], child: TradeDetailsPage());
         });
 
       case Routes.subaddressList:

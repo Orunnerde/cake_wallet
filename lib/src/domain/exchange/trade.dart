@@ -18,7 +18,7 @@ class Trade {
 
   static Trade fromMap(Map map) {
     return Trade(
-        id: map['name'],
+        id: map['id'],
         provider: ExchangeProviderDescription.deserialize(raw: map['provider']),
         from: CryptoCurrency.deserialize(raw: map['input']),
         to: CryptoCurrency.deserialize(raw: map['output']),
