@@ -38,8 +38,10 @@ class ExchangePage extends BasePage {
     else
       _isDarkTheme = false;
 
-    return InkWell(
-      onTap: () => _presentProviderPicker(context),
+    return FlatButton(
+      onPressed: () => _presentProviderPicker(context),
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -59,7 +61,7 @@ class ExchangePage extends BasePage {
                 arrowBottomPurple
               ]),
           Observer(
-              builder: (_) => Text(exchangeStore.provider.title,
+              builder: (_) => Text('${exchangeStore.provider.title}',
                   style: TextStyle(
                       fontSize: 10.0,
                       fontWeight: FontWeight.w400,
