@@ -331,13 +331,7 @@ class SettingsState extends State<Settings> {
                         ),
                       ),
                       trailing: _cakeArrowImage,
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (BuildContext context) =>
-                                    ChangeLanguage()));
-                      },
+                      onTap: () => Navigator.pushNamed(context, Routes.changeLanguage)
                     ),
                     Container(
                       padding: EdgeInsets.only(

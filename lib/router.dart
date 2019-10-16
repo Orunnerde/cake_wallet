@@ -75,6 +75,7 @@ import 'package:cake_wallet/src/screens/trade_history/trade_history_page.dart';
 import 'package:cake_wallet/src/screens/exchange_trade/exchange_funds_page.dart';
 import 'package:cake_wallet/src/screens/exchange_trade/exchange_trade_page.dart';
 import 'package:cake_wallet/src/screens/subaddress/subaddress_list_page.dart';
+import 'package:cake_wallet/src/screens/settings/change_language.dart';
 
 class Router {
   static Route<dynamic> generateRoute(
@@ -466,6 +467,11 @@ class Router {
                       builder: (_) =>
                           SubaddressListStore(walletService: walletService))
                 ], child: SubaddressListPage()));
+
+      case Routes.changeLanguage:
+        return MaterialPageRoute(
+            builder: (_) => ChangeLanguage()
+        );
 
       default:
         return MaterialPageRoute(

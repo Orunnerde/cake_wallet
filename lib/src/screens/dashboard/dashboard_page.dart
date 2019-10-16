@@ -19,6 +19,7 @@ import 'package:cake_wallet/src/screens/dashboard/date_section_item.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class DashboardPage extends BasePage {
   static final transactionDateFormat = DateFormat("dd.MM.yyyy, HH:mm");
@@ -74,7 +75,8 @@ class DashboardPage extends BasePage {
                     onPressed: () => Navigator.of(context)
                         .popAndPushNamed(Routes.accountList)),
                 CupertinoActionSheetAction(
-                    child: const Text('Wallets'),
+                    child: Text(S.of(context).Wallets),
+                    //const Text('Wallets'),
                     onPressed: () => Navigator.of(context)
                         .popAndPushNamed(Routes.walletList)),
                 CupertinoActionSheetAction(

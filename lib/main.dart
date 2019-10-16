@@ -23,6 +23,9 @@ import 'package:cake_wallet/src/domain/common/sync_status.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'theme_changer.dart';
 import 'themes.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:cake_wallet/generated/i18n.dart';
+import 'package:cake_wallet/src/domain/common/language.dart';
 
 void main() async {
   final sharedPreferences = await SharedPreferences.getInstance();
@@ -126,13 +129,16 @@ class CakeWalletApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ThemeChanger>(
       builder: (_) => ThemeChanger(Themes.lightTheme),
-      child: MaterialAppWithTheme(
-          sharedPreferences: sharedPreferences,
-          walletService: walletService,
-          walletListService: walletListService,
-          userService: userService,
-          db: db,
-          settingsStore: settingsStore),
+      child: ChangeNotifierProvider<Language>(
+        builder: (_) => Language(settingsStore.languageCode),
+        child: MaterialAppWithTheme(
+            sharedPreferences: sharedPreferences,
+            walletService: walletService,
+            walletListService: walletListService,
+            userService: userService,
+            db: db,
+            settingsStore: settingsStore),
+      )
     );
   }
 }
@@ -157,6 +163,7 @@ class MaterialAppWithTheme extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final theme = Provider.of<ThemeChanger>(context);
+    final currentLanguage = Provider.of<Language>(context);
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
       systemNavigationBarColor: Colors.black,
@@ -168,6 +175,14 @@ class MaterialAppWithTheme extends StatelessWidget {
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: theme.getTheme(),
+          localizationsDelegates: [
+            S.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: S.delegate.supportedLocales,
+          locale: Locale(currentLanguage.getCurrentLanguage()),
           onGenerateRoute: (settings) => Router.generateRoute(sharedPreferences,
               walletListService, walletService, userService, db, settings),
           home: MultiProvider(providers: [

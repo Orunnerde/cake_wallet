@@ -17,7 +17,7 @@ abstract class SettingsStoreBase with Store {
   static const currentTransactionPriorityKey = 'current_fee_priority';
   static const currentBalanceDisplayModeKey = 'current_balance_display_mode';
   static const shouldSaveRecipientAddressKey = 'save_recipient_address';
-  static const currentThemeKey = 'current_theme';
+  static const currentLanguageCode = 'language_code';
 
   static Future<SettingsStore> load(
       {@required SharedPreferences sharedPreferences,
@@ -33,6 +33,9 @@ abstract class SettingsStoreBase with Store {
         raw: sharedPreferences.getInt(currentBalanceDisplayModeKey));
     final shouldSaveRecipientAddress =
         sharedPreferences.getBool(shouldSaveRecipientAddressKey);
+    final savedLanguageCode =
+    sharedPreferences.getString(currentLanguageCode) == null ? 'en'
+        : sharedPreferences.getString(currentLanguageCode);
 
     final store = SettingsStore(
         sharedPreferences: sharedPreferences,
@@ -40,7 +43,8 @@ abstract class SettingsStoreBase with Store {
         initialFiatCurrency: currentFiatCurrency,
         initialTransactionPriority: currentTransactionPriority,
         initialBalanceDisplayMode: currentBalanceDisplayMode,
-        initialSaveRecipientAddress: shouldSaveRecipientAddress);
+        initialSaveRecipientAddress: shouldSaveRecipientAddress,
+        initialLanguageCode: savedLanguageCode);
     await store.loadSettings();
 
     return store;
@@ -61,6 +65,9 @@ abstract class SettingsStoreBase with Store {
   @observable
   bool shouldSaveRecipientAddress;
 
+  @observable
+  String languageCode;
+
   SharedPreferences _sharedPreferences;
   NodeList _nodeList;
 
@@ -70,13 +77,21 @@ abstract class SettingsStoreBase with Store {
       @required FiatCurrency initialFiatCurrency,
       @required TransactionPriority initialTransactionPriority,
       @required BalanceDisplayMode initialBalanceDisplayMode,
-      @required bool initialSaveRecipientAddress}) {
+      @required bool initialSaveRecipientAddress,
+      @required String initialLanguageCode}) {
     fiatCurrency = initialFiatCurrency;
     transactionPriority = initialTransactionPriority;
     balanceDisplayMode = initialBalanceDisplayMode;
     shouldSaveRecipientAddress = initialSaveRecipientAddress;
     _sharedPreferences = sharedPreferences;
     _nodeList = nodeList;
+    languageCode = initialLanguageCode;
+  }
+
+  @action
+  Future saveLanguageCode({@required String languageCode}) async {
+    this.languageCode = languageCode;
+    await _sharedPreferences.setString(currentLanguageCode, languageCode);
   }
 
   @action
