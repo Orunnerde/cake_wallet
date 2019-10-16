@@ -14,7 +14,7 @@ class SubaddressListStore = SubaddressListStoreBase with _$SubaddressListStore;
 
 abstract class SubaddressListStoreBase with Store {
   @observable
-  List<Subaddress> subaddresses;
+  ObservableList<Subaddress> subaddresses;
 
   SubaddressList _subaddressList;
   StreamSubscription<Wallet> _onWalletChangeSubscription;
@@ -23,7 +23,7 @@ abstract class SubaddressListStoreBase with Store {
   Account _account;
 
   SubaddressListStoreBase({@required WalletService walletService}) {
-    subaddresses = [];
+    subaddresses = ObservableList<Subaddress>();
 
     if (walletService.currentWallet != null) {
       _onWalletChanged(walletService.currentWallet);
@@ -49,7 +49,7 @@ abstract class SubaddressListStoreBase with Store {
 
   Future _updateSubaddressList({int accountIndex}) async {
     await _subaddressList.refresh(accountIndex: accountIndex);
-    subaddresses = await _subaddressList.getAll();
+    subaddresses = ObservableList.of(await _subaddressList.getAll());
   }
 
   Future _onWalletChanged(Wallet wallet) async {
@@ -61,7 +61,7 @@ abstract class SubaddressListStoreBase with Store {
       _account = wallet.account.value;
       _subaddressList = wallet.getSubaddress();
       _onSubaddressesChangeSubscription = _subaddressList.subaddresses
-          .listen((subaddress) => subaddresses = subaddress);
+          .listen((subaddress) => subaddresses = ObservableList.of(subaddress));
       await _updateSubaddressList(accountIndex: _account.id);
 
       _onAccountChangeSubscription = wallet.account.listen((account) async {

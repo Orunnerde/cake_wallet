@@ -18,8 +18,10 @@ class SubaddressList {
   }
 
   Future update({int accountIndex}) async {
-    if (_isUpdating) { return; }
-    
+    if (_isUpdating) {
+      return;
+    }
+
     try {
       _isUpdating = true;
       await refresh(accountIndex: accountIndex);
@@ -35,7 +37,13 @@ class SubaddressList {
   Future<List<Subaddress>> getAll() async {
     try {
       List subaddresses = await _platform.invokeMethod('getAllSubaddresses');
-      return subaddresses.map((tx) => Subaddress.fromMap(tx)).toList();
+      return subaddresses.map((sub) {
+        // Replace label of first subaddress from Primary account to Primary
+        if (sub['id'] == "0" && sub['label'] == "Primary account") {
+          sub['label'] = 'Primary';
+        }
+        return Subaddress.fromMap(sub);
+      }).toList();
     } on PlatformException catch (e) {
       print(e);
       throw e;
@@ -70,13 +78,13 @@ class SubaddressList {
   }
 
   Future refresh({int accountIndex}) async {
-    if (_isRefreshing) { return; }
+    if (_isRefreshing) {
+      return;
+    }
 
     try {
       _isRefreshing = true;
-      final arguments = {
-        'accountIndex': accountIndex
-      };
+      final arguments = {'accountIndex': accountIndex};
       await _platform.invokeMethod('refreshSubaddresses', arguments);
       _isRefreshing = false;
     } on PlatformException catch (e) {

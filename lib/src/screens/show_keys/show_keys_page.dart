@@ -5,6 +5,8 @@ import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class ShowKeysPage extends BasePage {
 
@@ -14,9 +16,14 @@ class ShowKeysPage extends BasePage {
   @override
   Widget body(BuildContext context) {
     final walletKeysStore = Provider.of<WalletKeysStore>(context);
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
 
     return Container(
-        padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+        padding: EdgeInsets.only(top: 20.0, bottom: 20.0, left: 20, right: 20),
         child: Observer(
           builder: (_) {
             Map<String, String> keysMap = {
@@ -50,7 +57,9 @@ class ShowKeysPage extends BasePage {
                       Container(
                         padding: EdgeInsets.only(left: 30.0, right: 20.0),
                         child: Divider(
-                          color: Palette.lightGrey,
+                          color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                              : Palette.lightGrey,
+                          height: 1.0,
                         ),
                       ),
                     ],

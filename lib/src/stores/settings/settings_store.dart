@@ -1,11 +1,11 @@
-import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
-import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
-import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cake_wallet/src/domain/common/node_list.dart';
 import 'package:cake_wallet/src/domain/common/node.dart';
+import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
+import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
+import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
 
 part 'settings_store.g.dart';
 
@@ -17,6 +17,7 @@ abstract class SettingsStoreBase with Store {
   static const currentTransactionPriorityKey = 'current_fee_priority';
   static const currentBalanceDisplayModeKey = 'current_balance_display_mode';
   static const shouldSaveRecipientAddressKey = 'save_recipient_address';
+  static const currentThemeKey = 'current_theme';
 
   static Future<SettingsStore> load(
       {@required SharedPreferences sharedPreferences,

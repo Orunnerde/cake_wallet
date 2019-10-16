@@ -21,6 +21,9 @@ abstract class BalanceStoreBase with Store {
   @observable
   String fiatUnlockedBalance;
 
+  @observable
+  bool isReversing;
+
   WalletService _walletService;
   StreamSubscription<Wallet> _onWalletChangeSubscription;
   StreamSubscription<Wallet> _onBalanceChangeSubscription;
@@ -33,6 +36,7 @@ abstract class BalanceStoreBase with Store {
     unlockedBalance = unlockedBalance;
     fiatFullBalance = '0.0';
     fiatUnlockedBalance = '0.0';
+    isReversing = false;
     _walletService = walletService;
 
     if (_walletService.currentWallet != null) {

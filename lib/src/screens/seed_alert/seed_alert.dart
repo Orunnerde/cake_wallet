@@ -2,15 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
+import 'package:provider/provider.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class SeedAlert extends StatelessWidget{
   final imageSeed = Image.asset('assets/images/seedIco.png');
 
   @override
   Widget build(BuildContext context) {
+
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
+
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.all(20.0),
@@ -77,7 +87,11 @@ class SeedAlert extends StatelessWidget{
               ),
               PrimaryButton(
                 onPressed: (){},
-                text: 'I understand'
+                text: 'I understand',
+                color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
+                    : Palette.purple,
+                borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
+                    : Palette.deepPink,
               ),
             ],
           ),

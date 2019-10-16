@@ -61,6 +61,12 @@ abstract class Wallet {
 
   Observable<SyncStatus> syncStatus;
 
+  Observable<String> get name;
+  
+  Observable<String> get address;
+
+  Future updateInfo();
+
   Future<String> getFilename();
 
   Future<String> getName();

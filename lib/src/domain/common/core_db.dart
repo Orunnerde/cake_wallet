@@ -40,6 +40,7 @@ class CoreDB {
         await db.execute('CREATE TABLE ${Contact.tableName}' +
             '(${Contact.primaryKey} INTEGER PRIMARY KEY,' +
             '${Contact.nameColumn} TEXT,' +
+            '${Contact.addressColumn} TEXT,' +
             '${Contact.typeColumn} NUMERIC);');
         await db.execute('CREATE TABLE ${TradeHistory.tableName} ' +
             '(${TradeHistory.idColumn} TEXT PRIMARY KEY,' +

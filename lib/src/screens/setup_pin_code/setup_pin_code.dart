@@ -32,7 +32,6 @@ class SetupPinCodeForm extends PinCodeWidget {
 
 class _SetupPinCodeFormState<WidgetType extends SetupPinCodeForm>
     extends PinCodeState<WidgetType> {
-  static final backArrowImage = Image.asset('assets/images/back_arrow.png');
 
   bool isEnteredOriginalPin() => !(_originalPin.length == 0);
   Function(BuildContext) onPinCodeSetup;

@@ -43,6 +43,11 @@ abstract class ExchangeTradeStoreBase with Store {
   Future _updateTrade() async {
     try {
       final updatedTrade = await _provider.findTradeById(id: trade.id);
+      
+      if (updatedTrade.createdAt == null && trade.createdAt != null) {
+        updatedTrade.createdAt = trade.createdAt;
+      }
+
       trade = updatedTrade;
       print('Trade updated');
     } catch (e) {

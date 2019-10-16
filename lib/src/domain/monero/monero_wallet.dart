@@ -13,6 +13,7 @@ import 'package:cake_wallet/src/domain/monero/account_list.dart';
 import 'package:cake_wallet/src/domain/monero/subaddress_list.dart';
 import 'package:cake_wallet/src/domain/monero/monero_transaction_creation_credentials.dart';
 import 'package:cake_wallet/src/domain/monero/monero_transaction_history.dart';
+import 'package:cake_wallet/src/domain/monero/subaddress.dart';
 import 'package:sqflite/sqflite.dart';
 
 const moneroBlockSize = 1000;
@@ -107,19 +108,33 @@ class MoneroWallet extends Wallet {
     return wallet;
   }
 
+  WalletType getType() => WalletType.monero;
   get syncStatus => _syncStatus.stream;
   get onBalanceChange => _onBalanceChange.stream;
   get account => _account.stream;
 
-  set account(Account account) => _account.add(account);
+  set account(Account account) {
+    _account.add(account);
+
+    getSubaddress()
+        .refresh(accountIndex: account.id)
+        .then((_) => getSubaddress().getAll())
+        .then((subaddresses) => _subaddress.value = subaddresses[0]);
+  }
 
   bool isRecovery;
   Function(int height) onHeightChange;
 
-  BehaviorSubject<Account> _account;
+  Observable<String> get name => _name.stream;
+  Observable<String> get address => _address.stream;
+  Observable<Subaddress> get subaddress => _subaddress.stream;
 
+  BehaviorSubject<Account> _account;
   BehaviorSubject<Wallet> _onBalanceChange;
   BehaviorSubject<SyncStatus> _syncStatus;
+  BehaviorSubject<String> _name;
+  BehaviorSubject<String> _address;
+  BehaviorSubject<Subaddress> _subaddress;
   int _cachedBlockchainHeight;
   bool _isSaving;
   int _lastSaveTime;
@@ -134,10 +149,12 @@ class MoneroWallet extends Wallet {
     _isSaving = false;
     _lastSaveTime = 0;
     _lastRefreshTime = 0;
-
+    _name = BehaviorSubject<String>();
+    _address = BehaviorSubject<String>();
     _syncStatus = BehaviorSubject<SyncStatus>();
     _onBalanceChange = BehaviorSubject<Wallet>();
     _account = BehaviorSubject<Account>()..add(Account(id: 0));
+    _subaddress = BehaviorSubject<Subaddress>();
 
     walletHeightChannel.setMessageHandler((h) async {
       final height = h.getUint64(0);
@@ -209,7 +226,15 @@ class MoneroWallet extends Wallet {
       ..getAll().then((account) => this.account.add(account[0]));
   }
 
-  WalletType getType() => WalletType.monero;
+  Future updateInfo() async {
+    _name.value = await getName();
+    _address.value = await getAddress();
+    final subaddressList = getSubaddress();
+    await subaddressList.refresh(
+        accountIndex: _account.value != null ? _account.value.id : 0);
+    final subaddresses = await subaddressList.getAll();
+    _subaddress.value = subaddresses.first;
+  }
 
   Future<String> getFilename() async {
     return getValue(key: 'getFilename');
@@ -415,5 +440,9 @@ class MoneroWallet extends Wallet {
     await Wallet.updateWalletData(
         db: db, name: name, isRecovery: false, type: WalletType.monero);
     isRecovery = true;
+  }
+
+  void changeCurrentSubaddress(Subaddress subaddress) {
+    _subaddress.value = subaddress;
   }
 }

@@ -13,6 +13,8 @@ import 'package:cake_wallet/src/stores/wallet_restoration/wallet_restoration_sto
 import 'package:cake_wallet/src/stores/wallet_restoration/wallet_restoration_state.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/widgets/blockchain_height_widget.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class RestoreWalletFromSeedPage extends BasePage {
   final WalletListService walletsService;
@@ -44,6 +46,12 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
   @override
   Widget build(BuildContext context) {
     final walletRestorationStore = Provider.of<WalletRestorationStore>(context);
+
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
 
     reaction((_) => walletRestorationStore.state, (state) {
       if (state is WalletRestoredSuccessfully) {
@@ -89,16 +97,23 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
                             child: Container(
                           padding: EdgeInsets.only(top: 20.0),
                           child: TextFormField(
+                            style: TextStyle(fontSize: 14.0),
                             controller: _nameController,
                             decoration: InputDecoration(
-                                hintStyle: TextStyle(color: Palette.lightBlue),
+                                hintStyle: TextStyle(
+                                    color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                        : Palette.lightBlue),
                                 hintText: 'Wallet name',
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: Palette.lightGrey, width: 2.0)),
+                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                            : Palette.lightGrey,
+                                        width: 1.0)),
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: Palette.lightGrey, width: 2.0))),
+                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                            : Palette.lightGrey,
+                                        width: 1.0))),
                             validator: (value) {
                               return null;
                             },
@@ -113,19 +128,26 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
                             child: Container(
                           padding: EdgeInsets.only(top: 20.0),
                           child: TextFormField(
+                            style: TextStyle(fontSize: 14.0),
                             controller: _seedController,
                             keyboardType: TextInputType.multiline,
                             maxLines: null,
                             textInputAction: TextInputAction.done,
                             decoration: InputDecoration(
-                                hintStyle: TextStyle(color: Palette.lightBlue),
+                                hintStyle: TextStyle(
+                                    color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                        : Palette.lightBlue),
                                 hintText: 'Seed',
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: Palette.lightGrey, width: 2.0)),
+                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                            : Palette.lightGrey,
+                                        width: 1.0)),
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: Palette.lightGrey, width: 2.0))),
+                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                            : Palette.lightGrey,
+                                        width: 1.0))),
                             validator: (value) {
                               return null;
                             },
@@ -150,7 +172,12 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
                             },
                             isLoading: walletRestorationStore.state
                                 is WalletIsRestoring,
-                            text: 'Recover');
+                            text: 'Recover',
+                            color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
+                                : Palette.purple,
+                            borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
+                                : Palette.deepPink,
+                        );
                       })))
             ],
           ),

@@ -1,31 +1,47 @@
 import 'dart:ui';
-import 'package:cake_wallet/src/domain/exchange/exchange_provider_description.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/src/domain/exchange/exchange_provider_description.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/src/domain/exchange/xmrto/xmrto_exchange_provider.dart';
 import 'package:cake_wallet/src/stores/exchange/exchange_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/screens/exchange/widgets/exchange_card.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/widgets/picker.dart';
-import 'package:cake_wallet/src/domain/exchange/xmrto/xmrto_exchange_provider.dart';
 import 'package:cake_wallet/src/stores/exchange/exchange_trade_state.dart';
 import 'package:cake_wallet/src/stores/exchange/limits_state.dart';
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/routes.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class ExchangePage extends BasePage {
   String get title => 'Exchange';
 
+  final Image arrowBottomPurple = Image.asset(
+    'assets/images/arrow_bottom_purple_icon.png',
+    height: 8,
+  );
+
   @override
   Widget middle(BuildContext context) {
     final exchangeStore = Provider.of<ExchangeStore>(context);
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
 
-    return InkWell(
-      onTap: () => _presentProviderPicker(context),
+    if (_themeChanger.getTheme() == Themes.darkTheme)
+      _isDarkTheme = true;
+    else
+      _isDarkTheme = false;
+
+    return FlatButton(
+      onPressed: () => _presentProviderPicker(context),
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -35,18 +51,23 @@ class ExchangePage extends BasePage {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text('Exchange',
-                    style:
-                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400)),
+                    style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w400,
+                        color: _isDarkTheme
+                            ? PaletteDark.darkThemeTitle
+                            : Colors.black)),
                 SizedBox(width: 5),
-                Image.asset(
-                  'assets/images/arrow_bottom_purple_icon.png',
-                  height: 8,
-                )
+                arrowBottomPurple
               ]),
           Observer(
-              builder: (_) => Text(exchangeStore.provider.title,
-                  style:
-                      TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400)))
+              builder: (_) => Text('${exchangeStore.provider.title}',
+                  style: TextStyle(
+                      fontSize: 10.0,
+                      fontWeight: FontWeight.w400,
+                      color: _isDarkTheme
+                          ? PaletteDark.darkThemeGrey
+                          : Colors.black)))
         ],
       ),
     );
@@ -54,13 +75,23 @@ class ExchangePage extends BasePage {
 
   @override
   Widget leading(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme)
+      _isDarkTheme = true;
+    else
+      _isDarkTheme = false;
+
     return SizedBox(
         width: 55,
         child: FlatButton(
           padding: EdgeInsets.all(0),
           child: Text('History',
               style: TextStyle(
-                  color: Colors.black,
+                  color: _isDarkTheme
+                      ? PaletteDark.darkThemeTitleViolet
+                      : Colors.black,
                   fontWeight: FontWeight.w500,
                   fontSize: 16)),
           onPressed: () => Navigator.of(context).pushNamed(Routes.tradeHistory),
@@ -71,6 +102,14 @@ class ExchangePage extends BasePage {
   Widget trailing(BuildContext context) {
     final exchangeStore = Provider.of<ExchangeStore>(context);
 
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme)
+      _isDarkTheme = true;
+    else
+      _isDarkTheme = false;
+
     return SizedBox(
         width: 50,
         child: FlatButton(
@@ -78,7 +117,9 @@ class ExchangePage extends BasePage {
             child: Text(
               'Clear',
               style: TextStyle(
-                  color: Color.fromRGBO(155, 172, 197, 1),
+                  color: _isDarkTheme
+                      ? PaletteDark.darkThemeTitleViolet
+                      : Palette.wildDarkBlue,
                   fontWeight: FontWeight.w500,
                   fontSize: 16),
             ),
@@ -113,6 +154,15 @@ class ExchangeFormState extends State<ExchangeForm> {
   final receiveKey = GlobalKey<ExchangeCardState>();
   var _isReactionsSet = false;
 
+  final Image arrowBottomPurple = Image.asset(
+    'assets/images/arrow_bottom_purple_icon.png',
+    height: 8,
+  );
+  final Image arrowBottomCakeGreen = Image.asset(
+    'assets/images/arrow_bottom_cake_green.png',
+    height: 8,
+  );
+
   @override
   Widget build(BuildContext context) {
     final exchangeStore = Provider.of<ExchangeStore>(context);
@@ -130,6 +180,14 @@ class ExchangeFormState extends State<ExchangeForm> {
     WidgetsBinding.instance.addPostFrameCallback(
         (_) => _setReactions(context, exchangeStore, walletStore));
 
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme)
+      _isDarkTheme = true;
+    else
+      _isDarkTheme = false;
+
     return Container(
       padding: EdgeInsets.only(left: 20, right: 20),
       child: SingleChildScrollView(
@@ -141,44 +199,90 @@ class ExchangeFormState extends State<ExchangeForm> {
               child: Text(
                 'You will send',
                 style: TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: 18, height: 1.1),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    height: 1.1,
+                    color: _isDarkTheme
+                        ? PaletteDark.darkThemeTitle
+                        : Colors.black),
               ),
             ),
             ExchangeCard(
-                key: depositKey,
-                initialCurrency: exchangeStore.depositCurrency,
-                initialWalletName: depositWalletName,
-                initialIsActive:
-                    !(exchangeStore.provider is XMRTOExchangeProvider),
-                isAmountEstimated:
-                    exchangeStore.provider is XMRTOExchangeProvider,
-                currencies: CryptoCurrency.all,
-                onCurrencySelected: (currency) =>
-                    exchangeStore.changeDepositCurrency(currency: currency)),
+              key: depositKey,
+              initialCurrency: exchangeStore.depositCurrency,
+              initialWalletName: depositWalletName,
+              initialAddress: exchangeStore.depositCurrency == walletStore.type
+                  ? walletStore.address
+                  : null,
+              initialIsAmountEditable:
+                  !(exchangeStore.provider is XMRTOExchangeProvider),
+              initialIsAddressEditable:
+                  !(exchangeStore.provider is XMRTOExchangeProvider),
+              isAmountEstimated:
+                  exchangeStore.provider is XMRTOExchangeProvider,
+              currencies: CryptoCurrency.all,
+              onCurrencySelected: (currency) =>
+                  exchangeStore.changeDepositCurrency(currency: currency),
+              imageArrow: arrowBottomPurple,
+            ),
             SizedBox(height: 35),
             Padding(
                 padding: EdgeInsets.only(bottom: 20),
                 child: Text(
                   'You will get',
                   style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 18, height: 1.1),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      height: 1.1,
+                      color: _isDarkTheme
+                          ? PaletteDark.darkThemeTitle
+                          : Colors.black),
                 )),
-            ExchangeCard(
-                key: receiveKey,
-                initialCurrency: exchangeStore.receiveCurrency,
-                initialWalletName: receiveWalletName,
-                initialIsActive:
-                    exchangeStore.provider is XMRTOExchangeProvider,
-                isAmountEstimated:
-                    !(exchangeStore.provider is XMRTOExchangeProvider),
-                currencies: CryptoCurrency.all,
-                onCurrencySelected: (currency) =>
-                    exchangeStore.changeReceiveCurrency(currency: currency)),
-            SizedBox(height: 35),
+            Observer(
+                builder: (_) => ExchangeCard(
+                      key: receiveKey,
+                      initialCurrency: exchangeStore.receiveCurrency,
+                      initialWalletName: receiveWalletName,
+                      initialAddress:
+                          exchangeStore.receiveCurrency == walletStore.type
+                              ? walletStore.address
+                              : null,
+                      initialIsAmountEditable:
+                          exchangeStore.provider is XMRTOExchangeProvider,
+                      initialIsAddressEditable:
+                          exchangeStore.provider is XMRTOExchangeProvider,
+                      isAmountEstimated:
+                          !(exchangeStore.provider is XMRTOExchangeProvider),
+                      currencies: CryptoCurrency.all,
+                      onCurrencySelected: (currency) => exchangeStore
+                          .changeReceiveCurrency(currency: currency),
+                      imageArrow: arrowBottomCakeGreen,
+                    )),
+            Padding(
+              padding: EdgeInsets.only(top: 35, bottom: 15),
+              child: Observer(builder: (_) {
+                final description =
+                    exchangeStore.provider is XMRTOExchangeProvider
+                        ? 'The receive amount is guaranteed'
+                        : 'The receive amount is an estimate';
+                return Center(
+                  child: Text(
+                    description,
+                    style: TextStyle(color: Palette.blueGrey, fontSize: 12),
+                  ),
+                );
+              }),
+            ),
             Observer(
                 builder: (_) => LoadingPrimaryButton(
-                      text: 'Create exchange',
+                      text: 'Exchange',
                       onPressed: () => exchangeStore.createTrade(),
+                      color: _isDarkTheme
+                          ? PaletteDark.darkThemePurpleButton
+                          : Palette.purple,
+                      borderColor: _isDarkTheme
+                          ? PaletteDark.darkThemePurpleButtonBorder
+                          : Palette.deepPink,
                       isLoading: exchangeStore.tradeState is TradeIsCreating,
                     )),
             Observer(builder: (_) {
@@ -277,11 +381,15 @@ class ExchangeFormState extends State<ExchangeForm> {
       final isReversed = provider is XMRTOExchangeProvider;
 
       if (isReversed) {
-        receiveKey.currentState.active();
-        depositKey.currentState.disactive();
+        receiveKey.currentState.isAddressEditable(isEditable: true);
+        receiveKey.currentState.isAmountEditable(isEditable: true);
+        depositKey.currentState.isAddressEditable(isEditable: false);
+        depositKey.currentState.isAmountEditable(isEditable: false);
       } else {
-        receiveKey.currentState.disactive();
-        depositKey.currentState.active();
+        receiveKey.currentState.isAddressEditable(isEditable: true);
+        receiveKey.currentState.isAmountEditable(isEditable: false);
+        depositKey.currentState.isAddressEditable(isEditable: true);
+        depositKey.currentState.isAmountEditable(isEditable: true);
       }
 
       depositKey.currentState.changeIsAmountEstimated(isReversed);
@@ -356,6 +464,16 @@ class ExchangeFormState extends State<ExchangeForm> {
     receiveAmountController.addListener(() {
       if (receiveAmountController.text != store.receiveAmount) {
         store.changeReceiveAmount(amount: receiveAmountController.text);
+      }
+    });
+
+    reaction((_) => walletStore.address, (address) {
+      if (store.depositCurrency == CryptoCurrency.xmr) {
+        depositKey.currentState.changeAddress(address: address);
+      }
+
+      if (store.receiveCurrency == CryptoCurrency.xmr) {
+        receiveKey.currentState.changeAddress(address: address);
       }
     });
 

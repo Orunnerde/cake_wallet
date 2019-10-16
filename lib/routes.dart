@@ -17,6 +17,7 @@ class Routes {
   static const receive = '/receive';
   static const newSubaddress = '/new_subaddress';
   static const disclaimer = '/disclaimer';
+  static const readDisclaimer = '/read_disclaimer';
   static const seedAlert = '/seed_alert';
   static const walletList = '/wallet_list';
   static const auth = '/auth';
@@ -28,10 +29,13 @@ class Routes {
   static const accountList = '/account_list';
   static const accountCreation = '/account_new';
   static const addressBook = '/address_book';
+  static const pickerAddressBook = '/picker_address_book';
   static const addressBookAddContact = '/address_book_add_contact';
   static const showKeys = '/show_keys';
   static const exchangeConfirm = '/exchange_confirm';
   static const tradeHistory = '/trade_history';
+  static const tradeDetails = '/trade_details';
   static const exchangeFunds = '/exchange_funds';
   static const exchangeTrade = '/exchange_trade';
+  static const subaddressList = '/subaddress_list';
 }

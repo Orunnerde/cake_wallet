@@ -66,6 +66,16 @@ abstract class WalletStoreBase with Store {
   }
 
   @action
+  void setSubaddress(Subaddress subaddress) {
+    final wallet = _walletService.currentWallet;
+
+    if (wallet is MoneroWallet) {
+      this.subaddress = subaddress;
+      wallet.changeCurrentSubaddress(subaddress);
+    }
+  }
+
+  @action
   Future reconnect() async {
     await _walletService.connectToNode(
         uri: _settingsStore.node.uri,
@@ -78,16 +88,12 @@ abstract class WalletStoreBase with Store {
       return;
     }
 
-    address = await wallet.getAddress();
-    name = await _walletService.getName();
+    wallet.name.listen((name) => this.name = name);
+    wallet.address.listen((address) => this.address = address);
 
     if (wallet is MoneroWallet) {
-      final _account = wallet.account.value;
-      final subaddressList = wallet.getSubaddress();
-      await subaddressList.refresh(accountIndex: _account.id);
-      final subaddresses = await subaddressList.getAll();
-      account = _account;
-      subaddress = subaddresses[0];
+      account = wallet.account.value;
+      wallet.subaddress.listen((subaddress) => this.subaddress = subaddress);
     }
   }
 }

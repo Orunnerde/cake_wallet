@@ -5,6 +5,8 @@ import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/stores/node_list/node_list_store.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
 
 class NewNodePage extends BasePage {
   @override
@@ -38,6 +40,11 @@ class NewNodeFormState extends State<NewNodePageForm> {
   @override
   Widget build(BuildContext context) {
     final nodeList = Provider.of<NodeListStore>(context);
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
+    else _isDarkTheme = false;
 
     return Form(
         key: _formKey,
@@ -61,10 +68,14 @@ class NewNodeFormState extends State<NewNodePageForm> {
                                 hintText: 'Node Address',
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: Palette.lightGrey, width: 2.0)),
+                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                            : Palette.lightGrey,
+                                        width: 1.0)),
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: Palette.lightGrey, width: 2.0))),
+                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                            : Palette.lightGrey,
+                                        width: 1.0))),
                             controller: _nodeAddressController,
                             validator: (value) {
                               String p = '[^ ]';
@@ -94,10 +105,14 @@ class NewNodeFormState extends State<NewNodePageForm> {
                                 hintText: 'Node port',
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: Palette.lightGrey, width: 2.0)),
+                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                            : Palette.lightGrey,
+                                        width: 1.0)),
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: Palette.lightGrey, width: 2.0))),
+                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                            : Palette.lightGrey,
+                                        width: 1.0))),
                             controller: _nodePortController,
                             validator: (value) {
                               return null;
@@ -120,10 +135,14 @@ class NewNodeFormState extends State<NewNodePageForm> {
                                 hintText: 'Login',
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: Palette.lightGrey, width: 2.0)),
+                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                            : Palette.lightGrey,
+                                        width: 1.0)),
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: Palette.lightGrey, width: 2.0))),
+                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                            : Palette.lightGrey,
+                                        width: 1.0))),
                             controller: _loginController,
                             validator: (value) {
                               return null;
@@ -146,10 +165,14 @@ class NewNodeFormState extends State<NewNodePageForm> {
                                 hintText: 'Password',
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: Palette.lightGrey, width: 2.0)),
+                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                            : Palette.lightGrey,
+                                        width: 1.0)),
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: Palette.lightGrey, width: 2.0))),
+                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                            : Palette.lightGrey,
+                                        width: 1.0))),
                             controller: _passwordController,
                             validator: (value) {
                               return null;
@@ -177,8 +200,10 @@ class NewNodeFormState extends State<NewNodePageForm> {
                         _passwordController.text = '';
                       },
                       text: 'Reset',
-                      color: Palette.indigo,
-                      borderColor: Palette.deepIndigo,
+                      color: _isDarkTheme ? PaletteDark.darkThemeIndigoButton
+                          : Palette.indigo,
+                      borderColor: _isDarkTheme ? PaletteDark.darkThemeIndigoButtonBorder
+                          : Palette.deepIndigo,
                     ),
                   )),
                   Flexible(
@@ -237,7 +262,12 @@ class NewNodeFormState extends State<NewNodePageForm> {
                           // }
                           // }
                         },
-                        text: 'Save'),
+                        text: 'Save',
+                        color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
+                            : Palette.purple,
+                        borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
+                            : Palette.deepPink,
+                    ),
                   )),
                 ],
               ),

@@ -378,7 +378,6 @@ public class MoneroWalletHandler implements WalletListener {
             boolean isClosed = moneroWalletsManager.close(getCurrentWallet(), true);
 
             if (isClosed) {
-                result.success(true);
                 currentWallet = null;
                 currentSubaddress = null;
                 currentTransactionHistory = null;

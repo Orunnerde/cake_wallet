@@ -1,32 +1,29 @@
-import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
-import 'package:cake_wallet/src/stores/settings/settings_store.dart';
-import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:cake_wallet/routes.dart';
+import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/domain/common/transaction_info.dart';
 import 'package:cake_wallet/src/domain/common/transaction_direction.dart';
-import 'package:cake_wallet/src/widgets/primary_button.dart';
+import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
 import 'package:cake_wallet/src/domain/common/sync_status.dart';
-import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/stores/balance/balance_store.dart';
 import 'package:cake_wallet/src/stores/sync/sync_store.dart';
 import 'package:cake_wallet/src/stores/transaction_list/transaction_list_store.dart';
+import 'package:cake_wallet/src/stores/settings/settings_store.dart';
+import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/screens/dashboard/date_section_item.dart';
+import 'package:cake_wallet/src/widgets/primary_button.dart';
+import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/theme_changer.dart';
 
 class DashboardPage extends BasePage {
   static final transactionDateFormat = DateFormat("dd.MM.yyyy, HH:mm");
   static final dateSectionDateFormat = DateFormat("d MMM");
   static final nowDate = DateTime.now();
-  final WalletService walletService;
-
-  String get title => 'Wallet';
-
-  DashboardPage({@required this.walletService});
 
   static List<Object> formatTransactionsList(
       List<TransactionInfo> transactions) {
@@ -83,22 +80,21 @@ class DashboardPage extends BasePage {
                 CupertinoActionSheetAction(
                     child: const Text('Show seed'),
                     onPressed: () {
-                      Navigator.of(context).popAndPushNamed(Routes.seed);
-                      // Navigator.of(context).popAndPushNamed(Routes.auth,
-                      //     arguments: [
-                      //       (auth) => Navigator.of(context)
-                      //           .popAndPushNamed(Routes.seed)
-                      //     ]);
+                      Navigator.of(context).popAndPushNamed(Routes.auth,
+                          arguments: [
+                            (auth, authContext) => Navigator.of(authContext)
+                                .popAndPushNamed(Routes.seed)
+                          ]);
                     }),
                 CupertinoActionSheetAction(
                     child: const Text('Show keys'),
                     onPressed: () {
-                      Navigator.of(context).popAndPushNamed(Routes.showKeys);
-                      // Navigator.of(context).popAndPushNamed(Routes.auth,
-                      //     arguments: [
-                      //       (auth) => Navigator.of(context)
-                      //           .popAndPushNamed(Routes.showKeys)
-                      //     ]);
+                      Navigator.of(context).pop();
+
+                      Navigator.of(context).pushNamed(Routes.auth, arguments: [
+                        (auth, authContext) => Navigator.of(authContext)
+                            .popAndPushNamed(Routes.showKeys)
+                      ]);
                     }),
                 CupertinoActionSheetAction(
                     child: const Text('Address book'),
@@ -115,13 +111,41 @@ class DashboardPage extends BasePage {
   }
 
   @override
-  Widget leading(BuildContext context) => SizedBox(
-      width: 30,
-      child: FlatButton(
-          padding: EdgeInsets.all(0),
-          onPressed: () => presentWalletMenu(context),
-          child: Image.asset('assets/images/more.png',
-              color: Colors.black, width: 30)));
+  Widget leading(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme)
+      _isDarkTheme = true;
+    else
+      _isDarkTheme = false;
+
+    return SizedBox(
+        width: 30,
+        child: FlatButton(
+            padding: EdgeInsets.all(0),
+            onPressed: () => presentWalletMenu(context),
+            child: Image.asset('assets/images/more.png',
+                color: _isDarkTheme ? Colors.white : Colors.black, width: 30)));
+  }
+
+  @override
+  Widget middle(BuildContext context) {
+    final walletStore = Provider.of<WalletStore>(context);
+
+    return Observer(builder: (_) {
+      return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(walletStore.name),
+            SizedBox(height: 5),
+            Text(
+              walletStore.account != null ? walletStore.account.label : '',
+              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 10),
+            ),
+          ]);
+    });
+  }
 
   @override
   Widget body(BuildContext context) {
@@ -129,220 +153,274 @@ class DashboardPage extends BasePage {
     final transactionListStore = Provider.of<TransactionListStore>(context);
     final syncStore = Provider.of<SyncStore>(context);
     final settingsStore = Provider.of<SettingsStore>(context);
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme;
 
-    return NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-      return <Widget>[
-        SliverAppBar(
-          expandedHeight: 363.0,
-          floating: false,
-          pinned: true,
-          backgroundColor: Colors.white,
-          flexibleSpace: FlexibleSpaceBar(
-            background: Container(
-              padding: EdgeInsets.only(bottom: 20),
-              child: Container(
-                decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                  BoxShadow(
-                    color: Color.fromRGBO(132, 141, 198, 0.05),
-                    blurRadius: 10,
-                    offset: Offset(
-                      0,
-                      12,
-                    ),
-                  )
-                ]),
-                child: Center(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.only(top: 54),
-                        child: Column(
-                          children: <Widget>[
-                            Observer(builder: (_) {
-                              final displayMode =
-                                  settingsStore.balanceDisplayMode;
-                              var title = 'XMR Hidden';
+    if (_themeChanger.getTheme() == Themes.darkTheme)
+      _isDarkTheme = true;
+    else
+      _isDarkTheme = false;
 
-                              if (displayMode.serialize() ==
-                                  BalanceDisplayMode.availableBalance
-                                      .serialize()) {
-                                title = 'XMR Available Balance';
-                              }
-
-                              if (displayMode.serialize() ==
-                                  BalanceDisplayMode.fullBalance.serialize()) {
-                                title = 'XMR Full Balance';
-                              }
-
-                              return Text(title,
-                                  style: TextStyle(
-                                      color: Color.fromRGBO(138, 80, 255, 1),
-                                      fontSize: 16));
-                            }),
-                            Observer(builder: (_) {
-                              final displayMode =
-                                  settingsStore.balanceDisplayMode;
-                              var balance = '---';
-
-                              if (displayMode.serialize() ==
-                                  BalanceDisplayMode.availableBalance
-                                      .serialize()) {
-                                balance = balanceStore.unlockedBalance ?? '0.0';
-                              }
-
-                              if (displayMode.serialize() ==
-                                  BalanceDisplayMode.fullBalance.serialize()) {
-                                balance = balanceStore.fullBalance ?? '0.0';
-                              }
-
-                              return Text(balance,
-                                  style: TextStyle(
-                                      color: Colors.black87, fontSize: 42));
-                            }),
-                            Padding(
-                              padding: EdgeInsets.only(top: 7),
-                              child: Observer(builder: (_) {
-                                final displayMode =
-                                    settingsStore.balanceDisplayMode;
-                                final symbol =
-                                    settingsStore.fiatCurrency.toString();
-                                var balance = '---';
-
-                                if (displayMode.serialize() ==
-                                    BalanceDisplayMode.availableBalance
-                                        .serialize()) {
-                                  balance =
-                                      '${balanceStore.fiatUnlockedBalance} $symbol';
-                                }
-
-                                if (displayMode.serialize() ==
-                                    BalanceDisplayMode.fullBalance
-                                        .serialize()) {
-                                  balance =
-                                      '${balanceStore.fiatFullBalance} $symbol';
-                                }
-
-                                return Text(balance,
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(155, 172, 197, 1),
-                                        fontSize: 16));
-                              }),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 45),
-                              decoration: BoxDecoration(
-                                  color: Color.fromRGBO(226, 235, 238, 0.4),
-                                  borderRadius: BorderRadius.circular(5)),
-                              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                              child: SizedBox(
-                                  width: 125,
-                                  child: Observer(builder: (_) {
-                                    if (syncStore.status is SyncingSyncStatus) {
-                                      return Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Image.asset(
-                                              'assets/images/refresh_icon.png',
-                                              width: 10,
-                                              height: 10,
-                                            ),
-                                            Text(
-                                                'BLOCKS REMAINING ${syncStore.status.toString()}',
-                                                style: TextStyle(
-                                                    fontSize: 8,
-                                                    color: Color.fromRGBO(
-                                                        155, 172, 197, 1)))
-                                          ]);
-                                    }
-
-                                    var text = '';
-
-                                    if (syncStore.status is SyncedSyncStatus) {
-                                      text = 'SYNCRONIZED';
-                                    }
-
-                                    if (syncStore.status
-                                        is NotConnectedSyncStatus) {
-                                      text = 'NOT CONNECTED';
-                                    }
-
-                                    if (syncStore.status is FailedSyncStatus) {
-                                      text = 'FAILED CONNECT TO THE NODE';
-                                    }
-
-                                    if (syncStore.status
-                                        is StartingSyncStatus) {
-                                      text = 'STARTINT SYNC';
-                                    }
-
-                                    return Center(
-                                      child: Text(text,
-                                          style: TextStyle(
-                                              fontSize: 9,
-                                              color: Color.fromRGBO(
-                                                  155, 172, 197, 1))),
-                                    );
-                                  })),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 50, right: 50, top: 40),
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                      child: PrimaryImageButton(
-                                    image: Image.asset(
-                                        'assets/images/send_icon.png',
-                                        height: 25,
-                                        width: 25),
-                                    text: 'Send',
-                                    onPressed: () => Navigator.of(context,
-                                            rootNavigator: true)
-                                        .pushNamed(Routes.send),
-                                    color: Color.fromRGBO(227, 212, 255, 0.7),
-                                    borderColor:
-                                        Color.fromRGBO(209, 194, 243, 1),
-                                  )),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                      child: PrimaryImageButton(
-                                    image: Image.asset(
-                                        'assets/images/receive_icon.png',
-                                        height: 25,
-                                        width: 25),
-                                    text: 'Receive',
-                                    onPressed: () => Navigator.of(context,
-                                            rootNavigator: true)
-                                        .pushNamed(Routes.receive),
-                                    color: Color.fromRGBO(151, 226, 255, 0.5),
-                                    borderColor:
-                                        Color.fromRGBO(121, 201, 233, 0.9),
-                                  ))
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ];
-    }, body: Observer(builder: (_) {
+    return Observer(builder: (_) {
       final items = transactionListStore.transactions == null
           ? []
           : formatTransactionsList(transactionListStore.transactions);
 
       return ListView.builder(
-          padding: EdgeInsets.only(left: 25, top: 10, right: 25, bottom: 15),
-          itemCount: items.length,
+          padding: EdgeInsets.only(top: 10, bottom: 15),
+          itemCount: items.length + 1,
           itemBuilder: (context, index) {
+            if (index == 0) {
+              return Container(
+                child: Container(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: _isDarkTheme
+                            ? Theme.of(context).backgroundColor
+                            : Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Palette.shadowGreyWithOpacity,
+                            blurRadius: 10,
+                            offset: Offset(
+                              0,
+                              12,
+                            ),
+                          )
+                        ]),
+                    child: Center(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.only(top: 54),
+                            child: Column(
+                              children: <Widget>[
+                                Observer(builder: (_) {
+                                  final savedDisplayMode =
+                                      settingsStore.balanceDisplayMode;
+                                  var title = 'XMR Hidden';
+                                  BalanceDisplayMode displayMode = balanceStore
+                                          .isReversing
+                                      ? (savedDisplayMode.serialize() ==
+                                              BalanceDisplayMode
+                                                  .availableBalance
+                                                  .serialize()
+                                          ? BalanceDisplayMode.fullBalance
+                                          : BalanceDisplayMode.availableBalance)
+                                      : savedDisplayMode;
+
+                                  if (displayMode.serialize() ==
+                                      BalanceDisplayMode.availableBalance
+                                          .serialize()) {
+                                    title = 'XMR Available Balance';
+                                  }
+
+                                  if (displayMode.serialize() ==
+                                      BalanceDisplayMode.fullBalance
+                                          .serialize()) {
+                                    title = 'XMR Full Balance';
+                                  }
+
+                                  return Text(title,
+                                      style: TextStyle(
+                                          color: Palette.violet, fontSize: 16));
+                                }),
+                                Observer(builder: (_) {
+                                  final savedDisplayMode =
+                                      settingsStore.balanceDisplayMode;
+                                  var balance = '---';
+                                  BalanceDisplayMode displayMode = balanceStore
+                                          .isReversing
+                                      ? (savedDisplayMode.serialize() ==
+                                              BalanceDisplayMode
+                                                  .availableBalance
+                                                  .serialize()
+                                          ? BalanceDisplayMode.fullBalance
+                                          : BalanceDisplayMode.availableBalance)
+                                      : savedDisplayMode;
+
+                                  if (displayMode.serialize() ==
+                                      BalanceDisplayMode.availableBalance
+                                          .serialize()) {
+                                    balance =
+                                        balanceStore.unlockedBalance ?? '0.0';
+                                  }
+
+                                  if (displayMode.serialize() ==
+                                      BalanceDisplayMode.fullBalance
+                                          .serialize()) {
+                                    balance = balanceStore.fullBalance ?? '0.0';
+                                  }
+
+                                  return GestureDetector(
+                                    onTapUp: (_) =>
+                                        balanceStore.isReversing = false,
+                                    onTapDown: (_) =>
+                                        balanceStore.isReversing = true,
+                                    child: Text(balance,
+                                        style: TextStyle(
+                                            color: _isDarkTheme
+                                                ? Colors.white
+                                                : Colors.black87,
+                                            fontSize: 42)),
+                                  );
+                                }),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 7),
+                                  child: Observer(builder: (_) {
+                                    final displayMode =
+                                        settingsStore.balanceDisplayMode;
+                                    final symbol =
+                                        settingsStore.fiatCurrency.toString();
+                                    var balance = '---';
+
+                                    if (displayMode.serialize() ==
+                                        BalanceDisplayMode.availableBalance
+                                            .serialize()) {
+                                      balance =
+                                          '${balanceStore.fiatUnlockedBalance} $symbol';
+                                    }
+
+                                    if (displayMode.serialize() ==
+                                        BalanceDisplayMode.fullBalance
+                                            .serialize()) {
+                                      balance =
+                                          '${balanceStore.fiatFullBalance} $symbol';
+                                    }
+
+                                    return Text(balance,
+                                        style: TextStyle(
+                                            color: Palette.wildDarkBlue,
+                                            fontSize: 16));
+                                  }),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(top: 45),
+                                  decoration: BoxDecoration(
+                                      color: Palette.containerLavender,
+                                      borderRadius: BorderRadius.circular(5)),
+                                  padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                  child: SizedBox(
+                                      width: 125,
+                                      child: Observer(builder: (_) {
+                                        if (syncStore.status
+                                            is SyncingSyncStatus) {
+                                          return Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                Image.asset(
+                                                  'assets/images/refresh_icon.png',
+                                                  width: 10,
+                                                  height: 10,
+                                                ),
+                                                Text(
+                                                    'BLOCKS REMAINING ${syncStore.status.toString()}',
+                                                    style: TextStyle(
+                                                        fontSize: 8,
+                                                        color: Palette
+                                                            .wildDarkBlue))
+                                              ]);
+                                        }
+
+                                        var text = '';
+
+                                        if (syncStore.status
+                                            is SyncedSyncStatus) {
+                                          text = 'SYNCRONIZED';
+                                        }
+
+                                        if (syncStore.status
+                                            is NotConnectedSyncStatus) {
+                                          text = 'NOT CONNECTED';
+                                        }
+
+                                        if (syncStore.status
+                                            is FailedSyncStatus) {
+                                          text = 'FAILED CONNECT TO THE NODE';
+                                        }
+
+                                        if (syncStore.status
+                                            is StartingSyncStatus) {
+                                          text = 'STARTING SYNC';
+                                        }
+
+                                        if (syncStore.status
+                                            is ConnectingSyncStatus) {
+                                          text = 'CONNECTING';
+                                        }
+
+                                        if (syncStore.status
+                                            is ConnectedSyncStatus) {
+                                          text = 'CONNECTED';
+                                        }
+
+                                        return Center(
+                                          child: Text(text,
+                                              style: TextStyle(
+                                                  fontSize: 9,
+                                                  color: Palette.wildDarkBlue)),
+                                        );
+                                      })),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 50, right: 50, top: 40, bottom: 20),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                          child: PrimaryImageButton(
+                                        image: Image.asset(
+                                            'assets/images/send_icon.png',
+                                            height: 25,
+                                            width: 25),
+                                        text: 'Send',
+                                        onPressed: () => Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pushNamed(Routes.send),
+                                        color: _isDarkTheme
+                                            ? PaletteDark.darkThemePurpleButton
+                                            : Palette.purple,
+                                        borderColor: _isDarkTheme
+                                            ? PaletteDark
+                                                .darkThemePurpleButtonBorder
+                                            : Palette.deepPink,
+                                      )),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                          child: PrimaryImageButton(
+                                        image: Image.asset(
+                                            'assets/images/receive_icon.png',
+                                            height: 25,
+                                            width: 25),
+                                        text: 'Receive',
+                                        onPressed: () => Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pushNamed(Routes.receive),
+                                        color: _isDarkTheme
+                                            ? PaletteDark.darkThemeBlueButton
+                                            : Palette.brightBlue,
+                                        borderColor: _isDarkTheme
+                                            ? PaletteDark
+                                                .darkThemeBlueButtonBorder
+                                            : Palette.cloudySky,
+                                      ))
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
+
+            index -= 1;
             final item = items[index];
 
             if (item is DateSectionItem) {
@@ -373,8 +451,7 @@ class DashboardPage extends BasePage {
                 child: Center(
                     child: Text(title,
                         style: TextStyle(
-                            fontSize: 16,
-                            color: Color.fromRGBO(155, 172, 197, 1)))),
+                            fontSize: 16, color: Palette.wildDarkBlue))),
               );
             }
 
@@ -385,12 +462,13 @@ class DashboardPage extends BasePage {
                       .pushNamed(Routes.transactionDetails, arguments: item);
                 },
                 child: Container(
-                  padding: EdgeInsets.only(top: 14, bottom: 14),
+                  padding:
+                      EdgeInsets.only(top: 14, bottom: 14, left: 20, right: 20),
                   decoration: BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
-                        color: Color.fromRGBO(218, 228, 243, 0.4),
-                        width: 1,
+                        color: PaletteDark.darkGrey,
+                        width: 0.5,
                         style: BorderStyle.solid,
                       ),
                     ),
@@ -415,12 +493,15 @@ class DashboardPage extends BasePage {
                                             TransactionDirection.incoming
                                         ? 'Received'
                                         : 'Sent',
-                                    style: const TextStyle(
-                                        fontSize: 16, color: Colors.black)),
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: _isDarkTheme
+                                            ? Palette.blueGrey
+                                            : Colors.black)),
                                 Text(item.amount(),
                                     style: const TextStyle(
                                         fontSize: 16,
-                                        color: Color.fromRGBO(84, 92, 139, 1)))
+                                        color: Palette.purpleBlue))
                               ]),
                           SizedBox(height: 6),
                           Row(
@@ -428,14 +509,10 @@ class DashboardPage extends BasePage {
                               children: <Widget>[
                                 Text(transactionDateFormat.format(item.date),
                                     style: const TextStyle(
-                                        fontSize: 13,
-                                        color:
-                                            Color.fromRGBO(103, 107, 141, 1))),
+                                        fontSize: 13, color: Palette.blueGrey)),
                                 Text(item.fiatAmount(),
                                     style: const TextStyle(
-                                        fontSize: 14,
-                                        color:
-                                            Color.fromRGBO(103, 107, 141, 1)))
+                                        fontSize: 14, color: Palette.blueGrey))
                               ]),
                         ],
                       ),
@@ -447,7 +524,7 @@ class DashboardPage extends BasePage {
 
             return Container();
           });
-    }));
+    });
   }
 
   Future _presentReconnectAlert(BuildContext context) async {
