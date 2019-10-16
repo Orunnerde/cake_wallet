@@ -403,6 +403,7 @@ class SettingsState extends State<Settings> {
                                 } else {
                                   _themeChanger.setTheme(Themes.lightTheme);
                                 }
+                                settingsStore.saveDarkTheme(isDarkTheme: _isDarkTheme);
                               });
                             }
                         )
