@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/screens/settings/attributes.dart';
 import 'package:cake_wallet/src/screens/settings/items/settings_item.dart';
@@ -390,5 +391,9 @@ class SettingsFormState extends State<SettingsForm> {
     if (selectedPriority != null) {
       settingsStore.setCurrentTransactionPriority(priority: selectedPriority);
     }
+  }
+
+  void _launchUrl(String url) async {
+    if (await canLaunch(url)) await launch(url);
   }
 }
