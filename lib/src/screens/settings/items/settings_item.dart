@@ -1,0 +1,20 @@
+import 'package:flutter/material.dart';
+import 'package:cake_wallet/src/screens/settings/attributes.dart';
+
+class SettingsItem {
+  final VoidCallback onTaped;
+  final String title;
+  final String link;
+  final Image image;
+  final bool value;
+  final Widget widget;
+  final Attributes attribute;
+
+  SettingsItem({this.onTaped,
+    this.title,
+    this.link,
+    this.image,
+    this.value,
+    this.widget,
+    this.attribute});
+}
