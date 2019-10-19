@@ -188,13 +188,17 @@ class DashboardPage extends BasePage {
                             ),
                           )
                         ]),
-                    child: Center(
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.only(top: 54),
+                    child: Column(
+                      children: <Widget>[
+                        GestureDetector(
+                          onTapUp: (_) => balanceStore.isReversing = false,
+                          onTapDown: (_) => balanceStore.isReversing = true,
+                          child: Container(
+                            padding: EdgeInsets.only(top: 54, bottom: 40),
+                            color: Colors.transparent,
                             child: Column(
                               children: <Widget>[
+                                Container(width: double.infinity),
                                 Observer(builder: (_) {
                                   final savedDisplayMode =
                                       settingsStore.balanceDisplayMode;
@@ -252,17 +256,13 @@ class DashboardPage extends BasePage {
                                     balance = balanceStore.fullBalance ?? '0.0';
                                   }
 
-                                  return GestureDetector(
-                                    onTapUp: (_) =>
-                                        balanceStore.isReversing = false,
-                                    onTapDown: (_) =>
-                                        balanceStore.isReversing = true,
-                                    child: Text(balance,
-                                        style: TextStyle(
-                                            color: _isDarkTheme
-                                                ? Colors.white
-                                                : Colors.black87,
-                                            fontSize: 42)),
+                                  return Text(
+                                    balance,
+                                    style: TextStyle(
+                                        color: _isDarkTheme
+                                            ? Colors.white
+                                            : Colors.black87,
+                                        fontSize: 42),
                                   );
                                 }),
                                 Padding(
@@ -364,56 +364,54 @@ class DashboardPage extends BasePage {
                                         );
                                       })),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 50, right: 50, top: 40, bottom: 20),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                          child: PrimaryImageButton(
-                                        image: Image.asset(
-                                            'assets/images/send_icon.png',
-                                            height: 25,
-                                            width: 25),
-                                        text: 'Send',
-                                        onPressed: () => Navigator.of(context,
-                                                rootNavigator: true)
-                                            .pushNamed(Routes.send),
-                                        color: _isDarkTheme
-                                            ? PaletteDark.darkThemePurpleButton
-                                            : Palette.purple,
-                                        borderColor: _isDarkTheme
-                                            ? PaletteDark
-                                                .darkThemePurpleButtonBorder
-                                            : Palette.deepPink,
-                                      )),
-                                      SizedBox(width: 10),
-                                      Expanded(
-                                          child: PrimaryImageButton(
-                                        image: Image.asset(
-                                            'assets/images/receive_icon.png',
-                                            height: 25,
-                                            width: 25),
-                                        text: 'Receive',
-                                        onPressed: () => Navigator.of(context,
-                                                rootNavigator: true)
-                                            .pushNamed(Routes.receive),
-                                        color: _isDarkTheme
-                                            ? PaletteDark.darkThemeBlueButton
-                                            : Palette.brightBlue,
-                                        borderColor: _isDarkTheme
-                                            ? PaletteDark
-                                                .darkThemeBlueButtonBorder
-                                            : Palette.cloudySky,
-                                      ))
-                                    ],
-                                  ),
-                                )
                               ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 50, right: 50, bottom: 20),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                  child: PrimaryImageButton(
+                                image: Image.asset(
+                                    'assets/images/send_icon.png',
+                                    height: 25,
+                                    width: 25),
+                                text: 'Send',
+                                onPressed: () =>
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pushNamed(Routes.send),
+                                color: _isDarkTheme
+                                    ? PaletteDark.darkThemePurpleButton
+                                    : Palette.purple,
+                                borderColor: _isDarkTheme
+                                    ? PaletteDark.darkThemePurpleButtonBorder
+                                    : Palette.deepPink,
+                              )),
+                              SizedBox(width: 10),
+                              Expanded(
+                                  child: PrimaryImageButton(
+                                image: Image.asset(
+                                    'assets/images/receive_icon.png',
+                                    height: 25,
+                                    width: 25),
+                                text: 'Receive',
+                                onPressed: () =>
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pushNamed(Routes.receive),
+                                color: _isDarkTheme
+                                    ? PaletteDark.darkThemeBlueButton
+                                    : Palette.brightBlue,
+                                borderColor: _isDarkTheme
+                                    ? PaletteDark.darkThemeBlueButtonBorder
+                                    : Palette.cloudySky,
+                              ))
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
