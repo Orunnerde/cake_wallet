@@ -6,7 +6,6 @@ class SettingsItem {
   final String title;
   final String link;
   final Image image;
-  final bool value;
   final Widget widget;
   final Attributes attribute;
 
@@ -14,7 +13,6 @@ class SettingsItem {
     this.title,
     this.link,
     this.image,
-    this.value,
     this.widget,
     this.attribute});
 }
