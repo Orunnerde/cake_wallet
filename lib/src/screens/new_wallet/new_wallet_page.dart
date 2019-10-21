@@ -14,6 +14,7 @@ import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/src/stores/validation/validation_store.dart';
 
 class NewWalletPage extends BasePage {
   static const _aspectRatioImage = 1.95;
@@ -79,6 +80,7 @@ class _WalletNameFormState extends State<WalletNameForm> {
   @override
   Widget build(BuildContext context) {
     final walletCreationStore = Provider.of<WalletCreationStore>(context);
+    final validation = ValidationStore();
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
 
@@ -143,7 +145,8 @@ class _WalletNameFormState extends State<WalletNameForm> {
                                       : Palette.lightGrey,
                                   width: 1.0))),
                       validator: (value) {
-                        if (value.isEmpty) return 'Please enter a wallet name';
+                        validation.validateWalletName(value);
+                        if (!validation.isValidate) return 'Please enter a wallet name';
                         return null;
                       },
                     ),
