@@ -159,10 +159,10 @@ class MaterialAppWithTheme extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final theme = Provider.of<ThemeChanger>(context);
+    Color _statusBarColor = settingsStore.isDarkTheme ? Colors.black : Colors.white;
 
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-      systemNavigationBarColor: Colors.black,
-      statusBarColor: Colors.white,
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: _statusBarColor
     ));
 
     return MultiProvider(
