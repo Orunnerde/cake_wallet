@@ -13,7 +13,6 @@ import 'package:provider/provider.dart';
 import 'package:cake_wallet/src/widgets/standart_switch.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
-import 'package:share/share.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -21,7 +20,6 @@ class Settings extends StatefulWidget {
 }
 
 class SettingsState extends State<Settings> {
-  final _formKey = GlobalKey<FormState>();
   final _newPasswordController = TextEditingController();
 
   final _cakeArrowImage = Image.asset('assets/images/cake_arrow.png');
@@ -31,7 +29,6 @@ class SettingsState extends State<Settings> {
   final _morphImage = Image.asset('assets/images/morph_icon.png');
   final _xmrBtcImage = Image.asset('assets/images/xmr_btc.png');
 
-  bool _isSaveRecipientAddressOn = false;
   bool _isAllowBiometricalAuthenticationOn = false;
   bool _isDarkTheme = false;
 
@@ -46,29 +43,33 @@ class SettingsState extends State<Settings> {
     final settingsStore = Provider.of<SettingsStore>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
 
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    if (_themeChanger.getTheme() == Themes.darkTheme)
+      _isDarkTheme = true;
+    else
+      _isDarkTheme = false;
 
     return Scaffold(
-      backgroundColor: _isDarkTheme? Theme.of(context).backgroundColor : Palette.lightGrey2,
+      backgroundColor:
+          _isDarkTheme ? Theme.of(context).backgroundColor : Palette.lightGrey2,
       resizeToAvoidBottomPadding: false,
       appBar: CupertinoNavigationBar(
         leading: Offstage(),
         middle: Text(
           'Settings',
           style: TextStyle(
-            fontSize: 16.0,
-            color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
-          ),
+              fontSize: 16.0,
+              color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black),
         ),
-        backgroundColor: _isDarkTheme? Theme.of(context).backgroundColor : Palette.lightGrey2,
+        backgroundColor: _isDarkTheme
+            ? Theme.of(context).backgroundColor
+            : Palette.lightGrey2,
         border: null,
       ),
       body: Container(
         padding: EdgeInsets.only(
-          //top: 20.0,
-          //bottom: 20.0
-        ),
+            //top: 20.0,
+            //bottom: 20.0
+            ),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -94,29 +95,31 @@ class SettingsState extends State<Settings> {
               InkWell(
                 onTap: () => Navigator.of(context).pushNamed(Routes.nodeList),
                 child: Container(
-                  color: _isDarkTheme? PaletteDark.darkThemeMidGrey : Colors.white,
+                  color: _isDarkTheme
+                      ? PaletteDark.darkThemeMidGrey
+                      : Colors.white,
                   child: ListTile(
                     contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
                     title: Text(
                       'Current node',
                       style: TextStyle(
-                        fontSize: 16.0,
-                        color: _isDarkTheme ? PaletteDark.darkThemeTitle
-                            : Colors.black
-                      ),
+                          fontSize: 16.0,
+                          color: _isDarkTheme
+                              ? PaletteDark.darkThemeTitle
+                              : Colors.black),
                     ),
                     trailing: Observer(
                         builder: (_) => Text(
-                          settingsStore.node == null
-                              ? ''
-                              : settingsStore.node.uri,
-                          // widget.currentNode,
-                          style: TextStyle(
-                              fontSize: 16.0,
-                              color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                                  : Palette.wildDarkBlue
-                          ),
-                        )),
+                              settingsStore.node == null
+                                  ? ''
+                                  : settingsStore.node.uri,
+                              // widget.currentNode,
+                              style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: _isDarkTheme
+                                      ? PaletteDark.darkThemeGrey
+                                      : Palette.wildDarkBlue),
+                            )),
                   ),
                 ),
               ),
@@ -140,7 +143,8 @@ class SettingsState extends State<Settings> {
                 height: 14.0,
               ),
               Container(
-                color: _isDarkTheme? PaletteDark.darkThemeMidGrey : Colors.white,
+                color:
+                    _isDarkTheme ? PaletteDark.darkThemeMidGrey : Colors.white,
                 child: Column(
                   children: <Widget>[
                     ListTile(
@@ -149,19 +153,19 @@ class SettingsState extends State<Settings> {
                         'Display balance as',
                         style: TextStyle(
                             fontSize: 16.0,
-                            color: _isDarkTheme ? PaletteDark.darkThemeTitle
-                                : Colors.black
-                        ),
+                            color: _isDarkTheme
+                                ? PaletteDark.darkThemeTitle
+                                : Colors.black),
                       ),
                       trailing: Observer(
                           builder: (_) => Text(
-                            settingsStore.balanceDisplayMode.toString(),
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                                    : Palette.wildDarkBlue
-                            ),
-                          )),
+                                settingsStore.balanceDisplayMode.toString(),
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: _isDarkTheme
+                                        ? PaletteDark.darkThemeGrey
+                                        : Palette.wildDarkBlue),
+                              )),
                       onTap: () {
                         _setBalance(context);
                       },
@@ -172,7 +176,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                        color: _isDarkTheme
+                            ? PaletteDark.darkThemeDarkGrey
                             : Palette.lightGrey,
                         height: 1.0,
                       ),
@@ -183,19 +188,19 @@ class SettingsState extends State<Settings> {
                         'Currency',
                         style: TextStyle(
                             fontSize: 16.0,
-                            color: _isDarkTheme ? PaletteDark.darkThemeTitle
-                                : Colors.black
-                        ),
+                            color: _isDarkTheme
+                                ? PaletteDark.darkThemeTitle
+                                : Colors.black),
                       ),
                       trailing: Observer(
                           builder: (_) => Text(
-                            settingsStore.fiatCurrency.toString(),
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                                    : Palette.wildDarkBlue
-                            ),
-                          )),
+                                settingsStore.fiatCurrency.toString(),
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: _isDarkTheme
+                                        ? PaletteDark.darkThemeGrey
+                                        : Palette.wildDarkBlue),
+                              )),
                       onTap: () => _setCurrency(context),
                     ),
                     Container(
@@ -204,7 +209,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                        color: _isDarkTheme
+                            ? PaletteDark.darkThemeDarkGrey
                             : Palette.lightGrey,
                         height: 1.0,
                       ),
@@ -215,19 +221,19 @@ class SettingsState extends State<Settings> {
                         'Fee priority',
                         style: TextStyle(
                             fontSize: 16.0,
-                            color: _isDarkTheme ? PaletteDark.darkThemeTitle
-                                : Colors.black
-                        ),
+                            color: _isDarkTheme
+                                ? PaletteDark.darkThemeTitle
+                                : Colors.black),
                       ),
                       trailing: Observer(
                           builder: (_) => Text(
-                            settingsStore.transactionPriority.toString(),
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                                    : Palette.wildDarkBlue
-                            ),
-                          )),
+                                settingsStore.transactionPriority.toString(),
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: _isDarkTheme
+                                        ? PaletteDark.darkThemeGrey
+                                        : Palette.wildDarkBlue),
+                              )),
                       onTap: () => _setTransactionPriority(context),
                     ),
                     Container(
@@ -236,32 +242,30 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                        color: _isDarkTheme
+                            ? PaletteDark.darkThemeDarkGrey
                             : Palette.lightGrey,
                         height: 1.0,
                       ),
                     ),
                     ListTile(
                         contentPadding:
-                        EdgeInsets.only(left: 20.0, right: 20.0),
+                            EdgeInsets.only(left: 20.0, right: 20.0),
                         title: Text(
                           'Save recipient address',
                           style: TextStyle(
                               fontSize: 16.0,
-                              color: _isDarkTheme ? PaletteDark.darkThemeTitle
-                                  : Colors.black
-                          ),
+                              color: _isDarkTheme
+                                  ? PaletteDark.darkThemeTitle
+                                  : Colors.black),
                         ),
-                        trailing: StandartSwitch(
-                            value: _isSaveRecipientAddressOn,
-                            onTaped: () {
-                              setState(() {
-                                _isSaveRecipientAddressOn =
-                                !_isSaveRecipientAddressOn;
-                              });
-                            }
-                        )
-                    ),
+                        trailing: Observer(
+                          builder: (_) => StandartSwitch(
+                            value: settingsStore.shouldSaveRecipientAddress,
+                            onTaped: () =>
+                                settingsStore.setSaveRecipientAddress(
+                                    shouldSaveRecipientAddress: !settingsStore
+                                        .shouldSaveRecipientAddress)))),
                   ],
                 ),
               ),
@@ -285,7 +289,8 @@ class SettingsState extends State<Settings> {
                 height: 14.0,
               ),
               Container(
-                color: _isDarkTheme? PaletteDark.darkThemeMidGrey : Colors.white,
+                color:
+                    _isDarkTheme ? PaletteDark.darkThemeMidGrey : Colors.white,
                 child: Column(
                   children: <Widget>[
                     ListTile(
@@ -294,15 +299,15 @@ class SettingsState extends State<Settings> {
                         'Change PIN',
                         style: TextStyle(
                             fontSize: 16.0,
-                            color: _isDarkTheme ? PaletteDark.darkThemeTitle
-                                : Colors.black
-                        ),
+                            color: _isDarkTheme
+                                ? PaletteDark.darkThemeTitle
+                                : Colors.black),
                       ),
                       trailing: _cakeArrowImage,
                       onTap: () {
                         Navigator.of(context)
                             .pushNamed(Routes.auth, arguments: [
-                              (auth) => Navigator.of(context).popAndPushNamed(
+                          (auth) => Navigator.of(context).popAndPushNamed(
                               Routes.setupPin,
                               arguments: (setupPinContext, _) =>
                                   Navigator.of(context).pop())
@@ -315,7 +320,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                        color: _isDarkTheme
+                            ? PaletteDark.darkThemeDarkGrey
                             : Palette.lightGrey,
                         height: 1.0,
                       ),
@@ -326,9 +332,9 @@ class SettingsState extends State<Settings> {
                         'Change language',
                         style: TextStyle(
                             fontSize: 16.0,
-                            color: _isDarkTheme ? PaletteDark.darkThemeTitle
-                                : Colors.black
-                        ),
+                            color: _isDarkTheme
+                                ? PaletteDark.darkThemeTitle
+                                : Colors.black),
                       ),
                       trailing: _cakeArrowImage,
                       onTap: () {
@@ -345,53 +351,53 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                        color: _isDarkTheme
+                            ? PaletteDark.darkThemeDarkGrey
                             : Palette.lightGrey,
                         height: 1.0,
                       ),
                     ),
                     ListTile(
                         contentPadding:
-                        EdgeInsets.only(left: 20.0, right: 20.0),
+                            EdgeInsets.only(left: 20.0, right: 20.0),
                         title: Text(
                           'Allow biometrical authentication',
                           style: TextStyle(
                               fontSize: 16.0,
-                              color: _isDarkTheme ? PaletteDark.darkThemeTitle
-                                  : Colors.black
-                          ),
+                              color: _isDarkTheme
+                                  ? PaletteDark.darkThemeTitle
+                                  : Colors.black),
                         ),
                         trailing: StandartSwitch(
                             value: _isAllowBiometricalAuthenticationOn,
                             onTaped: () {
                               setState(() {
                                 _isAllowBiometricalAuthenticationOn =
-                                !_isAllowBiometricalAuthenticationOn;
+                                    !_isAllowBiometricalAuthenticationOn;
                               });
-                            }
-                        )
-                    ),
+                            })),
                     Container(
                       padding: EdgeInsets.only(
                         left: 20.0,
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                        color: _isDarkTheme
+                            ? PaletteDark.darkThemeDarkGrey
                             : Palette.lightGrey,
                         height: 1.0,
                       ),
                     ),
                     ListTile(
                         contentPadding:
-                        EdgeInsets.only(left: 20.0, right: 20.0),
+                            EdgeInsets.only(left: 20.0, right: 20.0),
                         title: Text(
                           'Dark mode',
                           style: TextStyle(
                               fontSize: 16.0,
-                              color: _isDarkTheme ? PaletteDark.darkThemeTitle
-                                  : Colors.black
-                          ),
+                              color: _isDarkTheme
+                                  ? PaletteDark.darkThemeTitle
+                                  : Colors.black),
                         ),
                         trailing: StandartSwitch(
                             value: _isDarkTheme,
@@ -404,9 +410,7 @@ class SettingsState extends State<Settings> {
                                   _themeChanger.setTheme(Themes.lightTheme);
                                 }
                               });
-                            }
-                        )
-                    )
+                            }))
                   ],
                 ),
               ),
@@ -863,7 +867,8 @@ class SettingsState extends State<Settings> {
                 height: 14.0,
               ),
               Container(
-                color: _isDarkTheme? PaletteDark.darkThemeMidGrey : Colors.white,
+                color:
+                    _isDarkTheme ? PaletteDark.darkThemeMidGrey : Colors.white,
                 child: Column(
                   children: <Widget>[
                     ListTile(
@@ -872,15 +877,14 @@ class SettingsState extends State<Settings> {
                         'Email',
                         style: TextStyle(
                             fontSize: 14.0,
-                            color: _isDarkTheme ? PaletteDark.darkThemeTitle
-                                : Colors.black
-
-                        ),
+                            color: _isDarkTheme
+                                ? PaletteDark.darkThemeTitle
+                                : Colors.black),
                       ),
                       trailing: Text(
                         'support@cakewallet.io',
                         style:
-                        TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
+                            TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
                       ),
                     ),
                     Container(
@@ -889,7 +893,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                        color: _isDarkTheme
+                            ? PaletteDark.darkThemeDarkGrey
                             : Palette.lightGrey,
                         height: 1.0,
                       ),
@@ -907,9 +912,9 @@ class SettingsState extends State<Settings> {
                               style: TextStyle(
                                   fontSize: 15.0,
                                   fontWeight: FontWeight.w500,
-                                  color: _isDarkTheme ? PaletteDark.darkThemeTitle
-                                      : Colors.black
-                              ),
+                                  color: _isDarkTheme
+                                      ? PaletteDark.darkThemeTitle
+                                      : Colors.black),
                             ),
                           )
                         ],
@@ -917,7 +922,7 @@ class SettingsState extends State<Settings> {
                       trailing: Text(
                         'support@cakewallet.io',
                         style:
-                        TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
+                            TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
                       ),
                     ),
                     Container(
@@ -926,7 +931,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                        color: _isDarkTheme
+                            ? PaletteDark.darkThemeDarkGrey
                             : Palette.lightGrey,
                         height: 1.0,
                       ),
@@ -944,9 +950,9 @@ class SettingsState extends State<Settings> {
                               style: TextStyle(
                                   fontSize: 15.0,
                                   fontWeight: FontWeight.w500,
-                                  color: _isDarkTheme ? PaletteDark.darkThemeTitle
-                                      : Colors.black
-                              ),
+                                  color: _isDarkTheme
+                                      ? PaletteDark.darkThemeTitle
+                                      : Colors.black),
                             ),
                           )
                         ],
@@ -954,7 +960,7 @@ class SettingsState extends State<Settings> {
                       trailing: Text(
                         'support@cakewallet.io',
                         style:
-                        TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
+                            TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
                       ),
                     ),
                     Container(
@@ -963,7 +969,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                        color: _isDarkTheme
+                            ? PaletteDark.darkThemeDarkGrey
                             : Palette.lightGrey,
                         height: 1.0,
                       ),
@@ -981,9 +988,9 @@ class SettingsState extends State<Settings> {
                               style: TextStyle(
                                   fontSize: 15.0,
                                   fontWeight: FontWeight.w500,
-                                  color: _isDarkTheme ? PaletteDark.darkThemeTitle
-                                      : Colors.black
-                              ),
+                                  color: _isDarkTheme
+                                      ? PaletteDark.darkThemeTitle
+                                      : Colors.black),
                             ),
                           )
                         ],
@@ -991,7 +998,7 @@ class SettingsState extends State<Settings> {
                       trailing: Text(
                         'support@changenow.io',
                         style:
-                        TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
+                            TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
                       ),
                     ),
                     Container(
@@ -1000,7 +1007,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                        color: _isDarkTheme
+                            ? PaletteDark.darkThemeDarkGrey
                             : Palette.lightGrey,
                         height: 1.0,
                       ),
@@ -1018,9 +1026,9 @@ class SettingsState extends State<Settings> {
                               style: TextStyle(
                                   fontSize: 15.0,
                                   fontWeight: FontWeight.w500,
-                                  color: _isDarkTheme ? PaletteDark.darkThemeTitle
-                                      : Colors.black
-                              ),
+                                  color: _isDarkTheme
+                                      ? PaletteDark.darkThemeTitle
+                                      : Colors.black),
                             ),
                           )
                         ],
@@ -1028,7 +1036,7 @@ class SettingsState extends State<Settings> {
                       trailing: Text(
                         'contact@morphtoken.com',
                         style:
-                        TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
+                            TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
                       ),
                     ),
                     Container(
@@ -1037,7 +1045,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                        color: _isDarkTheme
+                            ? PaletteDark.darkThemeDarkGrey
                             : Palette.lightGrey,
                         height: 1.0,
                       ),
@@ -1055,9 +1064,9 @@ class SettingsState extends State<Settings> {
                               style: TextStyle(
                                   fontSize: 15.0,
                                   fontWeight: FontWeight.w500,
-                                  color: _isDarkTheme ? PaletteDark.darkThemeTitle
-                                      : Colors.black
-                              ),
+                                  color: _isDarkTheme
+                                      ? PaletteDark.darkThemeTitle
+                                      : Colors.black),
                             ),
                           )
                         ],
@@ -1065,7 +1074,7 @@ class SettingsState extends State<Settings> {
                       trailing: Text(
                         'support@xmr.to',
                         style:
-                        TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
+                            TextStyle(fontSize: 14.0, color: Palette.cakeGreen),
                       ),
                     ),
                     Container(
@@ -1074,7 +1083,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                        color: _isDarkTheme
+                            ? PaletteDark.darkThemeDarkGrey
                             : Palette.lightGrey,
                         height: 1.0,
                       ),
@@ -1085,9 +1095,9 @@ class SettingsState extends State<Settings> {
                         'Terms and conditions',
                         style: TextStyle(
                             fontSize: 14.0,
-                            color: _isDarkTheme ? PaletteDark.darkThemeTitle
-                                : Colors.black
-                        ),
+                            color: _isDarkTheme
+                                ? PaletteDark.darkThemeTitle
+                                : Colors.black),
                       ),
                       trailing: _cakeArrowImage,
                       onTap: () {
@@ -1104,7 +1114,8 @@ class SettingsState extends State<Settings> {
                         right: 20.0,
                       ),
                       child: Divider(
-                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
+                        color: _isDarkTheme
+                            ? PaletteDark.darkThemeDarkGrey
                             : Palette.lightGrey,
                       ),
                     ),
@@ -1139,9 +1150,9 @@ class SettingsState extends State<Settings> {
                   onSelectedItemChanged: (int index) => _value = list[index],
                   children: List.generate(
                       list.length,
-                          (index) => Center(
-                        child: Text(list[index].toString()),
-                      ))),
+                      (index) => Center(
+                            child: Text(list[index].toString()),
+                          ))),
             ),
             actions: <Widget>[
               FlatButton(
@@ -1158,7 +1169,7 @@ class SettingsState extends State<Settings> {
   void _setBalance(BuildContext context) async {
     final settingsStore = Provider.of<SettingsStore>(context);
     final selectedDisplayMode =
-    await _presentPicker(context, BalanceDisplayMode.all);
+        await _presentPicker(context, BalanceDisplayMode.all);
 
     if (selectedDisplayMode != null) {
       settingsStore.setCurrentBalanceDisplayMode(
@@ -1178,7 +1189,7 @@ class SettingsState extends State<Settings> {
   void _setTransactionPriority(BuildContext context) async {
     final settingsStore = Provider.of<SettingsStore>(context);
     final selectedPriority =
-    await _presentPicker(context, TransactionPriority.all);
+        await _presentPicker(context, TransactionPriority.all);
 
     if (selectedPriority != null) {
       settingsStore.setCurrentTransactionPriority(priority: selectedPriority);

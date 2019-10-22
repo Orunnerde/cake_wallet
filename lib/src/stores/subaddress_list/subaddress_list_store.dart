@@ -58,13 +58,13 @@ abstract class SubaddressListStoreBase with Store {
     }
 
     if (wallet is MoneroWallet) {
-      _account = wallet.account.value;
+      _account = wallet.account;
       _subaddressList = wallet.getSubaddress();
       _onSubaddressesChangeSubscription = _subaddressList.subaddresses
           .listen((subaddress) => subaddresses = ObservableList.of(subaddress));
       await _updateSubaddressList(accountIndex: _account.id);
 
-      _onAccountChangeSubscription = wallet.account.listen((account) async {
+      _onAccountChangeSubscription = wallet.onAccountChange.listen((account) async {
         _account = account;
         await _updateSubaddressList(accountIndex: account.id);
       });

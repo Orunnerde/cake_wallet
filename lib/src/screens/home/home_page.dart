@@ -89,9 +89,10 @@ class HomePage extends StatelessWidget {
                             walletService: walletService,
                             settingsStore: settingsStore),
                       ),
-                      Provider(
-                        builder: (context) =>
-                            BalanceStore(walletService: walletService),
+                      ProxyProvider<SettingsStore, BalanceStore>(
+                        builder: (_, settingsStore, __) => BalanceStore(
+                            walletService: walletService,
+                            settingsStore: settingsStore),
                       ),
                       ProxyProvider<SettingsStore, WalletStore>(
                           builder: (_, settingsStore, __) => WalletStore(

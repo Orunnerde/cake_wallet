@@ -1,3 +1,4 @@
+import 'package:cake_wallet/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -178,8 +179,7 @@ class SendFormState extends State<SendForm> {
                         },
                         options: [
                           AddressTextFieldOption.qrCode,
-                          AddressTextFieldOption.addressBook,
-                          AddressTextFieldOption.subaddressList
+                          AddressTextFieldOption.addressBook
                         ]),
                     Padding(
                       padding: const EdgeInsets.only(top: 20),
@@ -348,6 +348,8 @@ class SendFormState extends State<SendForm> {
                     ),
                   ]),
                   Observer(builder: (_) {
+                    print(sendStore.state);
+
                     return LoadingPrimaryButton(
                         onPressed: () async {
                           showDialog(
@@ -360,11 +362,21 @@ class SendFormState extends State<SendForm> {
                                     FlatButton(
                                         child: Text("Send"),
                                         onPressed: () async {
-                                          sendStore.createTransaction(
-                                              address: _addressController.text,
-                                              paymentId:
-                                                  _paymentIdController.text);
-                                          Navigator.of(context).pop();
+                                          Navigator.of(context).popAndPushNamed(
+                                              Routes.auth,
+                                              arguments: [
+                                                (auth, authContext) {
+                                                  Navigator.of(authContext)
+                                                      .pop();
+                                                  sendStore.createTransaction(
+                                                      address:
+                                                          _addressController
+                                                              .text,
+                                                      paymentId:
+                                                          _paymentIdController
+                                                              .text);
+                                                }
+                                              ]);
                                         }),
                                     FlatButton(
                                         child: Text("Cancel"),

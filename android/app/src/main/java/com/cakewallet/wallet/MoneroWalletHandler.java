@@ -14,6 +14,9 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import com.cakewallet.wallet.monero.Account;
 import com.cakewallet.wallet.monero.AccountRow;
@@ -56,6 +59,10 @@ public class MoneroWalletHandler implements WalletListener {
     }
 
     public void setCurrentWallet(Wallet wallet) {
+        if (wallet == null) {
+            return;
+        }
+
         currentWallet = wallet;
         setCurrentTransactionHistory(currentWallet.history());
         setCurrentSubaddress(currentWallet.subaddress());
@@ -233,6 +240,7 @@ public class MoneroWalletHandler implements WalletListener {
                 PendingTransaction transaction = new PendingTransaction(id);
                 transaction.commit();
                 mainHandler.post(() -> result.success(null));
+                mainHandler.post(() -> balanceChannel.send(null));
             } catch (Exception e) {
                 mainHandler.post(() -> result.error("TRANSACTION_COMMIT_ERROR", e.getMessage(), null));
             }
@@ -240,7 +248,8 @@ public class MoneroWalletHandler implements WalletListener {
     }
 
     public void store(MethodCall call, MethodChannel.Result result) {
-        AsyncTask.execute(() -> {
+        executorService.execute(() -> {
+//        AsyncTask.execute(() -> {
             getCurrentWallet().store();
 
             new Handler(Looper.getMainLooper())
@@ -373,22 +382,44 @@ public class MoneroWalletHandler implements WalletListener {
         });
     }
 
+    private static ExecutorService executorService = Executors.newSingleThreadExecutor();
+
     public void close(MethodCall call, MethodChannel.Result result) {
-        AsyncTask.execute(() -> {
-            boolean isClosed = moneroWalletsManager.close(getCurrentWallet(), true);
+        executorService.execute(() -> {
+//            Thread thread = new Thread(() -> {
+                boolean isClosed = moneroWalletsManager.close(getCurrentWallet(), true);
 
-            if (isClosed) {
-                currentWallet = null;
-                currentSubaddress = null;
-                currentTransactionHistory = null;
+                if (isClosed) {
+                    currentWallet = null;
+                    currentSubaddress = null;
+                    currentTransactionHistory = null;
 
-                new Handler(Looper.getMainLooper())
-                        .post(() -> result.success(null));
-            } else {
-                new Handler(Looper.getMainLooper())
-                        .post(() -> result.error("CLOSE_WALLET_ERROR", "Cannot close the wallet", null));
-            }
+                    new Handler(Looper.getMainLooper())
+                            .post(() -> result.success(null));
+                } else {
+                    new Handler(Looper.getMainLooper())
+                            .post(() -> result.error("CLOSE_WALLET_ERROR", "Cannot close the wallet", null));
+                }
+//            });
+
+//            thread.start();
         });
+
+//        AsyncTask.execute(() -> {
+//            boolean isClosed = moneroWalletsManager.close(getCurrentWallet(), true);
+//
+//            if (isClosed) {
+//                currentWallet = null;
+//                currentSubaddress = null;
+//                currentTransactionHistory = null;
+//
+//                new Handler(Looper.getMainLooper())
+//                        .post(() -> result.success(null));
+//            } else {
+//                new Handler(Looper.getMainLooper())
+//                        .post(() -> result.error("CLOSE_WALLET_ERROR", "Cannot close the wallet", null));
+//            }
+//        });
     }
 
     // MARK: TransactionHistory
@@ -574,6 +605,8 @@ public class MoneroWalletHandler implements WalletListener {
     // MARK: WalletListener
 
     public void moneySpent(String txId, long amount) {
+        System.out.println("moneySpent callback");
+
         if (balanceChannel == null || getCurrentWallet() == null) {
             return;
         }
@@ -583,15 +616,20 @@ public class MoneroWalletHandler implements WalletListener {
     }
 
     public void moneyReceived(String txId, long amount) {
+        System.out.println("moneyReceived callback");
+
         if (balanceChannel == null || getCurrentWallet() == null) {
             return;
         }
+
 
         new Handler(Looper.getMainLooper())
                 .post(() -> balanceChannel.send(null));
     }
 
     public void unconfirmedMoneyReceived(String txId, long amount) {
+        System.out.println("unconfirmedMoneyReceived callback");
+
         if (balanceChannel == null || getCurrentWallet() == null) {
             return;
         }

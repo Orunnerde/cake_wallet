@@ -304,7 +304,9 @@ class DashboardPage extends BasePage {
                                       width: 125,
                                       child: Observer(builder: (_) {
                                         if (syncStore.status
-                                            is SyncingSyncStatus) {
+                                                is SyncingSyncStatus ||
+                                            syncStore.status
+                                                is RestoringSyncStatus) {
                                           return Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment

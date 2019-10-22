@@ -80,8 +80,8 @@ abstract class TransactionListBase with Store {
         .listen((transactions) => _setTransactions(transactions));
 
     if (wallet is MoneroWallet) {
-      _account = wallet.account.value;
-      _onAccountChangeSubscription = wallet.account.listen((account) {
+      _account = wallet.account;
+      _onAccountChangeSubscription = wallet.onAccountChange.listen((account) {
         _account = account;
         _updateTransactionsList();
       });

@@ -72,7 +72,6 @@ import 'package:cake_wallet/src/screens/address_book/contact_page.dart';
 import 'package:cake_wallet/src/screens/show_keys/show_keys_page.dart';
 import 'package:cake_wallet/src/screens/exchange_trade/exchange_confirm_page.dart';
 import 'package:cake_wallet/src/screens/trade_history/trade_history_page.dart';
-import 'package:cake_wallet/src/screens/exchange_trade/exchange_funds_page.dart';
 import 'package:cake_wallet/src/screens/exchange_trade/exchange_trade_page.dart';
 import 'package:cake_wallet/src/screens/subaddress/subaddress_list_page.dart';
 
@@ -189,9 +188,10 @@ class Router {
                         walletService: walletService,
                         settingsStore: settingsStore),
                   ),
-                  Provider(
-                    builder: (context) =>
-                        BalanceStore(walletService: walletService),
+                  ProxyProvider<SettingsStore, BalanceStore>(
+                    builder: (_, settingsStore, __) => BalanceStore(
+                        walletService: walletService,
+                        settingsStore: settingsStore),
                   ),
                   ProxyProvider<SettingsStore, WalletStore>(
                       builder: (_, settingsStore, __) => WalletStore(
@@ -207,9 +207,11 @@ class Router {
         return CupertinoPageRoute(
             fullscreenDialog: true,
             builder: (_) => MultiProvider(providers: [
-                  Provider(
-                      builder: (_) =>
-                          BalanceStore(walletService: walletService)),
+                  ProxyProvider<SettingsStore, BalanceStore>(
+                    builder: (_, settingsStore, __) => BalanceStore(
+                        walletService: walletService,
+                        settingsStore: settingsStore),
+                  ),
                   ProxyProvider<SettingsStore, WalletStore>(
                       builder: (_, settingsStore, __) => WalletStore(
                           walletService: walletService,
