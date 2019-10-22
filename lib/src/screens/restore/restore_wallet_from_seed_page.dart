@@ -13,6 +13,7 @@ import 'package:cake_wallet/src/stores/wallet_restoration/wallet_restoration_sto
 import 'package:cake_wallet/src/stores/wallet_restoration/wallet_restoration_state.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/widgets/blockchain_height_widget.dart';
+import 'package:cake_wallet/src/widgets/seed_widget.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
 
@@ -50,8 +51,10 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
 
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    if (_themeChanger.getTheme() == Themes.darkTheme)
+      _isDarkTheme = true;
+    else
+      _isDarkTheme = false;
 
     reaction((_) => walletRestorationStore.state, (state) {
       if (state is WalletRestoredSuccessfully) {
@@ -88,97 +91,110 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Padding(
-                  padding: EdgeInsets.only(left: 13, right: 13),
-                  child: Column(children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Flexible(
-                            child: Container(
-                          padding: EdgeInsets.only(top: 20.0),
-                          child: TextFormField(
-                            style: TextStyle(fontSize: 14.0),
-                            controller: _nameController,
-                            decoration: InputDecoration(
-                                hintStyle: TextStyle(
-                                    color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                                        : Palette.lightBlue),
-                                hintText: 'Wallet name',
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
-                                        width: 1.0)),
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
-                                        width: 1.0))),
-                            validator: (value) {
-                              return null;
-                            },
-                          ),
-                        ))
-                      ],
-                    ),
-                    BlockchainHeightWidget(key: _blockchainHeightKey),
-                    Row(
-                      children: <Widget>[
-                        Flexible(
-                            child: Container(
-                          padding: EdgeInsets.only(top: 20.0),
-                          child: TextFormField(
-                            style: TextStyle(fontSize: 14.0),
-                            controller: _seedController,
-                            keyboardType: TextInputType.multiline,
-                            maxLines: null,
-                            textInputAction: TextInputAction.done,
-                            decoration: InputDecoration(
-                                hintStyle: TextStyle(
-                                    color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                                        : Palette.lightBlue),
-                                hintText: 'Seed',
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
-                                        width: 1.0)),
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
-                                        width: 1.0))),
-                            validator: (value) {
-                              return null;
-                            },
-                          ),
-                        ))
-                      ],
-                    ),
-                  ])),
-              Flexible(
-                  child: Container(
-                      alignment: Alignment.bottomCenter,
-                      child: Observer(builder: (_) {
-                        return LoadingPrimaryButton(
-                            onPressed: () {
-                              if (_formKey.currentState.validate()) {
-                                walletRestorationStore.restoreFromSeed(
-                                    name: _nameController.text,
-                                    seed: _seedController.text,
-                                    restoreHeight: _blockchainHeightKey
-                                        .currentState.height);
-                              }
-                            },
-                            isLoading: walletRestorationStore.state
-                                is WalletIsRestoring,
-                            text: 'Recover',
-                            color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
-                                : Palette.purple,
-                            borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
-                                : Palette.deepPink,
-                        );
-                      })))
+              // Padding(
+              //     padding: EdgeInsets.only(left: 13, right: 13),
+              //     child: Column(children: <Widget>[
+              //       Row(
+              //         children: <Widget>[
+              //           Flexible(
+              //               child: Container(
+              //             padding: EdgeInsets.only(top: 20.0),
+              //             child: TextFormField(
+              //               style: TextStyle(fontSize: 14.0),
+              //               controller: _nameController,
+              //               decoration: InputDecoration(
+              //                   hintStyle: TextStyle(
+              //                       color: _isDarkTheme
+              //                           ? PaletteDark.darkThemeGrey
+              //                           : Palette.lightBlue),
+              //                   hintText: 'Wallet name',
+              //                   focusedBorder: UnderlineInputBorder(
+              //                       borderSide: BorderSide(
+              //                           color: _isDarkTheme
+              //                               ? PaletteDark
+              //                                   .darkThemeGreyWithOpacity
+              //                               : Palette.lightGrey,
+              //                           width: 1.0)),
+              //                   enabledBorder: UnderlineInputBorder(
+              //                       borderSide: BorderSide(
+              //                           color: _isDarkTheme
+              //                               ? PaletteDark
+              //                                   .darkThemeGreyWithOpacity
+              //                               : Palette.lightGrey,
+              //                           width: 1.0))),
+              //               validator: (value) {
+              //                 return null;
+              //               },
+              //             ),
+              //           ))
+              //         ],
+              //       ),
+              //       BlockchainHeightWidget(key: _blockchainHeightKey),
+              //       Row(
+              //         children: <Widget>[
+              //           Flexible(
+              //               child: Container(
+              //             padding: EdgeInsets.only(top: 20.0),
+                          // child: TextFormField(
+                          //   style: TextStyle(fontSize: 14.0),
+                          //   controller: _seedController,
+                          //   keyboardType: TextInputType.multiline,
+                          //   maxLines: null,
+                          //   textInputAction: TextInputAction.done,
+                          //   decoration: InputDecoration(
+                          //       hintStyle: TextStyle(
+                          //           color: _isDarkTheme
+                          //               ? PaletteDark.darkThemeGrey
+                          //               : Palette.lightBlue),
+                          //       hintText: 'Seed',
+                          //       focusedBorder: UnderlineInputBorder(
+                          //           borderSide: BorderSide(
+                          //               color: _isDarkTheme
+                          //                   ? PaletteDark
+                          //                       .darkThemeGreyWithOpacity
+                          //                   : Palette.lightGrey,
+                          //               width: 1.0)),
+                          //       enabledBorder: UnderlineInputBorder(
+                          //           borderSide: BorderSide(
+                          //               color: _isDarkTheme
+                          //                   ? PaletteDark
+                          //                       .darkThemeGreyWithOpacity
+                          //                   : Palette.lightGrey,
+                          //               width: 1.0))),
+                          //   validator: (value) {
+                          //     return null;
+                          //   },
+                          // ),
+              //           ))
+              //         ],
+              //       ),
+              //     ])),
+              Flexible(child: Container(child: SeedWidget())),
+              // Flexible(
+              //     child: Container(
+              //         alignment: Alignment.bottomCenter,
+              //         child: Observer(builder: (_) {
+              //           return LoadingPrimaryButton(
+              //             onPressed: () {
+              //               if (_formKey.currentState.validate()) {
+              //                 walletRestorationStore.restoreFromSeed(
+              //                     name: _nameController.text,
+              //                     seed: _seedController.text,
+              //                     restoreHeight:
+              //                         _blockchainHeightKey.currentState.height);
+              //               }
+              //             },
+              //             isLoading:
+              //                 walletRestorationStore.state is WalletIsRestoring,
+              //             text: 'Recover',
+              //             color: _isDarkTheme
+              //                 ? PaletteDark.darkThemePurpleButton
+              //                 : Palette.purple,
+              //             borderColor: _isDarkTheme
+              //                 ? PaletteDark.darkThemePurpleButtonBorder
+              //                 : Palette.deepPink,
+              //           );
+              //         })))
             ],
           ),
         ),
