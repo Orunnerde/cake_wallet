@@ -15,6 +15,7 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/widgets/blockchain_height_widget.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/src/stores/validation/validation_store.dart';
 
 class RestoreWalletFromKeysPage extends BasePage {
   final WalletListService walletsService;
@@ -48,6 +49,7 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
   @override
   Widget build(BuildContext context) {
     final walletRestorationStore = Provider.of<WalletRestorationStore>(context);
+    final validation = ValidationStore();
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
 
@@ -116,6 +118,9 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                                           : Palette.lightGrey,
                                       width: 1.0))),
                           validator: (value) {
+                            validation.validateWalletName(value);
+                            if (!validation.isValidate) return 'Wallet name can only contain letters, '
+                                'numbers\nand must be between 1 and 15 characters long';
                             return null;
                           },
                         ),
@@ -148,6 +153,8 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                                           : Palette.lightGrey,
                                       width: 1.0))),
                           validator: (value) {
+                            validation.validateAddress(value);
+                            if (!validation.isValidate) return 'Wallet address can only contain cryptocurrency type';
                             return null;
                           },
                         ),
@@ -178,6 +185,8 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                                           : Palette.lightGrey,
                                       width: 1.0))),
                           validator: (value) {
+                            validation.validateKeys(value);
+                            if (!validation.isValidate) return 'Wallet keys can only contain 64 chars in hex';
                             return null;
                           },
                         ),
@@ -208,6 +217,8 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                                           : Palette.lightGrey,
                                       width: 1.0))),
                           validator: (value) {
+                            validation.validateKeys(value);
+                            if (!validation.isValidate) return 'Wallet keys can only contain 64 chars in hex';
                             return null;
                           },
                         ),

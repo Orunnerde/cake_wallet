@@ -19,13 +19,19 @@ abstract class ValidationStoreBase with Store {
 
   @action
   void validateWalletName(String value) {
-    String p = '^[a-zA-Z0-9_]{1,10}\$';
+    String p = '^[a-zA-Z0-9_]{1,15}\$';
     isValidate = _validate(value, p);
   }
 
   @action
   void validateKeys(String value) {
-    String p = '^[a-fA-F0-9]{64}\$';
+    String p = '^[A-F0-9]{64}\$';
+    isValidate = _validate(value, p);
+  }
+
+  @action
+  void validateSeed(String value) {
+    String p = '^[a-zA-Z0-9_]+( [a-zA-Z0-9_]+){24}\$';
     isValidate = _validate(value, p);
   }
 
@@ -37,7 +43,7 @@ abstract class ValidationStoreBase with Store {
 
   @action
   void validatePaymentID(String value) {
-    String p = '^[a-fA-F0-9]{16,64}\$';
+    String p = '^[A-F0-9]{16,64}\$';
     isValidate = _validate(value, p);
   }
 

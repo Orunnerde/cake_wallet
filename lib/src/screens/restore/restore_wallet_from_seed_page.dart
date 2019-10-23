@@ -15,6 +15,7 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/widgets/blockchain_height_widget.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/src/stores/validation/validation_store.dart';
 
 class RestoreWalletFromSeedPage extends BasePage {
   final WalletListService walletsService;
@@ -46,6 +47,7 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
   @override
   Widget build(BuildContext context) {
     final walletRestorationStore = Provider.of<WalletRestorationStore>(context);
+    final validation = ValidationStore();
 
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
@@ -115,6 +117,9 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
                                             : Palette.lightGrey,
                                         width: 1.0))),
                             validator: (value) {
+                              validation.validateWalletName(value);
+                              if (!validation.isValidate) return 'Wallet name can only contain letters, '
+                                  'numbers\nand must be between 1 and 15 characters long';
                               return null;
                             },
                           ),
@@ -149,6 +154,8 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
                                             : Palette.lightGrey,
                                         width: 1.0))),
                             validator: (value) {
+                              validation.validateSeed(value);
+                              if (!validation.isValidate) return 'Wallet seed can only contain 25 words';
                               return null;
                             },
                           ),

@@ -146,7 +146,8 @@ class _WalletNameFormState extends State<WalletNameForm> {
                                   width: 1.0))),
                       validator: (value) {
                         validation.validateWalletName(value);
-                        if (!validation.isValidate) return 'Please enter a wallet name';
+                        if (!validation.isValidate) return 'Wallet name can only contain letters, '
+                            'numbers\nand must be between 1 and 15 characters long';
                         return null;
                       },
                     ),
