@@ -63,13 +63,13 @@ class HomePage extends StatelessWidget {
                 color: Color.fromRGBO(121, 201, 233, 1), height: 20),
             title: const Text('Exchange'),
           ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/settings_icon.png',
-                color: Colors.grey, height: 20),
-            activeIcon: Image.asset('assets/images/settings_icon.png',
-                color: Color.fromRGBO(121, 201, 233, 1), height: 20),
-            title: const Text('Settings'),
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Image.asset('assets/images/settings_icon.png',
+          //       color: Colors.grey, height: 20),
+          //   activeIcon: Image.asset('assets/images/settings_icon.png',
+          //       color: Color.fromRGBO(121, 201, 233, 1), height: 20),
+          //   title: const Text('Settings'),
+          // ),
         ],
       ),
       tabBuilder: (context, index) {
