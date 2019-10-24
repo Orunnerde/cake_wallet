@@ -10,6 +10,7 @@ import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/src/stores/validation/validation_store.dart';
 
 class NewSubaddressPage extends BasePage {
   String get title => 'New subaddress';
@@ -39,12 +40,14 @@ class NewSubaddressForm extends StatefulWidget {
 }
 
 class NewSubaddressFormState extends State<NewSubaddressForm> {
+  final _formKey = GlobalKey<FormState>();
   final _labelController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final subaddressCreationStore =
         Provider.of<SubadrressCreationStore>(context);
+    final validation = ValidationStore();
 
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
@@ -54,45 +57,55 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
     else
       _isDarkTheme = false;
 
-    return Stack(children: <Widget>[
-      Center(
-        child: Padding(
-          padding: EdgeInsets.only(left: 35, right: 35),
-          child: TextFormField(
-              controller: _labelController,
-              decoration: InputDecoration(
-                  hintStyle: TextStyle(color: Palette.lightBlue),
-                  hintText: 'Label name',
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Palette.lightGrey, width: 1.0)),
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Palette.lightGrey, width: 1.0))),
-              validator: (value) => null),
+    return Form(
+      key: _formKey,
+      child: Stack(children: <Widget>[
+        Center(
+          child: Padding(
+            padding: EdgeInsets.only(left: 35, right: 35),
+            child: TextFormField(
+                controller: _labelController,
+                decoration: InputDecoration(
+                    hintStyle: TextStyle(color: Palette.lightBlue),
+                    hintText: 'Label name',
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide:
+                        BorderSide(color: Palette.lightGrey, width: 1.0)),
+                    enabledBorder: UnderlineInputBorder(
+                        borderSide:
+                        BorderSide(color: Palette.lightGrey, width: 1.0))),
+                validator: (value) {
+                  validation.validateSubaddressName(value);
+                  if (!validation.isValidate) return '''Subaddress name can't contain `,'" '''
+                      'symbols\nand must be between 1 and 20 characters long';
+                  return null;
+                }),
+          ),
         ),
-      ),
-      Positioned(
-          bottom: 20,
-          left: 20,
-          right: 20,
-          child: Observer(
-            builder: (_) => LoadingPrimaryButton(
-                onPressed: () async {
-                  await subaddressCreationStore.add(
-                      label: _labelController.text);
-                  Navigator.of(context).pop();
-                },
-                text: 'Create',
-                color: _isDarkTheme
-                    ? PaletteDark.darkThemeIndigoButton
-                    : Palette.indigo,
-                borderColor: _isDarkTheme
-                    ? PaletteDark.darkThemeIndigoButtonBorder
-                    : Palette.deepIndigo,
-                isLoading:
-                    subaddressCreationStore.state is SubaddressIsCreating),
-          ))
-    ]);
+        Positioned(
+            bottom: 20,
+            left: 20,
+            right: 20,
+            child: Observer(
+              builder: (_) => LoadingPrimaryButton(
+                  onPressed: () async {
+                    if (_formKey.currentState.validate()) {
+                      await subaddressCreationStore.add(
+                          label: _labelController.text);
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  text: 'Create',
+                  color: _isDarkTheme
+                      ? PaletteDark.darkThemeIndigoButton
+                      : Palette.indigo,
+                  borderColor: _isDarkTheme
+                      ? PaletteDark.darkThemeIndigoButtonBorder
+                      : Palette.deepIndigo,
+                  isLoading:
+                  subaddressCreationStore.state is SubaddressIsCreating),
+            ))
+      ])
+    );
   }
 }

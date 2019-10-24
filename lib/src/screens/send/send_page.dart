@@ -14,6 +14,7 @@ import 'package:cake_wallet/src/stores/send/sending_state.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/src/stores/validation/validation_store.dart';
 
 class SendPage extends BasePage {
   String get title => 'Send Monero';
@@ -66,6 +67,7 @@ class SendFormState extends State<SendForm> {
     final sendStore = Provider.of<SendStore>(context);
     final balanceStore = Provider.of<BalanceStore>(context);
     final walletStore = Provider.of<WalletStore>(context);
+    final validation = ValidationStore();
 
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
@@ -209,7 +211,11 @@ class SendFormState extends State<SendForm> {
                                           ? PaletteDark.darkThemeGreyWithOpacity
                                           : Palette.lightGrey,
                                       width: 1.0))),
-                          validator: (value) => null),
+                          validator: (value) {
+                            validation.validatePaymentID(value);
+                            if (!validation.isValidate) return 'Payment ID can only contain from 16 to 64 chars in hex';
+                            return null;
+                          }),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 20),

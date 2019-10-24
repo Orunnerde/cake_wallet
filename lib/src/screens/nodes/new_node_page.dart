@@ -7,6 +7,7 @@ import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/src/stores/validation/validation_store.dart';
 
 class NewNodePage extends BasePage {
   @override
@@ -40,6 +41,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
   @override
   Widget build(BuildContext context) {
     final nodeList = Provider.of<NodeListStore>(context);
+    final validation = ValidationStore();
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
 
@@ -78,12 +80,9 @@ class NewNodeFormState extends State<NewNodePageForm> {
                                         width: 1.0))),
                             controller: _nodeAddressController,
                             validator: (value) {
-                              String p = '[^ ]';
-                              RegExp regExp = new RegExp(p);
-                              if (regExp.hasMatch(value))
-                                return null;
-                              else
-                                return 'Please enter a node address';
+                              validation.validateNodeAddress(value);
+                              if (!validation.isValidate) return 'Please enter a iPv4 address';
+                              return null;
                             },
                           ),
                         )
@@ -115,6 +114,8 @@ class NewNodeFormState extends State<NewNodePageForm> {
                                         width: 1.0))),
                             controller: _nodePortController,
                             validator: (value) {
+                              validation.validateNodePort(value);
+                              if (!validation.isValidate) return 'Node port can only contain numbers between 0 and 65535';
                               return null;
                             },
                           ),

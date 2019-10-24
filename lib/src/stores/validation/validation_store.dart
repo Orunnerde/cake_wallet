@@ -85,7 +85,14 @@ abstract class ValidationStoreBase with Store {
   @action
   void validateNodePort(String value) {
     String p = '^[0-9]{1,5}';
-    isValidate = _validate(value, p);
+    if (_validate(value, p)) {
+      try {
+        int intValue = int.parse(value);
+        isValidate = (intValue >= 0 && intValue <= 65535);
+      } catch (e) {
+        isValidate = false;
+      }
+    } else isValidate = false;
   }
 
   @action
