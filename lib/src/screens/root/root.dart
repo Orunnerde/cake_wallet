@@ -1,3 +1,9 @@
+import 'package:cake_wallet/src/screens/dashboard/dashboard_page.dart';
+import 'package:cake_wallet/src/stores/balance/balance_store.dart';
+import 'package:cake_wallet/src/stores/settings/settings_store.dart';
+import 'package:cake_wallet/src/stores/sync/sync_store.dart';
+import 'package:cake_wallet/src/stores/transaction_list/transaction_list_store.dart';
+import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +56,26 @@ class Root extends StatelessWidget {
       }
 
       if (authenticationStore.state == AuthenticationState.authenticated) {
-        return HomePage();
+        return MultiProvider(providers: [
+                      ProxyProvider<SettingsStore, TransactionListStore>(
+                        builder: (_, settingsStore, __) => TransactionListStore(
+                            walletService: walletService,
+                            settingsStore: settingsStore),
+                      ),
+                      ProxyProvider<SettingsStore, BalanceStore>(
+                        builder: (_, settingsStore, __) => BalanceStore(
+                            walletService: walletService,
+                            settingsStore: settingsStore),
+                      ),
+                      ProxyProvider<SettingsStore, WalletStore>(
+                          builder: (_, settingsStore, __) => WalletStore(
+                              walletService: walletService,
+                              settingsStore: settingsStore)),
+                      Provider(
+                        builder: (context) =>
+                            SyncStore(walletService: walletService),
+                      ),
+                    ], child: DashboardPage());
       }
 
       return Container(color: Colors.white);

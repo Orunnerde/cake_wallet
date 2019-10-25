@@ -15,6 +15,9 @@ import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/domain/services/address_book_service.dart';
 import 'package:cake_wallet/src/domain/exchange/trade_history.dart';
 import 'package:cake_wallet/src/domain/common/recipient_address_list.dart';
+import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/src/domain/exchange/changenow/changenow_exchange_provider.dart';
+import 'package:cake_wallet/src/domain/exchange/xmrto/xmrto_exchange_provider.dart';
 
 // MARK: Import stores
 
@@ -40,6 +43,7 @@ import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/src/stores/wallet/wallet_keys_store.dart';
 import 'package:cake_wallet/src/stores/trade_history/trade_history_store.dart';
 import 'package:cake_wallet/src/stores/exchange_trade/exchange_trade_store.dart';
+import 'package:cake_wallet/src/stores/exchange/exchange_store.dart';
 
 // MARK: Import screens
 
@@ -75,6 +79,8 @@ import 'package:cake_wallet/src/screens/exchange_trade/exchange_trade_page.dart'
 import 'package:cake_wallet/src/screens/subaddress/subaddress_list_page.dart';
 import 'package:cake_wallet/src/screens/restore/restore_wallet_from_seed_details.dart';
 import 'package:cake_wallet/src/screens/trade_history/trade_details_page.dart';
+import 'package:cake_wallet/src/screens/exchange/exchange_page.dart';
+import 'package:cake_wallet/src/screens/settings/settings.dart';
 
 class Router {
   static Route<dynamic> generateRoute(
@@ -479,6 +485,33 @@ class Router {
                         walletListService: walletListService,
                         seed: settings.arguments),
                     child: RestoreWalletFromSeedDetailsPage()));
+      case Routes.exchange:
+        return MaterialPageRoute(
+            builder: (_) => MultiProvider(providers: [
+                  Provider(builder: (_) {
+                    final xmrtoprovider = XMRTOExchangeProvider();
+
+                    return ExchangeStore(
+                        initialProvider: xmrtoprovider,
+                        initialDepositCurrency: CryptoCurrency.xmr,
+                        initialReceiveCurrency: CryptoCurrency.btc,
+                        tradeHistory: TradeHistory(db: db),
+                        providerList: [
+                          xmrtoprovider,
+                          ChangeNowExchangeProvider()
+                        ]);
+                  }),
+                  ProxyProvider<SettingsStore, WalletStore>(
+                      builder: (_, settingsStore, __) => WalletStore(
+                          walletService: walletService,
+                          settingsStore: settingsStore)),
+                ], child: ExchangePage()));
+
+      case Routes.settings:
+        return MaterialPageRoute(
+            builder: (_) => Provider(
+                builder: (_) => NodeListStore(nodeList: NodeList(db: db)),
+                child: SettingsPage()));
 
       default:
         return MaterialPageRoute(

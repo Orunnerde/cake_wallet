@@ -22,6 +22,9 @@ import 'package:cake_wallet/themes.dart';
 class ExchangePage extends BasePage {
   String get title => 'Exchange';
 
+  @override
+  bool get isModalBackButton => true;
+
   final Image arrowBottomPurple = Image.asset(
     'assets/images/arrow_bottom_purple_icon.png',
     height: 8,
@@ -74,31 +77,6 @@ class ExchangePage extends BasePage {
   }
 
   @override
-  Widget leading(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
-
-    return SizedBox(
-        width: 55,
-        child: FlatButton(
-          padding: EdgeInsets.all(0),
-          child: Text('History',
-              style: TextStyle(
-                  color: _isDarkTheme
-                      ? PaletteDark.darkThemeTitleViolet
-                      : Colors.black,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16)),
-          onPressed: () => Navigator.of(context).pushNamed(Routes.tradeHistory),
-        ));
-  }
-
-  @override
   Widget trailing(BuildContext context) {
     final exchangeStore = Provider.of<ExchangeStore>(context);
 
@@ -110,20 +88,40 @@ class ExchangePage extends BasePage {
     else
       _isDarkTheme = false;
 
-    return SizedBox(
-        width: 50,
-        child: FlatButton(
-            padding: EdgeInsets.all(0),
-            child: Text(
-              'Clear',
-              style: TextStyle(
-                  color: _isDarkTheme
-                      ? PaletteDark.darkThemeTitleViolet
-                      : Palette.wildDarkBlue,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16),
-            ),
-            onPressed: () => exchangeStore.reset()));
+    return Container(
+      width: 115,
+      child: Row(children: <Widget>[
+        SizedBox(
+            width: 55,
+            child: FlatButton(
+              padding: EdgeInsets.all(0),
+              child: Text('History',
+                  style: TextStyle(
+                      color: _isDarkTheme
+                          ? PaletteDark.darkThemeTitleViolet
+                          : Colors.black,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16)),
+              onPressed: () =>
+                  Navigator.of(context).pushNamed(Routes.tradeHistory),
+            )),
+        SizedBox(width: 10),
+        SizedBox(
+            width: 50,
+            child: FlatButton(
+                padding: EdgeInsets.all(0),
+                child: Text(
+                  'Clear',
+                  style: TextStyle(
+                      color: _isDarkTheme
+                          ? PaletteDark.darkThemeTitleViolet
+                          : Palette.wildDarkBlue,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16),
+                ),
+                onPressed: () => exchangeStore.reset()))
+      ]),
+    );
   }
 
   @override
