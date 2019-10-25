@@ -1,4 +1,3 @@
-import 'package:cake_wallet/src/screens/trade_history/trade_details_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -74,6 +73,8 @@ import 'package:cake_wallet/src/screens/exchange_trade/exchange_confirm_page.dar
 import 'package:cake_wallet/src/screens/trade_history/trade_history_page.dart';
 import 'package:cake_wallet/src/screens/exchange_trade/exchange_trade_page.dart';
 import 'package:cake_wallet/src/screens/subaddress/subaddress_list_page.dart';
+import 'package:cake_wallet/src/screens/restore/restore_wallet_from_seed_details.dart';
+import 'package:cake_wallet/src/screens/trade_history/trade_details_page.dart';
 
 class Router {
   static Route<dynamic> generateRoute(
@@ -216,10 +217,9 @@ class Router {
                       builder: (_, settingsStore, __) => WalletStore(
                           walletService: walletService,
                           settingsStore: settingsStore)),
-                  ProxyProvider<SettingsStore, SendStore>(
-                      builder: (_, settingsStore, __) => SendStore(
+                  Provider(
+                      builder: (context) => SendStore(
                           walletService: walletService,
-                          settingsStore: settingsStore,
                           recipientAddressList: RecipientAddressList(db: db))),
                 ], child: SendPage()));
 
@@ -468,6 +468,17 @@ class Router {
                       builder: (_) =>
                           SubaddressListStore(walletService: walletService))
                 ], child: SubaddressListPage()));
+
+      case Routes.restoreWalletFromSeedDetails:
+        return CupertinoPageRoute(
+            builder: (_) =>
+                ProxyProvider<AuthenticationStore, WalletRestorationStore>(
+                    builder: (_, authStore, __) => WalletRestorationStore(
+                        authStore: authStore,
+                        sharedPreferences: sharedPreferences,
+                        walletListService: walletListService,
+                        seed: settings.arguments),
+                    child: RestoreWalletFromSeedDetailsPage()));
 
       default:
         return MaterialPageRoute(

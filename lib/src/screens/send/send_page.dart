@@ -65,6 +65,7 @@ class SendFormState extends State<SendForm> {
   Widget build(BuildContext context) {
     final settingsStore = Provider.of<SettingsStore>(context);
     final sendStore = Provider.of<SendStore>(context);
+    sendStore.settingsStore = settingsStore;
     final balanceStore = Provider.of<BalanceStore>(context);
     final walletStore = Provider.of<WalletStore>(context);
 
@@ -424,7 +425,7 @@ class SendFormState extends State<SendForm> {
       final fiatAmount = _fiatAmountController.text;
 
       if (sendStore.fiatAmount != fiatAmount) {
-        sendStore.fiatAmount = fiatAmount;
+        sendStore.changeFiatAmount(fiatAmount);
       }
     });
 
@@ -432,7 +433,7 @@ class SendFormState extends State<SendForm> {
       final cryptoAmount = _cryptoAmountController.text;
 
       if (sendStore.cryptoAmount != cryptoAmount) {
-        sendStore.cryptoAmount = cryptoAmount;
+        sendStore.changeCryptoAmount(cryptoAmount);
       }
     });
 

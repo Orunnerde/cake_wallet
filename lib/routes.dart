@@ -38,4 +38,5 @@ class Routes {
   static const exchangeFunds = '/exchange_funds';
   static const exchangeTrade = '/exchange_trade';
   static const subaddressList = '/subaddress_list';
+  static const restoreWalletFromSeedDetails = '/restore_from_seed_details';
 }
