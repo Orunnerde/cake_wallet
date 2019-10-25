@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/screens/settings/change_language.dart';
 import 'package:cake_wallet/src/screens/disclaimer/disclaimer_page.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/src/widgets/standart_switch.dart';
@@ -403,12 +404,19 @@ class SettingsState extends State<Settings> {
                             value: _isDarkTheme,
                             onTaped: () {
                               setState(() {
+                                Color _statusBarColor;
                                 _isDarkTheme = !_isDarkTheme;
                                 if (_isDarkTheme) {
                                   _themeChanger.setTheme(Themes.darkTheme);
+                                  _statusBarColor = Colors.black;
                                 } else {
                                   _themeChanger.setTheme(Themes.lightTheme);
+                                  _statusBarColor = Colors.white;
                                 }
+                                settingsStore.saveDarkTheme(isDarkTheme: _isDarkTheme);
+                                SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+                                    statusBarColor: _statusBarColor
+                                ));
                               });
                             }))
                   ],

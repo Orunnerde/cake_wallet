@@ -17,7 +17,7 @@ abstract class SettingsStoreBase with Store {
   static const currentTransactionPriorityKey = 'current_fee_priority';
   static const currentBalanceDisplayModeKey = 'current_balance_display_mode';
   static const shouldSaveRecipientAddressKey = 'save_recipient_address';
-  static const currentThemeKey = 'current_theme';
+  static const currentDarkTheme = 'dark_theme';
 
   static Future<SettingsStore> load(
       {@required SharedPreferences sharedPreferences,
@@ -33,6 +33,9 @@ abstract class SettingsStoreBase with Store {
         raw: sharedPreferences.getInt(currentBalanceDisplayModeKey));
     final shouldSaveRecipientAddress =
         sharedPreferences.getBool(shouldSaveRecipientAddressKey);
+    final savedDarkTheme =
+        sharedPreferences.getBool(currentDarkTheme) == null ? false
+           : sharedPreferences.getBool(currentDarkTheme);
 
     final store = SettingsStore(
         sharedPreferences: sharedPreferences,
@@ -40,7 +43,8 @@ abstract class SettingsStoreBase with Store {
         initialFiatCurrency: currentFiatCurrency,
         initialTransactionPriority: currentTransactionPriority,
         initialBalanceDisplayMode: currentBalanceDisplayMode,
-        initialSaveRecipientAddress: shouldSaveRecipientAddress);
+        initialSaveRecipientAddress: shouldSaveRecipientAddress,
+        initialDarkTheme: savedDarkTheme);
     await store.loadSettings();
 
     return store;
@@ -61,6 +65,9 @@ abstract class SettingsStoreBase with Store {
   @observable
   bool shouldSaveRecipientAddress;
 
+  @observable
+  bool isDarkTheme;
+
   SharedPreferences _sharedPreferences;
   NodeList _nodeList;
 
@@ -70,14 +77,23 @@ abstract class SettingsStoreBase with Store {
       @required FiatCurrency initialFiatCurrency,
       @required TransactionPriority initialTransactionPriority,
       @required BalanceDisplayMode initialBalanceDisplayMode,
-      @required bool initialSaveRecipientAddress}) {
+      @required bool initialSaveRecipientAddress,
+      @required bool initialDarkTheme}) {
     fiatCurrency = initialFiatCurrency;
     transactionPriority = initialTransactionPriority;
     balanceDisplayMode = initialBalanceDisplayMode;
     shouldSaveRecipientAddress = initialSaveRecipientAddress;
     _sharedPreferences = sharedPreferences;
     _nodeList = nodeList;
+    isDarkTheme = initialDarkTheme;
   }
+
+  @action
+  Future saveDarkTheme({@required bool isDarkTheme}) async {
+    this.isDarkTheme = isDarkTheme;
+    await _sharedPreferences.setBool(currentDarkTheme, isDarkTheme);
+  }
+
 
   @action
   Future setCurrentNode({@required Node node}) async {

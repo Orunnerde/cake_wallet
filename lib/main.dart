@@ -125,7 +125,9 @@ class CakeWalletApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ThemeChanger>(
-      builder: (_) => ThemeChanger(Themes.lightTheme),
+      builder: (_) => ThemeChanger(
+          settingsStore.isDarkTheme ? Themes.darkTheme : Themes.lightTheme
+      ),
       child: MaterialAppWithTheme(
           sharedPreferences: sharedPreferences,
           walletService: walletService,
@@ -157,10 +159,10 @@ class MaterialAppWithTheme extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final theme = Provider.of<ThemeChanger>(context);
+    Color _statusBarColor = settingsStore.isDarkTheme ? Colors.black : Colors.white;
 
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-      systemNavigationBarColor: Colors.black,
-      statusBarColor: Colors.white,
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: _statusBarColor
     ));
 
     return MultiProvider(
