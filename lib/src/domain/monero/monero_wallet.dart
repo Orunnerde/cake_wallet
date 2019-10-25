@@ -461,6 +461,13 @@ class MoneroWallet extends Wallet {
         fullBalance: fullBalance, unlockedBalance: unlockedBalance));
   }
 
+  Future rescan() async {
+    const startHeight = 0;
+    await configured(isRecovery: true, restoreHeight: startHeight);
+    await setRefreshFromBlockHeight(height: startHeight);
+    await setRecoveringFromSeed();
+  }
+
   void changeCurrentSubaddress(Subaddress subaddress) {
     _subaddress.value = subaddress;
   }

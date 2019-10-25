@@ -94,4 +94,6 @@ class WalletService extends Wallet {
       _currentWallet.createTransaction(credentials);
 
   Future updateInfo() async => _currentWallet.updateInfo();
+
+  Future rescan() async => _currentWallet.rescan();
 }

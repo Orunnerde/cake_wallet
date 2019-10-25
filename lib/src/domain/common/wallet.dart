@@ -105,4 +105,6 @@ abstract class Wallet {
 
   Future<PendingTransaction> createTransaction(
       TransactionCreationCredentials credentials);
+
+  Future rescan();
 }
