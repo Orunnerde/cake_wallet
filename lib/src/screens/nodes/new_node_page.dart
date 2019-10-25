@@ -41,7 +41,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
   @override
   Widget build(BuildContext context) {
     final nodeList = Provider.of<NodeListStore>(context);
-    final validation = ValidationStore();
+    final validation = Provider.of<ValidationStore>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
 
@@ -145,9 +145,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
                                             : Palette.lightGrey,
                                         width: 1.0))),
                             controller: _loginController,
-                            validator: (value) {
-                              return null;
-                            },
+                            validator: (value) => null,
                           ),
                         )
                       ],
@@ -175,9 +173,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
                                             : Palette.lightGrey,
                                         width: 1.0))),
                             controller: _passwordController,
-                            validator: (value) {
-                              return null;
-                            },
+                            validator: (value) => null,
                           ),
                         )
                       ],

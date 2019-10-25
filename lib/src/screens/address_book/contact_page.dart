@@ -90,7 +90,7 @@ class ContactFormState extends State<ContactForm> {
   @override
   Widget build(BuildContext context) {
     final addressBookStore = Provider.of<AddressBookStore>(context);
-    final validation = ValidationStore();
+    final validation = Provider.of<ValidationStore>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
 
     if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
@@ -135,7 +135,7 @@ class ContactFormState extends State<ContactForm> {
                           controller: _contactNameController,
                           validator: (value) {
                             validation.validateContactName(value);
-                            if (!validation.isValidate) return '''Contact name can't contain `,'" '''
+                            if (!validation.isValidate) return '''Contact name can't contain ` , ' " '''
                                 'symbols\nand must be between 1 and 32 characters long';
                             return null;
                           },
@@ -209,7 +209,7 @@ class ContactFormState extends State<ContactForm> {
                           controller: _addressController,
                           validator: (value) {
                             validation.validateAddress(value);
-                            if (!validation.isValidate) return 'Wallet address can only contain cryptocurrency type';
+                            if (!validation.isValidate) return 'Wallet address must correspond to the type of cryptocurrency';
                             return null;
                           }
                         ),

@@ -13,6 +13,7 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/src/widgets/nav_bar.dart';
+import 'package:cake_wallet/src/stores/validation/validation_store.dart';
 
 class ReceivePage extends BasePage {
   bool get isModalBackButton => true;
@@ -67,6 +68,7 @@ class ReceiveBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final walletStore = Provider.of<WalletStore>(context);
     final subaddressListStore = Provider.of<SubaddressListStore>(context);
+    final validation = Provider.of<ValidationStore>(context);
 
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     Color _currentColor, _notCurrentColor;
@@ -127,7 +129,7 @@ class ReceiveBody extends StatelessWidget {
                             Scaffold.of(context).showSnackBar(SnackBar(
                               content: Text(
                                 'Copied to Clipboard',
-                                textAlign: TextAlign.center,
+                                //textAlign: TextAlign.center,
                                 style: TextStyle(color: Colors.white),
                               ),
                               backgroundColor: Colors.green,
@@ -177,7 +179,9 @@ class ReceiveBody extends StatelessWidget {
                                     : Palette.lightGrey,
                                 width: 1.0))),
                     onSubmitted: (value) {
-                      // _validateAmount(value);
+                      validation.validateAmount(value);
+                      /*if (!validation.isValidate) return 'Amount can only contain numbers';
+                      return null;*/
                     },
                   ))
                 ],

@@ -47,7 +47,7 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
   Widget build(BuildContext context) {
     final subaddressCreationStore =
         Provider.of<SubadrressCreationStore>(context);
-    final validation = ValidationStore();
+    final validation = Provider.of<ValidationStore>(context);
 
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
@@ -76,7 +76,7 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
                         BorderSide(color: Palette.lightGrey, width: 1.0))),
                 validator: (value) {
                   validation.validateSubaddressName(value);
-                  if (!validation.isValidate) return '''Subaddress name can't contain `,'" '''
+                  if (!validation.isValidate) return '''Subaddress name can't contain ` , ' " '''
                       'symbols\nand must be between 1 and 20 characters long';
                   return null;
                 }),

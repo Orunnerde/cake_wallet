@@ -37,7 +37,8 @@ abstract class ValidationStoreBase with Store {
 
   @action
   void validateAddress(String value) {
-    String p = 'XMR|BTC|ETH|LTC|BCH|DASH';
+    // XMR, BTC, ETH
+    String p = '^[0-9a-zA-Z]{95}\$|^[0-9a-zA-Z]{34}\$|^[0-9a-zA-Z]{42}\$';
     isValidate = _validate(value, p);
   }
 
@@ -104,6 +105,12 @@ abstract class ValidationStoreBase with Store {
   @action
   void validateContactName(String value) {
     String p = '''^[^`,'"]{1,32}\$''';
+    isValidate = _validate(value, p);
+  }
+
+  @action
+  void validateAmount(String value) {
+    String p = '^[0-9]+\$';
     isValidate = _validate(value, p);
   }
 

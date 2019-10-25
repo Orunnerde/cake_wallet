@@ -10,6 +10,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:cake_wallet/src/screens/root/root.dart';
 import 'package:cake_wallet/src/stores/authentication/authentication_store.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
+import 'package:cake_wallet/src/stores/validation/validation_store.dart';
 import 'package:cake_wallet/src/domain/services/user_service.dart';
 import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
 import 'package:cake_wallet/src/domain/common/core_db.dart';
@@ -164,7 +165,10 @@ class MaterialAppWithTheme extends StatelessWidget {
     ));
 
     return MultiProvider(
-      providers: [Provider<SettingsStore>(builder: (_) => settingsStore)],
+      providers: [
+        Provider<SettingsStore>(builder: (_) => settingsStore),
+        Provider<ValidationStore>(builder: (_) => ValidationStore())
+      ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: theme.getTheme(),

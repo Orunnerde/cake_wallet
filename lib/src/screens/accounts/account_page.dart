@@ -7,6 +7,7 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/src/stores/validation/validation_store.dart';
 
 class AccountPage extends BasePage {
   String get title => 'Account';
@@ -56,6 +57,7 @@ class AccountFormState extends State<AccountForm> {
   @override
   Widget build(BuildContext context) {
     final accountListStore = Provider.of<AccountListStore>(context);
+    final validation = Provider.of<ValidationStore>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
 
@@ -93,13 +95,10 @@ class AccountFormState extends State<AccountForm> {
                             ))),
                 controller: _textController,
                 validator: (value) {
-                  // FIXME: Replace validation logic
-                  String p = '[^ ]';
-                  RegExp regExp = new RegExp(p);
-                  if (regExp.hasMatch(value))
-                    return null;
-                  else
-                    return 'Please enter a name of account';
+                  validation.validateWalletName(value);
+                  if (!validation.isValidate) return 'Account name can only contain letters, '
+                      'numbers\nand must be between 1 and 15 characters long';
+                  return null;
                 },
               ),
             )),

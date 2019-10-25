@@ -80,7 +80,7 @@ class _WalletNameFormState extends State<WalletNameForm> {
   @override
   Widget build(BuildContext context) {
     final walletCreationStore = Provider.of<WalletCreationStore>(context);
-    final validation = ValidationStore();
+    final validation = Provider.of<ValidationStore>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
 

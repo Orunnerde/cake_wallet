@@ -47,7 +47,7 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
   @override
   Widget build(BuildContext context) {
     final walletRestorationStore = Provider.of<WalletRestorationStore>(context);
-    final validation = ValidationStore();
+    final validation = Provider.of<ValidationStore>(context);
 
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;

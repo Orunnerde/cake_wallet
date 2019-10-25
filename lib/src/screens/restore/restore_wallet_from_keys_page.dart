@@ -49,7 +49,7 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
   @override
   Widget build(BuildContext context) {
     final walletRestorationStore = Provider.of<WalletRestorationStore>(context);
-    final validation = ValidationStore();
+    final validation = Provider.of<ValidationStore>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
 
@@ -154,7 +154,7 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                                       width: 1.0))),
                           validator: (value) {
                             validation.validateAddress(value);
-                            if (!validation.isValidate) return 'Wallet address can only contain cryptocurrency type';
+                            if (!validation.isValidate) return 'Wallet address must correspond to the type of cryptocurrency';
                             return null;
                           },
                         ),
