@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -60,6 +61,12 @@ void main() async {
       (node) async => await walletService.connectToNode(
           uri: node.uri, login: node.login, password: node.password));
 
+  Timer.periodic(Duration(seconds: 10), (_) {
+    final now = DateTime.now();
+    final dateFormatter = DateFormat('HH:mm:ss');
+    print('ZTest ${dateFormatter.format(now)}');
+  });
+
   Timer.periodic(Duration(seconds: 10), (_) async {
     if (walletService.currentWallet == null) {
       return;
@@ -116,18 +123,17 @@ class CakeWalletApp extends StatelessWidget {
 
   CakeWalletApp(
       {@required this.sharedPreferences,
-        @required this.walletService,
-        @required this.walletListService,
-        @required this.userService,
-        @required this.db,
-        @required this.settingsStore});
+      @required this.walletService,
+      @required this.walletListService,
+      @required this.userService,
+      @required this.db,
+      @required this.settingsStore});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ThemeChanger>(
       builder: (_) => ThemeChanger(
-          settingsStore.isDarkTheme ? Themes.darkTheme : Themes.lightTheme
-      ),
+          settingsStore.isDarkTheme ? Themes.darkTheme : Themes.lightTheme),
       child: MaterialAppWithTheme(
           sharedPreferences: sharedPreferences,
           walletService: walletService,
@@ -149,21 +155,20 @@ class MaterialAppWithTheme extends StatelessWidget {
 
   MaterialAppWithTheme(
       {@required this.sharedPreferences,
-        @required this.walletService,
-        @required this.walletListService,
-        @required this.userService,
-        @required this.db,
-        @required this.settingsStore});
+      @required this.walletService,
+      @required this.walletListService,
+      @required this.userService,
+      @required this.db,
+      @required this.settingsStore});
 
   @override
   Widget build(BuildContext context) {
-
     final theme = Provider.of<ThemeChanger>(context);
-    Color _statusBarColor = settingsStore.isDarkTheme ? Colors.black : Colors.white;
+    Color _statusBarColor =
+        settingsStore.isDarkTheme ? Colors.black : Colors.white;
 
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: _statusBarColor
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: _statusBarColor));
 
     return MultiProvider(
       providers: [Provider<SettingsStore>(builder: (_) => settingsStore)],
@@ -182,5 +187,4 @@ class MaterialAppWithTheme extends StatelessWidget {
           ], child: Root())),
     );
   }
-
 }

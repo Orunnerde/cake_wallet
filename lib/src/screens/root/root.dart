@@ -1,84 +1,89 @@
-import 'package:cake_wallet/src/screens/dashboard/dashboard_page.dart';
-import 'package:cake_wallet/src/stores/balance/balance_store.dart';
-import 'package:cake_wallet/src/stores/settings/settings_store.dart';
-import 'package:cake_wallet/src/stores/sync/sync_store.dart';
-import 'package:cake_wallet/src/stores/transaction_list/transaction_list_store.dart';
-import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cake_wallet/src/domain/services/user_service.dart';
-import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
-import 'package:cake_wallet/src/domain/services/wallet_service.dart';
+import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/src/stores/authentication/authentication_store.dart';
-import 'package:cake_wallet/src/stores/login/login_store.dart';
-import 'package:cake_wallet/src/screens/welcome/welcome_page.dart';
-import 'package:cake_wallet/src/screens/splash/splash_page.dart';
-import 'package:cake_wallet/src/screens/login/login_page.dart';
-import 'package:cake_wallet/src/screens/home/home_page.dart';
 
-class Root extends StatelessWidget {
+class Root extends StatefulWidget {
+  @override
+  RootState createState() => RootState();
+}
+
+class RootState extends State<Root> with WidgetsBindingObserver {
+  AuthenticationStore _authenticationStore;
+  bool _postFraneCallbackInited;
+  bool _reactionOnAuthenticationStateChangeInited;
+
+  @override
+  void initState() {
+    super.initState();
+    _postFraneCallbackInited = false;
+    _reactionOnAuthenticationStateChangeInited = false;
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.paused:
+        _authenticationStore.inactive();
+        break;
+      default:
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final authenticationStore = Provider.of<AuthenticationStore>(context);
-    final sharedPreferences = Provider.of<SharedPreferences>(context);
-    final userService = Provider.of<UserService>(context);
-    final walletService = Provider.of<WalletService>(context);
-    final walletListService = Provider.of<WalletListService>(context);
+    _authenticationStore = Provider.of<AuthenticationStore>(context);
 
-    return Observer(builder: (context) {
-      if (authenticationStore.state == AuthenticationState.uninitialized) {
-        return SplashPage();
-      }
+    if (!_postFraneCallbackInited) {
+      _postFraneCallbackInited = true;
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => _onAuthenticationStateChange(_authenticationStore.state));
+    }
 
-      if (authenticationStore.state == AuthenticationState.denied) {
-        return WelcomePage();
-      }
+    if (!_reactionOnAuthenticationStateChangeInited) {
+      _reactionOnAuthenticationStateChangeInited = true;
+      reaction((_) => _authenticationStore.state,
+          (state) => _onAuthenticationStateChange(state));
+    }
 
-      if (authenticationStore.state == AuthenticationState.allowed) {
-        return ProxyProvider<AuthenticationStore, LoginStore>(
-            builder: (context, authStore, _) => LoginStore(
-                authStore: authStore,
-                sharedPreferences: sharedPreferences,
-                userService: userService,
-                walletService: walletService,
-                walletsService: walletListService),
-            child: LoginPage(
-              userService: UserService(
-                  sharedPreferences: sharedPreferences,
-                  secureStorage: FlutterSecureStorage()),
-              walletsService: walletListService,
-              walletService: walletService,
-              sharedPreferences: sharedPreferences,
-            ));
-      }
+    return Container(color: Colors.white);
+  }
 
-      if (authenticationStore.state == AuthenticationState.authenticated) {
-        return MultiProvider(providers: [
-                      ProxyProvider<SettingsStore, TransactionListStore>(
-                        builder: (_, settingsStore, __) => TransactionListStore(
-                            walletService: walletService,
-                            settingsStore: settingsStore),
-                      ),
-                      ProxyProvider<SettingsStore, BalanceStore>(
-                        builder: (_, settingsStore, __) => BalanceStore(
-                            walletService: walletService,
-                            settingsStore: settingsStore),
-                      ),
-                      ProxyProvider<SettingsStore, WalletStore>(
-                          builder: (_, settingsStore, __) => WalletStore(
-                              walletService: walletService,
-                              settingsStore: settingsStore)),
-                      Provider(
-                        builder: (context) =>
-                            SyncStore(walletService: walletService),
-                      ),
-                    ], child: DashboardPage());
-      }
+  void _onAuthenticationStateChange(AuthenticationState state) {
+    if (state == AuthenticationState.uninitialized) {
+      Navigator.of(context).pushNamed(Routes.splash);
+    }
 
-      return Container(color: Colors.white);
-    });
+    if (state == AuthenticationState.denied) {
+      Navigator.of(context).pushNamed(Routes.welcome);
+    }
+
+    if (state == AuthenticationState.allowed) {
+      Navigator.of(context).pushNamed(Routes.login);
+    }
+
+    if (state == AuthenticationState.authenticated) {
+      Navigator.of(context).pushNamed(Routes.dashboard);
+    }
+
+    if (state == AuthenticationState.unauthenticated) {
+      Navigator.of(context).pushNamed(Routes.auth, arguments: [
+        (auth, _) {
+          if (_authenticationStore != null) {
+            _authenticationStore.active();
+          }
+          auth.close();
+        }
+      ]);
+    }
   }
 }
