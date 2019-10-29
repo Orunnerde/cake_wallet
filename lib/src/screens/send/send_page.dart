@@ -281,7 +281,13 @@ class SendFormState extends State<SendForm> {
                                             ? PaletteDark.darkThemeGreyWithOpacity
                                             : Palette.lightGrey,
                                         width: 1.0))),
-                            validator: (value) => null),
+                            validator: (value) {
+                              validation.validateXMR(value, balanceStore.unlockedBalance);
+                              if (!validation.isValidate) return "XMR value can't exceed available balance.\n"
+                                  "The number of fraction digits must be equal to 12";
+                              return null;
+                            }
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 20),
@@ -324,7 +330,26 @@ class SendFormState extends State<SendForm> {
                                             ? PaletteDark.darkThemeGreyWithOpacity
                                             : Palette.lightGrey,
                                         width: 1.0))),
-                            validator: (value) => null),
+                            validator: (value) {
+                              try {
+                                double cryptoAmount = double.parse(_cryptoAmountController.text);
+                                double fiatAmount = double.parse(_fiatAmountController.text);
+                                double availableAmount = double.parse(balanceStore.unlockedBalance);
+                                if (cryptoAmount > 0) {
+                                  availableAmount *= fiatAmount/cryptoAmount;
+                                  print(cryptoAmount);
+                                  print(fiatAmount);
+                                  print(availableAmount);
+                                  validation.validateUSD(value, availableAmount);
+                                  if (!validation.isValidate) return "Value of amount can't exceed available balance.\n"
+                                      "The amount must contain fraction digits";
+                                } else return "Minimum value of amount is 0.01";
+                              } catch (e) {
+                                return "Minimum value of amount is 0.01";
+                              }
+                              return null;
+                            }
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 12.0, bottom: 10),

@@ -54,7 +54,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
           children: <Widget>[
             Expanded(
                 child: Container(
-              padding: EdgeInsets.all(38.0),
+              padding: EdgeInsets.only(left: 38.0, right: 38.0),
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,

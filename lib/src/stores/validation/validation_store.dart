@@ -44,14 +44,17 @@ abstract class ValidationStoreBase with Store {
 
   @action
   void validatePaymentID(String value) {
-    String p = '^[A-F0-9]{16,64}\$';
-    isValidate = _validate(value, p);
+    if (value.isEmpty) {
+      isValidate = true;
+    } else {
+      String p = '^[A-F0-9]{16,64}\$';
+      isValidate = _validate(value, p);
+    }
   }
 
   @action
-  void validateUSD(String value, double totalXMR, double rateXMRUSD, double fee) {
+  void validateUSD(String value, double maxValue) {
     const double minValue = 0.01;
-    final double maxValue = totalXMR*rateXMRUSD - fee;
     String p = '^[0-9]*.[0-9]+';
     if (_validate(value, p)) {
       try {
@@ -64,13 +67,14 @@ abstract class ValidationStoreBase with Store {
   }
 
   @action
-  void validateXMR(String value, double maxAvailable, double fee) {
+  void validateXMR(String value, String availableBalance) {
     const double maxValue = 18446744.073709551616;
     String p = '^[0-9]*.[0-9]{12}';
     if (_validate(value, p)) {
       try {
-        double dValue = double.parse(value) + fee;
-        isValidate = (dValue <= maxAvailable && dValue <= maxValue);
+        double dValue = double.parse(value);
+        double maxAvailable = double.parse(availableBalance);
+        isValidate = (dValue <= maxAvailable && dValue <= maxValue && dValue > 0);
       } catch (e) {
         isValidate = false;
       }

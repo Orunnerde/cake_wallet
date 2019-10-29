@@ -45,7 +45,7 @@ abstract class SendStoreBase with Store {
     _fiatNumberFormat = NumberFormat()..maximumFractionDigits = 2;
 
     reaction((_) => this.fiatAmount, (amount) async {
-      fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: FiatCurrency.usd)
+      fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: settingsStore.fiatCurrency)
           .then((price) => amount.isEmpty ? null : double.parse(amount) / price)
           .then((amount) =>
               amount == null ? '' : _cryptoNumberFormat.format(amount))
@@ -53,7 +53,7 @@ abstract class SendStoreBase with Store {
     });
 
     reaction((_) => this.cryptoAmount, (amount) async {
-      fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: FiatCurrency.usd)
+      fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: settingsStore.fiatCurrency)
           .then((price) => amount.isEmpty
               ? null
               : double.parse(amount.replaceAll(',', '.')) * price)
