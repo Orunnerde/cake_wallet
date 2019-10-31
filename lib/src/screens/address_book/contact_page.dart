@@ -1,3 +1,4 @@
+import 'package:cake_wallet/src/widgets/address_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
@@ -9,7 +10,6 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/src/stores/validation/validation_store.dart';
 
 class ContactPage extends BasePage {
   String get title => 'Contact';
@@ -53,11 +53,14 @@ class ContactFormState extends State<ContactForm> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Please select:'),
-            backgroundColor: _isDarkTheme ? Theme.of(context).backgroundColor : Colors.white,
+            backgroundColor:
+                _isDarkTheme ? Theme.of(context).backgroundColor : Colors.white,
             content: Container(
               height: 150.0,
               child: CupertinoPicker(
-                  backgroundColor: _isDarkTheme ? Theme.of(context).backgroundColor : Colors.white,
+                  backgroundColor: _isDarkTheme
+                      ? Theme.of(context).backgroundColor
+                      : Colors.white,
                   itemExtent: 45.0,
                   onSelectedItemChanged: (int index) {
                     _selectectCrypto = CryptoCurrency.all[index];
@@ -90,11 +93,12 @@ class ContactFormState extends State<ContactForm> {
   @override
   Widget build(BuildContext context) {
     final addressBookStore = Provider.of<AddressBookStore>(context);
-    final validation = Provider.of<ValidationStore>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
 
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    if (_themeChanger.getTheme() == Themes.darkTheme)
+      _isDarkTheme = true;
+    else
+      _isDarkTheme = false;
 
     return Column(
       children: <Widget>[
@@ -113,39 +117,41 @@ class ContactFormState extends State<ContactForm> {
                         child: TextFormField(
                           style: TextStyle(
                               fontSize: 14.0,
-                              color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                                  : Colors.black
-                          ),
+                              color: _isDarkTheme
+                                  ? PaletteDark.darkThemeGrey
+                                  : Colors.black),
                           decoration: InputDecoration(
                               hintStyle: TextStyle(
-                                  color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                                      : Palette.wildDarkBlue
-                              ),
+                                  color: _isDarkTheme
+                                      ? PaletteDark.darkThemeGrey
+                                      : Palette.wildDarkBlue),
                               hintText: 'Contact Name',
                               focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                      color: _isDarkTheme
+                                          ? PaletteDark.darkThemeGreyWithOpacity
                                           : Palette.lightGrey,
                                       width: 1.0)),
                               enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                      color: _isDarkTheme
+                                          ? PaletteDark.darkThemeGreyWithOpacity
                                           : Palette.lightGrey,
                                       width: 1.0))),
                           controller: _contactNameController,
                           validator: (value) {
-                            validation.validateContactName(value);
-                            if (!validation.isValidate) return '''Contact name can't contain ` , ' " '''
-                                'symbols\nand must be between 1 and 32 characters long';
-                            return null;
+                            String p = '[^ ]';
+                            RegExp regExp = new RegExp(p);
+                            if (regExp.hasMatch(value))
+                              return null;
+                            else
+                              return 'Please enter a contact name';
                           },
                         ),
                       )
                     ],
                   ),
-                  SizedBox(
-                    height: 14.0,
-                  ),
+                  SizedBox(height: 14.0),
                   Row(
                     children: <Widget>[
                       Expanded(
@@ -156,64 +162,39 @@ class ContactFormState extends State<ContactForm> {
                             child: TextFormField(
                               style: TextStyle(
                                   fontSize: 14.0,
-                                  color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                                      : Colors.black
-                              ),
+                                  color: _isDarkTheme
+                                      ? PaletteDark.darkThemeGrey
+                                      : Colors.black),
                               decoration: InputDecoration(
                                   focusedBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                          color: _isDarkTheme
+                                              ? PaletteDark
+                                                  .darkThemeGreyWithOpacity
                                               : Palette.lightGrey,
                                           width: 1.0)),
                                   enabledBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                          color: _isDarkTheme
+                                              ? PaletteDark
+                                                  .darkThemeGreyWithOpacity
                                               : Palette.lightGrey,
                                           width: 1.0))),
                               controller: _currencyTypeController,
-                              //validator: (value) => null, // ??
+                              validator: (value) => null, // ??
                             ),
                           ),
                         ),
                       ))
                     ],
                   ),
-                  SizedBox(
-                    height: 14.0,
-                  ),
+                  SizedBox(height: 14.0),
                   Row(
                     children: <Widget>[
                       Expanded(
-                        child: TextFormField(
-                          style: TextStyle(
-                              fontSize: 14.0,
-                              color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                                  : Colors.black
-                          ),
-                          decoration: InputDecoration(
-                              hintStyle: TextStyle(
-                                  color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                                      : Palette.wildDarkBlue
-                              ),
-                              hintText: 'Address',
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
-                                          : Palette.lightGrey,
-                                      width: 1.0)),
-                              enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey
-                                          : Palette.lightGrey,
-                                      width: 1.0))),
-                          controller: _addressController,
-                          validator: (value) {
-                            validation.validateAddress(value);
-                            if (!validation.isValidate) return 'Wallet address must correspond to the type of cryptocurrency';
-                            return null;
-                          }
-                        ),
-                      )
+                          child: AddressTextField(
+                              controller: _addressController,
+                              options: [AddressTextFieldOption.qrCode])),
                     ],
                   ),
                 ],
@@ -239,49 +220,57 @@ class ContactFormState extends State<ContactForm> {
                     });
                   },
                   text: 'Reset',
-                  color: _isDarkTheme ? PaletteDark.darkThemeIndigoButton : Palette.indigo,
-                  borderColor: _isDarkTheme ? PaletteDark.darkThemeIndigoButtonBorder : Palette.deepIndigo,
+                  color: _isDarkTheme
+                      ? PaletteDark.darkThemeIndigoButton
+                      : Palette.indigo,
+                  borderColor: _isDarkTheme
+                      ? PaletteDark.darkThemeIndigoButtonBorder
+                      : Palette.deepIndigo,
                 ),
               )),
               Flexible(
                   child: Container(
                 padding: EdgeInsets.only(left: 8.0),
                 child: PrimaryButton(
-                    onPressed: () async {
-                      if (!_formKey.currentState.validate()) {
-                        return;
-                      }
+                  onPressed: () async {
+                    if (!_formKey.currentState.validate()) {
+                      return;
+                    }
 
-                      try {
-                        final contact = Contact(
-                            name: _contactNameController.text,
-                            address: _addressController.text,
-                            type: _selectectCrypto);
+                    try {
+                      final contact = Contact(
+                          name: _contactNameController.text,
+                          address: _addressController.text,
+                          type: _selectectCrypto);
 
-                        await addressBookStore.add(contact: contact);
-                        Navigator.pop(context);
-                      } catch (e) {
-                        await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text(
-                                  e.toString(),
-                                  textAlign: TextAlign.center,
-                                ),
-                                actions: <Widget>[
-                                  FlatButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(),
-                                      child: Text('OK'))
-                                ],
-                              );
-                            });
-                      }
-                    },
-                    text: 'Save',
-                    color: _isDarkTheme ? PaletteDark.darkThemePurpleButton : Palette.purple,
-                    borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder : Palette.deepPink,
+                      await addressBookStore.add(contact: contact);
+                      Navigator.pop(context);
+                    } catch (e) {
+                      await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text(
+                                e.toString(),
+                                textAlign: TextAlign.center,
+                              ),
+                              actions: <Widget>[
+                                FlatButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                    child: Text('OK'))
+                              ],
+                            );
+                          });
+                    }
+                  },
+                  text: 'Save',
+                  color: _isDarkTheme
+                      ? PaletteDark.darkThemePurpleButton
+                      : Palette.purple,
+                  borderColor: _isDarkTheme
+                      ? PaletteDark.darkThemePurpleButtonBorder
+                      : Palette.deepPink,
                 ),
               )),
             ],

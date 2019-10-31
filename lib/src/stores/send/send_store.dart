@@ -37,43 +37,27 @@ abstract class SendStoreBase with Store {
 
   SendStoreBase(
       {@required this.walletService,
-      @required this.settingsStore,
+      this.settingsStore,
       this.recipientAddressList}) {
     state = SendingStateInitial();
     _pendingTransaction = null;
     _cryptoNumberFormat = NumberFormat()..maximumFractionDigits = 12;
     _fiatNumberFormat = NumberFormat()..maximumFractionDigits = 2;
-
-    reaction((_) => this.fiatAmount, (amount) async {
-      fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: settingsStore.fiatCurrency)
-          .then((price) => amount.isEmpty ? null : double.parse(amount) / price)
-          .then((amount) =>
-              amount == null ? '' : _cryptoNumberFormat.format(amount))
-          .then((amount) => cryptoAmount = amount);
-    });
-
-    reaction((_) => this.cryptoAmount, (amount) async {
-      fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: settingsStore.fiatCurrency)
-          .then((price) => amount.isEmpty
-              ? null
-              : double.parse(amount.replaceAll(',', '.')) * price)
-          .then((amount) =>
-              amount == null ? '' : _fiatNumberFormat.format(amount))
-          .then((amount) => fiatAmount = amount);
-    });
   }
 
   @action
-  Future<void> createTransaction({String address, String paymentId}) async {
+  Future<void> createTransaction(
+      {String address, String paymentId, String amount}) async {
     state = CreatingTransaction();
 
     try {
-      final amount =
-          cryptoAmount == 'ALL' ? null : cryptoAmount.replaceAll(',', '.');
+      final _amount = amount != null
+          ? amount
+          : cryptoAmount == 'ALL' ? null : cryptoAmount.replaceAll(',', '.');
       final credentials = MoneroTransactionCreationCredentials(
           address: address,
-          paymentId: paymentId,
-          amount: amount,
+          paymentId: paymentId ?? '',
+          amount: _amount,
           priority: settingsStore.transactionPriority);
 
       _pendingTransaction = await walletService.createTransaction(credentials);
@@ -108,5 +92,39 @@ abstract class SendStoreBase with Store {
   void setSendAll() {
     cryptoAmount = 'ALL';
     fiatAmount = '';
+  }
+
+  @action
+  void changeCryptoAmount(String amount) {
+    cryptoAmount = amount;
+
+    if (cryptoAmount != null && cryptoAmount.isNotEmpty) {
+      _calculateFiatAmount();
+    }
+  }
+
+  @action
+  void changeFiatAmount(String amount) {
+    fiatAmount = amount;
+
+    if (fiatAmount != null && fiatAmount.isNotEmpty) {
+      _calculateCryptoAmount();
+    }
+  }
+
+  @action
+  Future _calculateFiatAmount() async {
+    final price =
+        await fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: FiatCurrency.usd);
+    final amount = double.parse(cryptoAmount) * price;
+    fiatAmount = _fiatNumberFormat.format(amount);
+  }
+
+  @action
+  Future _calculateCryptoAmount() async {
+    final price =
+        await fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: FiatCurrency.usd);
+    final amount = double.parse(fiatAmount) / price;
+    cryptoAmount = _cryptoNumberFormat.format(amount);
   }
 }

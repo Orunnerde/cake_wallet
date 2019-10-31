@@ -23,6 +23,9 @@ class LoginPage extends BasePage {
       @required this.walletService});
 
   @override
+  Widget leading(BuildContext context) => Container();
+
+  @override
   Widget body(BuildContext context) => _LoginPinCode();
 }
 

@@ -122,25 +122,27 @@ class SeedPage extends BasePage {
                           Flexible(
                               child: Container(
                             padding: EdgeInsets.only(left: 8.0),
-                            child: PrimaryButton(
-                              onPressed: () {
-                                Clipboard.setData(ClipboardData(text: _seed));
-                                Scaffold.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('Copied to Clipboard'),
-                                    backgroundColor: Colors.green,
-                                    duration: Duration(milliseconds: 1500),
-                                  ),
-                                );
-                              },
-                              text: 'Copy',
-                              color: _isDarkTheme
-                                  ? PaletteDark.darkThemeBlueButton
-                                  : Palette.brightBlue,
-                              borderColor: _isDarkTheme
-                                  ? PaletteDark.darkThemeBlueButtonBorder
-                                  : Palette.cloudySky,
-                            ),
+                            child: Builder(
+                                builder: (context) => PrimaryButton(
+                                  onPressed: () {
+                                    Clipboard.setData(ClipboardData(text: _seed));
+                                    Scaffold.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Copied to Clipboard'),
+                                        backgroundColor: Colors.green,
+                                        duration: Duration(milliseconds: 1500),
+                                      ),
+                                    );
+                                  },
+                                  text: 'Copy',
+                                  color: _isDarkTheme
+                                      ? PaletteDark.darkThemeBlueButton
+                                      : Palette.brightBlue,
+                                  borderColor: _isDarkTheme
+                                      ? PaletteDark.darkThemeBlueButtonBorder
+                                      : Palette.cloudySky,
+                                ),
+                            )
                           ))
                         ],
                       ),
