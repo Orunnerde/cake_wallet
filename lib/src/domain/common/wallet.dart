@@ -1,10 +1,11 @@
 import 'package:rxdart/rxdart.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:cake_wallet/src/domain/common/sync_status.dart';
 import 'package:cake_wallet/src/domain/common/transaction_history.dart';
 import 'package:cake_wallet/src/domain/common/wallet_type.dart';
 import 'package:cake_wallet/src/domain/common/transaction_creation_credentials.dart';
 import 'package:cake_wallet/src/domain/common/pending_transaction.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:cake_wallet/src/domain/common/balance.dart';
 
 abstract class Wallet {
   static final walletsTable = 'wallets';
@@ -20,19 +21,17 @@ abstract class Wallet {
       WalletType type,
       int restoreHeight = 0}) async {
     final id = walletTypeToString(type).toLowerCase() + '_' + name;
-    await db.insert(walletsTable, {
+    final map = {
       idColumn: id,
-      nameColumn : name,
+      nameColumn: name,
       isRecoveryColumn: isRecovery,
       restoreHeightColumn: restoreHeight
-    });
+    };
+    await db.insert(walletsTable, map);
   }
 
   static Future<void> updateWalletData(
-      {Database db,
-      bool isRecovery,
-      String name,
-      WalletType type}) async {
+      {Database db, bool isRecovery, String name, WalletType type}) async {
     final id = walletTypeToString(type).toLowerCase() + '_' + name;
     await db.update(walletsTable, {'$isRecoveryColumn': isRecovery},
         where: '$idColumn = ?', whereArgs: [id]);
@@ -57,13 +56,17 @@ abstract class Wallet {
   Database db;
   WalletType walletType;
 
-  Observable<Wallet> onBalanceChange;
+  Observable<Balance> onBalanceChange;
 
   Observable<SyncStatus> syncStatus;
 
-  Observable<String> get name;
+  Observable<String> get onNameChange;
+
+  Observable<String> get onAddressChange;
+
+  String get name;
   
-  Observable<String> get address;
+  String get address;
 
   Future updateInfo();
 
@@ -102,4 +105,6 @@ abstract class Wallet {
 
   Future<PendingTransaction> createTransaction(
       TransactionCreationCredentials credentials);
+
+  Future rescan();
 }

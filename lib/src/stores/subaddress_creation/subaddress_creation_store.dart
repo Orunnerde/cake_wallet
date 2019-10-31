@@ -57,10 +57,10 @@ abstract class SubadrressCreationStoreBase with Store {
 
   Future _onWalletChanged(Wallet wallet) async {
     if (wallet is MoneroWallet) {
-      _account = wallet.account.value;
+      _account = wallet.account;
       _subaddressList = wallet.getSubaddress();
 
-      _onAccountChangeSubscription = wallet.account.listen((account) async {
+      _onAccountChangeSubscription = wallet.onAccountChange.listen((account) async {
         _account = account;
         _subaddressList.update(accountIndex: account.id);
       });

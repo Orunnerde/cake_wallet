@@ -69,6 +69,8 @@ abstract class BasePage extends StatelessWidget {
 
   Widget trailing(BuildContext context) => null;
 
+  Widget floatingActionButton(BuildContext context) => null;
+
   Widget body(BuildContext context);
 
   @override
@@ -89,6 +91,7 @@ abstract class BasePage extends StatelessWidget {
             trailing: trailing(context),
             backgroundColor: _isDarkTheme ? Theme.of(context).backgroundColor
                 : backgroundColor),
-        body: SafeArea(child: body(context)));
+        body: SafeArea(child: body(context)),
+        floatingActionButton: floatingActionButton(context));
   }
 }

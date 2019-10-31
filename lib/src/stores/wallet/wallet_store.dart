@@ -61,7 +61,7 @@ abstract class WalletStoreBase with Store {
 
     if (wallet is MoneroWallet) {
       this.account = account;
-      wallet.account.value = account;
+      wallet.changeAccount(account);
     }
   }
 
@@ -88,11 +88,11 @@ abstract class WalletStoreBase with Store {
       return;
     }
 
-    wallet.name.listen((name) => this.name = name);
-    wallet.address.listen((address) => this.address = address);
+    wallet.onNameChange.listen((name) => this.name = name);
+    wallet.onAddressChange.listen((address) => this.address = address);
 
     if (wallet is MoneroWallet) {
-      account = wallet.account.value;
+      account = wallet.account;
       wallet.subaddress.listen((subaddress) => this.subaddress = subaddress);
     }
   }

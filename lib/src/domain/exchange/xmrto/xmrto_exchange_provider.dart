@@ -148,7 +148,9 @@ class XMRTOExchangeProvider extends ExchangeProvider {
       _rate = await _fetchRates();
     }
 
-    return _rate * amount;
+    final double result = _rate * amount;
+    
+    return double.parse(result.toStringAsFixed(12));
   }
 
   Future<double> _fetchRates() async {

@@ -22,7 +22,7 @@ class BlockchainHeightState extends State<BlockchainHeightWidget> {
   @override
   void initState() {
     restoreHeightController
-        .addListener(() => _height = int.parse(restoreHeightController.text));
+        .addListener(() => _height = restoreHeightController.text != null ? int.parse(restoreHeightController.text) : 0);
     super.initState();
   }
 

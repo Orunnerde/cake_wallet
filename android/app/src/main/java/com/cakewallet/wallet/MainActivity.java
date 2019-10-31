@@ -26,6 +26,7 @@ public class MainActivity extends FlutterActivity {
         super.onCreate(savedInstanceState);
         GeneratedPluginRegistrant.registerWith(this);
 
+
         MethodChannel walletManagerChannel = new MethodChannel(getFlutterView(), MoneroWalletManagerHandler.MONERO_WALLET_MANAGER_CHANNEL);
         walletManagerChannel.setMethodCallHandler(
                 new MethodCallHandler() {

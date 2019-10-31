@@ -1,18 +1,22 @@
 import 'package:cake_wallet/src/domain/common/transaction_direction.dart';
 
 String formatAmount(String originAmount) {
+  final int startIndex = originAmount.length - 1;
   int lastIndex = 0;
 
-  for (int i = originAmount.length - 1; i >= 0; i--) {
+  for (int i = startIndex; i >= 0; i--) {
     if (originAmount[i] == "0") {
       lastIndex = i;
+    } else if (i == startIndex) {
+      lastIndex = i + 1;
+      break;
     } else {
       break;
     }
   }
 
   if (lastIndex < 3) {
-    lastIndex = 3;
+    return '0.00';
   }
 
   return originAmount.substring(0, lastIndex);
