@@ -1,0 +1,111 @@
+import 'package:cake_wallet/routes.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:mobx/mobx.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/src/widgets/primary_button.dart';
+import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
+import 'package:cake_wallet/src/domain/services/wallet_service.dart';
+import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/src/stores/wallet_restoration/wallet_restoration_store.dart';
+import 'package:cake_wallet/src/widgets/seed_widget.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/themes.dart';
+
+class RestoreWalletFromSeedPage extends BasePage {
+  final WalletListService walletsService;
+  final WalletService walletService;
+  final SharedPreferences sharedPreferences;
+
+  String get title => 'Restore from seed';
+
+  RestoreWalletFromSeedPage(
+      {@required this.walletsService,
+      @required this.walletService,
+      @required this.sharedPreferences});
+
+  @override
+  Widget body(BuildContext context) => RestoreFromSeedForm();
+}
+
+class RestoreFromSeedForm extends StatefulWidget {
+  @override
+  createState() => _RestoreFromSeedFormState();
+}
+
+class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
+  final _seedKey = GlobalKey<SeedWidgetState>();
+  bool _reactionSet = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final walletRestorationStore = Provider.of<WalletRestorationStore>(context);
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
+
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _setReactions(context, walletRestorationStore));
+
+    return GestureDetector(
+      onTap: () {
+        SystemChannels.textInput.invokeMethod('TextInput.hide');
+      },
+      child: Container(
+        padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
+        child: Column(
+          children: <Widget>[
+            Flexible(
+              flex: 16,
+                child: SeedWidget(
+              key: _seedKey,
+              onMnemoticChange: (seed) => walletRestorationStore.setSeed(seed),
+            )),
+            Flexible(
+              flex: 2,
+                child: Container(
+                    alignment: Alignment.bottomCenter,
+                    child: PrimaryButton(
+                      onPressed: () {
+                        if (!walletRestorationStore.isValid) {
+                          return;
+                        }
+
+                        Navigator.of(context).pushNamed(
+                            Routes.restoreWalletFromSeedDetails,
+                            arguments: _seedKey.currentState.items);
+                      },
+                      text: 'Next',
+                      color: _isDarkTheme
+                          ? PaletteDark.darkThemePurpleButton
+                          : Palette.purple,
+                      borderColor: _isDarkTheme
+                          ? PaletteDark.darkThemePurpleButtonBorder
+                          : Palette.deepPink,
+                    )))
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _setReactions(BuildContext context, WalletRestorationStore store) {
+    if (_reactionSet) {
+      return;
+    }
+
+    reaction((_) => store.errorMessage, (errorMessage) {
+      if (errorMessage == null || errorMessage.isEmpty) {
+        _seedKey.currentState.validated();
+      } else {
+        _seedKey.currentState.invalidate();
+      }
+
+      _seedKey.currentState.setErrorMessage(errorMessage);
+    });
+
+    _reactionSet = true;
+  }
+}
