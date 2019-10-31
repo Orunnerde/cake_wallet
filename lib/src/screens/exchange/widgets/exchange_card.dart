@@ -140,7 +140,7 @@ class ExchangeCardState extends State<ExchangeCard> {
               children: <Widget>[
                 Container(
                   height: 52,
-                  width: 70,
+                  width: 80,
                   child: InkWell(
                     onTap: () => _presentPicker(context),
                     child: Column(
@@ -168,7 +168,7 @@ class ExchangeCardState extends State<ExchangeCard> {
                         ]),
                   ),
                 ),
-                SizedBox(width: 36),
+                SizedBox(width: 10),
                 Flexible(
                   child: Column(
                     children: [
@@ -195,9 +195,12 @@ class ExchangeCardState extends State<ExchangeCard> {
                                       width: 1.0)),
                               enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: _isDarkTheme
-                                          ? PaletteDark.darkThemeGreyWithOpacity
-                                          : Palette.lightGrey,
+                                      color: _isAmountEditable
+                                          ? Palette.deepPurple
+                                          : _isDarkTheme
+                                              ? PaletteDark
+                                                  .darkThemeGreyWithOpacity
+                                              : Palette.lightGrey,
                                       width: 1.0)))),
                       SizedBox(height: 5),
                       SizedBox(

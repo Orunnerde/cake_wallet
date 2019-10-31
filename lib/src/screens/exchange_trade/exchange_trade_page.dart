@@ -50,7 +50,6 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
     _setEffects(context);
 
     return Observer(builder: (_) {
-      print('Redraw');
       final trade = tradeStore.trade;
       final walletName = walletStore.name;
 
@@ -301,7 +300,8 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                     padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
                     child: PrimaryButton(
                         onPressed: () => sendStore.createTransaction(
-                            address: tradeStore.trade.inputAddress),
+                            address: tradeStore.trade.inputAddress,
+                            amount: tradeStore.trade.amount),
                         text: 'Confirm',
                         color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
                             : Palette.purple,

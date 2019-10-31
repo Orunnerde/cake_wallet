@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'dart:isolate';
+import 'package:cake_wallet/src/screens/receive/receive_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -24,6 +27,35 @@ import 'package:cake_wallet/src/domain/common/sync_status.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'theme_changer.dart';
 import 'themes.dart';
+
+void autoReconnection(String arg) {
+
+  // Timer.periodic(Duration(seconds: 10), (_) { print('Test timer'); });
+
+  // if (walletService.currentWallet == null) {
+  //   return;
+  // }
+  // final startDate = DateTime.now();
+  // final isConnected = await walletService.isConnected();
+  // print(
+  //     'Is conncted end ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}');
+
+  // if (!isConnected &&
+  //     !(walletService.syncStatusValue is ConnectingSyncStatus ||
+  //         walletService.syncStatusValue is StartingSyncStatus)) {
+  //   print('Start to reconnect');
+  //   try {
+  //     await walletService.connectToNode(
+  //         uri: 'node.moneroworld.com:18089', login: '', password: '');
+  //   } catch (e) {
+  //     print('Error while reconnection');
+  //     print(e);
+  //   }
+
+  //   print(
+  //       'End: ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}');
+  // }
+}
 
 void main() async {
   final sharedPreferences = await SharedPreferences.getInstance();
@@ -56,39 +88,19 @@ void main() async {
       initialTransactionPriority: TransactionPriority.slow,
       initialBalanceDisplayMode: BalanceDisplayMode.availableBalance);
 
-  reaction(
-      (_) => settingsStore.node,
-      (node) async => await walletService.connectToNode(
-          uri: node.uri, login: node.login, password: node.password));
-
-  Timer.periodic(Duration(seconds: 10), (_) {
-    final now = DateTime.now();
-    final dateFormatter = DateFormat('HH:mm:ss');
-    print('ZTest ${dateFormatter.format(now)}');
+  reaction((_) => settingsStore.node, (node) async {
+    final startDate = DateTime.now();
+    await walletService.connectToNode(
+        uri: node.uri, login: node.login, password: node.password);
+    print(
+        'Connection time took ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}');
   });
 
-  Timer.periodic(Duration(seconds: 10), (_) async {
-    if (walletService.currentWallet == null) {
-      return;
-    }
+  // Timer.periodic(Duration(seconds: 10), (_) async {
+  //   await compute(autoReconnection, null);
+  // });
 
-    final isConnected = await walletService.isConnected();
-
-    print('isConnected $isConnected');
-
-    if (!isConnected &&
-        !(walletService.syncStatusValue is ConnectingSyncStatus ||
-            walletService.syncStatusValue is StartingSyncStatus)) {
-      print('Start to reconnect');
-      try {
-        await walletService.connectToNode(
-            uri: 'node.moneroworld.com:18089', login: '', password: '');
-      } catch (e) {
-        print('Error while reconnection');
-        print(e);
-      }
-    }
-  });
+  compute(autoReconnection, null);
 
   final authStore = AuthenticationStore(userService: userService);
   await authStore.started();

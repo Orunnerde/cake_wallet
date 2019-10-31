@@ -11,20 +11,18 @@ class Root extends StatefulWidget {
 
 class RootState extends State<Root> with WidgetsBindingObserver {
   AuthenticationStore _authenticationStore;
-  bool _postFraneCallbackInited;
-  bool _reactionOnAuthenticationStateChangeInited;
+  ReactionDisposer _reaction;
 
   @override
   void initState() {
     super.initState();
-    _postFraneCallbackInited = false;
-    _reactionOnAuthenticationStateChangeInited = false;
     WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _reaction.call();
     super.dispose();
   }
 
@@ -43,16 +41,15 @@ class RootState extends State<Root> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     _authenticationStore = Provider.of<AuthenticationStore>(context);
 
-    if (!_postFraneCallbackInited) {
-      _postFraneCallbackInited = true;
-      WidgetsBinding.instance.addPostFrameCallback(
-          (_) => _onAuthenticationStateChange(_authenticationStore.state));
-    }
+    if (_reaction == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_reaction != null) {
+          return;
+        }
 
-    if (!_reactionOnAuthenticationStateChangeInited) {
-      _reactionOnAuthenticationStateChangeInited = true;
-      reaction((_) => _authenticationStore.state,
-          (state) => _onAuthenticationStateChange(state));
+        _reaction = autorun(
+            (_) => _onAuthenticationStateChange(_authenticationStore.state));
+      });
     }
 
     return Container(color: Colors.white);
@@ -72,7 +69,8 @@ class RootState extends State<Root> with WidgetsBindingObserver {
     }
 
     if (state == AuthenticationState.authenticated) {
-      Navigator.of(context).pushNamed(Routes.dashboard);
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(Routes.dashboard, (_) => false);
     }
 
     if (state == AuthenticationState.unauthenticated) {

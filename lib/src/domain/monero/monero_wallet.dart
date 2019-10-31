@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:isolate';
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sqflite/sqflite.dart';
@@ -159,11 +160,15 @@ class MoneroWallet extends Wallet {
     _subaddress = BehaviorSubject<Subaddress>();
 
     walletHeightChannel.setMessageHandler((h) async {
+      final startDate = DateTime.now();
       final height = h.getUint64(0);
       final nodeHeight = await getNodeHeightOrUpdate(height);
+      // print(
+      //     'Ended fetching of node height ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}');
 
       if (isRecovery) {
-        _syncStatus.add(RestoringSyncStatus(height, _refreshHeight, nodeHeight));
+        _syncStatus
+            .add(RestoringSyncStatus(height, _refreshHeight, nodeHeight));
         return platformBinaryEmptyResponse;
       }
 
@@ -187,12 +192,16 @@ class MoneroWallet extends Wallet {
     });
 
     syncStateChannel.setMessageHandler((_) async {
+      final startDate = DateTime.now();
+
       final currentHeight = await getCurrentHeight();
       final nodeHeight = await getNodeHeightOrUpdate(currentHeight);
 
-      getHistory()
-          .update()
-          .then((_) => print('ask to update transaction history'));
+      // print(
+      //     'Ended fetching of node height ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}');
+
+      getHistory().update().then((_) => print(
+          'Updated transaction history: ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}'));
 
       if (currentHeight == 0) {
         return platformBinaryEmptyResponse;
@@ -207,6 +216,8 @@ class MoneroWallet extends Wallet {
       if (isRecovery && (nodeHeight - currentHeight < moneroBlockSize)) {
         await setAsRecovered();
         askForUpdateBalance();
+        print(
+            'Ended set as recovered ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}');
       }
 
       final now = DateTime.now().millisecondsSinceEpoch;
@@ -217,6 +228,8 @@ class MoneroWallet extends Wallet {
       }
 
       await store();
+      print(
+          'Ended storing while syncing ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}');
 
       _lastRefreshTime = now;
 
@@ -266,10 +279,6 @@ class MoneroWallet extends Wallet {
 
   Future<int> getCurrentHeight() async {
     return getValue(key: 'getCurrentHeight');
-  }
-
-  Future<bool> isConnected() async {
-    return getValue(key: 'getIsConnected');
   }
 
   Future<int> getNodeHeight() async {
@@ -374,22 +383,6 @@ class MoneroWallet extends Wallet {
     await store();
   }
 
-  Future store() async {
-    if (_isSaving) {
-      return;
-    }
-
-    try {
-      _isSaving = true;
-      await platform.invokeMethod('store');
-      _isSaving = false;
-    } on PlatformException catch (e) {
-      print(e);
-      _isSaving = false;
-      throw e;
-    }
-  }
-
   Future<int> getNodeHeightOrUpdate(int baseHeight) async {
     if (_cachedBlockchainHeight < baseHeight) {
       _cachedBlockchainHeight = await getNodeHeight();
@@ -479,5 +472,49 @@ class MoneroWallet extends Wallet {
         .refresh(accountIndex: account.id)
         .then((_) => getSubaddress().getAll())
         .then((subaddresses) => _subaddress.value = subaddresses[0]);
+  }
+
+  Future store() async {
+    print('Store start');
+
+    final start = DateTime.now();
+
+    if (_isSaving) {
+      return;
+    }
+
+    try {
+      _isSaving = true;
+      await platform.invokeMethod('store');
+      _isSaving = false;
+    } on PlatformException catch (e) {
+      print(e);
+      _isSaving = false;
+      throw e;
+    }
+
+    print('Store end');
+    print('Store time: ${DateTime.now().millisecondsSinceEpoch - start.millisecondsSinceEpoch}');
+  }
+
+  Future<bool> isConnected() async {
+    print('isConnected start');
+
+    final start = DateTime.now();
+
+    bool isConnected = false;
+
+    try {
+      _isSaving = true;
+      isConnected = await platform.invokeMethod('getIsConnected');
+    } on PlatformException catch (e) {
+      print(e);
+      throw e;
+    }
+
+    print('isConnected end');
+    print('isConnected time: ${DateTime.now().millisecondsSinceEpoch - start.millisecondsSinceEpoch}');
+
+    return isConnected;
   }
 }

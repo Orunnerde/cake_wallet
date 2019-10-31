@@ -46,16 +46,18 @@ abstract class SendStoreBase with Store {
   }
 
   @action
-  Future<void> createTransaction({String address, String paymentId}) async {
+  Future<void> createTransaction(
+      {String address, String paymentId, String amount}) async {
     state = CreatingTransaction();
 
     try {
-      final amount =
-          cryptoAmount == 'ALL' ? null : cryptoAmount.replaceAll(',', '.');
+      final _amount = amount != null
+          ? amount
+          : cryptoAmount == 'ALL' ? null : cryptoAmount.replaceAll(',', '.');
       final credentials = MoneroTransactionCreationCredentials(
           address: address,
-          paymentId: paymentId,
-          amount: amount,
+          paymentId: paymentId ?? '',
+          amount: _amount,
           priority: settingsStore.transactionPriority);
 
       _pendingTransaction = await walletService.createTransaction(credentials);
@@ -112,14 +114,16 @@ abstract class SendStoreBase with Store {
 
   @action
   Future _calculateFiatAmount() async {
-    final price = await fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: FiatCurrency.usd);
+    final price =
+        await fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: FiatCurrency.usd);
     final amount = double.parse(cryptoAmount) * price;
     fiatAmount = _fiatNumberFormat.format(amount);
   }
 
   @action
   Future _calculateCryptoAmount() async {
-    final price = await fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: FiatCurrency.usd);
+    final price =
+        await fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: FiatCurrency.usd);
     final amount = double.parse(fiatAmount) / price;
     cryptoAmount = _cryptoNumberFormat.format(amount);
   }

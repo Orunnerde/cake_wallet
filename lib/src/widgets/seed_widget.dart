@@ -245,8 +245,8 @@ class SeedWidgetState extends State<SeedWidget> {
                           onTap: () => deleteMnemotic(item),
                           child: Image.asset(
                             'assets/images/x.png',
-                            height: 10,
-                            width: 10,
+                            height: 15,
+                            width: 15,
                             color: Palette.wildDarkBlue,
                           ))
                     ],

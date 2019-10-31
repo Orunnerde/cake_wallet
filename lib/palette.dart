@@ -18,7 +18,7 @@ class Palette {
   static const Color cloudySky = Color.fromRGBO(121, 201, 233, 0.8);
   static const Color darkGrey = Color.fromRGBO(136, 155, 183, 0.21);
   static const Color shadowGrey = Color.fromRGBO(132, 141, 198, 0.14);
-  static const Color shadowGreyWithOpacity = Color.fromRGBO(132, 141, 198, 0.07);
+  static const Color shadowGreyWithOpacity = Color.fromRGBO(132, 141, 198, 0.05);
   static const Color blueGrey = Color.fromRGBO(103, 107, 141, 1.0);
   static const Color lightGrey2 = Color.fromRGBO(249, 249, 249, 1.0);
   static const Color violet = Color.fromRGBO(138, 80, 255, 1.0);
