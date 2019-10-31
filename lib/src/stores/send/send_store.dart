@@ -115,7 +115,7 @@ abstract class SendStoreBase with Store {
   @action
   Future _calculateFiatAmount() async {
     final price =
-        await fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: FiatCurrency.usd);
+        await fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: settingsStore.fiatCurrency);
     final amount = double.parse(cryptoAmount) * price;
     fiatAmount = _fiatNumberFormat.format(amount);
   }
@@ -123,7 +123,7 @@ abstract class SendStoreBase with Store {
   @action
   Future _calculateCryptoAmount() async {
     final price =
-        await fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: FiatCurrency.usd);
+        await fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: settingsStore.fiatCurrency);
     final amount = double.parse(fiatAmount) / price;
     cryptoAmount = _cryptoNumberFormat.format(amount);
   }

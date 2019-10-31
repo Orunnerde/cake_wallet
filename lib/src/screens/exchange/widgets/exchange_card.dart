@@ -3,6 +3,7 @@ import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/widgets/picker.dart';
 import 'package:cake_wallet/src/widgets/address_text_field.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
@@ -179,6 +180,7 @@ class ExchangeCardState extends State<ExchangeCard> {
                           textAlign: TextAlign.right,
                           keyboardType: TextInputType.numberWithOptions(
                               signed: false, decimal: false),
+                          inputFormatters: [BlacklistingTextInputFormatter(new RegExp('[\\-|\\ |\\,]'))],
                           decoration: InputDecoration(
                               hintStyle: TextStyle(
                                   color: _isDarkTheme
