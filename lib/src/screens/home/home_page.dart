@@ -131,7 +131,7 @@ class HomePage extends StatelessWidget {
                     settings),
                 builder: (context) => Provider(
                     builder: (_) => NodeListStore(nodeList: NodeList(db: db)),
-                    child: Settings()));
+                    child: SettingsPage()));
         }
 
         return null;

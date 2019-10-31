@@ -24,14 +24,9 @@ import 'package:cake_wallet/src/screens/settings/widgets/link_list_row.dart';
 import 'package:cake_wallet/src/screens/settings/widgets/switch_list_row.dart';
 import 'package:cake_wallet/src/screens/settings/widgets/widget_list_row.dart';
 
-class Settings extends BasePage {
+class SettingsPage extends BasePage {
   String get title => 'Settings';
   Color get backgroundColor => Palette.lightGrey2;
-
-  @override
-  Widget leading(BuildContext context) {
-    return null;
-  }
 
   @override
   Widget body(BuildContext context) {
