@@ -63,13 +63,13 @@ class HomePage extends StatelessWidget {
                 color: Color.fromRGBO(121, 201, 233, 1), height: 20),
             title: const Text('Exchange'),
           ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/images/settings_icon.png',
-                color: Colors.grey, height: 20),
-            activeIcon: Image.asset('assets/images/settings_icon.png',
-                color: Color.fromRGBO(121, 201, 233, 1), height: 20),
-            title: const Text('Settings'),
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Image.asset('assets/images/settings_icon.png',
+          //       color: Colors.grey, height: 20),
+          //   activeIcon: Image.asset('assets/images/settings_icon.png',
+          //       color: Color.fromRGBO(121, 201, 233, 1), height: 20),
+          //   title: const Text('Settings'),
+          // ),
         ],
       ),
       tabBuilder: (context, index) {
@@ -89,9 +89,10 @@ class HomePage extends StatelessWidget {
                             walletService: walletService,
                             settingsStore: settingsStore),
                       ),
-                      Provider(
-                        builder: (context) =>
-                            BalanceStore(walletService: walletService),
+                      ProxyProvider<SettingsStore, BalanceStore>(
+                        builder: (_, settingsStore, __) => BalanceStore(
+                            walletService: walletService,
+                            settingsStore: settingsStore),
                       ),
                       ProxyProvider<SettingsStore, WalletStore>(
                           builder: (_, settingsStore, __) => WalletStore(

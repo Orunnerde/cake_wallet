@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:isolate';
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:cake_wallet/src/domain/common/wallet.dart';
 import 'package:cake_wallet/src/domain/common/sync_status.dart';
 import 'package:cake_wallet/src/domain/common/transaction_history.dart';
@@ -14,23 +16,28 @@ import 'package:cake_wallet/src/domain/monero/subaddress_list.dart';
 import 'package:cake_wallet/src/domain/monero/monero_transaction_creation_credentials.dart';
 import 'package:cake_wallet/src/domain/monero/monero_transaction_history.dart';
 import 'package:cake_wallet/src/domain/monero/subaddress.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:cake_wallet/src/domain/common/balance.dart';
+import 'package:cake_wallet/src/domain/monero/monero_balance.dart';
 
 const moneroBlockSize = 1000;
 
 String formatAmount(String originAmount) {
-  int lastIndex = 1;
+  final int startIndex = originAmount.length - 1;
+  int lastIndex = 0;
 
-  for (int i = originAmount.length - 1; i >= 0; i--) {
+  for (int i = startIndex; i >= 0; i--) {
     if (originAmount[i] == "0") {
       lastIndex = i;
+    } else if (i == startIndex) {
+      lastIndex = i + 1;
+      break;
     } else {
       break;
     }
   }
 
   if (lastIndex < 3) {
-    lastIndex = 3;
+    return '0.00';
   }
 
   return originAmount.substring(0, lastIndex);
@@ -64,14 +71,15 @@ class MoneroWallet extends Wallet {
       String name,
       WalletType type,
       bool isRecovery,
-      int restoreHeight}) async {
+      int restoreHeight = 0}) async {
     await Wallet.setInitialWalletData(
         db: db,
         isRecovery: isRecovery,
         name: name,
         type: WalletType.monero,
         restoreHeight: restoreHeight);
-    return await configured(isRecovery: isRecovery);
+    return await configured(
+        isRecovery: isRecovery, restoreHeight: restoreHeight);
   }
 
   static Future<MoneroWallet> load(
@@ -85,8 +93,9 @@ class MoneroWallet extends Wallet {
     var restoreHeight = 0;
 
     if (wallets.length != 0) {
-      isRecovery = wallets[0][Wallet.isRecoveryColumn] == 1;
-      restoreHeight = wallets[0][Wallet.restoreHeightColumn];
+      final wallet = wallets[0];
+      isRecovery = wallet[Wallet.isRecoveryColumn] == 1;
+      restoreHeight = wallet[Wallet.restoreHeightColumn] ?? 0;
     }
 
     return await configured(
@@ -100,7 +109,7 @@ class MoneroWallet extends Wallet {
     if (isRecovery) {
       await wallet.setRecoveringFromSeed();
 
-      if (restoreHeight != null || restoreHeight != 0) {
+      if (restoreHeight != null && restoreHeight != 0) {
         await wallet.setRefreshFromBlockHeight(height: restoreHeight);
       }
     }
@@ -109,28 +118,20 @@ class MoneroWallet extends Wallet {
   }
 
   WalletType getType() => WalletType.monero;
-  get syncStatus => _syncStatus.stream;
-  get onBalanceChange => _onBalanceChange.stream;
-  get account => _account.stream;
-
-  set account(Account account) {
-    _account.add(account);
-
-    getSubaddress()
-        .refresh(accountIndex: account.id)
-        .then((_) => getSubaddress().getAll())
-        .then((subaddresses) => _subaddress.value = subaddresses[0]);
-  }
-
   bool isRecovery;
-  Function(int height) onHeightChange;
-
-  Observable<String> get name => _name.stream;
-  Observable<String> get address => _address.stream;
+  Observable<SyncStatus> get syncStatus => _syncStatus.stream;
+  Observable<Balance> get onBalanceChange => _onBalanceChange.stream;
+  Observable<Account> get onAccountChange => _account.stream;
+  Observable<String> get onNameChange => _name.stream;
+  Observable<String> get onAddressChange => _address.stream;
   Observable<Subaddress> get subaddress => _subaddress.stream;
 
+  Account get account => _account.value;
+  String get address => _address.value;
+  String get name => _name.value;
+
   BehaviorSubject<Account> _account;
-  BehaviorSubject<Wallet> _onBalanceChange;
+  BehaviorSubject<MoneroBalance> _onBalanceChange;
   BehaviorSubject<SyncStatus> _syncStatus;
   BehaviorSubject<String> _name;
   BehaviorSubject<String> _address;
@@ -139,6 +140,7 @@ class MoneroWallet extends Wallet {
   bool _isSaving;
   int _lastSaveTime;
   int _lastRefreshTime;
+  int _refreshHeight;
 
   TransactionHistory _cachedTransactionHistory;
   SubaddressList _cachedSubaddressList;
@@ -149,21 +151,26 @@ class MoneroWallet extends Wallet {
     _isSaving = false;
     _lastSaveTime = 0;
     _lastRefreshTime = 0;
+    _refreshHeight = 0;
     _name = BehaviorSubject<String>();
     _address = BehaviorSubject<String>();
     _syncStatus = BehaviorSubject<SyncStatus>();
-    _onBalanceChange = BehaviorSubject<Wallet>();
+    _onBalanceChange = BehaviorSubject<MoneroBalance>();
     _account = BehaviorSubject<Account>()..add(Account(id: 0));
     _subaddress = BehaviorSubject<Subaddress>();
 
     walletHeightChannel.setMessageHandler((h) async {
+      final startDate = DateTime.now();
       final height = h.getUint64(0);
-
-      if (onHeightChange != null) {
-        onHeightChange(height);
-      }
-
       final nodeHeight = await getNodeHeightOrUpdate(height);
+      // print(
+      //     'Ended fetching of node height ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}');
+
+      if (isRecovery) {
+        _syncStatus
+            .add(RestoringSyncStatus(height, _refreshHeight, nodeHeight));
+        return platformBinaryEmptyResponse;
+      }
 
       if (height > 0 && ((nodeHeight - height) < moneroBlockSize)) {
         _syncStatus.add(SyncedSyncStatus());
@@ -175,7 +182,7 @@ class MoneroWallet extends Wallet {
     });
 
     balanceChangeChannel.setMessageHandler((_) async {
-      _onBalanceChange.add(this);
+      askForUpdateBalance();
 
       getHistory()
           .update()
@@ -185,12 +192,16 @@ class MoneroWallet extends Wallet {
     });
 
     syncStateChannel.setMessageHandler((_) async {
-      final currentHeight = await getCurrentHeight();
-      final nodeHeight = await getNodeHeight();
+      final startDate = DateTime.now();
 
-      getHistory()
-          .update()
-          .then((_) => print('ask to update transaction history'));
+      final currentHeight = await getCurrentHeight();
+      final nodeHeight = await getNodeHeightOrUpdate(currentHeight);
+
+      // print(
+      //     'Ended fetching of node height ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}');
+
+      getHistory().update().then((_) => print(
+          'Updated transaction history: ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}'));
 
       if (currentHeight == 0) {
         return platformBinaryEmptyResponse;
@@ -204,7 +215,9 @@ class MoneroWallet extends Wallet {
 
       if (isRecovery && (nodeHeight - currentHeight < moneroBlockSize)) {
         await setAsRecovered();
-        _onBalanceChange.add(this);
+        askForUpdateBalance();
+        print(
+            'Ended set as recovered ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}');
       }
 
       final now = DateTime.now().millisecondsSinceEpoch;
@@ -215,6 +228,8 @@ class MoneroWallet extends Wallet {
       }
 
       await store();
+      print(
+          'Ended storing while syncing ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}');
 
       _lastRefreshTime = now;
 
@@ -223,7 +238,7 @@ class MoneroWallet extends Wallet {
 
     getAccountList()
       ..refresh()
-      ..getAll().then((account) => this.account.add(account[0]));
+      ..getAll().then((account) => this._account.add(account[0]));
   }
 
   Future updateInfo() async {
@@ -264,10 +279,6 @@ class MoneroWallet extends Wallet {
 
   Future<int> getCurrentHeight() async {
     return getValue(key: 'getCurrentHeight');
-  }
-
-  Future<bool> isConnected() async {
-    return getValue(key: 'getIsConnected');
   }
 
   Future<int> getNodeHeight() async {
@@ -372,22 +383,6 @@ class MoneroWallet extends Wallet {
     await store();
   }
 
-  Future store() async {
-    if (_isSaving) {
-      return;
-    }
-
-    try {
-      _isSaving = true;
-      await platform.invokeMethod('store');
-      _isSaving = false;
-    } on PlatformException catch (e) {
-      print(e);
-      _isSaving = false;
-      throw e;
-    }
-  }
-
   Future<int> getNodeHeightOrUpdate(int baseHeight) async {
     if (_cachedBlockchainHeight < baseHeight) {
       _cachedBlockchainHeight = await getNodeHeight();
@@ -426,6 +421,7 @@ class MoneroWallet extends Wallet {
 
   Future setRefreshFromBlockHeight({int height}) async {
     try {
+      _refreshHeight = height;
       await platform.invokeMethod('setRecoveringFromSeed', {'height': height});
     } on PlatformException catch (e) {
       print(e);
@@ -442,7 +438,83 @@ class MoneroWallet extends Wallet {
     isRecovery = true;
   }
 
+  Future askForUpdateBalance() async {
+    final fullBalance = await getFullBalance();
+    final unlockedBalance = await getUnlockedBalance();
+    final needToChange = _onBalanceChange.value != null
+        ? _onBalanceChange.value.fullBalance != fullBalance ||
+            _onBalanceChange.value.unlockedBalance != unlockedBalance
+        : true;
+
+    if (!needToChange) {
+      return;
+    }
+
+    _onBalanceChange.add(MoneroBalance(
+        fullBalance: fullBalance, unlockedBalance: unlockedBalance));
+  }
+
+  Future rescan() async {
+    const startHeight = 0;
+    await configured(isRecovery: true, restoreHeight: startHeight);
+    await setRefreshFromBlockHeight(height: startHeight);
+    await setRecoveringFromSeed();
+  }
+
   void changeCurrentSubaddress(Subaddress subaddress) {
     _subaddress.value = subaddress;
+  }
+
+  void changeAccount(Account account) {
+    _account.add(account);
+
+    getSubaddress()
+        .refresh(accountIndex: account.id)
+        .then((_) => getSubaddress().getAll())
+        .then((subaddresses) => _subaddress.value = subaddresses[0]);
+  }
+
+  Future store() async {
+    print('Store start');
+
+    final start = DateTime.now();
+
+    if (_isSaving) {
+      return;
+    }
+
+    try {
+      _isSaving = true;
+      await platform.invokeMethod('store');
+      _isSaving = false;
+    } on PlatformException catch (e) {
+      print(e);
+      _isSaving = false;
+      throw e;
+    }
+
+    print('Store end');
+    print('Store time: ${DateTime.now().millisecondsSinceEpoch - start.millisecondsSinceEpoch}');
+  }
+
+  Future<bool> isConnected() async {
+    print('isConnected start');
+
+    final start = DateTime.now();
+
+    bool isConnected = false;
+
+    try {
+      _isSaving = true;
+      isConnected = await platform.invokeMethod('getIsConnected');
+    } on PlatformException catch (e) {
+      print(e);
+      throw e;
+    }
+
+    print('isConnected end');
+    print('isConnected time: ${DateTime.now().millisecondsSinceEpoch - start.millisecondsSinceEpoch}');
+
+    return isConnected;
   }
 }

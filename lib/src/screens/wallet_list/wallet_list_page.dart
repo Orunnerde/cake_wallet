@@ -48,8 +48,10 @@ class WalletListBody extends StatelessWidget {
     bool _isDarkTheme;
     Color _backgroundColor = Theme.of(context).backgroundColor;
 
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    if (_themeChanger.getTheme() == Themes.darkTheme)
+      _isDarkTheme = true;
+    else
+      _isDarkTheme = false;
 
     return Column(
       children: <Widget>[
@@ -57,19 +59,20 @@ class WalletListBody extends StatelessWidget {
         Expanded(
             child: Stack(
           children: <Widget>[
-            _isDarkTheme ? Container(
-              height: 10.0,
-              color: _backgroundColor,
-            )
-            : Container(
-              height: 10.0,
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                colors: [Palette.lightGrey2, Colors.white],
-                begin: FractionalOffset(0.0, 0.0),
-                end: FractionalOffset(0.0, 1.0),
-              )),
-            ),
+            _isDarkTheme
+                ? Container(
+                    height: 10.0,
+                    color: _backgroundColor,
+                  )
+                : Container(
+                    height: 10.0,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                      colors: [Palette.lightGrey2, Colors.white],
+                      begin: FractionalOffset(0.0, 0.0),
+                      end: FractionalOffset(0.0, 1.0),
+                    )),
+                  ),
             Container(
               padding: EdgeInsets.all(20.0),
               child: Column(
@@ -79,10 +82,10 @@ class WalletListBody extends StatelessWidget {
                     builder: (_) => ListView.separated(
                         separatorBuilder: (_, index) {
                           return Divider(
-                              color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                              color: _isDarkTheme
+                                  ? PaletteDark.darkThemeGreyWithOpacity
                                   : Palette.lightGrey,
-                              height: 1.0
-                          );
+                              height: 1.0);
                         },
                         itemCount: _walletListStore.wallets.length,
                         itemBuilder: (__, index) {
@@ -94,10 +97,8 @@ class WalletListBody extends StatelessWidget {
                               onTap: () => presetMenuForWallet(
                                   wallet, isCurrentWallet, context),
                               child: Container(
-                                  padding: EdgeInsets.only(
-                                    left: 10.0,
-                                    right: 10.0
-                                  ),
+                                  padding:
+                                      EdgeInsets.only(left: 10.0, right: 10.0),
                                   child: ListTile(
                                       title: Text(
                                         wallet.name,
@@ -105,8 +106,8 @@ class WalletListBody extends StatelessWidget {
                                             color: isCurrentWallet
                                                 ? Palette.cakeGreen
                                                 : _isDarkTheme
-                                                ? PaletteDark.darkThemeGrey
-                                                : Colors.black,
+                                                    ? PaletteDark.darkThemeGrey
+                                                    : Colors.black,
                                             fontSize: 18.0,
                                             fontWeight: FontWeight.w600),
                                       ),
@@ -126,12 +127,15 @@ class WalletListBody extends StatelessWidget {
                       onPressed: () =>
                           Navigator.of(context).pushNamed(Routes.newWallet),
                       iconData: Icons.add,
-                      color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
+                      color: _isDarkTheme
+                          ? PaletteDark.darkThemePurpleButton
                           : Palette.purple,
-                      borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
+                      borderColor: _isDarkTheme
+                          ? PaletteDark.darkThemePurpleButtonBorder
                           : Palette.deepPink,
                       iconColor: Palette.violet,
-                      iconBackgroundColor: _isDarkTheme ? PaletteDark.darkThemeViolet
+                      iconBackgroundColor: _isDarkTheme
+                          ? PaletteDark.darkThemeViolet
                           : Colors.white,
                       text: 'Create New Wallet'),
                   SizedBox(
@@ -142,12 +146,15 @@ class WalletListBody extends StatelessWidget {
                         .pushNamed(Routes.restoreWalletOptions),
                     iconData: Icons.refresh,
                     text: 'Restore Wallet',
-                    color: _isDarkTheme ? PaletteDark.darkThemeIndigoButton
+                    color: _isDarkTheme
+                        ? PaletteDark.darkThemeIndigoButton
                         : Palette.indigo,
-                    borderColor: _isDarkTheme ? PaletteDark.darkThemeIndigoButtonBorder
+                    borderColor: _isDarkTheme
+                        ? PaletteDark.darkThemeIndigoButtonBorder
                         : Palette.deepIndigo,
                     iconColor: _isDarkTheme ? Colors.white : Colors.black,
-                    iconBackgroundColor: _isDarkTheme ? PaletteDark.darkThemeIndigoButtonBorder
+                    iconBackgroundColor: _isDarkTheme
+                        ? PaletteDark.darkThemeIndigoButtonBorder
                         : Colors.white,
                   ),
                 ],
@@ -187,7 +194,7 @@ class WalletListBody extends StatelessWidget {
         child: const Text('Show seed'),
         onPressed: () async {
           Navigator.of(context).popAndPushNamed(Routes.auth, arguments: [
-            (auth) async {
+            (auth, _) async {
               auth.close();
               Navigator.of(bodyContext).popAndPushNamed(Routes.seed);
             }
@@ -200,7 +207,7 @@ class WalletListBody extends StatelessWidget {
           isDestructiveAction: true,
           onPressed: () {
             Navigator.of(context).popAndPushNamed(Routes.auth, arguments: [
-              (auth) async {
+              (auth, _) async {
                 try {
                   auth.changeProcessText('Removing ${wallet.name} wallet');
                   await _walletListStore.remove(wallet);
@@ -212,6 +219,11 @@ class WalletListBody extends StatelessWidget {
               }
             ]);
           }));
+    }
+
+    if (isCurrentWallet) {
+      actions.add(CupertinoActionSheetAction(
+          child: const Text('Rescan'), onPressed: () async {}));
     }
 
     return actions;

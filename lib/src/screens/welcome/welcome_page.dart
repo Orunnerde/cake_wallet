@@ -14,6 +14,9 @@ class WelcomePage extends BasePage {
   final _cakeLogo = Image.asset('assets/images/cake_logo.png');
 
   @override
+  Widget leading(BuildContext context) => Container();
+
+  @override
   Widget body(BuildContext context) {
     final _screenWidth = MediaQuery.of(context).size.width;
     final textScaleFactor = _screenWidth < _baseWidth ? 0.76 : 1.0;

@@ -37,3 +37,16 @@ Future<double> fetchPriceFor({CryptoCurrency crypto, FiatCurrency fiat}) async {
 
   return price;
 }
+
+Future<String> calculateAmount(
+    {CryptoCurrency crypto, FiatCurrency fiat, String amount}) async {
+  final price = await fetchPriceFor(crypto: crypto, fiat: fiat);
+  final _amount = double.parse(amount);
+  final result = price * _amount;
+
+  if (result == 0.0) {
+    return '0.0';
+  }
+
+  return result > 0.01 ? result.toStringAsFixed(2) : '< 0.01';
+}

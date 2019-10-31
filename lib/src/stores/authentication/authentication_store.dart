@@ -16,6 +16,7 @@ enum AuthenticationState {
   denied,
   authenticated,
   unauthenticated,
+  active,
   loading
 }
 
@@ -37,10 +38,22 @@ abstract class AuthenticationStoreBase with Store {
     state = canAuth ? AuthenticationState.allowed : AuthenticationState.denied;
   }
 
+  @action
   void loggedIn() {
     state = AuthenticationState.authenticated;
   }
 
+  @action
+  void inactive() {
+    state = AuthenticationState.unauthenticated;
+  }
+
+  @action
+  void active() {
+    state = AuthenticationState.active;
+  }
+
+  @action
   void loggedOut() {
     state = AuthenticationState.uninitialized;
   }

@@ -1,3 +1,4 @@
+import 'package:cake_wallet/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -64,6 +65,7 @@ class SendFormState extends State<SendForm> {
   Widget build(BuildContext context) {
     final settingsStore = Provider.of<SettingsStore>(context);
     final sendStore = Provider.of<SendStore>(context);
+    sendStore.settingsStore = settingsStore;
     final balanceStore = Provider.of<BalanceStore>(context);
     final walletStore = Provider.of<WalletStore>(context);
 
@@ -178,8 +180,7 @@ class SendFormState extends State<SendForm> {
                         },
                         options: [
                           AddressTextFieldOption.qrCode,
-                          AddressTextFieldOption.addressBook,
-                          AddressTextFieldOption.subaddressList
+                          AddressTextFieldOption.addressBook
                         ]),
                     Padding(
                       padding: const EdgeInsets.only(top: 20),
@@ -348,6 +349,8 @@ class SendFormState extends State<SendForm> {
                     ),
                   ]),
                   Observer(builder: (_) {
+                    print(sendStore.state);
+
                     return LoadingPrimaryButton(
                         onPressed: () async {
                           showDialog(
@@ -360,11 +363,21 @@ class SendFormState extends State<SendForm> {
                                     FlatButton(
                                         child: Text("Send"),
                                         onPressed: () async {
-                                          sendStore.createTransaction(
-                                              address: _addressController.text,
-                                              paymentId:
-                                                  _paymentIdController.text);
-                                          Navigator.of(context).pop();
+                                          Navigator.of(context).popAndPushNamed(
+                                              Routes.auth,
+                                              arguments: [
+                                                (auth, authContext) {
+                                                  Navigator.of(authContext)
+                                                      .pop();
+                                                  sendStore.createTransaction(
+                                                      address:
+                                                          _addressController
+                                                              .text,
+                                                      paymentId:
+                                                          _paymentIdController
+                                                              .text);
+                                                }
+                                              ]);
                                         }),
                                     FlatButton(
                                         child: Text("Cancel"),
@@ -412,7 +425,7 @@ class SendFormState extends State<SendForm> {
       final fiatAmount = _fiatAmountController.text;
 
       if (sendStore.fiatAmount != fiatAmount) {
-        sendStore.fiatAmount = fiatAmount;
+        sendStore.changeFiatAmount(fiatAmount);
       }
     });
 
@@ -420,7 +433,7 @@ class SendFormState extends State<SendForm> {
       final cryptoAmount = _cryptoAmountController.text;
 
       if (sendStore.cryptoAmount != cryptoAmount) {
-        sendStore.cryptoAmount = cryptoAmount;
+        sendStore.changeCryptoAmount(cryptoAmount);
       }
     });
 

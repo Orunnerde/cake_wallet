@@ -12,7 +12,6 @@ import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/src/widgets/standart_switch.dart';
 
 class NodeListPage extends BasePage {
-  final bool _isOn = true;
   NodeListPage();
 
   String get title => 'Nodes';
@@ -119,33 +118,9 @@ class NodeListPage extends BasePage {
     }
 
     return Container(
-      padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+      padding: EdgeInsets.only(bottom: 20.0),
       child: Column(
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              Expanded(
-                  child: Container(
-                color: _isDarkTheme ? Theme.of(context).backgroundColor : Palette.lightGrey2,
-                child: ListTile(
-                    title: Text(
-                      'Auto switch node',
-                      style: TextStyle(
-                          fontSize: 16.0,
-                          color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
-                      ),
-                    ),
-                    trailing: StandartSwitch(
-                        value: _isOn,
-                        onTaped: () => null
-                    )
-                    ),
-              ))
-            ],
-          ),
-          SizedBox(
-            height: 20.0,
-          ),
           Expanded(child: Observer(builder: (context) {
             return ListView.separated(
                 separatorBuilder: (_, __) =>
