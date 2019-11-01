@@ -36,10 +36,31 @@ abstract class ValidationStoreBase with Store {
   }
 
   @action
-  void validateAddress(String value) {
-    // XMR, BTC, ETH
+  void validateAddress(String value, {String currency = ''}) {
+    // XMR (95), BTC (34), ETH (42), LTC (34), BCH (42), DASH (34)
     String p = '^[0-9a-zA-Z]{95}\$|^[0-9a-zA-Z]{34}\$|^[0-9a-zA-Z]{42}\$';
     isValidate = _validate(value, p);
+    if (isValidate && currency != '') {
+      switch (currency) {
+        case 'XMR':
+          isValidate = (value.length == 95);
+          break;
+        case 'BTC':
+          isValidate = (value.length == 34);
+          break;
+        case 'ETH':
+          isValidate = (value.length == 42);
+          break;
+        case 'LTC':
+          isValidate = (value.length == 34);
+          break;
+        case 'BCH':
+          isValidate = (value.length == 42);
+          break;
+        case 'DASH':
+          isValidate = (value.length == 34);
+      }
+    }
   }
 
   @action

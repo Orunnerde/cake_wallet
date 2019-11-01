@@ -166,7 +166,7 @@ class SendFormState extends State<SendForm> {
                             AddressTextFieldOption.addressBook
                           ],
                           validator: (value) {
-                            validation.validateAddress(value);
+                            validation.validateAddress(value, currency: 'XMR');
                             if (!validation.isValidate) return 'Wallet address must correspond to the type of cryptocurrency';
                             return null;
                           },

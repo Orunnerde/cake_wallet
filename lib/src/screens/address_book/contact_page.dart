@@ -51,6 +51,7 @@ class ContactFormState extends State<ContactForm> {
   _setCurrencyType(BuildContext context) async {
     _currencyTypeController.text =
         CryptoCurrency.all[0].toString();
+    _selectectCrypto = CryptoCurrency.all[0];
     await showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -197,7 +198,7 @@ class ContactFormState extends State<ContactForm> {
                               controller: _addressController,
                               options: [AddressTextFieldOption.qrCode],
                               validator: (value) {
-                                validation.validateAddress(value);
+                                validation.validateAddress(value, currency: _currencyTypeController.text);
                                 if (!validation.isValidate) return 'Wallet address must correspond to the type of cryptocurrency';
                                 return null;
                               },
