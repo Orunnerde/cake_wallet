@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
@@ -186,9 +187,9 @@ class ExchangeFormState extends State<ExchangeForm> {
     else
       _isDarkTheme = false;
 
-    return Container(
-      padding: EdgeInsets.only(left: 20, right: 20),
-      child: SingleChildScrollView(
+    return ScrollableWithBottomSection(
+      contentPadding: EdgeInsets.only(left: 20, right: 20),
+      content: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -256,66 +257,67 @@ class ExchangeFormState extends State<ExchangeForm> {
                           .changeReceiveCurrency(currency: currency),
                       imageArrow: arrowBottomCakeGreen,
                     )),
-            Padding(
-              padding: EdgeInsets.only(top: 35, bottom: 15),
-              child: Observer(builder: (_) {
-                final description =
-                    exchangeStore.provider is XMRTOExchangeProvider
-                        ? 'The receive amount is guaranteed'
-                        : 'The receive amount is an estimate';
-                return Center(
-                  child: Text(
-                    description,
-                    style: TextStyle(color: Palette.blueGrey, fontSize: 12),
-                  ),
-                );
-              }),
-            ),
-            Observer(
-                builder: (_) => LoadingPrimaryButton(
-                      text: 'Exchange',
-                      onPressed: () => exchangeStore.createTrade(),
-                      color: _isDarkTheme
-                          ? PaletteDark.darkThemePurpleButton
-                          : Palette.purple,
-                      borderColor: _isDarkTheme
-                          ? PaletteDark.darkThemePurpleButtonBorder
-                          : Palette.deepPink,
-                      isLoading: exchangeStore.tradeState is TradeIsCreating,
-                    )),
-            Observer(builder: (_) {
-              final title = exchangeStore.provider.description.title;
-              var imageSrc = '';
-
-              switch (exchangeStore.provider.description) {
-                case ExchangeProviderDescription.xmrto:
-                  imageSrc = 'assets/images/xmr_btc.png';
-                  break;
-                case ExchangeProviderDescription.changeNow:
-                  imageSrc = 'assets/images/change_now.png';
-                  break;
-              }
-
-              return Padding(
-                padding: EdgeInsets.only(top: 20, bottom: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Image.asset(imageSrc),
-                    SizedBox(width: 10),
-                    Text(
-                      'Powered by $title',
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Color.fromRGBO(191, 201, 215, 1)),
-                    )
-                  ],
-                ),
-              );
-            })
           ],
         ),
       ),
+      bottomSectionPadding: EdgeInsets.only(top: 35, left: 20, right: 20),
+      bottomSection: Column(children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(bottom: 15),
+          child: Observer(builder: (_) {
+            final description = exchangeStore.provider is XMRTOExchangeProvider
+                ? 'The receive amount is guaranteed'
+                : 'The receive amount is an estimate';
+            return Center(
+              child: Text(
+                description,
+                style: TextStyle(color: Palette.blueGrey, fontSize: 12),
+              ),
+            );
+          }),
+        ),
+        Observer(
+            builder: (_) => LoadingPrimaryButton(
+                  text: 'Exchange',
+                  onPressed: () => exchangeStore.createTrade(),
+                  color: _isDarkTheme
+                      ? PaletteDark.darkThemePurpleButton
+                      : Palette.purple,
+                  borderColor: _isDarkTheme
+                      ? PaletteDark.darkThemePurpleButtonBorder
+                      : Palette.deepPink,
+                  isLoading: exchangeStore.tradeState is TradeIsCreating,
+                )),
+        Observer(builder: (_) {
+          final title = exchangeStore.provider.description.title;
+          var imageSrc = '';
+
+          switch (exchangeStore.provider.description) {
+            case ExchangeProviderDescription.xmrto:
+              imageSrc = 'assets/images/xmr_btc.png';
+              break;
+            case ExchangeProviderDescription.changeNow:
+              imageSrc = 'assets/images/change_now.png';
+              break;
+          }
+
+          return Padding(
+            padding: EdgeInsets.only(top: 20, bottom: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(imageSrc),
+                SizedBox(width: 10),
+                Text(
+                  'Powered by $title',
+                  style: TextStyle(
+                      fontSize: 14, color: Color.fromRGBO(191, 201, 215, 1)),
+                )
+              ],
+            ),
+          );
+        })
+      ]),
     );
   }
 

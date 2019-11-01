@@ -12,7 +12,6 @@ import 'package:cake_wallet/src/screens/receive/qr_image.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/src/widgets/nav_bar.dart';
 
 class ReceivePage extends BasePage {
   bool get isModalBackButton => true;
@@ -36,30 +35,6 @@ class ReceivePage extends BasePage {
   @override
   Widget body(BuildContext context) =>
       SingleChildScrollView(child: ReceiveBody());
-
-  @override
-  Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
-
-    return Scaffold(
-        backgroundColor:
-            _isDarkTheme ? PaletteDark.darkThemeBlack : Palette.lightGrey2,
-        resizeToAvoidBottomPadding: false,
-        appBar: NavBar(
-            leading: leading(context),
-            middle: middle(context),
-            trailing: trailing(context),
-            backgroundColor: _isDarkTheme
-                ? Theme.of(context).backgroundColor
-                : Colors.white),
-        body: SafeArea(child: body(context)));
-  }
 }
 
 class ReceiveBody extends StatelessWidget {
