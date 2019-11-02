@@ -27,14 +27,12 @@ abstract class TransactionListBase with Store {
   StreamSubscription<Wallet> _onWalletChangeSubscription;
   StreamSubscription<List<TransactionInfo>> _onTransactionsChangeSubscription;
   StreamSubscription<Account> _onAccountChangeSubscription;
-  double _price;
 
   TransactionListBase(
       {@required WalletService walletService,
       @required SettingsStore settingsStore}) {
     _walletService = walletService;
     _settingsStore = settingsStore;
-    _price = 0;
 
     if (walletService.currentWallet != null) {
       _onWalletChanged(walletService.currentWallet);
@@ -42,9 +40,6 @@ abstract class TransactionListBase with Store {
 
     _onWalletChangeSubscription =
         walletService.onWalletChange.listen(_onWalletChanged);
-
-    fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: _settingsStore.fiatCurrency)
-        .then((price) => _price = price);
   }
 
   @override
