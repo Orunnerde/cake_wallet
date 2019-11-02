@@ -86,7 +86,7 @@ class MoneroWallet extends Wallet {
       Database db, String name, WalletType type) async {
     final id = walletTypeToString(type).toLowerCase() + '_' + name;
     final wallets = await db.query(Wallet.walletsTable,
-        columns: [Wallet.isRecoveryColumn],
+        columns: [Wallet.isRecoveryColumn, Wallet.restoreHeightColumn],
         where: '${Wallet.idColumn} = ?',
         whereArgs: [id]);
     var isRecovery = false;
@@ -109,7 +109,7 @@ class MoneroWallet extends Wallet {
     if (isRecovery) {
       await wallet.setRecoveringFromSeed();
 
-      if (restoreHeight != null && restoreHeight != 0) {
+      if (restoreHeight != null) {
         await wallet.setRefreshFromBlockHeight(height: restoreHeight);
       }
     }
