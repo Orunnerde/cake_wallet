@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cake_wallet/src/domain/monero/account.dart';
@@ -102,12 +103,16 @@ abstract class TransactionListBase with Store {
       _transactions = transactions;
     }
 
-    this.transactions = _transactions.map((tx) {
-      final amount = _price * tx.amountRaw();
-      final fiatAmount =
-          '${amount.toStringAsFixed(2)} ${_settingsStore.fiatCurrency}';
+    final __transactions = await Future.wait(_transactions.map((tx) async {
+      final amount = await calculateAmountFromRaw(
+          amount: tx.amountRaw(),
+          crypto: CryptoCurrency.xmr,
+          fiat: _settingsStore.fiatCurrency);
+      final fiatAmount = '$amount ${_settingsStore.fiatCurrency}';
       tx.changeFiatAmount(fiatAmount);
       return tx;
-    }).toList();
+    }));
+
+    this.transactions = __transactions.toList();
   }
 }
