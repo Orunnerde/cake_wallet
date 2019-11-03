@@ -1,9 +1,4 @@
 import 'dart:async';
-import 'package:cake_wallet/src/domain/common/transaction_direction.dart';
-import 'package:cake_wallet/src/domain/exchange/exchange_provider_description.dart';
-import 'package:cake_wallet/src/stores/action_list/action_list_display_mode.dart';
-import 'package:cake_wallet/src/stores/action_list/trade_filter_store.dart';
-import 'package:cake_wallet/src/stores/action_list/transaction_filter_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cake_wallet/src/domain/monero/account.dart';
@@ -13,36 +8,16 @@ import 'package:cake_wallet/src/domain/common/wallet.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/domain/monero/monero_wallet.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
-import 'package:cake_wallet/src/domain/exchange/trade.dart';
 import 'package:cake_wallet/src/domain/exchange/trade_history.dart';
+import 'package:cake_wallet/src/stores/action_list/action_list_display_mode.dart';
+import 'package:cake_wallet/src/stores/action_list/action_list_item.dart';
+import 'package:cake_wallet/src/stores/action_list/date_section_item.dart';
+import 'package:cake_wallet/src/stores/action_list/trade_filter_store.dart';
+import 'package:cake_wallet/src/stores/action_list/trade_list_item.dart';
+import 'package:cake_wallet/src/stores/action_list/transaction_filter_store.dart';
+import 'package:cake_wallet/src/stores/action_list/transaction_list_item.dart';
 
 part 'action_list_store.g.dart';
-
-abstract class ActionListItem {
-  DateTime get date;
-}
-
-class TransactionListItem extends ActionListItem {
-  final TransactionInfo transaction;
-
-  DateTime get date => transaction.date;
-
-  TransactionListItem({this.transaction});
-}
-
-class TradeListItem extends ActionListItem {
-  final Trade trade;
-
-  DateTime get date => trade.createdAt;
-
-  TradeListItem({this.trade});
-}
-
-class DateSectionItem extends ActionListItem {
-  final DateTime date;
-
-  DateSectionItem(this.date);
-}
 
 class ActionListStore = ActionListBase with _$ActionListStore;
 
@@ -89,63 +64,13 @@ abstract class ActionListBase with Store {
 
     if (_settingsStore.actionlistDisplayMode
         .contains(ActionListDisplayMode.transactions)) {
-      List<TransactionListItem> _transactions = [];
-      final needToFilter = !transactionFilterStore.displayOutgoing ||
-          !transactionFilterStore.displayIncoming ||
-          (transactionFilterStore.startDate != null &&
-              transactionFilterStore.endDate != null);
-
-      if (needToFilter) {
-        _transactions = transactions.where((item) {
-          var allowed = true;
-
-          if (allowed &&
-              transactionFilterStore.startDate != null &&
-              transactionFilterStore.endDate != null) {
-            allowed = transactionFilterStore.startDate
-                    .isBefore(item.transaction.date) &&
-                transactionFilterStore.endDate.isAfter(item.transaction.date);
-          }
-
-          if (allowed &&
-              (!transactionFilterStore.displayOutgoing ||
-                  transactionFilterStore.displayIncoming)) {
-            allowed = (transactionFilterStore.displayOutgoing &&
-                    item.transaction.direction ==
-                        TransactionDirection.outgoing) ||
-                (transactionFilterStore.displayIncoming &&
-                    item.transaction.direction ==
-                        TransactionDirection.incoming);
-          }
-
-          return allowed;
-        }).toList();
-      } else {
-        _transactions = transactions;
-      }
-
-      _items.addAll(_transactions);
+      _items
+          .addAll(transactionFilterStore.filtered(transactions: transactions));
     }
 
     if (_settingsStore.actionlistDisplayMode
         .contains(ActionListDisplayMode.trades)) {
-      List<TradeListItem> _trades = [];
-
-      final needToFilter =
-          !tradeFilterStore.displayChangeNow || !tradeFilterStore.displayXMRTO;
-
-      if (needToFilter) {
-        _trades = trades.where((item) {
-          return (!tradeFilterStore.displayXMRTO &&
-                  item.trade.provider != ExchangeProviderDescription.xmrto) ||
-              (!tradeFilterStore.displayChangeNow &&
-                  item.trade.provider != ExchangeProviderDescription.changeNow);
-        }).toList();
-      } else {
-        _trades = trades;
-      }
-
-      _items.addAll(_trades);
+      _items.addAll(tradeFilterStore.filtered(trades: trades));
     }
 
     return formattedItemsList(_items);

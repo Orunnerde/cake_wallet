@@ -1,4 +1,3 @@
-import 'package:cake_wallet/src/stores/action_list/action_list_display_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -7,17 +6,21 @@ import 'package:intl/intl.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/palette.dart';
-import 'package:cake_wallet/src/domain/common/transaction_direction.dart';
 import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
 import 'package:cake_wallet/src/domain/common/sync_status.dart';
-import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/domain/exchange/exchange_provider_description.dart';
 import 'package:cake_wallet/src/stores/action_list/action_list_store.dart';
 import 'package:cake_wallet/src/stores/balance/balance_store.dart';
 import 'package:cake_wallet/src/stores/sync/sync_store.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
+import 'package:cake_wallet/src/stores/action_list/date_section_item.dart';
+import 'package:cake_wallet/src/stores/action_list/trade_list_item.dart';
+import 'package:cake_wallet/src/stores/action_list/transaction_list_item.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/src/screens/dashboard/date_section_raw.dart';
+import 'package:cake_wallet/src/screens/dashboard/trade_row.dart';
+import 'package:cake_wallet/src/screens/dashboard/transaction_raw.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
@@ -176,8 +179,6 @@ class DashboardPageBody extends StatefulWidget {
 
 class DashboardPageBodyState extends State<DashboardPageBody> {
   static final transactionDateFormat = DateFormat("dd.MM.yyyy, HH:mm");
-  static final dateSectionDateFormat = DateFormat("d MMM");
-  static final nowDate = DateTime.now();
 
   final _connectionStatusObserverKey = GlobalKey();
   final _balanceObserverKey = GlobalKey();
@@ -450,7 +451,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                   );
                 }
 
-                if (index == 1) {
+                if (index == 1 && actionListStore.items.length > 0) {
                   return Padding(
                     padding: EdgeInsets.only(right: 20, top: 10, bottom: 20),
                     child: Row(
@@ -557,7 +558,12 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                                 )
                                               ])))
                             ],
-                            child: Text('Filters'),
+                            child: Text('Filters',
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: _isDarkTheme
+                                        ? PaletteDark.darkThemeGrey
+                                        : Palette.wildDarkBlue)),
                             onSelected: (item) async {
                               if (item == 2) {
                                 final List<DateTime> picked =
@@ -578,81 +584,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                 }
                               }
                             },
-                          ),
-                          SizedBox(width: 10),
-                          PopupMenuButton<ActionListDisplayMode>(
-                              itemBuilder: (context) => [
-                                    PopupMenuItem(
-                                        value:
-                                            ActionListDisplayMode.transactions,
-                                        child: Observer(
-                                            builder: (_) => Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text('Transactions'),
-                                                      Checkbox(
-                                                        value: settingsStore
-                                                            .actionlistDisplayMode
-                                                            .contains(
-                                                                ActionListDisplayMode
-                                                                    .transactions),
-                                                        onChanged: (value) =>
-                                                            settingsStore
-                                                                .toggleTransactionsDisplay(),
-                                                      )
-                                                    ]))),
-                                    PopupMenuItem(
-                                        value: ActionListDisplayMode.trades,
-                                        child: Observer(
-                                            builder: (_) => Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text('Trades'),
-                                                      Checkbox(
-                                                        value: settingsStore
-                                                            .actionlistDisplayMode
-                                                            .contains(
-                                                                ActionListDisplayMode
-                                                                    .trades),
-                                                        onChanged: (value) =>
-                                                            settingsStore
-                                                                .toggleTradesDisplay(),
-                                                      )
-                                                    ])))
-                                  ],
-                              child: Observer(builder: (_) {
-                                var title = '';
-
-                                if (settingsStore
-                                        .actionlistDisplayMode.length ==
-                                    ActionListDisplayMode.values.length) {
-                                  title = 'ALL';
-                                }
-
-                                if (title.isEmpty &&
-                                    settingsStore.actionlistDisplayMode
-                                        .contains(
-                                            ActionListDisplayMode.trades)) {
-                                  title = 'Only trades';
-                                }
-
-                                if (title.isEmpty &&
-                                    settingsStore.actionlistDisplayMode
-                                        .contains(ActionListDisplayMode
-                                            .transactions)) {
-                                  title = 'Only transactions';
-                                }
-
-                                if (title.isEmpty) {
-                                  title = 'None';
-                                }
-
-                                return Text('Display: ' + title);
-                              })),
+                          )
                         ]),
                   );
                 }
@@ -661,35 +593,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                 final item = items[index];
 
                 if (item is DateSectionItem) {
-                  final diffDays = item.date.difference(nowDate).inDays;
-
-                  // final txDateUtc = item.date.toUtc();
-                  // final txDate = DateTime(txDateUtc.year, txDateUtc.month, txDateUtc.day);
-
-                  var title = "";
-
-                  // var r = nowDate.compareTo(txDate);
-
-                  // print('Test $r');
-
-                  if (diffDays == 0) {
-                    title = "Today";
-                  } else if (diffDays == -1) {
-                    title = "Yesterday";
-                  } else if (diffDays > -7 && diffDays < 0) {
-                    final dateFormat = DateFormat("EEEE");
-                    title = dateFormat.format(item.date);
-                  } else {
-                    title = dateSectionDateFormat.format(item.date);
-                  }
-
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 10, bottom: 10),
-                    child: Center(
-                        child: Text(title,
-                            style: TextStyle(
-                                fontSize: 16, color: Palette.wildDarkBlue))),
-                  );
+                  return DateSectionRaw(date: item.date);
                 }
 
                 if (item is TransactionListItem) {
@@ -708,7 +612,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
 
                 if (item is TradeListItem) {
                   final trade = item.trade;
-
+                  
                   return TradeRow(
                       onTap: () => null,
                       provider: trade.provider,
@@ -722,164 +626,5 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                 return Container();
               });
         });
-  }
-}
-
-class TransactionRow extends StatelessWidget {
-  final VoidCallback onTap;
-  final TransactionDirection direction;
-  final String formattedDate;
-  final String formattedAmount;
-  final String formattedFiatAmount;
-
-  TransactionRow(
-      {this.direction,
-      this.formattedDate,
-      this.formattedAmount,
-      this.formattedFiatAmount,
-      @required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final _isDarkTheme = false;
-
-    return InkWell(
-        onTap: onTap,
-        child: Container(
-          padding: EdgeInsets.only(top: 14, bottom: 14, left: 20, right: 20),
-          decoration: BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(
-                      color: PaletteDark.darkGrey,
-                      width: 0.5,
-                      style: BorderStyle.solid))),
-          child: Row(children: <Widget>[
-            Image.asset(
-                direction == TransactionDirection.incoming
-                    ? 'assets/images/transaction_incoming.png'
-                    : 'assets/images/transaction_outgoing.png',
-                height: 25,
-                width: 25),
-            Expanded(
-                child: Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                            direction == TransactionDirection.incoming
-                                ? 'Received'
-                                : 'Sent',
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: _isDarkTheme
-                                    ? Palette.blueGrey
-                                    : Colors.black)),
-                        Text(formattedAmount,
-                            style: const TextStyle(
-                                fontSize: 16, color: Palette.purpleBlue))
-                      ]),
-                  SizedBox(height: 6),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(formattedDate,
-                            style: const TextStyle(
-                                fontSize: 13, color: Palette.blueGrey)),
-                        Text(formattedFiatAmount,
-                            style: const TextStyle(
-                                fontSize: 14, color: Palette.blueGrey))
-                      ]),
-                ],
-              ),
-            ))
-          ]),
-        ));
-  }
-}
-
-class TradeRow extends StatelessWidget {
-  final VoidCallback onTap;
-  final ExchangeProviderDescription provider;
-  final CryptoCurrency from;
-  final CryptoCurrency to;
-  final String createdAtFormattedDate;
-  final String formattedAmount;
-
-  TradeRow(
-      {this.provider,
-      this.from,
-      this.to,
-      this.createdAtFormattedDate,
-      this.formattedAmount,
-      @required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final _isDarkTheme = false;
-
-    return InkWell(
-        onTap: onTap,
-        child: Container(
-          padding: EdgeInsets.only(top: 14, bottom: 14, left: 20, right: 20),
-          decoration: BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(
-                      color: PaletteDark.darkGrey,
-                      width: 0.5,
-                      style: BorderStyle.solid))),
-          child: Row(children: <Widget>[
-            _getPoweredImage(provider),
-            Expanded(
-                child: Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text('${from.toString()} �� ${to.toString()}',
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: _isDarkTheme
-                                    ? Palette.blueGrey
-                                    : Colors.black)),
-                        Text(formattedAmount ?? '',
-                            style: const TextStyle(
-                                fontSize: 16, color: Palette.purpleBlue))
-                      ]),
-                  SizedBox(height: 6),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(createdAtFormattedDate,
-                            style: const TextStyle(
-                                fontSize: 13, color: Palette.blueGrey)),
-                        // Text(formattedFiatAmount,
-                        //     style: const TextStyle(
-                        //         fontSize: 14, color: Palette.blueGrey))
-                      ]),
-                ],
-              ),
-            ))
-          ]),
-        ));
-  }
-
-  Image _getPoweredImage(ExchangeProviderDescription provider) {
-    Image image;
-    switch (provider) {
-      case ExchangeProviderDescription.xmrto:
-        image = Image.asset('assets/images/xmr_btc.png');
-        break;
-      case ExchangeProviderDescription.changeNow:
-        image = Image.asset('assets/images/change_now.png');
-        break;
-      default:
-        image = null;
-    }
-    return image;
   }
 }

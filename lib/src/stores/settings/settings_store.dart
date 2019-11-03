@@ -97,10 +97,10 @@ abstract class SettingsStoreBase with Store {
     _nodeList = nodeList;
     isDarkTheme = initialDarkTheme;
 
-    // actionlistDisplayMode.observe((_) {
-    //   _sharedPreferences.setInt(displayActionListModeKey,
-    //       serializeActionlistDisplayModes(actionlistDisplayMode));
-    // });
+    actionlistDisplayMode.observe(
+        (dynamic _) => _sharedPreferences.setInt(displayActionListModeKey,
+            serializeActionlistDisplayModes(actionlistDisplayMode)),
+        fireImmediately: false);
   }
 
   @action

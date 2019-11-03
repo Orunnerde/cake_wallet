@@ -193,11 +193,6 @@ class Router {
       case Routes.dashboard:
         return CupertinoPageRoute(
             builder: (_) => MultiProvider(providers: [
-                  ProxyProvider<SettingsStore, TransactionListStore>(
-                    builder: (_, settingsStore, __) => TransactionListStore(
-                        walletService: walletService,
-                        settingsStore: settingsStore),
-                  ),
                   ProxyProvider<SettingsStore, BalanceStore>(
                     builder: (_, settingsStore, __) => BalanceStore(
                         walletService: walletService,
