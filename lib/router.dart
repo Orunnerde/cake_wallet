@@ -1,3 +1,6 @@
+import 'package:cake_wallet/src/stores/action_list/action_list_store.dart';
+import 'package:cake_wallet/src/stores/action_list/trade_filter_store.dart';
+import 'package:cake_wallet/src/stores/action_list/transaction_filter_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -208,6 +211,13 @@ class Router {
                     builder: (context) =>
                         SyncStore(walletService: walletService),
                   ),
+                  ProxyProvider<SettingsStore, ActionListStore>(
+                      builder: (_, settingsStore, __) => ActionListStore(
+                          walletService: walletService,
+                          settingsStore: settingsStore,
+                          tradeHistory: TradeHistory(db: db),
+                          transactionFilterStore: TransactionFilterStore(),
+                          tradeFilterStore: TradeFilterStore())),
                 ], child: DashboardPage()));
 
       case Routes.send:
