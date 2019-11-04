@@ -88,10 +88,7 @@ class ExchangePage extends BasePage {
     else
       _isDarkTheme = false;
 
-    return Container(
-      width: 115,
-      child: Row(children: <Widget>[
-        SizedBox(
+    return SizedBox(
             width: 50,
             child: FlatButton(
                 padding: EdgeInsets.all(0),
@@ -104,9 +101,7 @@ class ExchangePage extends BasePage {
                       fontWeight: FontWeight.w500,
                       fontSize: 16),
                 ),
-                onPressed: () => exchangeStore.reset()))
-      ]),
-    );
+                onPressed: () => exchangeStore.reset()));
   }
 
   @override
