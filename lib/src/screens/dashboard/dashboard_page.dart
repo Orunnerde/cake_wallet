@@ -206,11 +206,12 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
         builder: (_) {
           final items =
               actionListStore.items == null ? [] : actionListStore.items;
+          final itemsCount = items.length + 2;
 
           return ListView.builder(
               key: _listKey,
               padding: EdgeInsets.only(bottom: 15),
-              itemCount: items.length + 2,
+              itemCount: itemsCount,
               itemBuilder: (context, index) {
                 if (index == 0) {
                   return Container(
@@ -590,6 +591,11 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                 }
 
                 index -= 2;
+
+                if (index < 0 || index >= items.length) {
+                  return Container();
+                }
+
                 final item = items[index];
 
                 if (item is DateSectionItem) {
@@ -612,9 +618,10 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
 
                 if (item is TradeListItem) {
                   final trade = item.trade;
-                  
+
                   return TradeRow(
-                      onTap: () => null,
+                      onTap: () => Navigator.of(context)
+                          .pushNamed(Routes.tradeDetails, arguments: trade),
                       provider: trade.provider,
                       from: trade.from,
                       to: trade.to,

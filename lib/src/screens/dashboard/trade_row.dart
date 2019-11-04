@@ -22,6 +22,9 @@ class TradeRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _isDarkTheme = false;
+    final amountCrypto = provider == ExchangeProviderDescription.xmrto
+        ? to.toString()
+        : from.toString();
 
     return InkWell(
         onTap: onTap,
@@ -49,9 +52,11 @@ class TradeRow extends StatelessWidget {
                                 color: _isDarkTheme
                                     ? Palette.blueGrey
                                     : Colors.black)),
-                        Text(formattedAmount ?? '',
-                            style: const TextStyle(
-                                fontSize: 16, color: Palette.purpleBlue))
+                        formattedAmount != null
+                            ? Text(formattedAmount + ' ' + amountCrypto,
+                                style: const TextStyle(
+                                    fontSize: 16, color: Palette.purpleBlue))
+                            : Container()
                       ]),
                   SizedBox(height: 6),
                   Row(
@@ -59,10 +64,7 @@ class TradeRow extends StatelessWidget {
                       children: <Widget>[
                         Text(createdAtFormattedDate,
                             style: const TextStyle(
-                                fontSize: 13, color: Palette.blueGrey)),
-                        // Text(formattedFiatAmount,
-                        //     style: const TextStyle(
-                        //         fontSize: 14, color: Palette.blueGrey))
+                                fontSize: 13, color: Palette.blueGrey))
                       ]),
                 ],
               ),
