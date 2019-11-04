@@ -1,4 +1,5 @@
 import 'package:mobx/mobx.dart';
+import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 
 part 'validation_store.g.dart';
 
@@ -11,10 +12,7 @@ abstract class ValidationStoreBase with Store {
 
   bool _validate(String value, String p) {
     RegExp regExp = new RegExp(p);
-    if (regExp.hasMatch(value))
-      return true;
-    else
-      return false;
+    return regExp.hasMatch(value);
   }
 
   @action
@@ -36,12 +34,12 @@ abstract class ValidationStoreBase with Store {
   }
 
   @action
-  void validateAddress(String value, {String currency = ''}) {
+  void validateAddress(String value, {CryptoCurrency cryptoCurrency}) {
     // XMR (95), BTC (34), ETH (42), LTC (34), BCH (42), DASH (34)
     String p = '^[0-9a-zA-Z]{95}\$|^[0-9a-zA-Z]{34}\$|^[0-9a-zA-Z]{42}\$';
     isValidate = _validate(value, p);
-    if (isValidate && currency != '') {
-      switch (currency) {
+    if (isValidate && cryptoCurrency != null) {
+      switch (cryptoCurrency.toString()) {
         case 'XMR':
           isValidate = (value.length == 95);
           break;

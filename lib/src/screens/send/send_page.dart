@@ -17,6 +17,7 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/src/stores/validation/validation_store.dart';
+import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 
 class SendPage extends BasePage {
   String get title => 'Send Monero';
@@ -166,7 +167,7 @@ class SendFormState extends State<SendForm> {
                             AddressTextFieldOption.addressBook
                           ],
                           validator: (value) {
-                            validation.validateAddress(value, currency: 'XMR');
+                            validation.validateAddress(value, cryptoCurrency: CryptoCurrency.xmr);
                             if (!validation.isValidate) return 'Wallet address must correspond to the type of cryptocurrency';
                             return null;
                           },

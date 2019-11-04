@@ -198,7 +198,7 @@ class ContactFormState extends State<ContactForm> {
                               controller: _addressController,
                               options: [AddressTextFieldOption.qrCode],
                               validator: (value) {
-                                validation.validateAddress(value, currency: _currencyTypeController.text);
+                                validation.validateAddress(value, cryptoCurrency: _selectectCrypto);
                                 if (!validation.isValidate) return 'Wallet address must correspond to the type of cryptocurrency';
                                 return null;
                               },
