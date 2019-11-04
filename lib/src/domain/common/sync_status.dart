@@ -9,10 +9,15 @@ abstract class SyncStatus {
 class SyncingSyncStatus extends SyncStatus {
   final int height;
   final int blockchainHeight;
+  final int refreshHeight;
 
-  SyncingSyncStatus(this.height, this.blockchainHeight);
+  SyncingSyncStatus(this.height, this.blockchainHeight, this.refreshHeight);
 
-  double progress() => height / blockchainHeight;
+  double progress() {
+    final line = blockchainHeight - refreshHeight;
+    final diff = line - (blockchainHeight - height);
+    return diff < 0 ? 0.0 : diff / line;
+  }
 
   String title() => 'SYNCRONIZING';
 
@@ -56,26 +61,4 @@ class ConnectedSyncStatus extends SyncStatus {
   double progress() => 0.0;
 
   String title() => 'CONNECTED';
-}
-
-class RestoringSyncStatus extends SyncStatus {
-  final int height;
-  final int startRestoreFromHeight;
-  final int blockchainHeight;
-
-  RestoringSyncStatus(
-      this.height, this.startRestoreFromHeight, this.blockchainHeight);
-
-  double progress() => startRestoreFromHeight / height;
-
-  String title() => 'SYNCRONIZING';
-
-  @override
-  String toString() {
-    if (startRestoreFromHeight > height) {
-      return '${blockchainHeight - startRestoreFromHeight}';
-    }
-
-    return '${blockchainHeight - height}';
-  }
 }

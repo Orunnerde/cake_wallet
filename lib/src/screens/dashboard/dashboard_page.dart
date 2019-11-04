@@ -266,14 +266,14 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
 
                               var descriptionText = '';
 
-                              if (status is SyncingSyncStatus ||
-                                  status is RestoringSyncStatus) {
+                              if (status is SyncingSyncStatus) {
                                 descriptionText =
                                     '${syncStore.status.toString()} Blocks Remaining ';
                               }
 
                               if (status is FailedSyncStatus) {
-                                descriptionText = 'Please try to connect to another node';
+                                descriptionText =
+                                    'Please try to connect to another node';
                               }
 
                               return Container(
