@@ -13,7 +13,6 @@ import 'package:provider/provider.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:share/share.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/screens/settings/attributes.dart';
 import 'package:cake_wallet/src/screens/settings/items/settings_item.dart';
@@ -22,7 +21,7 @@ import 'package:cake_wallet/src/screens/settings/widgets/arrow_list_row.dart';
 import 'package:cake_wallet/src/screens/settings/widgets/header_list_row.dart';
 import 'package:cake_wallet/src/screens/settings/widgets/link_list_row.dart';
 import 'package:cake_wallet/src/screens/settings/widgets/switch_list_row.dart';
-import 'package:cake_wallet/src/screens/settings/widgets/widget_list_row.dart';
+import 'package:cake_wallet/src/screens/settings/widgets/observable_text_list_row.dart';
 
 class SettingsPage extends BasePage {
   String get title => 'Settings';
@@ -43,9 +42,6 @@ class SettingsForm extends StatefulWidget {
 }
 
 class SettingsFormState extends State<SettingsForm> {
-  final _formKey = GlobalKey<FormState>();
-  final _newPasswordController = TextEditingController();
-
   final _telegramImage = Image.asset('assets/images/Telegram.png');
   final _twitterImage = Image.asset('assets/images/Twitter.png');
   final _changeNowImage = Image.asset('assets/images/change_now.png');
@@ -237,12 +233,6 @@ class SettingsFormState extends State<SettingsForm> {
     WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
   }
 
-  @override
-  void dispose() {
-    _newPasswordController.dispose();
-    super.dispose();
-  }
-
   Widget _getWidget(SettingsItem item) {
     switch (item.attribute) {
       case Attributes.arrow:
@@ -266,11 +256,13 @@ class SettingsFormState extends State<SettingsForm> {
           title: item.title,
         );
       case Attributes.widget:
-        return WidgetListRow(
+        return ObservableTextListRow(
           onTaped: item.onTaped,
           title: item.title,
           widget: item.widget,
         );
+      default:
+        return Offstage();
     }
   }
 
@@ -386,9 +378,5 @@ class SettingsFormState extends State<SettingsForm> {
     if (selectedPriority != null) {
       settingsStore.setCurrentTransactionPriority(priority: selectedPriority);
     }
-  }
-
-  void _launchUrl(String url) async {
-    if (await canLaunch(url)) await launch(url);
   }
 }
