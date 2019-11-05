@@ -1,3 +1,4 @@
+import 'package:cake_wallet/src/screens/rescan/rescan_page.dart';
 import 'package:cake_wallet/src/stores/action_list/action_list_store.dart';
 import 'package:cake_wallet/src/stores/action_list/trade_filter_store.dart';
 import 'package:cake_wallet/src/stores/action_list/transaction_filter_store.dart';
@@ -543,6 +544,10 @@ class Router {
             builder: (_) => Provider(
                 builder: (_) => NodeListStore(nodeList: NodeList(db: db)),
                 child: SettingsPage()));
+
+      case Routes.rescan:
+        return MaterialPageRoute(
+            builder: (_) => RescanPage());
 
       default:
         return MaterialPageRoute(
