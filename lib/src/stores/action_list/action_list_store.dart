@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/src/domain/common/fetch_price.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cake_wallet/src/domain/monero/account.dart';
@@ -172,14 +174,18 @@ abstract class ActionListBase with Store {
       _transactions = transactions;
     }
 
-    this.transactions = _transactions
-        .map((tx) {
-          // final amount = _price * tx.amountRaw();
-          final fiatAmount = '0 ${_settingsStore.fiatCurrency}';
-          tx.changeFiatAmount(fiatAmount);
-          return tx;
-        })
-        .map((tx) => TransactionListItem(transaction: tx))
+    final __transactions = await Future.wait(_transactions.map((tx) async {
+      final amount = await calculateAmountFromRaw(
+          amount: tx.amountRaw(),
+          crypto: CryptoCurrency.xmr,
+          fiat: _settingsStore.fiatCurrency);
+      final fiatAmount = '$amount ${_settingsStore.fiatCurrency}';
+      tx.changeFiatAmount(fiatAmount);
+      return tx;
+    }));
+
+    this.transactions = __transactions
+        .map((transaction) => TransactionListItem(transaction: transaction))
         .toList();
   }
 }
