@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
+import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/src/domain/common/fetch_price.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cake_wallet/src/domain/monero/account.dart';
@@ -8,31 +9,98 @@ import 'package:cake_wallet/src/domain/common/transaction_info.dart';
 import 'package:cake_wallet/src/domain/common/wallet.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/domain/monero/monero_wallet.dart';
-import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
-import 'package:cake_wallet/src/domain/common/fetch_price.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
+import 'package:cake_wallet/src/domain/exchange/trade_history.dart';
+import 'package:cake_wallet/src/stores/action_list/action_list_display_mode.dart';
+import 'package:cake_wallet/src/stores/action_list/action_list_item.dart';
+import 'package:cake_wallet/src/stores/action_list/date_section_item.dart';
+import 'package:cake_wallet/src/stores/action_list/trade_filter_store.dart';
+import 'package:cake_wallet/src/stores/action_list/trade_list_item.dart';
+import 'package:cake_wallet/src/stores/action_list/transaction_filter_store.dart';
+import 'package:cake_wallet/src/stores/action_list/transaction_list_item.dart';
 
-part 'transaction_list_store.g.dart';
+part 'action_list_store.g.dart';
 
-class TransactionListStore = TransactionListBase with _$TransactionListStore;
+class ActionListStore = ActionListBase with _$ActionListStore;
 
-abstract class TransactionListBase with Store {
+abstract class ActionListBase with Store {
+  static List<ActionListItem> formattedItemsList(List<ActionListItem> items) {
+    var formattedList = List<ActionListItem>();
+    DateTime lastDate;
+    items.sort((a, b) => b.date.compareTo(a.date));
+
+    for (int i = 0; i < items.length; i++) {
+      final transaction = items[i];
+      final txDateUtc = transaction.date.toUtc();
+      final txDate = DateTime(txDateUtc.year, txDateUtc.month, txDateUtc.day);
+
+      if (lastDate == null) {
+        lastDate = txDate;
+        formattedList.add(DateSectionItem(transaction.date));
+        formattedList.add(transaction);
+        continue;
+      }
+
+      if (lastDate.compareTo(txDate) == 0) {
+        formattedList.add(transaction);
+        continue;
+      }
+
+      lastDate = txDate;
+      formattedList.add(DateSectionItem(transaction.date));
+      formattedList.add(transaction);
+    }
+
+    return formattedList;
+  }
+
   @observable
-  List<TransactionInfo> transactions;
+  List<TransactionListItem> transactions;
+
+  @observable
+  List<TradeListItem> trades;
+
+  @computed
+  List<ActionListItem> get items {
+    var _items = List<ActionListItem>();
+
+    if (_settingsStore.actionlistDisplayMode
+        .contains(ActionListDisplayMode.transactions)) {
+      _items
+          .addAll(transactionFilterStore.filtered(transactions: transactions));
+    }
+
+    if (_settingsStore.actionlistDisplayMode
+        .contains(ActionListDisplayMode.trades)) {
+      _items.addAll(tradeFilterStore.filtered(trades: trades));
+    }
+
+    return formattedItemsList(_items);
+  }
+
+  TransactionFilterStore transactionFilterStore;
+  TradeFilterStore tradeFilterStore;
 
   WalletService _walletService;
   TransactionHistory _history;
+  TradeHistory _tradeHistory;
   SettingsStore _settingsStore;
   Account _account;
   StreamSubscription<Wallet> _onWalletChangeSubscription;
   StreamSubscription<List<TransactionInfo>> _onTransactionsChangeSubscription;
   StreamSubscription<Account> _onAccountChangeSubscription;
 
-  TransactionListBase(
+  ActionListBase(
       {@required WalletService walletService,
-      @required SettingsStore settingsStore}) {
+      @required TradeHistory tradeHistory,
+      @required SettingsStore settingsStore,
+      @required this.transactionFilterStore,
+      @required this.tradeFilterStore}) {
+    transactions = List<TransactionListItem>();
+    trades = List<TradeListItem>();
     _walletService = walletService;
     _settingsStore = settingsStore;
+    _tradeHistory = tradeHistory;
 
     if (walletService.currentWallet != null) {
       _onWalletChanged(walletService.currentWallet);
@@ -40,6 +108,8 @@ abstract class TransactionListBase with Store {
 
     _onWalletChangeSubscription =
         walletService.onWalletChange.listen(_onWalletChanged);
+
+    updateTradeList();
   }
 
   @override
@@ -54,6 +124,12 @@ abstract class TransactionListBase with Store {
 
     _onWalletChangeSubscription.cancel();
     super.dispose();
+  }
+
+  @action
+  Future updateTradeList() async {
+    final trades = await _tradeHistory.all();
+    this.trades = trades.map((trade) => TradeListItem(trade: trade)).toList();
   }
 
   Future _updateTransactionsList() async {
@@ -108,6 +184,8 @@ abstract class TransactionListBase with Store {
       return tx;
     }));
 
-    this.transactions = __transactions.toList();
+    this.transactions = __transactions
+        .map((transaction) => TransactionListItem(transaction: transaction))
+        .toList();
   }
 }

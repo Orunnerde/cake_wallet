@@ -21,13 +21,12 @@ abstract class Wallet {
       WalletType type,
       int restoreHeight = 0}) async {
     final id = walletTypeToString(type).toLowerCase() + '_' + name;
-    final map = {
+    await db.insert(walletsTable, {
       idColumn: id,
       nameColumn: name,
       isRecoveryColumn: isRecovery,
       restoreHeightColumn: restoreHeight
-    };
-    await db.insert(walletsTable, map);
+    });
   }
 
   static Future<void> updateWalletData(
@@ -65,7 +64,7 @@ abstract class Wallet {
   Observable<String> get onAddressChange;
 
   String get name;
-  
+
   String get address;
 
   Future updateInfo();
