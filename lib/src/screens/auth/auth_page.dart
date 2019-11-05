@@ -12,8 +12,9 @@ class AuthPage extends StatelessWidget {
   final _key = GlobalKey<ScaffoldState>();
   final Function(AuthPage, BuildContext) onAuthenticationSuccessful;
   final Function(AuthPage, BuildContext) onAuthenticationFailed;
+  final bool closable;
 
-  AuthPage({this.onAuthenticationSuccessful, this.onAuthenticationFailed});
+  AuthPage({this.onAuthenticationSuccessful, this.onAuthenticationFailed, this.closable = true});
 
   void changeProcessText(String text) {
     _key.currentState.showSnackBar(
@@ -83,7 +84,7 @@ class AuthPage extends StatelessWidget {
     return Scaffold(
         key: _key,
         appBar: CupertinoNavigationBar(
-          leading: CloseButton(),
+          leading: closable ? CloseButton() : Container(),
           backgroundColor: _isDarkTheme ? Theme.of(context).backgroundColor : Colors.white,
           border: null,
         ),

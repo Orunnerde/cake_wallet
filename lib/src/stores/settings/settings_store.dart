@@ -6,6 +6,7 @@ import 'package:cake_wallet/src/domain/common/node.dart';
 import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
 import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
 import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
+import 'package:cake_wallet/src/stores/action_list/action_list_display_mode.dart';
 
 part 'settings_store.g.dart';
 
@@ -18,6 +19,7 @@ abstract class SettingsStoreBase with Store {
   static const currentBalanceDisplayModeKey = 'current_balance_display_mode';
   static const shouldSaveRecipientAddressKey = 'save_recipient_address';
   static const currentDarkTheme = 'dark_theme';
+  static const displayActionListModeKey = 'display_list_mode';
 
   static Future<SettingsStore> load(
       {@required SharedPreferences sharedPreferences,
@@ -33,9 +35,12 @@ abstract class SettingsStoreBase with Store {
         raw: sharedPreferences.getInt(currentBalanceDisplayModeKey));
     final shouldSaveRecipientAddress =
         sharedPreferences.getBool(shouldSaveRecipientAddressKey);
-    final savedDarkTheme =
-        sharedPreferences.getBool(currentDarkTheme) == null ? false
-           : sharedPreferences.getBool(currentDarkTheme);
+    final savedDarkTheme = sharedPreferences.getBool(currentDarkTheme) == null
+        ? false
+        : sharedPreferences.getBool(currentDarkTheme);
+    final actionlistDisplayMode = ObservableList();
+    actionlistDisplayMode.addAll(deserializeActionlistDisplayModes(
+        sharedPreferences.getInt(displayActionListModeKey) ?? 11));
 
     final store = SettingsStore(
         sharedPreferences: sharedPreferences,
@@ -44,7 +49,8 @@ abstract class SettingsStoreBase with Store {
         initialTransactionPriority: currentTransactionPriority,
         initialBalanceDisplayMode: currentBalanceDisplayMode,
         initialSaveRecipientAddress: shouldSaveRecipientAddress,
-        initialDarkTheme: savedDarkTheme);
+        initialDarkTheme: savedDarkTheme,
+        actionlistDisplayMode: actionlistDisplayMode);
     await store.loadSettings();
 
     return store;
@@ -55,6 +61,9 @@ abstract class SettingsStoreBase with Store {
 
   @observable
   FiatCurrency fiatCurrency;
+
+  @observable
+  ObservableList<ActionListDisplayMode> actionlistDisplayMode;
 
   @observable
   TransactionPriority transactionPriority;
@@ -78,7 +87,8 @@ abstract class SettingsStoreBase with Store {
       @required TransactionPriority initialTransactionPriority,
       @required BalanceDisplayMode initialBalanceDisplayMode,
       @required bool initialSaveRecipientAddress,
-      @required bool initialDarkTheme}) {
+      @required bool initialDarkTheme,
+      this.actionlistDisplayMode}) {
     fiatCurrency = initialFiatCurrency;
     transactionPriority = initialTransactionPriority;
     balanceDisplayMode = initialBalanceDisplayMode;
@@ -86,6 +96,11 @@ abstract class SettingsStoreBase with Store {
     _sharedPreferences = sharedPreferences;
     _nodeList = nodeList;
     isDarkTheme = initialDarkTheme;
+
+    actionlistDisplayMode.observe(
+        (dynamic _) => _sharedPreferences.setInt(displayActionListModeKey,
+            serializeActionlistDisplayModes(actionlistDisplayMode)),
+        fireImmediately: false);
   }
 
   @action
@@ -93,7 +108,6 @@ abstract class SettingsStoreBase with Store {
     this.isDarkTheme = isDarkTheme;
     await _sharedPreferences.setBool(currentDarkTheme, isDarkTheme);
   }
-
 
   @action
   Future setCurrentNode({@required Node node}) async {
@@ -135,6 +149,33 @@ abstract class SettingsStoreBase with Store {
   Future loadSettings() async {
     node = await _fetchCurrentNode();
   }
+
+  @action
+  void toggleTransactionsDisplay() =>
+      actionlistDisplayMode.contains(ActionListDisplayMode.transactions)
+          ? _hideTransaction()
+          : _showTransaction();
+
+  @action
+  void toggleTradesDisplay() =>
+      actionlistDisplayMode.contains(ActionListDisplayMode.trades)
+          ? _hideTrades()
+          : _showTrades();
+
+  @action
+  void _hideTransaction() =>
+      actionlistDisplayMode.remove(ActionListDisplayMode.transactions);
+
+  @action
+  void _hideTrades() =>
+      actionlistDisplayMode.remove(ActionListDisplayMode.trades);
+
+  @action
+  void _showTransaction() =>
+      actionlistDisplayMode.add(ActionListDisplayMode.transactions);
+
+  @action
+  void _showTrades() => actionlistDisplayMode.add(ActionListDisplayMode.trades);
 
   Future<Node> _fetchCurrentNode() async {
     final id = _sharedPreferences.getInt(currentNodeIdKey);

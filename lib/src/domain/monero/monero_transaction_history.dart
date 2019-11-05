@@ -27,8 +27,6 @@ class MoneroTransactionHistory extends TransactionHistory {
       _isUpdating = true;
       final _isNeedToRefresh = _needToCheckForRefresh ? await isNeedToRefresh() : true;
       var transactions;
-
-      // print ('_isNeedToRefresh $_isNeedToRefresh');
       
       if (_isNeedToRefresh) {
         await refresh();
