@@ -41,5 +41,5 @@ class Routes {
   static const restoreWalletFromSeedDetails = '/restore_from_seed_details';
   static const exchange = '/exchange';
   static const settings = '/settings';
-  static const faq = '/faq';
+  static const unlock = '/auth_not_closable';
 }

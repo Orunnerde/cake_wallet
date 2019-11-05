@@ -4,12 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
 
-class WidgetListRow extends StatelessWidget {
+class ObservableTextListRow extends StatelessWidget {
   final VoidCallback onTaped;
   final String title;
   final Widget widget;
 
-  WidgetListRow({@required this.onTaped, this.title, this.widget});
+  ObservableTextListRow({@required this.onTaped, this.title, this.widget});
 
   @override
   Widget build(BuildContext context) {

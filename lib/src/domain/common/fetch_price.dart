@@ -50,3 +50,15 @@ Future<String> calculateAmount(
 
   return result > 0.01 ? result.toStringAsFixed(2) : '< 0.01';
 }
+
+Future<String> calculateAmountFromRaw(
+    {CryptoCurrency crypto, FiatCurrency fiat, double amount}) async {
+  final price = await fetchPriceFor(crypto: crypto, fiat: fiat);
+  final result = price * amount;
+
+  if (result == 0.0) {
+    return '0.0';
+  }
+
+  return result > 0.01 ? result.toStringAsFixed(2) : '< 0.01';
+}
