@@ -302,6 +302,32 @@ class Router {
                       onAuthenticationFailed: onAuthenticationFailed),
                 ));
 
+      case Routes.unlock:
+        void Function(AuthPage, BuildContext) onAuthenticationSuccessful;
+        void Function(AuthPage, BuildContext) onAuthenticationFailed;
+
+        if (settings.arguments is List<void Function(AuthPage, BuildContext)>) {
+          final args =
+              settings.arguments as List<void Function(AuthPage, BuildContext)>;
+
+          if (args.length > 0) {
+            onAuthenticationSuccessful = args[0];
+          }
+
+          if (args.length > 1) {
+            onAuthenticationFailed = args[1];
+          }
+        }
+
+        return MaterialPageRoute(
+            fullscreenDialog: true,
+            builder: (_) => Provider(
+                builder: (context) => AuthStore(userService: userService),
+                child: AuthPage(
+                    onAuthenticationSuccessful: onAuthenticationSuccessful,
+                    onAuthenticationFailed: onAuthenticationFailed,
+                    closable: false)));
+
       case Routes.nodeList:
         return CupertinoPageRoute(builder: (context) {
           return Provider(
