@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/domain/common/transaction_direction.dart';
 
-
 class TransactionRow extends StatelessWidget {
   final VoidCallback onTap;
   final TransactionDirection direction;
   final String formattedDate;
   final String formattedAmount;
   final String formattedFiatAmount;
+  final bool isPending;
 
   TransactionRow(
       {this.direction,
       this.formattedDate,
       this.formattedAmount,
       this.formattedFiatAmount,
+      this.isPending,
       @required this.onTap});
 
   @override
@@ -47,9 +48,10 @@ class TransactionRow extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                            direction == TransactionDirection.incoming
-                                ? 'Received'
-                                : 'Sent',
+                            (direction == TransactionDirection.incoming
+                                    ? 'Received'
+                                    : 'Sent') +
+                                (isPending ? ' (pending)' : ''),
                             style: TextStyle(
                                 fontSize: 16,
                                 color: _isDarkTheme

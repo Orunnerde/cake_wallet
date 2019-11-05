@@ -613,7 +613,8 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                       formattedDate:
                           transactionDateFormat.format(transaction.date),
                       formattedAmount: transaction.amount(),
-                      formattedFiatAmount: transaction.fiatAmount());
+                      formattedFiatAmount: transaction.fiatAmount(),
+                      isPending: transaction.isPending);
                 }
 
                 if (item is TradeListItem) {
