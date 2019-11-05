@@ -1,3 +1,4 @@
+import 'package:cake_wallet/src/domain/common/parseBoolFromString.dart';
 import 'package:cake_wallet/src/domain/common/transaction_direction.dart';
 
 String formatAmount(String originAmount) {
@@ -28,6 +29,7 @@ class TransactionInfo {
   final TransactionDirection direction;
   final DateTime date;
   final int accountIndex;
+  final bool isPending;
   final String _amount;
   String _fiatAmount;
 
@@ -38,11 +40,12 @@ class TransactionInfo {
             TransactionDirection.incoming,
         date = DateTime.fromMillisecondsSinceEpoch(
             (int.parse(map['timestamp']) ?? 0) * 1000),
+        isPending = parseBoolFromString(map['isPending']),
         _amount = map['amount'],
         accountIndex = int.parse(map['accountIndex']);
 
-  TransactionInfo(this.id, this.height, this.direction, this.date, this._amount,
-      this.accountIndex);
+  TransactionInfo(this.id, this.height, this.direction, this.date,
+      this.isPending, this._amount, this.accountIndex);
 
   double amountRaw() {
     return double.parse(_amount);
