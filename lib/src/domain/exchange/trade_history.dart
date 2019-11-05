@@ -8,6 +8,7 @@ class TradeHistory {
   static const fromColumn = 'input';
   static const toColumn = 'output';
   static const dateColumn = 'date';
+  static const amountColumn = 'amount';
   static const transactionIdColumn = 'transactioin_id';
 
   Database _db;

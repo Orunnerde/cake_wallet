@@ -15,6 +15,7 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/widgets/standart_switch.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/src/stores/action_list/action_list_display_mode.dart';
 
 class SettingsPage extends BasePage {
   @override
@@ -410,7 +411,91 @@ class SettingsState extends State<Settings> {
                                   SystemUiOverlayStyle(
                                       statusBarColor: _statusBarColor));
                             });
-                          }))
+                          })),
+                  ListTile(
+                      contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
+                      title: Text(
+                        'Display on dashboard list',
+                        style: TextStyle(
+                            fontSize: 16.0,
+                            color: _isDarkTheme
+                                ? PaletteDark.darkThemeTitle
+                                : Colors.black),
+                      ),
+                      trailing: PopupMenuButton<ActionListDisplayMode>(
+                          itemBuilder: (context) => [
+                                PopupMenuItem(
+                                    value: ActionListDisplayMode.transactions,
+                                    child: Observer(
+                                        builder: (_) => Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text('Transactions'),
+                                                  Checkbox(
+                                                    value: settingsStore
+                                                        .actionlistDisplayMode
+                                                        .contains(
+                                                            ActionListDisplayMode
+                                                                .transactions),
+                                                    onChanged: (value) =>
+                                                        settingsStore
+                                                            .toggleTransactionsDisplay(),
+                                                  )
+                                                ]))),
+                                PopupMenuItem(
+                                    value: ActionListDisplayMode.trades,
+                                    child: Observer(
+                                        builder: (_) => Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text('Trades'),
+                                                  Checkbox(
+                                                    value: settingsStore
+                                                        .actionlistDisplayMode
+                                                        .contains(
+                                                            ActionListDisplayMode
+                                                                .trades),
+                                                    onChanged: (value) =>
+                                                        settingsStore
+                                                            .toggleTradesDisplay(),
+                                                  )
+                                                ])))
+                              ],
+                          child: Observer(builder: (_) {
+                            var title = '';
+
+                            if (settingsStore.actionlistDisplayMode.length ==
+                                ActionListDisplayMode.values.length) {
+                              title = 'ALL';
+                            }
+
+                            if (title.isEmpty &&
+                                settingsStore.actionlistDisplayMode
+                                    .contains(ActionListDisplayMode.trades)) {
+                              title = 'Only trades';
+                            }
+
+                            if (title.isEmpty &&
+                                settingsStore.actionlistDisplayMode.contains(
+                                    ActionListDisplayMode.transactions)) {
+                              title = 'Only transactions';
+                            }
+
+                            if (title.isEmpty) {
+                              title = 'None';
+                            }
+
+                            return Text(title,
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: _isDarkTheme
+                                        ? PaletteDark.darkThemeGrey
+                                        : Palette.wildDarkBlue));
+                          })))
                 ],
               ),
             ),

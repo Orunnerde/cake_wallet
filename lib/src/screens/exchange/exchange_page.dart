@@ -89,25 +89,7 @@ class ExchangePage extends BasePage {
     else
       _isDarkTheme = false;
 
-    return Container(
-      width: 115,
-      child: Row(children: <Widget>[
-        SizedBox(
-            width: 55,
-            child: FlatButton(
-              padding: EdgeInsets.all(0),
-              child: Text('History',
-                  style: TextStyle(
-                      color: _isDarkTheme
-                          ? PaletteDark.darkThemeTitleViolet
-                          : Colors.black,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16)),
-              onPressed: () =>
-                  Navigator.of(context).pushNamed(Routes.tradeHistory),
-            )),
-        SizedBox(width: 10),
-        SizedBox(
+    return SizedBox(
             width: 50,
             child: FlatButton(
                 padding: EdgeInsets.all(0),
@@ -120,9 +102,7 @@ class ExchangePage extends BasePage {
                       fontWeight: FontWeight.w500,
                       fontSize: 16),
                 ),
-                onPressed: () => exchangeStore.reset()))
-      ]),
-    );
+                onPressed: () => exchangeStore.reset()));
   }
 
   @override
