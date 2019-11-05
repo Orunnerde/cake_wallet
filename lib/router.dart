@@ -1,7 +1,3 @@
-import 'package:cake_wallet/src/screens/rescan/rescan_page.dart';
-import 'package:cake_wallet/src/stores/action_list/action_list_store.dart';
-import 'package:cake_wallet/src/stores/action_list/trade_filter_store.dart';
-import 'package:cake_wallet/src/stores/action_list/transaction_filter_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -48,6 +44,10 @@ import 'package:cake_wallet/src/stores/wallet/wallet_keys_store.dart';
 import 'package:cake_wallet/src/stores/trade_history/trade_history_store.dart';
 import 'package:cake_wallet/src/stores/exchange_trade/exchange_trade_store.dart';
 import 'package:cake_wallet/src/stores/exchange/exchange_store.dart';
+import 'package:cake_wallet/src/stores/action_list/action_list_store.dart';
+import 'package:cake_wallet/src/stores/action_list/trade_filter_store.dart';
+import 'package:cake_wallet/src/stores/action_list/transaction_filter_store.dart';
+import 'package:cake_wallet/src/stores/rescan/rescan_wallet_store.dart';
 
 // MARK: Import screens
 
@@ -85,6 +85,7 @@ import 'package:cake_wallet/src/screens/restore/restore_wallet_from_seed_details
 import 'package:cake_wallet/src/screens/trade_history/trade_details_page.dart';
 import 'package:cake_wallet/src/screens/exchange/exchange_page.dart';
 import 'package:cake_wallet/src/screens/settings/settings.dart';
+import 'package:cake_wallet/src/screens/rescan/rescan_page.dart';
 
 class Router {
   static Route<dynamic> generateRoute(
@@ -547,7 +548,10 @@ class Router {
 
       case Routes.rescan:
         return MaterialPageRoute(
-            builder: (_) => RescanPage());
+            builder: (_) => Provider(
+                builder: (_) =>
+                    RescanWalletStore(walletListService: walletListService),
+                child: RescanPage()));
 
       default:
         return MaterialPageRoute(

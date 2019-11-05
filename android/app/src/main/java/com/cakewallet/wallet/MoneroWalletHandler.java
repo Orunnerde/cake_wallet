@@ -187,6 +187,9 @@ public class MoneroWalletHandler implements WalletListener {
                 case "getKeys":
                     getKeys(call, result);
                     break;
+                case "pauseRefreshAsync":
+                    pauseRefreshAsync(call, result);
+                    break;
                 default:
                     result.notImplemented();
                     break;
@@ -258,6 +261,13 @@ public class MoneroWalletHandler implements WalletListener {
     }
 
     // MARK: Wallet
+
+    private void pauseRefreshAsync(MethodCall call, MethodChannel.Result result) {
+        AsyncTask.execute(() -> {
+            getCurrentWallet().pauseRefreshAsync();
+            mainHandler.post(() -> result.success(null));
+        });
+    }
 
     private void createTransaction(MethodCall call, MethodChannel.Result result) {
         AsyncTask.execute(() -> {

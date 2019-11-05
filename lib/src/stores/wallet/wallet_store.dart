@@ -77,10 +77,12 @@ abstract class WalletStoreBase with Store {
 
   @action
   Future reconnect() async {
-    await _walletService.connectToNode(
-        uri: _settingsStore.node.uri,
-        login: _settingsStore.node.login,
-        password: _settingsStore.node.password);
+    await _walletService.connectToNode(node: _settingsStore.node);
+  }
+
+   @action
+  Future rescan({int restoreHeight}) async {
+    await _walletService.rescan(restoreHeight: restoreHeight);
   }
 
   Future _onWalletChanged(Wallet wallet) async {

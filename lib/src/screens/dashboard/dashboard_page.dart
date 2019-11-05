@@ -123,6 +123,10 @@ class DashboardPage extends BasePage {
             CupertinoActionSheet(
               actions: <Widget>[
                 CupertinoActionSheetAction(
+                    child: const Text('Rescan'),
+                    onPressed: () => Navigator.of(context)
+                        .popAndPushNamed(Routes.rescan)),
+                CupertinoActionSheetAction(
                     child: const Text('Reconnect'),
                     onPressed: () {
                       Navigator.of(context).pop();
