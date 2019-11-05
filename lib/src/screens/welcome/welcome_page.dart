@@ -14,7 +14,17 @@ class WelcomePage extends BasePage {
   final _cakeLogo = Image.asset('assets/images/cake_logo.png');
 
   @override
-  Widget leading(BuildContext context) => Container();
+  Widget build(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme = (_themeChanger.getTheme() == Themes.darkTheme);
+
+    return Scaffold(
+        backgroundColor: _isDarkTheme ? Theme.of(context).backgroundColor
+            : backgroundColor,
+        resizeToAvoidBottomPadding: false,
+        body: SafeArea(child: body(context)),
+    );
+  }
 
   @override
   Widget body(BuildContext context) {
