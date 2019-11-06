@@ -22,7 +22,6 @@ import 'package:cake_wallet/src/domain/exchange/xmrto/xmrto_exchange_provider.da
 // MARK: Import stores
 
 import 'package:cake_wallet/src/stores/authentication/authentication_store.dart';
-import 'package:cake_wallet/src/stores/login/login_store.dart';
 import 'package:cake_wallet/src/stores/node_list/node_list_store.dart';
 import 'package:cake_wallet/src/stores/auth/auth_store.dart';
 import 'package:cake_wallet/src/stores/balance/balance_store.dart';
@@ -30,7 +29,6 @@ import 'package:cake_wallet/src/stores/send/send_store.dart';
 import 'package:cake_wallet/src/stores/subaddress_creation/subaddress_creation_store.dart';
 import 'package:cake_wallet/src/stores/subaddress_list/subaddress_list_store.dart';
 import 'package:cake_wallet/src/stores/sync/sync_store.dart';
-import 'package:cake_wallet/src/stores/transaction_list/transaction_list_store.dart';
 import 'package:cake_wallet/src/stores/user/user_store.dart';
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/src/stores/wallet_creation/wallet_creation_store.dart';
@@ -284,56 +282,29 @@ class Router {
                 child: WalletListPage()));
 
       case Routes.auth:
-        void Function(AuthPage, BuildContext) onAuthenticationSuccessful;
-        void Function(AuthPage, BuildContext) onAuthenticationFailed;
-
-        if (settings.arguments is List<void Function(AuthPage, BuildContext)>) {
-          final args =
-              settings.arguments as List<void Function(AuthPage, BuildContext)>;
-
-          if (args.length > 0) {
-            onAuthenticationSuccessful = args[0];
-          }
-
-          if (args.length > 1) {
-            onAuthenticationFailed = args[1];
-          }
-        }
-
         return MaterialPageRoute(
             fullscreenDialog: true,
-            builder: (_) => Provider(
-                  builder: (context) => AuthStore(userService: userService),
-                  child: AuthPage(
-                      onAuthenticationSuccessful: onAuthenticationSuccessful,
-                      onAuthenticationFailed: onAuthenticationFailed),
+            builder: (_) => ProxyProvider<AuthenticationStore, AuthStore>(
+                  builder: (context, authStore, _) => AuthStore(
+                      authStore: authStore,
+                      sharedPreferences: sharedPreferences,
+                      userService: userService,
+                      walletService: walletService,
+                      walletsService: walletListService),
+                  child: AuthPage(onAuthenticationFinished: settings.arguments),
                 ));
 
       case Routes.unlock:
-        void Function(AuthPage, BuildContext) onAuthenticationSuccessful;
-        void Function(AuthPage, BuildContext) onAuthenticationFailed;
-
-        if (settings.arguments is List<void Function(AuthPage, BuildContext)>) {
-          final args =
-              settings.arguments as List<void Function(AuthPage, BuildContext)>;
-
-          if (args.length > 0) {
-            onAuthenticationSuccessful = args[0];
-          }
-
-          if (args.length > 1) {
-            onAuthenticationFailed = args[1];
-          }
-        }
-
         return MaterialPageRoute(
             fullscreenDialog: true,
-            builder: (_) => Provider(
-                builder: (context) => AuthStore(userService: userService),
-                child: AuthPage(
-                    onAuthenticationSuccessful: onAuthenticationSuccessful,
-                    onAuthenticationFailed: onAuthenticationFailed,
-                    closable: false)));
+            builder: (_) => ProxyProvider<AuthenticationStore, AuthStore>(
+                builder: (context, authStore, _) => AuthStore(
+                    authStore: authStore,
+                    sharedPreferences: sharedPreferences,
+                    userService: userService,
+                    walletService: walletService,
+                    walletsService: walletListService),
+                child: AuthPage(onAuthenticationFinished: settings.arguments)));
 
       case Routes.nodeList:
         return CupertinoPageRoute(builder: (context) {
@@ -353,8 +324,8 @@ class Router {
 
       case Routes.login:
         return CupertinoPageRoute(
-            builder: (_) => ProxyProvider<AuthenticationStore, LoginStore>(
-                builder: (context, authStore, _) => LoginStore(
+            builder: (_) => ProxyProvider<AuthenticationStore, AuthStore>(
+                builder: (context, authStore, _) => AuthStore(
                     authStore: authStore,
                     sharedPreferences: sharedPreferences,
                     userService: userService,

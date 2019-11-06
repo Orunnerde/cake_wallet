@@ -140,31 +140,36 @@ class WalletListBodyState extends State<WalletListBody> {
       actions.add(CupertinoActionSheetAction(
           child: const Text('Load wallet'),
           onPressed: () async {
-            Navigator.of(context).popAndPushNamed(Routes.auth, arguments: [
-              (auth, _) async {
-                try {
-                  auth.changeProcessText('Loading ${wallet.name} wallet');
-                  await _walletListStore.loadWallet(wallet);
-                  auth.close();
-                  Navigator.of(bodyContext).pop();
-                } catch (e) {
-                  auth.changeProcessText(
-                      'Failed to load ${wallet.name} wallet. ${e.toString()}');
-                }
+            Navigator.of(context).popAndPushNamed(Routes.auth,
+                arguments: (isAuthenticatedSuccessfully, auth, _) async {
+              if (!isAuthenticatedSuccessfully) {
+                return;
               }
-            ]);
+
+              try {
+                auth.changeProcessText('Loading ${wallet.name} wallet');
+                await _walletListStore.loadWallet(wallet);
+                auth.close();
+                Navigator.of(bodyContext).pop();
+              } catch (e) {
+                auth.changeProcessText(
+                    'Failed to load ${wallet.name} wallet. ${e.toString()}');
+              }
+            });
           }));
     }
 
     actions.add(CupertinoActionSheetAction(
         child: const Text('Show seed'),
         onPressed: () async {
-          Navigator.of(context).popAndPushNamed(Routes.auth, arguments: [
-            (auth, _) async {
-              auth.close();
-              Navigator.of(bodyContext).popAndPushNamed(Routes.seed);
+          Navigator.of(context).popAndPushNamed(Routes.auth,
+              arguments: (isAuthenticatedSuccessfully, auth, _) async {
+            if (!isAuthenticatedSuccessfully) {
+              return;
             }
-          ]);
+            auth.close();
+            Navigator.of(bodyContext).popAndPushNamed(Routes.seed);
+          });
         }));
 
     if (!isCurrentWallet) {
@@ -172,18 +177,21 @@ class WalletListBodyState extends State<WalletListBody> {
           child: const Text('Remove'),
           isDestructiveAction: true,
           onPressed: () {
-            Navigator.of(context).popAndPushNamed(Routes.auth, arguments: [
-              (auth, _) async {
-                try {
-                  auth.changeProcessText('Removing ${wallet.name} wallet');
-                  await _walletListStore.remove(wallet);
-                  auth.close();
-                } catch (e) {
-                  auth.changeProcessText(
-                      'Failed to remove ${wallet.name} wallet. ${e.toString()}');
-                }
+            Navigator.of(context).popAndPushNamed(Routes.auth,
+                arguments: (isAuthenticatedSuccessfully, auth, _) async {
+              if (!isAuthenticatedSuccessfully) {
+                return;
               }
-            ]);
+
+              try {
+                auth.changeProcessText('Removing ${wallet.name} wallet');
+                await _walletListStore.remove(wallet);
+                auth.close();
+              } catch (e) {
+                auth.changeProcessText(
+                    'Failed to remove ${wallet.name} wallet. ${e.toString()}');
+              }
+            });
           }));
     }
 

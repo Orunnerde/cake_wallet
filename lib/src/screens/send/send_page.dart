@@ -364,20 +364,19 @@ class SendFormState extends State<SendForm> {
                                         child: Text("Send"),
                                         onPressed: () async {
                                           Navigator.of(context).popAndPushNamed(
-                                              Routes.auth,
-                                              arguments: [
-                                                (auth, authContext) {
-                                                  Navigator.of(authContext)
-                                                      .pop();
-                                                  sendStore.createTransaction(
-                                                      address:
-                                                          _addressController
-                                                              .text,
-                                                      paymentId:
-                                                          _paymentIdController
-                                                              .text);
-                                                }
-                                              ]);
+                                              Routes.auth, arguments:
+                                                  (isAuthenticatedSuccessfully,
+                                                      auth, authContext) {
+                                            if (!isAuthenticatedSuccessfully) {
+                                              return;
+                                            }
+                                            Navigator.of(authContext).pop();
+                                            sendStore.createTransaction(
+                                                address:
+                                                    _addressController.text,
+                                                paymentId:
+                                                    _paymentIdController.text);
+                                          });
                                         }),
                                     FlatButton(
                                         child: Text("Cancel"),

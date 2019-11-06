@@ -1,10 +1,11 @@
+import 'package:cake_wallet/src/stores/auth/auth_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/src/screens/pin_code/pin_code.dart';
-import 'package:cake_wallet/src/stores/login/login_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/src/stores/auth/auth_store.dart';
 
 class LoginPage extends BasePage {
   @override
@@ -15,14 +16,14 @@ class LoginPage extends BasePage {
 }
 
 class _LoginPinCode extends PinCode {
-  _LoginPinCode() : super((_, __) => null, false);
+  _LoginPinCode([Key key]) : super((_, __) => null, false, key);
 
   @override
   _LoginPinCodeState createState() => _LoginPinCodeState();
 }
 
 class _LoginPinCodeState extends PinCodeState<_LoginPinCode> {
-  LoginStore _loginStore;
+  AuthStore _loginStore;
   String title = 'Enter your PIN';
 
   @override
@@ -35,11 +36,11 @@ class _LoginPinCodeState extends PinCodeState<_LoginPinCode> {
 
   @override
   Widget build(BuildContext context) {
-    _setLoginStore(store: Provider.of<LoginStore>(context));
+    _setLoginStore(store: Provider.of<AuthStore>(context));
     return body(context);
   }
 
-  void _setLoginStore({LoginStore store}) {
+  void _setLoginStore({AuthStore store}) {
     if (_loginStore != null) {
       return;
     }
@@ -47,19 +48,19 @@ class _LoginPinCodeState extends PinCodeState<_LoginPinCode> {
     _loginStore = store;
 
     reaction((_) => _loginStore.state, (state) {
-      if (state == LoginState.failure || state == LoginState.banned) {
+      if (state == AuthenticationFailure || state is AuthenticationBanned) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           clear();
           Scaffold.of(context).showSnackBar(
             SnackBar(
-              content: Text(_loginStore.errorMessage),
+              content: Text(state.error),
               backgroundColor: Colors.red,
             ),
           );
         });
       }
 
-      if (state == LoginState.loading) {
+      if (state is AuthenticationInProgress) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Scaffold.of(context).hideCurrentSnackBar();
           Scaffold.of(context).showSnackBar(

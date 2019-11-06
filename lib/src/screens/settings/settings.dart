@@ -301,12 +301,13 @@ class SettingsState extends State<Settings> {
                     ),
                     trailing: _cakeArrowImage,
                     onTap: () {
-                      Navigator.of(context).pushNamed(Routes.auth, arguments: [
-                        (auth, _) => Navigator.of(context).popAndPushNamed(
-                            Routes.setupPin,
-                            arguments: (setupPinContext, _) =>
-                                Navigator.of(context).pop())
-                      ]);
+                      Navigator.of(context).pushNamed(Routes.auth,
+                          arguments: (status, auth, _) => status
+                              ? Navigator.of(context).popAndPushNamed(
+                                  Routes.setupPin,
+                                  arguments: (setupPinContext, _) =>
+                                      Navigator.of(context).pop())
+                              : null);
                     },
                   ),
                   Container(

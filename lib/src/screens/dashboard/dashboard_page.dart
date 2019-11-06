@@ -124,8 +124,8 @@ class DashboardPage extends BasePage {
               actions: <Widget>[
                 CupertinoActionSheetAction(
                     child: const Text('Rescan'),
-                    onPressed: () => Navigator.of(context)
-                        .popAndPushNamed(Routes.rescan)),
+                    onPressed: () =>
+                        Navigator.of(context).popAndPushNamed(Routes.rescan)),
                 CupertinoActionSheetAction(
                     child: const Text('Reconnect'),
                     onPressed: () {
@@ -144,20 +144,25 @@ class DashboardPage extends BasePage {
                     child: const Text('Show seed'),
                     onPressed: () {
                       Navigator.of(context).popAndPushNamed(Routes.auth,
-                          arguments: [
-                            (auth, authContext) => Navigator.of(authContext)
-                                .popAndPushNamed(Routes.seed)
-                          ]);
+                          arguments: (isAuthenticatedSuccessfully, auth,
+                                  authContext) =>
+                              isAuthenticatedSuccessfully
+                                  ? Navigator.of(authContext)
+                                      .popAndPushNamed(Routes.seed)
+                                  : null);
                     }),
                 CupertinoActionSheetAction(
                     child: const Text('Show keys'),
                     onPressed: () {
                       Navigator.of(context).pop();
 
-                      Navigator.of(context).pushNamed(Routes.auth, arguments: [
-                        (auth, authContext) => Navigator.of(authContext)
-                            .popAndPushNamed(Routes.showKeys)
-                      ]);
+                      Navigator.of(context).pushNamed(Routes.auth,
+                          arguments: (isAuthenticatedSuccessfully, auth,
+                                  authContext) =>
+                              isAuthenticatedSuccessfully
+                                  ? Navigator.of(authContext)
+                                      .popAndPushNamed(Routes.showKeys)
+                                  : null);
                     }),
                 CupertinoActionSheetAction(
                     child: const Text('Address book'),

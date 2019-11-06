@@ -74,14 +74,17 @@ class RootState extends State<Root> with WidgetsBindingObserver {
       }
 
       if (state == AuthenticationState.unauthenticated) {
-        Navigator.of(context).pushNamed(Routes.unlock, arguments: [
-          (auth, _) {
-            if (_authenticationStore != null) {
-              _authenticationStore.active();
-            }
-            auth.close();
+        Navigator.of(context).pushNamed(Routes.unlock,
+            arguments: (isAuthenticatedSuccessfully, auth, _) {
+          if (!isAuthenticatedSuccessfully) {
+            return;
           }
-        ]);
+          
+          if (_authenticationStore != null) {
+            _authenticationStore.active();
+          }
+          auth.close();
+        });
       }
     });
   }
