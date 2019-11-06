@@ -38,7 +38,6 @@ class WalletNameForm extends StatefulWidget {
 }
 
 class _WalletNameFormState extends State<WalletNameForm> {
-  static const _aspectRatioImage = 2.1;
   final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
 
@@ -78,23 +77,15 @@ class _WalletNameFormState extends State<WalletNameForm> {
     });
 
     return ScrollableWithBottomSection(
-        content: Padding(
-          padding: EdgeInsets.only(bottom: 10),
-          child: Column(children: [
-            Padding(
-              padding: EdgeInsets.only(bottom: 20),
-              child: AspectRatio(
-                aspectRatio: _aspectRatioImage,
-                child: Container(
-                  width: double.infinity,
-                  child: FittedBox(
-                    fit: BoxFit.contain,
-                    child: Image.asset('assets/images/bitmap.png'),
-                  ),
-                ),
-              ),
-            ),
-            Form(
+        content: Column(children: [
+          Padding(
+            padding: EdgeInsets.only(bottom: 10),
+            child: Image.asset('assets/images/bitmap.png',
+                height: 224, width: 400),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+            child: Form(
                 key: _formKey,
                 child: TextFormField(
                   style: TextStyle(
@@ -126,9 +117,9 @@ class _WalletNameFormState extends State<WalletNameForm> {
                     if (value.isEmpty) return 'Please enter a wallet name';
                     return null;
                   },
-                ))
-          ]),
-        ),
+                )),
+          )
+        ]),
         bottomSection: Observer(
           builder: (context) {
             return LoadingPrimaryButton(
