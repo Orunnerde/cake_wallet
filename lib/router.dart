@@ -304,7 +304,7 @@ class Router {
                     userService: userService,
                     walletService: walletService,
                     walletsService: walletListService),
-                child: AuthPage(onAuthenticationFinished: settings.arguments)));
+                child: AuthPage(onAuthenticationFinished: settings.arguments, closable: false)));
 
       case Routes.nodeList:
         return CupertinoPageRoute(builder: (context) {

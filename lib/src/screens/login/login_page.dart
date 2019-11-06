@@ -48,7 +48,19 @@ class _LoginPinCodeState extends PinCodeState<_LoginPinCode> {
     _loginStore = store;
 
     reaction((_) => _loginStore.state, (state) {
-      if (state == AuthenticationFailure || state is AuthenticationBanned) {
+      if (state is AuthenticationFailure) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          clear();
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.error),
+              backgroundColor: Colors.red,
+            ),
+          );
+        });
+      }
+
+      if (state is AuthenticationBanned) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           clear();
           Scaffold.of(context).showSnackBar(
