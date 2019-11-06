@@ -11,7 +11,6 @@ enum AppBarStyle { regular, withShadow }
 abstract class BasePage extends StatelessWidget {
   String get title => null;
   bool get isModalBackButton => false;
-
   Color get backgroundColor => Colors.white;
 
   AppBarStyle get appBarStyle => AppBarStyle.regular;
@@ -22,6 +21,8 @@ abstract class BasePage extends StatelessWidget {
   final _closeButtonImage = Image.asset('assets/images/close_button.png');
   final _closeButtonImageDarkTheme =
       Image.asset('assets/images/close_button_dark_theme.png');
+
+  void onClose(BuildContext context) => Navigator.of(context).pop();
 
   Widget leading(BuildContext context) {
     if (ModalRoute.of(context).isFirst) {
@@ -48,7 +49,7 @@ abstract class BasePage extends StatelessWidget {
             highlightColor: Colors.transparent,
             splashColor: Colors.transparent,
             padding: EdgeInsets.all(0),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => onClose(context),
             child: isModalBackButton ? _closeButton : _backButton),
       ),
     );
