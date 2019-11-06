@@ -12,7 +12,7 @@ abstract class BasePage extends StatelessWidget {
   String get title => null;
   bool get isModalBackButton => false;
   Color get backgroundColor => Colors.white;
-
+  bool get resizeToAvoidBottomPadding => true;
   AppBarStyle get appBarStyle => AppBarStyle.regular;
 
   final _backArrowImage = Image.asset('assets/images/back_arrow.png');
@@ -127,7 +127,7 @@ abstract class BasePage extends StatelessWidget {
     return Scaffold(
         backgroundColor:
             _isDarkTheme ? Theme.of(context).backgroundColor : backgroundColor,
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomPadding: resizeToAvoidBottomPadding,
         appBar: appBar(context),
         body: SafeArea(child: body(context)),
         floatingActionButton: floatingActionButton(context));
