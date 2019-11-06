@@ -13,7 +13,6 @@ import 'package:cake_wallet/src/widgets/blockchain_height_widget.dart';
 import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/src/stores/validation/validation_store.dart';
 
 class RestoreWalletFromSeedDetailsPage extends BasePage {
   String get title => 'Wallet restore description';
@@ -36,7 +35,6 @@ class _RestoreFromSeedDetailsFormState
   @override
   Widget build(BuildContext context) {
     final walletRestorationStore = Provider.of<WalletRestorationStore>(context);
-    final validation = Provider.of<ValidationStore>(context);
 
     final _themeChanger = Provider.of<ThemeChanger>(context);
     final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
@@ -106,10 +104,8 @@ class _RestoreFromSeedDetailsFormState
                                               : Palette.lightGrey,
                                           width: 1.0))),
                               validator: (value) {
-                                validation.validateWalletName(value);
-                                if (!validation.isValidate) return 'Wallet name can only contain letters, '
-                                    'numbers\nand must be between 1 and 15 characters long';
-                                return null;
+                                walletRestorationStore.validateWalletName(value);
+                                return walletRestorationStore.errorMessage;
                               },
                             ),
                           ))

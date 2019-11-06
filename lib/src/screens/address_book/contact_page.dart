@@ -10,7 +10,6 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/src/stores/validation/validation_store.dart';
 
 class ContactPage extends BasePage {
   String get title => 'Contact';
@@ -97,13 +96,8 @@ class ContactFormState extends State<ContactForm> {
   @override
   Widget build(BuildContext context) {
     final addressBookStore = Provider.of<AddressBookStore>(context);
-    final validation = Provider.of<ValidationStore>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
+    _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Column(
       children: <Widget>[
@@ -145,10 +139,8 @@ class ContactFormState extends State<ContactForm> {
                                       width: 1.0))),
                           controller: _contactNameController,
                           validator: (value) {
-                            validation.validateContactName(value);
-                            if (!validation.isValidate) return '''Contact name can't contain ` , ' " '''
-                                'symbols\nand must be between 1 and 32 characters long';
-                            return null;
+                            addressBookStore.validateContactName(value);
+                            return addressBookStore.errorMessage;
                           },
                         ),
                       )
@@ -198,9 +190,8 @@ class ContactFormState extends State<ContactForm> {
                               controller: _addressController,
                               options: [AddressTextFieldOption.qrCode],
                               validator: (value) {
-                                validation.validateAddress(value, cryptoCurrency: _selectectCrypto);
-                                if (!validation.isValidate) return 'Wallet address must correspond to the type of cryptocurrency';
-                                return null;
+                                addressBookStore.validateAddress(value, cryptoCurrency: _selectectCrypto);
+                                return addressBookStore.errorMessage;
                               },
                           )),
                     ],

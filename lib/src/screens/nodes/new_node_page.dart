@@ -7,7 +7,6 @@ import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/src/stores/validation/validation_store.dart';
 
 class NewNodePage extends BasePage {
   @override
@@ -41,7 +40,6 @@ class NewNodeFormState extends State<NewNodePageForm> {
   @override
   Widget build(BuildContext context) {
     final nodeList = Provider.of<NodeListStore>(context);
-    final validation = Provider.of<ValidationStore>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
 
@@ -80,9 +78,8 @@ class NewNodeFormState extends State<NewNodePageForm> {
                                         width: 1.0))),
                             controller: _nodeAddressController,
                             validator: (value) {
-                              validation.validateNodeAddress(value);
-                              if (!validation.isValidate) return 'Please enter a iPv4 address';
-                              return null;
+                              nodeList.validateNodeAddress(value);
+                              return nodeList.errorMessage;
                             },
                           ),
                         )
@@ -114,9 +111,8 @@ class NewNodeFormState extends State<NewNodePageForm> {
                                         width: 1.0))),
                             controller: _nodePortController,
                             validator: (value) {
-                              validation.validateNodePort(value);
-                              if (!validation.isValidate) return 'Node port can only contain numbers between 0 and 65535';
-                              return null;
+                              nodeList.validateNodePort(value);
+                              return nodeList.errorMessage;
                             },
                           ),
                         )

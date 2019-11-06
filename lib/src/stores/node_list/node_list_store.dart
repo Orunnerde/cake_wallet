@@ -12,6 +12,12 @@ abstract class NodeListBase with Store {
 
   NodeList _nodeList;
 
+  @observable
+  bool isValid;
+
+  @observable
+  String errorMessage;
+
   NodeListBase({NodeList nodeList}) {
     _nodeList = nodeList;
     nodes = ObservableList<Node>();
@@ -48,5 +54,26 @@ abstract class NodeListBase with Store {
   Future reset() async {
     await _nodeList.resetToDefault();
     await update();
+  }
+
+  void validateNodeAddress(String value) {
+    String p = '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\$';
+    RegExp regExp = new RegExp(p);
+    isValid = regExp.hasMatch(value);
+    errorMessage = isValid ? null : 'Please enter a iPv4 address';
+  }
+
+  void validateNodePort(String value) {
+    String p = '^[0-9]{1,5}';
+    RegExp regExp = new RegExp(p);
+    if (regExp.hasMatch(value)) {
+      try {
+        int intValue = int.parse(value);
+        isValid = (intValue >= 0 && intValue <= 65535);
+      } catch (e) {
+        isValid = false;
+      }
+    } else isValid = false;
+    errorMessage = isValid ? null : 'Node port can only contain numbers between 0 and 65535';
   }
 }

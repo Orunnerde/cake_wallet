@@ -10,7 +10,6 @@ import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/src/stores/validation/validation_store.dart';
 
 class NewSubaddressPage extends BasePage {
   String get title => 'New subaddress';
@@ -47,15 +46,9 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
   Widget build(BuildContext context) {
     final subaddressCreationStore =
         Provider.of<SubadrressCreationStore>(context);
-    final validation = Provider.of<ValidationStore>(context);
 
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
+    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Form(
       key: _formKey,
@@ -75,10 +68,8 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
                         borderSide:
                         BorderSide(color: Palette.lightGrey, width: 1.0))),
                 validator: (value) {
-                  validation.validateSubaddressName(value);
-                  if (!validation.isValidate) return '''Subaddress name can't contain ` , ' " '''
-                      'symbols\nand must be between 1 and 20 characters long';
-                  return null;
+                  subaddressCreationStore.validateSubaddressName(value);
+                  return subaddressCreationStore.errorMessage;
                 }),
           ),
         ),

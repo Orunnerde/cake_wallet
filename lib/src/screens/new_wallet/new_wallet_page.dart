@@ -14,7 +14,6 @@ import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/src/stores/validation/validation_store.dart';
 
 class NewWalletPage extends BasePage {
   static const _aspectRatioImage = 1.95;
@@ -80,12 +79,8 @@ class _WalletNameFormState extends State<WalletNameForm> {
   @override
   Widget build(BuildContext context) {
     final walletCreationStore = Provider.of<WalletCreationStore>(context);
-    final validation = Provider.of<ValidationStore>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     reaction((_) => walletCreationStore.state, (state) {
       if (state is WalletCreatedSuccessfully) {
@@ -145,10 +140,8 @@ class _WalletNameFormState extends State<WalletNameForm> {
                                       : Palette.lightGrey,
                                   width: 1.0))),
                       validator: (value) {
-                        validation.validateWalletName(value);
-                        if (!validation.isValidate) return 'Wallet name can only contain letters, '
-                            'numbers\nand must be between 1 and 15 characters long';
-                        return null;
+                        walletCreationStore.validateWalletName(value);
+                        return walletCreationStore.errorMessage;
                       },
                     ),
                   )

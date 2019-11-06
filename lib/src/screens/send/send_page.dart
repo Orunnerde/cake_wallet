@@ -16,7 +16,6 @@ import 'package:cake_wallet/src/stores/send/sending_state.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/src/stores/validation/validation_store.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 
 class SendPage extends BasePage {
@@ -49,15 +48,9 @@ class SendFormState extends State<SendForm> {
     sendStore.settingsStore = settingsStore;
     final balanceStore = Provider.of<BalanceStore>(context);
     final walletStore = Provider.of<WalletStore>(context);
-    final validation = Provider.of<ValidationStore>(context);
 
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
+    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     _setEffects(context);
 
@@ -167,9 +160,8 @@ class SendFormState extends State<SendForm> {
                             AddressTextFieldOption.addressBook
                           ],
                           validator: (value) {
-                            validation.validateAddress(value, cryptoCurrency: CryptoCurrency.xmr);
-                            if (!validation.isValidate) return 'Wallet address must correspond to the type of cryptocurrency';
-                            return null;
+                            sendStore.validateAddress(value, cryptoCurrency: CryptoCurrency.xmr);
+                            return sendStore.errorMessage;
                           },
                       ),
                       Padding(
@@ -201,9 +193,8 @@ class SendFormState extends State<SendForm> {
                                             : Palette.lightGrey,
                                         width: 1.0))),
                             validator: (value) {
-                              validation.validatePaymentID(value);
-                              if (!validation.isValidate) return 'Payment ID can only contain from 16 to 64 chars in hex';
-                              return null;
+                              sendStore.validatePaymentID(value);
+                              return sendStore.errorMessage;
                             }),
                       ),
                       Padding(
@@ -263,10 +254,8 @@ class SendFormState extends State<SendForm> {
                                             : Palette.lightGrey,
                                         width: 1.0))),
                             validator: (value) {
-                              validation.validateXMR(value, balanceStore.unlockedBalance);
-                              if (!validation.isValidate) return "XMR value can't exceed available balance.\n"
-                                  "The number of fraction digits must be equal to 12";
-                              return null;
+                              sendStore.validateXMR(value, balanceStore.unlockedBalance);
+                              return sendStore.errorMessage;
                             }
                         ),
                       ),
@@ -325,17 +314,12 @@ class SendFormState extends State<SendForm> {
                                 double availableAmount = double.parse(balanceStore.unlockedBalance);
                                 if (cryptoAmount > 0) {
                                   availableAmount *= fiatAmount/cryptoAmount;
-                                  print(cryptoAmount);
-                                  print(fiatAmount);
-                                  print(availableAmount);
-                                  validation.validateUSD(value, availableAmount);
-                                  if (!validation.isValidate) return "Value of amount can't exceed available balance.\n"
-                                      "The amount must contain fraction digits";
+                                  sendStore.validateFiat(value, availableAmount);
+                                  return sendStore.errorMessage;
                                 } else return "Minimum value of amount is 0.01";
                               } catch (e) {
-                                return "Minimum value of amount is 0.01";
+                                return "Currency can only contain numbers";
                               }
-                              return null;
                             }
                         ),
                       ),

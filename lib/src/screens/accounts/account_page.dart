@@ -7,36 +7,12 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/src/stores/validation/validation_store.dart';
 
 class AccountPage extends BasePage {
   String get title => 'Account';
 
   @override
   Widget body(BuildContext context) => AccountForm();
-
-  @override
-  Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
-
-    return Scaffold(
-        backgroundColor: _isDarkTheme ? PaletteDark.darkThemeBackgroundDark
-            : Colors.white,
-        resizeToAvoidBottomPadding: false,
-        appBar: CupertinoNavigationBar(
-          leading: leading(context),
-          middle: middle(context),
-          trailing: trailing(context),
-          backgroundColor: _isDarkTheme ? PaletteDark.darkThemeBackgroundDark
-              : Colors.white,
-          border: null,
-        ),
-        body: SafeArea(child: body(context)));
-  }
 }
 
 class AccountForm extends StatefulWidget {
@@ -57,12 +33,9 @@ class AccountFormState extends State<AccountForm> {
   @override
   Widget build(BuildContext context) {
     final accountListStore = Provider.of<AccountListStore>(context);
-    final validation = Provider.of<ValidationStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
 
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Form(
       key: _formKey,
@@ -95,10 +68,8 @@ class AccountFormState extends State<AccountForm> {
                             ))),
                 controller: _textController,
                 validator: (value) {
-                  validation.validateWalletName(value);
-                  if (!validation.isValidate) return 'Account name can only contain letters, '
-                      'numbers\nand must be between 1 and 15 characters long';
-                  return null;
+                  accountListStore.validateAccountName(value);
+                  return accountListStore.errorMessage;
                 },
               ),
             )),
