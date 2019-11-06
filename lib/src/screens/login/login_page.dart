@@ -2,26 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cake_wallet/src/domain/services/user_service.dart';
-import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
-import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/screens/pin_code/pin_code.dart';
 import 'package:cake_wallet/src/stores/login/login_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 
 class LoginPage extends BasePage {
-  final UserService userService;
-  final SharedPreferences sharedPreferences;
-  final WalletListService walletsService;
-  final WalletService walletService;
-
-  LoginPage(
-      {@required this.userService,
-      @required this.sharedPreferences,
-      @required this.walletsService,
-      @required this.walletService});
-
   @override
   Widget leading(BuildContext context) => Container();
 
@@ -62,7 +47,7 @@ class _LoginPinCodeState extends PinCodeState<_LoginPinCode> {
     _loginStore = store;
 
     reaction((_) => _loginStore.state, (state) {
-      if (state == LoginState.failure) {
+      if (state == LoginState.failure || state == LoginState.banned) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           clear();
           Scaffold.of(context).showSnackBar(

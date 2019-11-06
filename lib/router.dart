@@ -360,14 +360,7 @@ class Router {
                     userService: userService,
                     walletService: walletService,
                     walletsService: walletListService),
-                child: LoginPage(
-                  userService: UserService(
-                      sharedPreferences: sharedPreferences,
-                      secureStorage: FlutterSecureStorage()),
-                  walletsService: walletListService,
-                  walletService: walletService,
-                  sharedPreferences: sharedPreferences,
-                )));
+                child: LoginPage()));
 
       case Routes.accountList:
         return MaterialPageRoute(
