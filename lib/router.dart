@@ -162,7 +162,7 @@ class Router {
             builder: (_) => Provider(
                 builder: (context) =>
                     WalletSeedStore(walletService: walletService),
-                child: SeedPage()));
+                child: SeedPage(onCloseCallback: settings.arguments)));
 
       case Routes.restoreWalletFromSeed:
         return CupertinoPageRoute(

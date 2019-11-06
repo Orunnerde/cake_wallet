@@ -73,6 +73,18 @@ class RootState extends State<Root> with WidgetsBindingObserver {
             Routes.dashboard, (route) => route.isFirst);
       }
 
+      if (state == AuthenticationState.created) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            Routes.seed, (route) => route.isFirst,
+            arguments: () =>
+                Navigator.of(context).pushReplacementNamed(Routes.dashboard));
+      }
+
+      if (state == AuthenticationState.restored) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            Routes.dashboard, (route) => route.isFirst);
+      }
+
       if (state == AuthenticationState.unauthenticated) {
         Navigator.of(context).pushNamed(Routes.unlock, arguments: [
           (auth, _) {
