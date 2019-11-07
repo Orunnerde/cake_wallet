@@ -78,7 +78,7 @@ class WelcomePage extends BasePage {
             ]),
       ),
       Container(
-          padding: EdgeInsets.all(20.0),
+          padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 20.0),
           child: Column(
               children: <Widget>[
                 PrimaryButton(
