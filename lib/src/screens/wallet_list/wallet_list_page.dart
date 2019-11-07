@@ -141,7 +141,7 @@ class WalletListBodyState extends State<WalletListBody> {
           child: const Text('Load wallet'),
           onPressed: () async {
             Navigator.of(context).popAndPushNamed(Routes.auth,
-                arguments: (isAuthenticatedSuccessfully, auth, _) async {
+                arguments: (isAuthenticatedSuccessfully, auth) async {
               if (!isAuthenticatedSuccessfully) {
                 return;
               }
@@ -163,7 +163,7 @@ class WalletListBodyState extends State<WalletListBody> {
         child: const Text('Show seed'),
         onPressed: () async {
           Navigator.of(context).popAndPushNamed(Routes.auth,
-              arguments: (isAuthenticatedSuccessfully, auth, _) async {
+              arguments: (isAuthenticatedSuccessfully, auth) async {
             if (!isAuthenticatedSuccessfully) {
               return;
             }
@@ -178,7 +178,7 @@ class WalletListBodyState extends State<WalletListBody> {
           isDestructiveAction: true,
           onPressed: () {
             Navigator.of(context).popAndPushNamed(Routes.auth,
-                arguments: (isAuthenticatedSuccessfully, auth, _) async {
+                arguments: (isAuthenticatedSuccessfully, auth) async {
               if (!isAuthenticatedSuccessfully) {
                 return;
               }

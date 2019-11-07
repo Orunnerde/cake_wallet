@@ -9,7 +9,7 @@ import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
 
 class AuthPage extends StatefulWidget {
-  final Function(bool, AuthPage, BuildContext) onAuthenticationFinished;
+  final Function(bool, AuthPageState) onAuthenticationFinished;
   final bool closable;
 
   AuthPage({this.onAuthenticationFinished, this.closable = true});
@@ -39,7 +39,7 @@ class AuthPageState extends State<AuthPage> {
       if (state is AuthenticatedSuccessfully) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (widget.onAuthenticationFinished != null) {
-            widget.onAuthenticationFinished(true, widget, context);
+            widget.onAuthenticationFinished(true, this);
           } else {
             _key.currentState.showSnackBar(
               SnackBar(
@@ -73,7 +73,7 @@ class AuthPageState extends State<AuthPage> {
           );
 
           if (widget.onAuthenticationFinished != null) {
-            widget.onAuthenticationFinished(false, widget, context);
+            widget.onAuthenticationFinished(false, this);
           }
         });
       }

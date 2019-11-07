@@ -3,6 +3,7 @@ import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/src/stores/authentication/authentication_store.dart';
+import 'package:cake_wallet/src/domain/common/qr_scanner.dart';
 
 class Root extends StatefulWidget {
   Root({Key key}) : super(key: key);
@@ -32,6 +33,10 @@ class RootState extends State<Root> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.paused:
+        if (isQrScannerShown) {
+          return;
+        }
+
         if (_authenticationStore.state == AuthenticationState.authenticated ||
             _authenticationStore.state == AuthenticationState.active) {
           _authenticationStore.inactive();
@@ -87,11 +92,11 @@ class RootState extends State<Root> with WidgetsBindingObserver {
 
       if (state == AuthenticationState.unauthenticated) {
         Navigator.of(context).pushNamed(Routes.unlock,
-            arguments: (isAuthenticatedSuccessfully, auth, _) {
+            arguments: (isAuthenticatedSuccessfully, auth) {
           if (!isAuthenticatedSuccessfully) {
             return;
           }
-          
+
           if (_authenticationStore != null) {
             _authenticationStore.active();
           }

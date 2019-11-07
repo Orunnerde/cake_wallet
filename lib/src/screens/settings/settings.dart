@@ -302,7 +302,7 @@ class SettingsState extends State<Settings> {
                     trailing: _cakeArrowImage,
                     onTap: () {
                       Navigator.of(context).pushNamed(Routes.auth,
-                          arguments: (status, auth, _) => status
+                          arguments: (status, auth) => status
                               ? Navigator.of(context).popAndPushNamed(
                                   Routes.setupPin,
                                   arguments: (setupPinContext, _) =>

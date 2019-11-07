@@ -366,11 +366,12 @@ class SendFormState extends State<SendForm> {
                                           Navigator.of(context).popAndPushNamed(
                                               Routes.auth, arguments:
                                                   (isAuthenticatedSuccessfully,
-                                                      auth, authContext) {
+                                                      auth) {
                                             if (!isAuthenticatedSuccessfully) {
                                               return;
                                             }
-                                            Navigator.of(authContext).pop();
+                                            
+                                            Navigator.of(auth.context).pop();
                                             sendStore.createTransaction(
                                                 address:
                                                     _addressController.text,

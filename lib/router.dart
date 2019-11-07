@@ -1,3 +1,4 @@
+import 'package:cake_wallet/src/stores/login/login_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -284,27 +285,25 @@ class Router {
       case Routes.auth:
         return MaterialPageRoute(
             fullscreenDialog: true,
-            builder: (_) => ProxyProvider<AuthenticationStore, AuthStore>(
-                  builder: (context, authStore, _) => AuthStore(
-                      authStore: authStore,
+            builder: (_) => Provider(
+                  builder: (_) => AuthStore(
                       sharedPreferences: sharedPreferences,
                       userService: userService,
-                      walletService: walletService,
-                      walletsService: walletListService),
+                      walletService: walletService),
                   child: AuthPage(onAuthenticationFinished: settings.arguments),
                 ));
 
       case Routes.unlock:
         return MaterialPageRoute(
             fullscreenDialog: true,
-            builder: (_) => ProxyProvider<AuthenticationStore, AuthStore>(
-                builder: (context, authStore, _) => AuthStore(
-                    authStore: authStore,
+            builder: (_) => Provider(
+                builder: (_) => AuthStore(
                     sharedPreferences: sharedPreferences,
                     userService: userService,
-                    walletService: walletService,
-                    walletsService: walletListService),
-                child: AuthPage(onAuthenticationFinished: settings.arguments, closable: false)));
+                    walletService: walletService),
+                child: AuthPage(
+                    onAuthenticationFinished: settings.arguments,
+                    closable: false)));
 
       case Routes.nodeList:
         return CupertinoPageRoute(builder: (context) {
@@ -324,12 +323,14 @@ class Router {
 
       case Routes.login:
         return CupertinoPageRoute(
-            builder: (_) => ProxyProvider<AuthenticationStore, AuthStore>(
-                builder: (context, authStore, _) => AuthStore(
-                    authStore: authStore,
+            builder: (_) => ProxyProvider<AuthenticationStore, LoginStore>(
+                builder: (context, authStore, _) => LoginStore(
+                    authenticationStore: authStore,
+                    authStore: AuthStore(
+                        sharedPreferences: sharedPreferences,
+                        userService: userService,
+                        walletService: walletService),
                     sharedPreferences: sharedPreferences,
-                    userService: userService,
-                    walletService: walletService,
                     walletsService: walletListService),
                 child: LoginPage()));
 

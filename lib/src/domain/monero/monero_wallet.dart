@@ -293,7 +293,9 @@ class MoneroWallet extends Wallet {
 
   Future close() async {
     try {
+      print('Start closing');
       await platform.invokeMethod('close');
+      print('Closed');
     } on PlatformException catch (e) {
       print(e);
       throw e;
@@ -319,7 +321,7 @@ class MoneroWallet extends Wallet {
     } on PlatformException catch (e) {
       _syncStatus.value = FailedSyncStatus();
       print(e);
-      throw e;
+      // throw e;
     }
   }
 

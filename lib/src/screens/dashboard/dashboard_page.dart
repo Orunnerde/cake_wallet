@@ -144,10 +144,9 @@ class DashboardPage extends BasePage {
                     child: const Text('Show seed'),
                     onPressed: () {
                       Navigator.of(context).popAndPushNamed(Routes.auth,
-                          arguments: (isAuthenticatedSuccessfully, auth,
-                                  authContext) =>
+                          arguments: (isAuthenticatedSuccessfully, auth) =>
                               isAuthenticatedSuccessfully
-                                  ? Navigator.of(authContext)
+                                  ? Navigator.of(auth.context)
                                       .popAndPushNamed(Routes.seed)
                                   : null);
                     }),
@@ -157,10 +156,9 @@ class DashboardPage extends BasePage {
                       Navigator.of(context).pop();
 
                       Navigator.of(context).pushNamed(Routes.auth,
-                          arguments: (isAuthenticatedSuccessfully, auth,
-                                  authContext) =>
+                          arguments: (isAuthenticatedSuccessfully, auth) =>
                               isAuthenticatedSuccessfully
-                                  ? Navigator.of(authContext)
+                                  ? Navigator.of(auth.context)
                                       .popAndPushNamed(Routes.showKeys)
                                   : null);
                     }),
