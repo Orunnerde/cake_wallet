@@ -95,9 +95,10 @@ abstract class SendStoreBase with Store {
   }
 
   @action
-  void setSendAll() {
-    cryptoAmount = 'ALL';
-    fiatAmount = '';
+  void setSendAll(String availableBalance) {
+    /*cryptoAmount = 'ALL';
+    fiatAmount = '';*/
+    changeCryptoAmount(availableBalance);
   }
 
   @action

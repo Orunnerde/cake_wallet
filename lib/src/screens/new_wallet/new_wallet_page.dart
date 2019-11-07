@@ -1,7 +1,6 @@
 import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
@@ -45,12 +44,7 @@ class _WalletNameFormState extends State<WalletNameForm> {
   Widget build(BuildContext context) {
     final walletCreationStore = Provider.of<WalletCreationStore>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
+    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     reaction((_) => walletCreationStore.state, (state) {
       if (state is WalletCreatedSuccessfully) {
@@ -114,8 +108,8 @@ class _WalletNameFormState extends State<WalletNameForm> {
                                   : Palette.lightGrey,
                               width: 1.0))),
                   validator: (value) {
-                    if (value.isEmpty) return 'Please enter a wallet name';
-                    return null;
+                    walletCreationStore.validateWalletName(value);
+                    return walletCreationStore.errorMessage;
                   },
                 )),
           )
