@@ -21,6 +21,7 @@ import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 class SendPage extends BasePage {
   String get title => 'Send Monero';
   bool get isModalBackButton => true;
+  bool get resizeToAvoidBottomPadding => false;
 
   @override
   Widget body(BuildContext context) => SendForm();
