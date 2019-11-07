@@ -42,4 +42,5 @@ class Routes {
   static const exchange = '/exchange';
   static const settings = '/settings';
   static const unlock = '/auth_not_closable';
+  static const faq = '/faq';
 }

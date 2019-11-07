@@ -251,6 +251,10 @@ class SettingsFormState extends State<SettingsForm> {
           },
           title: 'Terms and conditions',
           attribute: Attributes.arrow),
+      SettingsItem(
+          onTaped: () => Navigator.pushNamed(context, Routes.faq),
+          title: 'FAQ',
+          attribute: Attributes.arrow)
     ]);
     setState(() {});
   }
