@@ -43,4 +43,5 @@ class Routes {
   static const settings = '/settings';
   static const unlock = '/auth_not_closable';
   static const rescan = '/rescan';
+  static const faq = '/faq';
 }

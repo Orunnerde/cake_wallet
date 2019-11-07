@@ -65,6 +65,7 @@ flutter:
     - assets/images/
     - assets/node_list.yml
     - assets/text/
+    - assets/faq/
 
   fonts:
     - family: Lato

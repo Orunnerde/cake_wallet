@@ -18,6 +18,7 @@ abstract class SettingsStoreBase with Store {
   static const currentTransactionPriorityKey = 'current_fee_priority';
   static const currentBalanceDisplayModeKey = 'current_balance_display_mode';
   static const shouldSaveRecipientAddressKey = 'save_recipient_address';
+  static const allowBiometricalAuthenticationKey = 'allow_biometrical_authentication';
   static const currentDarkTheme = 'dark_theme';
   static const displayActionListModeKey = 'display_list_mode';
 
@@ -35,8 +36,11 @@ abstract class SettingsStoreBase with Store {
         raw: sharedPreferences.getInt(currentBalanceDisplayModeKey));
     final shouldSaveRecipientAddress =
         sharedPreferences.getBool(shouldSaveRecipientAddressKey);
-    final savedDarkTheme = sharedPreferences.getBool(currentDarkTheme) == null
-        ? false
+    final allowBiometricalAuthentication =
+    sharedPreferences.getBool(allowBiometricalAuthenticationKey) == null ? false
+        : sharedPreferences.getBool(allowBiometricalAuthenticationKey);
+    final savedDarkTheme =
+    sharedPreferences.getBool(currentDarkTheme) == null ? false
         : sharedPreferences.getBool(currentDarkTheme);
     final actionlistDisplayMode = ObservableList();
     actionlistDisplayMode.addAll(deserializeActionlistDisplayModes(
@@ -49,6 +53,7 @@ abstract class SettingsStoreBase with Store {
         initialTransactionPriority: currentTransactionPriority,
         initialBalanceDisplayMode: currentBalanceDisplayMode,
         initialSaveRecipientAddress: shouldSaveRecipientAddress,
+        initialAllowBiometricalAuthentication : allowBiometricalAuthentication,
         initialDarkTheme: savedDarkTheme,
         actionlistDisplayMode: actionlistDisplayMode);
     await store.loadSettings();
@@ -75,6 +80,9 @@ abstract class SettingsStoreBase with Store {
   bool shouldSaveRecipientAddress;
 
   @observable
+  bool allowBiometricalAuthentication;
+
+  @observable
   bool isDarkTheme;
 
   SharedPreferences _sharedPreferences;
@@ -87,6 +95,7 @@ abstract class SettingsStoreBase with Store {
       @required TransactionPriority initialTransactionPriority,
       @required BalanceDisplayMode initialBalanceDisplayMode,
       @required bool initialSaveRecipientAddress,
+      @required bool initialAllowBiometricalAuthentication,
       @required bool initialDarkTheme,
       this.actionlistDisplayMode}) {
     fiatCurrency = initialFiatCurrency;
@@ -95,12 +104,21 @@ abstract class SettingsStoreBase with Store {
     shouldSaveRecipientAddress = initialSaveRecipientAddress;
     _sharedPreferences = sharedPreferences;
     _nodeList = nodeList;
+    allowBiometricalAuthentication = initialAllowBiometricalAuthentication;
     isDarkTheme = initialDarkTheme;
 
     actionlistDisplayMode.observe(
-        (dynamic _) => _sharedPreferences.setInt(displayActionListModeKey,
+            (dynamic _) => _sharedPreferences.setInt(displayActionListModeKey,
             serializeActionlistDisplayModes(actionlistDisplayMode)),
         fireImmediately: false);
+  }
+
+  @action
+  Future setAllowBiometricalAuthentication(
+      {@required bool allowBiometricalAuthentication}) async {
+    this.allowBiometricalAuthentication = allowBiometricalAuthentication;
+    await _sharedPreferences.setBool(allowBiometricalAuthenticationKey,
+        allowBiometricalAuthentication);
   }
 
   @action

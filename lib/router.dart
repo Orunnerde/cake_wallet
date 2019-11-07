@@ -85,6 +85,7 @@ import 'package:cake_wallet/src/screens/trade_history/trade_details_page.dart';
 import 'package:cake_wallet/src/screens/exchange/exchange_page.dart';
 import 'package:cake_wallet/src/screens/settings/settings.dart';
 import 'package:cake_wallet/src/screens/rescan/rescan_page.dart';
+import 'package:cake_wallet/src/screens/faq/faq_page.dart';
 
 class Router {
   static Route<dynamic> generateRoute(
@@ -517,6 +518,10 @@ class Router {
                 builder: (_) =>
                     RescanWalletStore(walletListService: walletListService),
                 child: RescanPage()));
+
+      case Routes.faq:
+        return MaterialPageRoute(
+            builder: (_) => FaqPage());
 
       default:
         return MaterialPageRoute(
