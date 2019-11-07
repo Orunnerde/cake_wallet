@@ -4,12 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
 
-class ArrowListRow extends StatelessWidget {
+class SettingsArrowListRow extends StatelessWidget {
   final VoidCallback onTaped;
   final String title;
   final _cakeArrowImage = Image.asset('assets/images/cake_arrow.png');
 
-  ArrowListRow({@required this.onTaped, this.title});
+  SettingsArrowListRow({@required this.onTaped, this.title});
 
   @override
   Widget build(BuildContext context) {
