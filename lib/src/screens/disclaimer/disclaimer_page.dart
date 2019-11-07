@@ -35,8 +35,8 @@ class DisclaimerPageBody extends StatefulWidget {
 }
 
 class DisclaimerBodyState extends State<DisclaimerPageBody> {
-  static const url1 = 'https://xmr.to/app_static/html/tos.html';
-  static const url2 = 'https://www.morphtoken.com/terms/';
+  static const xmrto_url = 'https://xmr.to/app_static/html/tos.html';
+  static const morphtoken_url = 'https://www.morphtoken.com/terms/';
 
   bool _isAccepted;
   bool _checked = false;
@@ -45,7 +45,7 @@ class DisclaimerBodyState extends State<DisclaimerPageBody> {
   DisclaimerBodyState(this._isAccepted);
 
   launchUrl(String url) async {
-    await launch(url);
+    if (await canLaunch(url)) await launch(url);
   }
 
   Future getFileLines() async {
@@ -176,9 +176,9 @@ class DisclaimerBodyState extends State<DisclaimerPageBody> {
                     children: <Widget>[
                       Expanded(
                           child: GestureDetector(
-                        onTap: () => launchUrl(url1),
+                        onTap: () => launchUrl(xmrto_url),
                         child: Text(
-                          url1,
+                          xmrto_url,
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               color: Colors.blue,
@@ -197,9 +197,9 @@ class DisclaimerBodyState extends State<DisclaimerPageBody> {
                     children: <Widget>[
                       Expanded(
                           child: GestureDetector(
-                        onTap: () => launchUrl(url2),
+                        onTap: () => launchUrl(morphtoken_url),
                         child: Text(
-                          url2,
+                          morphtoken_url,
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               color: Colors.blue,

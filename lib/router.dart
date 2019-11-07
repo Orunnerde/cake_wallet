@@ -1,3 +1,4 @@
+import 'package:cake_wallet/src/stores/login/login_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -22,7 +23,6 @@ import 'package:cake_wallet/src/domain/exchange/xmrto/xmrto_exchange_provider.da
 // MARK: Import stores
 
 import 'package:cake_wallet/src/stores/authentication/authentication_store.dart';
-import 'package:cake_wallet/src/stores/login/login_store.dart';
 import 'package:cake_wallet/src/stores/node_list/node_list_store.dart';
 import 'package:cake_wallet/src/stores/auth/auth_store.dart';
 import 'package:cake_wallet/src/stores/balance/balance_store.dart';
@@ -30,7 +30,6 @@ import 'package:cake_wallet/src/stores/send/send_store.dart';
 import 'package:cake_wallet/src/stores/subaddress_creation/subaddress_creation_store.dart';
 import 'package:cake_wallet/src/stores/subaddress_list/subaddress_list_store.dart';
 import 'package:cake_wallet/src/stores/sync/sync_store.dart';
-import 'package:cake_wallet/src/stores/transaction_list/transaction_list_store.dart';
 import 'package:cake_wallet/src/stores/user/user_store.dart';
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/src/stores/wallet_creation/wallet_creation_store.dart';
@@ -44,6 +43,10 @@ import 'package:cake_wallet/src/stores/wallet/wallet_keys_store.dart';
 import 'package:cake_wallet/src/stores/trade_history/trade_history_store.dart';
 import 'package:cake_wallet/src/stores/exchange_trade/exchange_trade_store.dart';
 import 'package:cake_wallet/src/stores/exchange/exchange_store.dart';
+import 'package:cake_wallet/src/stores/action_list/action_list_store.dart';
+import 'package:cake_wallet/src/stores/action_list/trade_filter_store.dart';
+import 'package:cake_wallet/src/stores/action_list/transaction_filter_store.dart';
+import 'package:cake_wallet/src/stores/rescan/rescan_wallet_store.dart';
 
 // MARK: Import screens
 
@@ -81,6 +84,8 @@ import 'package:cake_wallet/src/screens/restore/restore_wallet_from_seed_details
 import 'package:cake_wallet/src/screens/trade_history/trade_details_page.dart';
 import 'package:cake_wallet/src/screens/exchange/exchange_page.dart';
 import 'package:cake_wallet/src/screens/settings/settings.dart';
+import 'package:cake_wallet/src/screens/rescan/rescan_page.dart';
+import 'package:cake_wallet/src/screens/faq/faq_page.dart';
 
 class Router {
   static Route<dynamic> generateRoute(
@@ -159,7 +164,7 @@ class Router {
             builder: (_) => Provider(
                 builder: (context) =>
                     WalletSeedStore(walletService: walletService),
-                child: SeedPage()));
+                child: SeedPage(onCloseCallback: settings.arguments)));
 
       case Routes.restoreWalletFromSeed:
         return CupertinoPageRoute(
@@ -190,11 +195,6 @@ class Router {
       case Routes.dashboard:
         return CupertinoPageRoute(
             builder: (_) => MultiProvider(providers: [
-                  ProxyProvider<SettingsStore, TransactionListStore>(
-                    builder: (_, settingsStore, __) => TransactionListStore(
-                        walletService: walletService,
-                        settingsStore: settingsStore),
-                  ),
                   ProxyProvider<SettingsStore, BalanceStore>(
                     builder: (_, settingsStore, __) => BalanceStore(
                         walletService: walletService,
@@ -208,6 +208,13 @@ class Router {
                     builder: (context) =>
                         SyncStore(walletService: walletService),
                   ),
+                  ProxyProvider<SettingsStore, ActionListStore>(
+                      builder: (_, settingsStore, __) => ActionListStore(
+                          walletService: walletService,
+                          settingsStore: settingsStore,
+                          tradeHistory: TradeHistory(db: db),
+                          transactionFilterStore: TransactionFilterStore(),
+                          tradeFilterStore: TradeFilterStore())),
                 ], child: DashboardPage()));
 
       case Routes.send:
@@ -277,30 +284,27 @@ class Router {
                 child: WalletListPage()));
 
       case Routes.auth:
-        void Function(AuthPage, BuildContext) onAuthenticationSuccessful;
-        void Function(AuthPage, BuildContext) onAuthenticationFailed;
-
-        if (settings.arguments is List<void Function(AuthPage, BuildContext)>) {
-          final args =
-              settings.arguments as List<void Function(AuthPage, BuildContext)>;
-
-          if (args.length > 0) {
-            onAuthenticationSuccessful = args[0];
-          }
-
-          if (args.length > 1) {
-            onAuthenticationFailed = args[1];
-          }
-        }
-
         return MaterialPageRoute(
             fullscreenDialog: true,
             builder: (_) => Provider(
-                  builder: (context) => AuthStore(userService: userService),
-                  child: AuthPage(
-                      onAuthenticationSuccessful: onAuthenticationSuccessful,
-                      onAuthenticationFailed: onAuthenticationFailed),
+                  builder: (_) => AuthStore(
+                      sharedPreferences: sharedPreferences,
+                      userService: userService,
+                      walletService: walletService),
+                  child: AuthPage(onAuthenticationFinished: settings.arguments),
                 ));
+
+      case Routes.unlock:
+        return MaterialPageRoute(
+            fullscreenDialog: true,
+            builder: (_) => Provider(
+                builder: (_) => AuthStore(
+                    sharedPreferences: sharedPreferences,
+                    userService: userService,
+                    walletService: walletService),
+                child: AuthPage(
+                    onAuthenticationFinished: settings.arguments,
+                    closable: false)));
 
       case Routes.nodeList:
         return CupertinoPageRoute(builder: (context) {
@@ -322,19 +326,14 @@ class Router {
         return CupertinoPageRoute(
             builder: (_) => ProxyProvider<AuthenticationStore, LoginStore>(
                 builder: (context, authStore, _) => LoginStore(
-                    authStore: authStore,
+                    authenticationStore: authStore,
+                    authStore: AuthStore(
+                        sharedPreferences: sharedPreferences,
+                        userService: userService,
+                        walletService: walletService),
                     sharedPreferences: sharedPreferences,
-                    userService: userService,
-                    walletService: walletService,
                     walletsService: walletListService),
-                child: LoginPage(
-                  userService: UserService(
-                      sharedPreferences: sharedPreferences,
-                      secureStorage: FlutterSecureStorage()),
-                  walletsService: walletListService,
-                  walletService: walletService,
-                  sharedPreferences: sharedPreferences,
-                )));
+                child: LoginPage()));
 
       case Routes.accountList:
         return MaterialPageRoute(
@@ -512,6 +511,17 @@ class Router {
             builder: (_) => Provider(
                 builder: (_) => NodeListStore(nodeList: NodeList(db: db)),
                 child: SettingsPage()));
+
+      case Routes.rescan:
+        return MaterialPageRoute(
+            builder: (_) => Provider(
+                builder: (_) =>
+                    RescanWalletStore(walletListService: walletListService),
+                child: RescanPage()));
+
+      case Routes.faq:
+        return MaterialPageRoute(
+            builder: (_) => FaqPage());
 
       default:
         return MaterialPageRoute(
