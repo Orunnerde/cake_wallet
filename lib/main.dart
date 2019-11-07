@@ -1,10 +1,6 @@
-import 'dart:async';
-import 'dart:isolate';
-import 'package:cake_wallet/src/screens/receive/receive_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -23,13 +19,11 @@ import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
 import 'package:cake_wallet/src/domain/common/node_list.dart';
 import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
 import 'package:cake_wallet/src/domain/common/wallet_type.dart';
-import 'package:cake_wallet/src/domain/common/sync_status.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'theme_changer.dart';
 import 'themes.dart';
 
 void autoReconnection(String arg) {
-
   // Timer.periodic(Duration(seconds: 10), (_) { print('Test timer'); });
 
   // if (walletService.currentWallet == null) {
@@ -90,15 +84,15 @@ void main() async {
 
   reaction((_) => settingsStore.node, (node) async {
     final startDate = DateTime.now();
-    await walletService.connectToNode(
-        uri: node.uri, login: node.login, password: node.password);
+    await walletService.connectToNode(node: node);
     print(
         'Connection time took ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}');
   });
 
-  // Timer.periodic(Duration(seconds: 10), (_) async {
-  //   await compute(autoReconnection, null);
-  // });
+  walletService.onWalletChange.listen((wallet) async {
+    await wallet.connectToNode(node: settingsStore.node);
+    await wallet.startSync();
+  });
 
   compute(autoReconnection, null);
 
@@ -109,8 +103,7 @@ void main() async {
     if (state == AuthenticationState.authenticated) {
       print('Connection after wallet change');
       final node = settingsStore.node;
-      await walletService.connectToNode(
-          uri: node.uri, login: node.login, password: node.password);
+      await walletService.connectToNode(node: node);
     }
   });
 

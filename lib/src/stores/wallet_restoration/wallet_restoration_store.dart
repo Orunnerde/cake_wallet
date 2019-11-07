@@ -45,7 +45,7 @@ abstract class WalleRestorationStoreBase with Store {
     try {
       state = WalletIsRestoring();
       await walletListService.restoreFromSeed(name, _seed, restoreHeight);
-      authStore.loggedIn();
+      authStore.restored();
       state = WalletRestoredSuccessfully();
     } catch (e) {
       state = WalletRestorationFailure(error: e.toString());
@@ -65,7 +65,7 @@ abstract class WalleRestorationStoreBase with Store {
       state = WalletIsRestoring();
       await walletListService.restoreFromKeys(
           name, restoreHeight, address, viewKey, spendKey);
-      authStore.loggedIn();
+      authStore.restored();
       state = WalletRestoredSuccessfully();
     } catch (e) {
       state = WalletRestorationFailure(error: e.toString());

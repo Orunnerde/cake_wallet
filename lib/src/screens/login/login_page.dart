@@ -1,27 +1,14 @@
+import 'package:cake_wallet/src/stores/auth/auth_state.dart';
+import 'package:cake_wallet/src/stores/login/login_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cake_wallet/src/domain/services/user_service.dart';
-import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
-import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/screens/pin_code/pin_code.dart';
-import 'package:cake_wallet/src/stores/login/login_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/src/stores/auth/auth_store.dart';
 
 class LoginPage extends BasePage {
-  final UserService userService;
-  final SharedPreferences sharedPreferences;
-  final WalletListService walletsService;
-  final WalletService walletService;
-
-  LoginPage(
-      {@required this.userService,
-      @required this.sharedPreferences,
-      @required this.walletsService,
-      @required this.walletService});
-
   @override
   Widget leading(BuildContext context) => Container();
 
@@ -30,7 +17,7 @@ class LoginPage extends BasePage {
 }
 
 class _LoginPinCode extends PinCode {
-  _LoginPinCode() : super((_, __) => null, false);
+  _LoginPinCode([Key key]) : super((_, __) => null, false, key);
 
   @override
   _LoginPinCodeState createState() => _LoginPinCodeState();
@@ -44,7 +31,7 @@ class _LoginPinCodeState extends PinCodeState<_LoginPinCode> {
   Future onPinCodeEntered(PinCodeState state) async {
     final password = pin.fold("", (ac, val) => ac + '$val');
 
-    await _loginStore.auth(password: password);
+    await _loginStore.authStore.auth(password: password);
     super.onPinCodeEntered(state);
   }
 
@@ -61,20 +48,58 @@ class _LoginPinCodeState extends PinCodeState<_LoginPinCode> {
 
     _loginStore = store;
 
-    reaction((_) => _loginStore.state, (state) {
-      if (state == LoginState.failure) {
+    reaction((_) => _loginStore.authStore.state, (state) {
+      if (state is AuthenticationFailure) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           clear();
           Scaffold.of(context).showSnackBar(
             SnackBar(
-              content: Text(_loginStore.errorMessage),
+              content: Text(state.error),
               backgroundColor: Colors.red,
             ),
           );
         });
       }
 
-      if (state == LoginState.loading) {
+      if (state is AuthenticationBanned) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          clear();
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.error),
+              backgroundColor: Colors.red,
+            ),
+          );
+        });
+      }
+
+      if (state is AuthenticationInProgress) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Scaffold.of(context).hideCurrentSnackBar();
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Authentication'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        });
+      }
+    });
+
+    reaction((_) => _loginStore.state, (state) {
+      if (state is LoadedCurrentWalletFailure) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          clear();
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.errorMessage),
+              backgroundColor: Colors.red,
+            ),
+          );
+        });
+      }
+
+      if (state is LoadingCurrentWallet) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Scaffold.of(context).hideCurrentSnackBar();
           Scaffold.of(context).showSnackBar(

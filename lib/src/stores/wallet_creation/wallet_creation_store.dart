@@ -37,7 +37,7 @@ abstract class WalletCreationStoreBase with Store {
     try {
       state = WalletIsCreating();
       await walletListService.create(name);
-      authStore.loggedIn();
+      authStore.created();
       state = WalletCreatedSuccessfully();
     } catch (e) {
       state = WalletCreationFailure(error: e.toString());

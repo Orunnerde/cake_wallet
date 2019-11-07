@@ -180,6 +180,14 @@ public class Wallet {
         }
     }
 
+    public void rescanBlockchainAsync() {
+        rescanBlockchainAsyncJNI();
+    }
+
+    public void pauseRefreshAsync() {
+        pauseRefreshAsyncJNI();
+    }
+
     private native String getSeedJNI();
 
     private native MoneroWalletKeys getKeysJNI();
@@ -219,4 +227,8 @@ public class Wallet {
     private native void storeJNI(String path);
 
     private native long createTransactionJNI(String address, String paymentId, String amount, int priority, int accountIndex);
+
+    private native void rescanBlockchainAsyncJNI();
+
+    private native void pauseRefreshAsyncJNI();
 }
