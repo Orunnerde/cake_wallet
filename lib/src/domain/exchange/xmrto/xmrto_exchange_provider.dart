@@ -92,6 +92,7 @@ class XMRTOExchangeProvider extends ExchangeProvider {
         from: _request.from,
         to: _request.to,
         state: TradeState.created,
+        amount: _request.amount,
         createdAt: DateTime.now());
   }
 

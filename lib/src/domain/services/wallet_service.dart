@@ -7,6 +7,7 @@ import 'package:cake_wallet/src/domain/common/wallet_type.dart';
 import 'package:cake_wallet/src/domain/common/sync_status.dart';
 import 'package:cake_wallet/src/domain/common/transaction_creation_credentials.dart';
 import 'package:cake_wallet/src/domain/common/pending_transaction.dart';
+import 'package:cake_wallet/src/domain/common/node.dart';
 
 class WalletService extends Wallet {
   Observable<Wallet> get onWalletChange => _onWalletChanged.stream;
@@ -23,6 +24,11 @@ class WalletService extends Wallet {
 
   set currentWallet(Wallet wallet) {
     _currentWallet = wallet;
+
+    if (wallet == null) {
+      return;
+    }
+
     _currentWallet.onBalanceChange
         .listen((wallet) => _onBalanceChange.add(wallet));
     _currentWallet.syncStatus.listen((status) => _syncStatus.add(status));
@@ -72,16 +78,9 @@ class WalletService extends Wallet {
 
   Future<void> close() => _currentWallet.close();
 
-  Future<void> connectToNode(
-          {String uri,
-          String login,
-          String password,
-          bool useSSL = false,
-          bool isLightWallet = false}) =>
+  Future<void> connectToNode({Node node, bool useSSL = false, bool isLightWallet = false}) =>
       _currentWallet.connectToNode(
-          uri: uri,
-          login: login,
-          password: password,
+          node: node,
           useSSL: useSSL,
           isLightWallet: isLightWallet);
 
@@ -95,5 +94,5 @@ class WalletService extends Wallet {
 
   Future updateInfo() async => _currentWallet.updateInfo();
 
-  Future rescan() async => _currentWallet.rescan();
+  Future rescan({int restoreHeight = 0}) async => _currentWallet.rescan(restoreHeight: restoreHeight);
 }

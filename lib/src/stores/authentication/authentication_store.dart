@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mobx/mobx.dart';
 import 'package:cake_wallet/src/domain/services/user_service.dart';
-import 'package:cake_wallet/src/domain/services/wallet_service.dart';
-import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
 
 part 'authentication_store.g.dart';
 
@@ -17,7 +14,9 @@ enum AuthenticationState {
   authenticated,
   unauthenticated,
   active,
-  loading
+  loading,
+  created,
+  restored
 }
 
 abstract class AuthenticationStoreBase with Store {
@@ -36,6 +35,16 @@ abstract class AuthenticationStoreBase with Store {
   Future started() async {
     final canAuth = await userService.canAuthenticate();
     state = canAuth ? AuthenticationState.allowed : AuthenticationState.denied;
+  }
+
+  @action
+  void created() {
+    state = AuthenticationState.created;
+  }
+
+  @action
+  void restored() {
+    state = AuthenticationState.restored;
   }
 
   @action

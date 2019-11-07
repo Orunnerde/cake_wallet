@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cake_wallet/src/domain/monero/account.dart';
@@ -26,14 +27,12 @@ abstract class TransactionListBase with Store {
   StreamSubscription<Wallet> _onWalletChangeSubscription;
   StreamSubscription<List<TransactionInfo>> _onTransactionsChangeSubscription;
   StreamSubscription<Account> _onAccountChangeSubscription;
-  double _price;
 
   TransactionListBase(
       {@required WalletService walletService,
       @required SettingsStore settingsStore}) {
     _walletService = walletService;
     _settingsStore = settingsStore;
-    _price = 0;
 
     if (walletService.currentWallet != null) {
       _onWalletChanged(walletService.currentWallet);
@@ -41,9 +40,6 @@ abstract class TransactionListBase with Store {
 
     _onWalletChangeSubscription =
         walletService.onWalletChange.listen(_onWalletChanged);
-
-    fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: _settingsStore.fiatCurrency)
-        .then((price) => _price = price);
   }
 
   @override
@@ -102,12 +98,16 @@ abstract class TransactionListBase with Store {
       _transactions = transactions;
     }
 
-    this.transactions = _transactions.map((tx) {
-      final amount = _price * tx.amountRaw();
-      final fiatAmount =
-          '${amount.toStringAsFixed(2)} ${_settingsStore.fiatCurrency}';
+    final __transactions = await Future.wait(_transactions.map((tx) async {
+      final amount = await calculateAmountFromRaw(
+          amount: tx.amountRaw(),
+          crypto: CryptoCurrency.xmr,
+          fiat: _settingsStore.fiatCurrency);
+      final fiatAmount = '$amount ${_settingsStore.fiatCurrency}';
       tx.changeFiatAmount(fiatAmount);
       return tx;
-    }).toList();
+    }));
+
+    this.transactions = __transactions.toList();
   }
 }

@@ -8,40 +8,38 @@ import 'package:cake_wallet/src/screens/pin_code/pin_code.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
 
-class AuthPage extends StatelessWidget {
-  final _key = GlobalKey<ScaffoldState>();
-  final Function(AuthPage, BuildContext) onAuthenticationSuccessful;
-  final Function(AuthPage, BuildContext) onAuthenticationFailed;
+class AuthPage extends StatefulWidget {
+  final Function(bool, AuthPageState) onAuthenticationFinished;
+  final bool closable;
 
-  AuthPage({this.onAuthenticationSuccessful, this.onAuthenticationFailed});
+  AuthPage({this.onAuthenticationFinished, this.closable = true});
+
+  @override
+  AuthPageState createState() => AuthPageState();
+}
+
+class AuthPageState extends State<AuthPage> {
+  final _key = GlobalKey<ScaffoldState>();
+  final _pinCodeKey = GlobalKey<PinCodeState>();
 
   void changeProcessText(String text) {
     _key.currentState.showSnackBar(
-      SnackBar(
-        content: Text(text),
-        backgroundColor: Colors.green,
-      ),
-    );
+        SnackBar(content: Text(text), backgroundColor: Colors.green));
   }
 
-  void close() {
-    Navigator.of(_key.currentContext).pop();
-  }
+  void close() => Navigator.of(_key.currentContext).pop();
 
   @override
   Widget build(BuildContext context) {
     final authStore = Provider.of<AuthStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    final _themeChanger = Provider.of<ThemeChanger>(context);
+    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     reaction((_) => authStore.state, (state) {
       if (state is AuthenticatedSuccessfully) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (onAuthenticationSuccessful != null) {
-            onAuthenticationSuccessful(this, context);
+          if (widget.onAuthenticationFinished != null) {
+            widget.onAuthenticationFinished(true, this);
           } else {
             _key.currentState.showSnackBar(
               SnackBar(
@@ -64,17 +62,18 @@ class AuthPage extends StatelessWidget {
         });
       }
 
-      if (state is AuthenticationFailure) {
+      if (state is AuthenticationFailure || state is AuthenticationBanned) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (onAuthenticationSuccessful != null) {
-            onAuthenticationFailed(this, context);
-          } else {
-            _key.currentState.showSnackBar(
-              SnackBar(
-                content: Text('Failed authentication. ${state.error}'),
-                backgroundColor: Colors.red,
-              ),
-            );
+          _pinCodeKey.currentState.clear();
+          _key.currentState.showSnackBar(
+            SnackBar(
+              content: Text('Failed authentication. ${state.error}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+
+          if (widget.onAuthenticationFinished != null) {
+            widget.onAuthenticationFinished(false, this);
           }
         });
       }
@@ -83,13 +82,15 @@ class AuthPage extends StatelessWidget {
     return Scaffold(
         key: _key,
         appBar: CupertinoNavigationBar(
-          leading: CloseButton(),
-          backgroundColor: _isDarkTheme ? Theme.of(context).backgroundColor : Colors.white,
+          leading: widget.closable ? CloseButton() : Container(),
+          backgroundColor:
+              _isDarkTheme ? Theme.of(context).backgroundColor : Colors.white,
           border: null,
         ),
         body: PinCode(
-            (pin, _) =>
-                authStore.auth(pin: pin.fold("", (ac, val) => ac + '$val')),
-            false));
+            (pin, _) => authStore.auth(
+                password: pin.fold('', (ac, val) => ac + '$val')),
+            false,
+            _pinCodeKey));
   }
 }

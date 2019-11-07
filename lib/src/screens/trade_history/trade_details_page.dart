@@ -13,6 +13,7 @@ import 'package:cake_wallet/themes.dart';
 
 class TradeDetailsPage extends BasePage {
   String get title => 'Trade Details';
+  bool get isModalBackButton => true;
 
   @override
   Widget body(BuildContext context) {
