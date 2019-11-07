@@ -57,34 +57,31 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
         padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
         child: Column(
           children: <Widget>[
-            Flexible(
-              flex: 16,
+            Expanded(
                 child: SeedWidget(
               key: _seedKey,
               onMnemoticChange: (seed) => walletRestorationStore.setSeed(seed),
             )),
-            Flexible(
-              flex: 2,
-                child: Container(
-                    alignment: Alignment.bottomCenter,
-                    child: PrimaryButton(
-                      onPressed: () {
-                        if (!walletRestorationStore.isValid) {
-                          return;
-                        }
+            Container(
+                alignment: Alignment.bottomCenter,
+                child: PrimaryButton(
+                  onPressed: () {
+                    if (!walletRestorationStore.isValid) {
+                      return;
+                    }
 
-                        Navigator.of(context).pushNamed(
-                            Routes.restoreWalletFromSeedDetails,
-                            arguments: _seedKey.currentState.items);
-                      },
-                      text: 'Next',
-                      color: _isDarkTheme
-                          ? PaletteDark.darkThemePurpleButton
-                          : Palette.purple,
-                      borderColor: _isDarkTheme
-                          ? PaletteDark.darkThemePurpleButtonBorder
-                          : Palette.deepPink,
-                    )))
+                    Navigator.of(context).pushNamed(
+                        Routes.restoreWalletFromSeedDetails,
+                        arguments: _seedKey.currentState.items);
+                  },
+                  text: 'Next',
+                  color: _isDarkTheme
+                      ? PaletteDark.darkThemePurpleButton
+                      : Palette.purple,
+                  borderColor: _isDarkTheme
+                      ? PaletteDark.darkThemePurpleButtonBorder
+                      : Palette.deepPink,
+                ))
           ],
         ),
       ),

@@ -106,9 +106,12 @@ class MoneroWalletsManager extends WalletsManager {
       final arguments = {'name': name, 'password': password};
       final int walletID = await platform.invokeMethod('openWallet', arguments);
 
-      print('Opened monero wallet with ID: $walletID, name: $name');
+      print('Start opening wallet');
 
       final wallet = await MoneroWallet.load(db, name, type);
+
+      print('Opened monero wallet with ID: $walletID, name: $name');
+
       await wallet.updateInfo();
       return wallet;
     } on PlatformException catch (e) {
