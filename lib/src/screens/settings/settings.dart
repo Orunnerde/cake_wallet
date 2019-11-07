@@ -25,6 +25,7 @@ import 'package:cake_wallet/src/screens/settings/widgets/settings_text_list_row.
 
 class SettingsPage extends BasePage {
   String get title => 'Settings';
+  bool get isModalBackButton => true;
   Color get backgroundColor => Palette.lightGrey2;
 
   @override

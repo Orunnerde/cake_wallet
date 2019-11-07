@@ -17,25 +17,29 @@ Future<double> fetchPriceFor({CryptoCurrency crypto, FiatCurrency fiat}) async {
 
   final uri = Uri.https(coinMarketCapAuthority, coinMarketCapPath,
       {'structure': 'array', 'convert': fiatStringified});
-  final response = await get(uri.toString());
+  try {
+    final response = await get(uri.toString());
 
-  if (response.statusCode != 200) {
-    return 0;
-  }
-
-  final responseJSON = json.decode(response.body);
-  final data = responseJSON['data'];
-  double price;
-
-  for (final item in data) {
-    if (item['symbol'] == cryptoToString(crypto)) {
-      price = item['quotes'][fiatStringified]['price'];
-      _cachedPrices[fiatStringified] = price;
-      break;
+    if (response.statusCode != 200) {
+      return 0.0;
     }
-  }
 
-  return price;
+    final responseJSON = json.decode(response.body);
+    final data = responseJSON['data'];
+    double price;
+
+    for (final item in data) {
+      if (item['symbol'] == cryptoToString(crypto)) {
+        price = item['quotes'][fiatStringified]['price'];
+        _cachedPrices[fiatStringified] = price;
+        break;
+      }
+    }
+
+    return price;
+  } catch (e) {
+    return 0.0;
+  }
 }
 
 Future<String> calculateAmount(
