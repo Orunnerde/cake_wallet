@@ -611,6 +611,12 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
 
                 if (item is TransactionListItem) {
                   final transaction = item.transaction;
+                  final savedDisplayMode =
+                      settingsStore.balanceDisplayMode;
+                  final formattedAmount = savedDisplayMode.serialize() ==
+                  BalanceDisplayMode.hiddenBalance.serialize() ? '---' : transaction.amount();
+                  final formattedFiatAmount = savedDisplayMode.serialize() ==
+                      BalanceDisplayMode.hiddenBalance.serialize() ? '---' : transaction.fiatAmount();
 
                   return TransactionRow(
                       onTap: () => Navigator.of(context).pushNamed(
@@ -619,13 +625,19 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                       direction: transaction.direction,
                       formattedDate:
                           transactionDateFormat.format(transaction.date),
-                      formattedAmount: transaction.amount(),
-                      formattedFiatAmount: transaction.fiatAmount(),
+                      formattedAmount: formattedAmount,
+                      formattedFiatAmount: formattedFiatAmount,
                       isPending: transaction.isPending);
                 }
 
                 if (item is TradeListItem) {
                   final trade = item.trade;
+                  final savedDisplayMode =
+                      settingsStore.balanceDisplayMode;
+                  final formattedAmount = trade.amount != null ?
+                      savedDisplayMode.serialize() == BalanceDisplayMode.hiddenBalance.serialize() ?
+                      '---' : trade.amount
+                      : trade.amount;
 
                   return TradeRow(
                       onTap: () => Navigator.of(context)
@@ -635,7 +647,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                       to: trade.to,
                       createdAtFormattedDate:
                           DateFormat("dd.MM.yyyy, H:m").format(trade.createdAt),
-                      formattedAmount: trade.amount);
+                      formattedAmount: formattedAmount);
                 }
 
                 return Container();
