@@ -30,13 +30,8 @@ class DashboardPage extends BasePage {
 
   @override
   Widget leading(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
+    final _themeChanger = Provider.of<ThemeChanger>(context);
+    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return SizedBox(
         width: 30,
@@ -185,7 +180,7 @@ class DashboardPageBody extends StatefulWidget {
 }
 
 class DashboardPageBodyState extends State<DashboardPageBody> {
-  static final transactionDateFormat = DateFormat("dd.MM.yyyy, HH:mm");
+  static final transactionDateFormat = DateFormat("MMM d, yyyy HH:mm");
 
   final _connectionStatusObserverKey = GlobalKey();
   final _balanceObserverKey = GlobalKey();
@@ -200,13 +195,8 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
     final actionListStore = Provider.of<ActionListStore>(context);
     final syncStore = Provider.of<SyncStore>(context);
     final settingsStore = Provider.of<SettingsStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
+    final _themeChanger = Provider.of<ThemeChanger>(context);
+    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Observer(
         key: _listObserverKey,
@@ -621,7 +611,8 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                           transactionDateFormat.format(transaction.date),
                       formattedAmount: transaction.amount(),
                       formattedFiatAmount: transaction.fiatAmount(),
-                      isPending: transaction.isPending);
+                      isPending: transaction.isPending,
+                      isDarkTheme: _isDarkTheme);
                 }
 
                 if (item is TradeListItem) {
@@ -634,7 +625,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                       from: trade.from,
                       to: trade.to,
                       createdAtFormattedDate:
-                          DateFormat("dd.MM.yyyy, H:m").format(trade.createdAt),
+                          transactionDateFormat.format(trade.createdAt),
                       formattedAmount: trade.amount);
                 }
 
