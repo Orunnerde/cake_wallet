@@ -177,7 +177,7 @@ abstract class SendStoreBase with Store {
 
   void validateXMR(String value, String availableBalance) {
     const double maxValue = 18446744.073709551616;
-    String p = '^[0-9]*.[0-9]{12}';
+    String p = '^([0-9]+([.][0-9]{0,12})?|[.][0-9]{1,12})\$';
     RegExp regExp = new RegExp(p);
     if (regExp.hasMatch(value)) {
       try {
@@ -189,12 +189,12 @@ abstract class SendStoreBase with Store {
       }
     } else isValid = false;
     errorMessage = isValid ? null : "XMR value can't exceed available balance.\n"
-                   "The number of fraction digits must be equal to 12";
+                                    "The number of fraction digits must be less or equal to 12";
   }
 
   void validateFiat(String value, double maxValue) {
     const double minValue = 0.01;
-    String p = '^[0-9]*.[0-9]+';
+    String p = '^([0-9]+([.][0-9]{0,2})?|[.][0-9]{1,2})\$';
     RegExp regExp = new RegExp(p);
     if (regExp.hasMatch(value)) {
       try {
@@ -204,7 +204,7 @@ abstract class SendStoreBase with Store {
         isValid = false;
       }
     } else isValid = false;
-    errorMessage = isValid ? null : "Value of amount can't exceed available balance.\n"
-                   "The amount must contain fraction digits";
+    errorMessage = isValid ? null : "Value of amount can't exceed available balance."
+                                    "The number of fraction digits must be less or equal to 2";
   }
 }
