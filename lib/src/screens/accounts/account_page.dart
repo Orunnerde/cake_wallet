@@ -7,7 +7,6 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
-import 'dart:ui';
 
 class AccountPage extends BasePage {
   String get title => 'Account';
@@ -44,39 +43,14 @@ class AccountForm extends StatefulWidget {
   createState() => AccountFormState();
 }
 
-class AccountFormState extends State<AccountForm> with WidgetsBindingObserver {
+class AccountFormState extends State<AccountForm> {
   final _formKey = GlobalKey<FormState>();
   final _textController = TextEditingController();
-  bool isBlurred = false;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     _textController.dispose();
     super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.inactive || state == AppLifecycleState.paused || state == AppLifecycleState.suspending) {
-      setState(() {
-        isBlurred = true;
-      });
-    }
-    if (state == AppLifecycleState.resumed) {
-      setState(() {
-        isBlurred = false;
-      });
-    }
-    print('isBlurred  = $isBlurred');
-    print('state = $state');
   }
 
   @override
@@ -89,75 +63,65 @@ class AccountFormState extends State<AccountForm> with WidgetsBindingObserver {
     else _isDarkTheme = false;
 
     return Form(
-        key: _formKey,
-        child: Stack(
+      key: _formKey,
+      child: Container(
+        padding: EdgeInsets.all(20.0),
+        child: Column(
           children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(20.0),
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                      child: Center(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                              hintStyle: TextStyle(
-                                  color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                                      : Palette.lightBlue
-                              ),
-                              hintText: 'Account',
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide:
-                                  BorderSide(
-                                      color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                          : Palette.lightGrey,
-                                      width: 1.0
-                                  )),
-                              enabledBorder: UnderlineInputBorder(
-                                  borderSide:
-                                  BorderSide(
-                                      color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                          : Palette.lightGrey,
-                                      width: 1.0
-                                  ))),
-                          controller: _textController,
-                          validator: (value) {
-                            // FIXME: Replace validation logic
-                            String p = '[^ ]';
-                            RegExp regExp = new RegExp(p);
-                            if (regExp.hasMatch(value))
-                              return null;
-                            else
-                              return 'Please enter a name of account';
-                          },
+            Expanded(
+                child: Center(
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                        hintStyle: TextStyle(
+                            color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                : Palette.lightBlue
                         ),
-                      )),
-                  PrimaryButton(
-                    onPressed: () async {
-                      if (!_formKey.currentState.validate()) {
-                        return;
-                      }
-
-                      await accountListStore.addAccount(
-                          label: _textController.text);
-                      Navigator.pop(context, _textController.text);
+                        hintText: 'Account',
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                            BorderSide(
+                                color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                    : Palette.lightGrey,
+                                width: 1.0
+                            )),
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide:
+                            BorderSide(
+                                color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                                    : Palette.lightGrey,
+                                width: 1.0
+                            ))),
+                    controller: _textController,
+                    validator: (value) {
+                      // FIXME: Replace validation logic
+                      String p = '[^ ]';
+                      RegExp regExp = new RegExp(p);
+                      if (regExp.hasMatch(value))
+                        return null;
+                      else
+                        return 'Please enter a name of account';
                     },
-                    text: 'Add',
-                    color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
-                        : Palette.purple,
-                    borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
-                        : Palette.deepPink,
-                  )
-                ],
-              ),
-            ),
-            isBlurred ? BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-              child: Container(
-                color: Colors.black.withOpacity(0),
-              ),
-            ) : Offstage(),
+                  ),
+                )),
+            PrimaryButton(
+              onPressed: () async {
+                if (!_formKey.currentState.validate()) {
+                  return;
+                }
+
+                await accountListStore.addAccount(
+                    label: _textController.text);
+                Navigator.pop(context, _textController.text);
+              },
+              text: 'Add',
+              color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
+                  : Palette.purple,
+              borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
+                  : Palette.deepPink,
+            )
           ],
-        )
+        ),
+      ),
     );
   }
 }
