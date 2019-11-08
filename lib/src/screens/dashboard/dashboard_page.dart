@@ -24,6 +24,8 @@ import 'package:cake_wallet/src/screens/dashboard/transaction_raw.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/src/screens/dashboard/wallet_menu.dart';
+import 'package:cake_wallet/src/widgets/picker.dart';
 
 class DashboardPage extends BasePage {
   final _bodyKey = GlobalKey();
@@ -88,92 +90,17 @@ class DashboardPage extends BasePage {
       onPressed: () => Navigator.of(context, rootNavigator: true)
           .pushNamed(Routes.exchange));
 
-  Future _presentReconnectAlert(BuildContext context) async {
-    final walletStore = Provider.of<WalletStore>(context);
-
-    await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
-              'Reconnection',
-              textAlign: TextAlign.center,
-            ),
-            content: Text('Are you sure to reconnect ?'),
-            actions: <Widget>[
-              FlatButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('Cancel')),
-              FlatButton(
-                  onPressed: () {
-                    walletStore.reconnect();
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('OK'))
-            ],
-          );
-        });
-  }
-
   void _presentWalletMenu(BuildContext bodyContext) {
-    showDialog(
-        context: bodyContext,
-        builder: (context) {
-          return Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-            CupertinoActionSheet(
-              actions: <Widget>[
-                CupertinoActionSheetAction(
-                    child: const Text('Rescan'),
-                    onPressed: () =>
-                        Navigator.of(context).popAndPushNamed(Routes.rescan)),
-                CupertinoActionSheetAction(
-                    child: const Text('Reconnect'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      _presentReconnectAlert(bodyContext);
-                    }),
-                CupertinoActionSheetAction(
-                    child: const Text('Accounts'),
-                    onPressed: () => Navigator.of(context)
-                        .popAndPushNamed(Routes.accountList)),
-                CupertinoActionSheetAction(
-                    child: const Text('Wallets'),
-                    onPressed: () => Navigator.of(context)
-                        .popAndPushNamed(Routes.walletList)),
-                CupertinoActionSheetAction(
-                    child: const Text('Show seed'),
-                    onPressed: () {
-                      Navigator.of(context).popAndPushNamed(Routes.auth,
-                          arguments: (isAuthenticatedSuccessfully, auth) =>
-                              isAuthenticatedSuccessfully
-                                  ? Navigator.of(auth.context)
-                                      .popAndPushNamed(Routes.seed)
-                                  : null);
-                    }),
-                CupertinoActionSheetAction(
-                    child: const Text('Show keys'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
+    final walletMenu = WalletMenu(bodyContext);
 
-                      Navigator.of(context).pushNamed(Routes.auth,
-                          arguments: (isAuthenticatedSuccessfully, auth) =>
-                              isAuthenticatedSuccessfully
-                                  ? Navigator.of(auth.context)
-                                      .popAndPushNamed(Routes.showKeys)
-                                  : null);
-                    }),
-                CupertinoActionSheetAction(
-                    child: const Text('Address book'),
-                    onPressed: () => Navigator.of(context)
-                        .popAndPushNamed(Routes.addressBook)),
-              ],
-              cancelButton: CupertinoActionSheetAction(
-                  child: const Text('Cancel'),
-                  isDefaultAction: true,
-                  onPressed: () => Navigator.of(context).pop()),
-            )
-          ]);
-        });
+    showDialog(
+        builder: (_) => Picker(
+            items: walletMenu.items,
+            selectedAtIndex: -1,
+            title: 'Wallet Menu',
+            onItemSelected: (item) =>
+                walletMenu.action(item)),
+        context: bodyContext);
   }
 }
 
