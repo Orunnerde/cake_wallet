@@ -63,7 +63,7 @@ class Picker<Item extends Object> extends StatelessWidget {
                                       fontSize: 16,
                                       fontWeight: FontWeight.normal,
                                       decoration: TextDecoration.none,
-                                      //color: Colors.black
+                                      color: _isDarkTheme ? Colors.white : Colors.black
                                   ),
                                 ),
                               ),
