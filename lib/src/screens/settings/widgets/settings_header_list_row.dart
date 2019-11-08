@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/palette.dart';
 
-class HeaderListRow extends StatelessWidget {
+class SettingsHeaderListRow extends StatelessWidget {
   final String title;
 
-  HeaderListRow({this.title});
+  SettingsHeaderListRow({this.title});
 
   @override
   Widget build(BuildContext context) {

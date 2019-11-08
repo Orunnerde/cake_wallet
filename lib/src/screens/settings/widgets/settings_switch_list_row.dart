@@ -7,10 +7,10 @@ import 'package:cake_wallet/src/widgets/standart_switch.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 
-class SwitchListRow extends StatelessWidget {
+class SettingsSwitchListRow extends StatelessWidget {
   final String title;
 
-  SwitchListRow({@required this.title});
+  SettingsSwitchListRow({@required this.title});
 
   Widget _getSwitch(BuildContext context) {
     final settingsStore = Provider.of<SettingsStore>(context);
@@ -22,22 +22,21 @@ class SwitchListRow extends StatelessWidget {
               value: settingsStore.shouldSaveRecipientAddress,
               onTaped: () {
                 bool _currentValue = !settingsStore.shouldSaveRecipientAddress;
-                settingsStore.setSaveRecipientAddress(shouldSaveRecipientAddress: _currentValue);
-              }
-          )
-      );
+                settingsStore.setSaveRecipientAddress(
+                    shouldSaveRecipientAddress: _currentValue);
+              }));
     }
 
     if (title == 'Allow biometrical authentication') {
       return Observer(
           builder: (_) => StandartSwitch(
-              value: settingsStore.shouldAllowBiometricalAuthentication,
+              value: settingsStore.allowBiometricalAuthentication,
               onTaped: () {
-                bool _currentValue = !settingsStore.shouldAllowBiometricalAuthentication;
-                settingsStore.setAllowBiometricalAuthentication(shouldAllowBiometricalAuthentication: _currentValue);
-              }
-          )
-      );
+                bool _currentValue =
+                    !settingsStore.allowBiometricalAuthentication;
+                settingsStore.setAllowBiometricalAuthentication(
+                    allowBiometricalAuthentication: _currentValue);
+              }));
     }
 
     if (title == 'Dark mode') {
@@ -47,14 +46,9 @@ class SwitchListRow extends StatelessWidget {
               onTaped: () {
                 bool _currentValue = !settingsStore.isDarkTheme;
                 settingsStore.saveDarkTheme(isDarkTheme: _currentValue);
-                if (_currentValue) {
-                  _themeChanger.setTheme(Themes.darkTheme);
-                } else {
-                  _themeChanger.setTheme(Themes.lightTheme);
-                }
-              }
-          )
-      );
+                _themeChanger.setTheme(
+                    _currentValue ? Themes.darkTheme : Themes.lightTheme);
+              }));
     }
 
     return null;
@@ -66,21 +60,17 @@ class SwitchListRow extends StatelessWidget {
     bool _isDarkTheme = (_themeChanger.getTheme() == Themes.darkTheme);
 
     return Container(
-      color: _isDarkTheme? PaletteDark.darkThemeMidGrey : Colors.white,
+      color: _isDarkTheme ? PaletteDark.darkThemeMidGrey : Colors.white,
       child: ListTile(
-          contentPadding:
-          EdgeInsets.only(left: 20.0, right: 20.0),
+          contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
           title: Text(
             title,
             style: TextStyle(
                 fontSize: 16.0,
-                color: _isDarkTheme ? PaletteDark.darkThemeTitle
-                    : Colors.black
-            ),
+                color:
+                    _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black),
           ),
-          trailing: _getSwitch(context)
-      ),
+          trailing: _getSwitch(context)),
     );
   }
-
 }

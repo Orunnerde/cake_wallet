@@ -4,13 +4,13 @@ import 'package:provider/provider.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
 
-class LinkListRow extends StatelessWidget {
+class SettingsLinktListRow extends StatelessWidget {
   final VoidCallback onTaped;
   final String title;
   final String link;
   final Image image;
 
-  LinkListRow({@required this.onTaped, this.title, this.link, this.image});
+  SettingsLinktListRow({@required this.onTaped, this.title, this.link, this.image});
 
   @override
   Widget build(BuildContext context) {

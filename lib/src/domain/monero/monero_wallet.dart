@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:isolate';
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sqflite/sqflite.dart';
@@ -10,6 +9,7 @@ import 'package:cake_wallet/src/domain/common/transaction_creation_credentials.d
 import 'package:cake_wallet/src/domain/common/pending_transaction.dart';
 import 'package:cake_wallet/src/domain/common/wallet_type.dart';
 import 'package:cake_wallet/src/domain/common/core_db.dart';
+import 'package:cake_wallet/src/domain/common/node.dart';
 import 'package:cake_wallet/src/domain/monero/account.dart';
 import 'package:cake_wallet/src/domain/monero/account_list.dart';
 import 'package:cake_wallet/src/domain/monero/subaddress_list.dart';
@@ -293,7 +293,9 @@ class MoneroWallet extends Wallet {
 
   Future close() async {
     try {
+      print('Start closing');
       await platform.invokeMethod('close');
+      print('Closed');
     } on PlatformException catch (e) {
       print(e);
       throw e;
@@ -301,18 +303,14 @@ class MoneroWallet extends Wallet {
   }
 
   Future connectToNode(
-      {String uri,
-      String login,
-      String password,
-      bool useSSL = false,
-      bool isLightWallet = false}) async {
+      {Node node, bool useSSL = false, bool isLightWallet = false}) async {
     try {
       _syncStatus.value = ConnectingSyncStatus();
 
       final arguments = {
-        'uri': uri,
-        'login': login,
-        'password': password,
+        'uri': node.uri,
+        'login': node.login,
+        'password': node.password,
         'use_ssl': useSSL,
         'is_light_wallet': isLightWallet
       };
@@ -323,7 +321,7 @@ class MoneroWallet extends Wallet {
     } on PlatformException catch (e) {
       _syncStatus.value = FailedSyncStatus();
       print(e);
-      throw e;
+      // throw e;
     }
   }
 
@@ -449,12 +447,7 @@ class MoneroWallet extends Wallet {
         fullBalance: fullBalance, unlockedBalance: unlockedBalance));
   }
 
-  Future rescan() async {
-    const startHeight = 0;
-    await configured(isRecovery: true, restoreHeight: startHeight);
-    await setRefreshFromBlockHeight(height: startHeight);
-    await setRecoveringFromSeed();
-  }
+  Future rescan({int restoreHeight = 0}) async {}
 
   void changeCurrentSubaddress(Subaddress subaddress) {
     _subaddress.value = subaddress;
@@ -489,7 +482,8 @@ class MoneroWallet extends Wallet {
     }
 
     print('Store end');
-    print('Store time: ${DateTime.now().millisecondsSinceEpoch - start.millisecondsSinceEpoch}');
+    print(
+        'Store time: ${DateTime.now().millisecondsSinceEpoch - start.millisecondsSinceEpoch}');
   }
 
   Future<bool> isConnected() async {
@@ -508,7 +502,8 @@ class MoneroWallet extends Wallet {
     }
 
     print('isConnected end');
-    print('isConnected time: ${DateTime.now().millisecondsSinceEpoch - start.millisecondsSinceEpoch}');
+    print(
+        'isConnected time: ${DateTime.now().millisecondsSinceEpoch - start.millisecondsSinceEpoch}');
 
     return isConnected;
   }

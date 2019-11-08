@@ -18,7 +18,7 @@ abstract class SettingsStoreBase with Store {
   static const currentTransactionPriorityKey = 'current_fee_priority';
   static const currentBalanceDisplayModeKey = 'current_balance_display_mode';
   static const shouldSaveRecipientAddressKey = 'save_recipient_address';
-  static const shouldAllowBiometricalAuthenticationKey = 'allow_biometrical_authentication';
+  static const allowBiometricalAuthenticationKey = 'allow_biometrical_authentication';
   static const currentDarkTheme = 'dark_theme';
   static const displayActionListModeKey = 'display_list_mode';
 
@@ -36,9 +36,9 @@ abstract class SettingsStoreBase with Store {
         raw: sharedPreferences.getInt(currentBalanceDisplayModeKey));
     final shouldSaveRecipientAddress =
         sharedPreferences.getBool(shouldSaveRecipientAddressKey);
-    final shouldAllowBiometricalAuthentication =
-    sharedPreferences.getBool(shouldAllowBiometricalAuthenticationKey) == null ? false
-        : sharedPreferences.getBool(shouldAllowBiometricalAuthenticationKey);
+    final allowBiometricalAuthentication =
+    sharedPreferences.getBool(allowBiometricalAuthenticationKey) == null ? false
+        : sharedPreferences.getBool(allowBiometricalAuthenticationKey);
     final savedDarkTheme =
     sharedPreferences.getBool(currentDarkTheme) == null ? false
         : sharedPreferences.getBool(currentDarkTheme);
@@ -53,7 +53,7 @@ abstract class SettingsStoreBase with Store {
         initialTransactionPriority: currentTransactionPriority,
         initialBalanceDisplayMode: currentBalanceDisplayMode,
         initialSaveRecipientAddress: shouldSaveRecipientAddress,
-        initialAllowBiometricalAuthentication : shouldAllowBiometricalAuthentication,
+        initialAllowBiometricalAuthentication : allowBiometricalAuthentication,
         initialDarkTheme: savedDarkTheme,
         actionlistDisplayMode: actionlistDisplayMode);
     await store.loadSettings();
@@ -80,7 +80,7 @@ abstract class SettingsStoreBase with Store {
   bool shouldSaveRecipientAddress;
 
   @observable
-  bool shouldAllowBiometricalAuthentication;
+  bool allowBiometricalAuthentication;
 
   @observable
   bool isDarkTheme;
@@ -104,7 +104,7 @@ abstract class SettingsStoreBase with Store {
     shouldSaveRecipientAddress = initialSaveRecipientAddress;
     _sharedPreferences = sharedPreferences;
     _nodeList = nodeList;
-    shouldAllowBiometricalAuthentication = initialAllowBiometricalAuthentication;
+    allowBiometricalAuthentication = initialAllowBiometricalAuthentication;
     isDarkTheme = initialDarkTheme;
 
     actionlistDisplayMode.observe(
@@ -115,10 +115,10 @@ abstract class SettingsStoreBase with Store {
 
   @action
   Future setAllowBiometricalAuthentication(
-      {@required bool shouldAllowBiometricalAuthentication}) async {
-    this.shouldAllowBiometricalAuthentication = shouldAllowBiometricalAuthentication;
-    await _sharedPreferences.setBool(shouldAllowBiometricalAuthenticationKey,
-        shouldAllowBiometricalAuthentication);
+      {@required bool allowBiometricalAuthentication}) async {
+    this.allowBiometricalAuthentication = allowBiometricalAuthentication;
+    await _sharedPreferences.setBool(allowBiometricalAuthenticationKey,
+        allowBiometricalAuthentication);
   }
 
   @action
