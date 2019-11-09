@@ -387,7 +387,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                             balance =
                                                 '${balanceStore.fiatFullBalance} $symbol';
                                           }
-
+                                          
                                           return Text(balance,
                                               style: TextStyle(
                                                   color: Palette.wildDarkBlue,

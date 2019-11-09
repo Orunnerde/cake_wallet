@@ -23,7 +23,6 @@ class Routes {
   static const auth = '/auth';
   static const nodeList = '/node_list';
   static const newNode = '/new_node_list';
-  static const home = '/home';
   static const login = '/login';
   static const splash = '/splash';
   static const accountList = '/account_list';
