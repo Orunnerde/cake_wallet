@@ -147,7 +147,7 @@ abstract class WalleRestorationStoreBase with Store {
   }
 
   void validateKeys(String value) {
-    String p = '^[A-F0-9]{64}\$';
+    String p = '^[A-Fa-f0-9]{64}\$';
     RegExp regExp = new RegExp(p);
     isValid = regExp.hasMatch(value);
     errorMessage = isValid ? null : 'Wallet keys can only contain 64 chars in hex';

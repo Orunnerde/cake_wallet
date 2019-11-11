@@ -168,7 +168,7 @@ abstract class SendStoreBase with Store {
     if (value.isEmpty) {
       isValid = true;
     } else {
-      String p = '^[A-F0-9]{16,64}\$';
+      String p = '^[A-Fa-f0-9]{16,64}\$';
       RegExp regExp = new RegExp(p);
       isValid = regExp.hasMatch(value);
     }
