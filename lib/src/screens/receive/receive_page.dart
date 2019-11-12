@@ -156,6 +156,7 @@ class ReceiveBody extends StatelessWidget {
                                     : Palette.lightGrey,
                                 width: 1.0))),
                     onSubmitted: (value) {
+                      walletStore.validateAmount(value);
                       // _validateAmount(value);
                     },
                   ))

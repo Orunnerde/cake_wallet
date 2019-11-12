@@ -104,7 +104,8 @@ class _RestoreFromSeedDetailsFormState
                                               : Palette.lightGrey,
                                           width: 1.0))),
                               validator: (value) {
-                                return null;
+                                walletRestorationStore.validateWalletName(value);
+                                return walletRestorationStore.errorMessage;
                               },
                             ),
                           ))

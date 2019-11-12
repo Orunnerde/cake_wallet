@@ -32,6 +32,12 @@ abstract class WalletStoreBase with Store {
   SettingsStore _settingsStore;
   StreamSubscription<Wallet> _onWalletChangeSubscription;
 
+  @observable
+  bool isValid;
+
+  @observable
+  String errorMessage;
+
   WalletStoreBase({WalletService walletService, SettingsStore settingsStore}) {
     _walletService = walletService;
     _settingsStore = settingsStore;
@@ -97,5 +103,12 @@ abstract class WalletStoreBase with Store {
       account = wallet.account;
       wallet.subaddress.listen((subaddress) => this.subaddress = subaddress);
     }
+  }
+
+  void validateAmount(String value) {
+    String p = '^[0-9]+\$';
+    RegExp regExp = new RegExp(p);
+    isValid = regExp.hasMatch(value);
+    errorMessage = isValid ? null : 'Amount can only contain numbers';
   }
 }
