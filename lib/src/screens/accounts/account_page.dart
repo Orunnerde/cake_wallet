@@ -45,22 +45,22 @@ class AccountFormState extends State<AccountForm> {
           children: <Widget>[
             Expanded(
                 child: Center(
-              child: TextFormField(
-                decoration: InputDecoration(
-                    hintStyle: TextStyle(
-                        color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                            : Palette.lightBlue
-                    ),
-                    hintText: 'Account',
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide:
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                        hintStyle: TextStyle(
+                            color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                : Palette.lightBlue
+                        ),
+                        hintText: 'Account',
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide:
                             BorderSide(
                                 color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
                                     : Palette.lightGrey,
                                 width: 1.0
                             )),
-                    enabledBorder: UnderlineInputBorder(
-                        borderSide:
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide:
                             BorderSide(
                                 color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
                                     : Palette.lightGrey,
@@ -74,16 +74,16 @@ class AccountFormState extends State<AccountForm> {
               ),
             )),
             PrimaryButton(
-                onPressed: () async {
-                  if (!_formKey.currentState.validate()) {
-                    return;
-                  }
+              onPressed: () async {
+                if (!_formKey.currentState.validate()) {
+                  return;
+                }
 
-                  await accountListStore.addAccount(
-                      label: _textController.text);
-                  Navigator.pop(context, _textController.text);
-                },
-                text: 'Add',
+                await accountListStore.addAccount(
+                    label: _textController.text);
+                Navigator.pop(context, _textController.text);
+              },
+              text: 'Add',
               color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
                   : Palette.purple,
               borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
