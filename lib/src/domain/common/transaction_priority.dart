@@ -13,7 +13,7 @@ class TransactionPriority extends EnumerableItem<int> with Serializable<int> {
   static final medium = TransactionPriority(title: 'Medium', raw: 2);
   static final fast = TransactionPriority(title: 'Fast', raw: 3);
   static final fastest = TransactionPriority(title: 'Fastest', raw: 4);
-  static final standart = medium;
+  static final standart = slow;
 
   static TransactionPriority deserialize({int raw}) {
     var title = '';

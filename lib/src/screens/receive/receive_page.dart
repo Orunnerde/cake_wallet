@@ -77,9 +77,13 @@ class ReceiveBody extends StatelessWidget {
                         flex: 2,
                         child: AspectRatio(
                           aspectRatio: 1.0,
-                          child: QrImage(
-                            data: walletStore.subaddress.address,
-                            backgroundColor: Colors.white,
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            color:  Colors.white,
+                            child: QrImage(
+                              data: walletStore.subaddress.address,
+                              backgroundColor: Colors.transparent,
+                            ),
                           ),
                         )),
                     Spacer(
@@ -152,6 +156,7 @@ class ReceiveBody extends StatelessWidget {
                                     : Palette.lightGrey,
                                 width: 1.0))),
                     onSubmitted: (value) {
+                      walletStore.validateAmount(value);
                       // _validateAmount(value);
                     },
                   ))

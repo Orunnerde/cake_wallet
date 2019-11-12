@@ -168,6 +168,24 @@ abstract class ExchangeStoreBase with Store {
     receiveCurrency = CryptoCurrency.btc;
   }
 
+  List<ExchangeProvider> providersForCurrentPair() {
+    return _providersForPair(from: depositCurrency, to: receiveCurrency);
+  }
+
+  List<ExchangeProvider> _providersForPair(
+      {CryptoCurrency from, CryptoCurrency to}) {
+    final providers = providerList
+        .where((provider) =>
+            provider.pairList
+                .where((pair) =>
+                    pair.from == depositCurrency && pair.to == receiveCurrency)
+                .length >
+            0)
+        .toList();
+
+    return providers;
+  }
+
   void _onPairChange() {
     final isPairExist = provider.pairList
             .where((pair) =>
@@ -188,15 +206,7 @@ abstract class ExchangeStoreBase with Store {
   }
 
   ExchangeProvider _providerForPair({CryptoCurrency from, CryptoCurrency to}) {
-    final providers = providerList
-        .where((provider) =>
-            provider.pairList
-                .where((pair) =>
-                    pair.from == depositCurrency && pair.to == receiveCurrency)
-                .length >
-            0)
-        .toList();
-
+    final providers = _providersForPair(from: from, to: to);
     return providers.length > 0 ? providers[0] : null;
   }
 }

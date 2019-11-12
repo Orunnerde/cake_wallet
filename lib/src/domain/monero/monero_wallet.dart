@@ -141,6 +141,7 @@ class MoneroWallet extends Wallet {
   int _lastSaveTime;
   int _lastRefreshTime;
   int _refreshHeight;
+  int _lastSyncHeight;
 
   TransactionHistory _cachedTransactionHistory;
   SubaddressList _cachedSubaddressList;
@@ -152,6 +153,7 @@ class MoneroWallet extends Wallet {
     _lastSaveTime = 0;
     _lastRefreshTime = 0;
     _refreshHeight = 0;
+    _lastSyncHeight = 0;
     _name = BehaviorSubject<String>();
     _address = BehaviorSubject<String>();
     _syncStatus = BehaviorSubject<SyncStatus>();
@@ -163,8 +165,16 @@ class MoneroWallet extends Wallet {
       final height = h.getUint64(0);
       final nodeHeight = await getNodeHeightOrUpdate(height);
 
-      if (_refreshHeight <= 0) {
+      if (isRecovery && _refreshHeight <= 0) {
         _refreshHeight = height;
+      }
+
+      if (isRecovery &&
+          (_lastSyncHeight == 0 ||
+              (height - _lastSyncHeight) > moneroBlockSize)) {
+        _lastSyncHeight = height;
+        askForUpdateBalance();
+        askForUpdateTransactionHistory();
       }
 
       if (height > 0 && ((nodeHeight - height) < moneroBlockSize)) {
@@ -178,25 +188,16 @@ class MoneroWallet extends Wallet {
 
     balanceChangeChannel.setMessageHandler((_) async {
       askForUpdateBalance();
-
-      getHistory()
-          .update()
-          .then((_) => print('ask to update transaction history'));
+      askForUpdateTransactionHistory();
 
       return '';
     });
 
     syncStateChannel.setMessageHandler((_) async {
-      final startDate = DateTime.now();
-
       final currentHeight = await getCurrentHeight();
       final nodeHeight = await getNodeHeightOrUpdate(currentHeight);
 
-      // print(
-      //     'Ended fetching of node height ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}');
-
-      getHistory().update().then((_) => print(
-          'Updated transaction history: ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}'));
+      askForUpdateTransactionHistory();
 
       if (currentHeight == 0) {
         return platformBinaryEmptyResponse;
@@ -211,8 +212,6 @@ class MoneroWallet extends Wallet {
       if (isRecovery && (nodeHeight - currentHeight < moneroBlockSize)) {
         await setAsRecovered();
         askForUpdateBalance();
-        print(
-            'Ended set as recovered ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}');
       }
 
       final now = DateTime.now().millisecondsSinceEpoch;
@@ -223,9 +222,6 @@ class MoneroWallet extends Wallet {
       }
 
       await store();
-      print(
-          'Ended storing while syncing ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}');
-
       _lastRefreshTime = now;
 
       return platformBinaryEmptyResponse;
@@ -293,9 +289,7 @@ class MoneroWallet extends Wallet {
 
   Future close() async {
     try {
-      print('Start closing');
       await platform.invokeMethod('close');
-      print('Closed');
     } on PlatformException catch (e) {
       print(e);
       throw e;
@@ -321,7 +315,6 @@ class MoneroWallet extends Wallet {
     } on PlatformException catch (e) {
       _syncStatus.value = FailedSyncStatus();
       print(e);
-      // throw e;
     }
   }
 
@@ -415,7 +408,8 @@ class MoneroWallet extends Wallet {
   Future setRefreshFromBlockHeight({int height}) async {
     try {
       _refreshHeight = height;
-      await platform.invokeMethod('setRecoveringFromSeed', {'height': height});
+      await platform
+          .invokeMethod('setRefreshFromBlockHeight', {'height': height});
     } on PlatformException catch (e) {
       print(e);
       throw e;
@@ -447,6 +441,10 @@ class MoneroWallet extends Wallet {
         fullBalance: fullBalance, unlockedBalance: unlockedBalance));
   }
 
+  Future askForUpdateTransactionHistory() async {
+    await getHistory().update();
+  }
+
   Future rescan({int restoreHeight = 0}) async {}
 
   void changeCurrentSubaddress(Subaddress subaddress) {
@@ -463,10 +461,6 @@ class MoneroWallet extends Wallet {
   }
 
   Future store() async {
-    print('Store start');
-
-    final start = DateTime.now();
-
     if (_isSaving) {
       return;
     }
@@ -480,17 +474,9 @@ class MoneroWallet extends Wallet {
       _isSaving = false;
       throw e;
     }
-
-    print('Store end');
-    print(
-        'Store time: ${DateTime.now().millisecondsSinceEpoch - start.millisecondsSinceEpoch}');
   }
 
   Future<bool> isConnected() async {
-    print('isConnected start');
-
-    final start = DateTime.now();
-
     bool isConnected = false;
 
     try {
@@ -500,10 +486,6 @@ class MoneroWallet extends Wallet {
       print(e);
       throw e;
     }
-
-    print('isConnected end');
-    print(
-        'isConnected time: ${DateTime.now().millisecondsSinceEpoch - start.millisecondsSinceEpoch}');
 
     return isConnected;
   }

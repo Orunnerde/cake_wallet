@@ -20,6 +20,7 @@ class AddressTextField extends StatelessWidget {
   final String placeholder;
   final Function(Uri) onURIScanned;
   final List<AddressTextFieldOption> options;
+  final FormFieldValidator<String> validator;
 
   AddressTextField(
       {@required this.controller,
@@ -29,7 +30,8 @@ class AddressTextField extends StatelessWidget {
         AddressTextFieldOption.qrCode,
         AddressTextFieldOption.addressBook
       ],
-      this.onURIScanned});
+      this.onURIScanned,
+      this.validator});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,7 @@ class AddressTextField extends StatelessWidget {
     else
       _isDarkTheme = false;
 
-    return TextField(
+    return TextFormField(
         enabled: isActive,
         controller: controller,
         decoration: InputDecoration(
@@ -126,7 +128,9 @@ class AddressTextField extends StatelessWidget {
                       ? PaletteDark.darkThemeGreyWithOpacity
                       : Palette.lightGrey,
                   width: 1.0)),
-        ));
+        ),
+      validator: validator,
+    );
   }
 
   Future _presentQRScanner(BuildContext context) async {

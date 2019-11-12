@@ -50,12 +50,7 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
   Widget build(BuildContext context) {
     final walletRestorationStore = Provider.of<WalletRestorationStore>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
+    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     reaction((_) => walletRestorationStore.state, (state) {
       if (state is WalletRestoredSuccessfully) {
@@ -118,7 +113,8 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                                         : Palette.lightGrey,
                                     width: 1.0))),
                         validator: (value) {
-                          return null;
+                          walletRestorationStore.validateWalletName(value);
+                          return walletRestorationStore.errorMessage;
                         },
                       ),
                     ))
@@ -153,7 +149,8 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                                         : Palette.lightGrey,
                                     width: 1.0))),
                         validator: (value) {
-                          return null;
+                          walletRestorationStore.validateAddress(value);
+                          return walletRestorationStore.errorMessage;
                         },
                       ),
                     ))
@@ -186,7 +183,8 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                                         : Palette.lightGrey,
                                     width: 1.0))),
                         validator: (value) {
-                          return null;
+                          walletRestorationStore.validateKeys(value);
+                          return walletRestorationStore.errorMessage;
                         },
                       ),
                     ))
@@ -219,7 +217,8 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                                         : Palette.lightGrey,
                                     width: 1.0))),
                         validator: (value) {
-                          return null;
+                          walletRestorationStore.validateKeys(value);
+                          return walletRestorationStore.errorMessage;
                         },
                       ),
                     ))
