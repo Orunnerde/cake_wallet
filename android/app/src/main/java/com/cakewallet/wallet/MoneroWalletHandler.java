@@ -427,7 +427,7 @@ public class MoneroWalletHandler implements WalletListener {
 
     private void setRefreshFromBlockHeight(MethodCall call, MethodChannel.Result result) {
         AsyncTask.execute(() -> {
-            long height = call.argument("height");
+            long height = Long.valueOf((int) call.argument("height"));
             getCurrentWallet().setRefreshFromBlockHeight(height);
             mainHandler.post(() -> result.success(null));
         });

@@ -22,6 +22,12 @@ abstract class SubadrressCreationStoreBase with Store {
   StreamSubscription<Account> _onAccountChangeSubscription;
   Account _account;
 
+  @observable
+  bool isValid;
+
+  @observable
+  String errorMessage;
+
   SubadrressCreationStoreBase({@required WalletService walletService}) {
     state = SubaddressCreationStateInitial();
 
@@ -68,5 +74,13 @@ abstract class SubadrressCreationStoreBase with Store {
     }
 
     print('Incorrect wallet type for this operation (SubaddressList)');
+  }
+
+  void validateSubaddressName(String value) {
+    String p = '''^[^`,'"]{1,20}\$''';
+    RegExp regExp = new RegExp(p);
+    isValid = regExp.hasMatch(value);
+    errorMessage = isValid ? null : '''Subaddress name can't contain ` , ' " '''
+        'symbols\nand must be between 1 and 20 characters long';
   }
 }

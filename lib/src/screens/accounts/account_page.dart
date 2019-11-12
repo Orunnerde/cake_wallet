@@ -13,29 +13,6 @@ class AccountPage extends BasePage {
 
   @override
   Widget body(BuildContext context) => AccountForm();
-
-  @override
-  Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
-
-    return Scaffold(
-        backgroundColor: _isDarkTheme ? PaletteDark.darkThemeBackgroundDark
-            : Colors.white,
-        resizeToAvoidBottomPadding: false,
-        appBar: CupertinoNavigationBar(
-          leading: leading(context),
-          middle: middle(context),
-          trailing: trailing(context),
-          backgroundColor: _isDarkTheme ? PaletteDark.darkThemeBackgroundDark
-              : Colors.white,
-          border: null,
-        ),
-        body: SafeArea(child: body(context)));
-  }
 }
 
 class AccountForm extends StatefulWidget {
@@ -56,11 +33,9 @@ class AccountFormState extends State<AccountForm> {
   @override
   Widget build(BuildContext context) {
     final accountListStore = Provider.of<AccountListStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
 
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Form(
       key: _formKey,
@@ -91,18 +66,13 @@ class AccountFormState extends State<AccountForm> {
                                     : Palette.lightGrey,
                                 width: 1.0
                             ))),
-                    controller: _textController,
-                    validator: (value) {
-                      // FIXME: Replace validation logic
-                      String p = '[^ ]';
-                      RegExp regExp = new RegExp(p);
-                      if (regExp.hasMatch(value))
-                        return null;
-                      else
-                        return 'Please enter a name of account';
-                    },
-                  ),
-                )),
+                controller: _textController,
+                validator: (value) {
+                  accountListStore.validateAccountName(value);
+                  return accountListStore.errorMessage;
+                },
+              ),
+            )),
             PrimaryButton(
               onPressed: () async {
                 if (!_formKey.currentState.validate()) {

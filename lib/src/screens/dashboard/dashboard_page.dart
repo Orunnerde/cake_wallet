@@ -24,19 +24,16 @@ import 'package:cake_wallet/src/screens/dashboard/transaction_raw.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/src/screens/dashboard/wallet_menu.dart';
+import 'package:cake_wallet/src/widgets/picker.dart';
 
 class DashboardPage extends BasePage {
   final _bodyKey = GlobalKey();
 
   @override
   Widget leading(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
+    final _themeChanger = Provider.of<ThemeChanger>(context);
+    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return SizedBox(
         width: 30,
@@ -88,92 +85,17 @@ class DashboardPage extends BasePage {
       onPressed: () => Navigator.of(context, rootNavigator: true)
           .pushNamed(Routes.exchange));
 
-  Future _presentReconnectAlert(BuildContext context) async {
-    final walletStore = Provider.of<WalletStore>(context);
-
-    await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
-              'Reconnection',
-              textAlign: TextAlign.center,
-            ),
-            content: Text('Are you sure to reconnect ?'),
-            actions: <Widget>[
-              FlatButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('Cancel')),
-              FlatButton(
-                  onPressed: () {
-                    walletStore.reconnect();
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('OK'))
-            ],
-          );
-        });
-  }
-
   void _presentWalletMenu(BuildContext bodyContext) {
-    showDialog(
-        context: bodyContext,
-        builder: (context) {
-          return Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-            CupertinoActionSheet(
-              actions: <Widget>[
-                CupertinoActionSheetAction(
-                    child: const Text('Rescan'),
-                    onPressed: () =>
-                        Navigator.of(context).popAndPushNamed(Routes.rescan)),
-                CupertinoActionSheetAction(
-                    child: const Text('Reconnect'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      _presentReconnectAlert(bodyContext);
-                    }),
-                CupertinoActionSheetAction(
-                    child: const Text('Accounts'),
-                    onPressed: () => Navigator.of(context)
-                        .popAndPushNamed(Routes.accountList)),
-                CupertinoActionSheetAction(
-                    child: const Text('Wallets'),
-                    onPressed: () => Navigator.of(context)
-                        .popAndPushNamed(Routes.walletList)),
-                CupertinoActionSheetAction(
-                    child: const Text('Show seed'),
-                    onPressed: () {
-                      Navigator.of(context).popAndPushNamed(Routes.auth,
-                          arguments: (isAuthenticatedSuccessfully, auth) =>
-                              isAuthenticatedSuccessfully
-                                  ? Navigator.of(auth.context)
-                                      .popAndPushNamed(Routes.seed)
-                                  : null);
-                    }),
-                CupertinoActionSheetAction(
-                    child: const Text('Show keys'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
+    final walletMenu = WalletMenu(bodyContext);
 
-                      Navigator.of(context).pushNamed(Routes.auth,
-                          arguments: (isAuthenticatedSuccessfully, auth) =>
-                              isAuthenticatedSuccessfully
-                                  ? Navigator.of(auth.context)
-                                      .popAndPushNamed(Routes.showKeys)
-                                  : null);
-                    }),
-                CupertinoActionSheetAction(
-                    child: const Text('Address book'),
-                    onPressed: () => Navigator.of(context)
-                        .popAndPushNamed(Routes.addressBook)),
-              ],
-              cancelButton: CupertinoActionSheetAction(
-                  child: const Text('Cancel'),
-                  isDefaultAction: true,
-                  onPressed: () => Navigator.of(context).pop()),
-            )
-          ]);
-        });
+    showDialog(
+        builder: (_) => Picker(
+            items: walletMenu.items,
+            selectedAtIndex: -1,
+            title: 'Wallet Menu',
+            onItemSelected: (item) =>
+                walletMenu.action(item)),
+        context: bodyContext);
   }
 }
 
@@ -185,7 +107,7 @@ class DashboardPageBody extends StatefulWidget {
 }
 
 class DashboardPageBodyState extends State<DashboardPageBody> {
-  static final transactionDateFormat = DateFormat("dd.MM.yyyy, HH:mm");
+  static final transactionDateFormat = DateFormat("MMM d, yyyy HH:mm");
 
   final _connectionStatusObserverKey = GlobalKey();
   final _balanceObserverKey = GlobalKey();
@@ -200,13 +122,8 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
     final actionListStore = Provider.of<ActionListStore>(context);
     final syncStore = Provider.of<SyncStore>(context);
     final settingsStore = Provider.of<SettingsStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
+    final _themeChanger = Provider.of<ThemeChanger>(context);
+    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Observer(
         key: _listObserverKey,
@@ -397,7 +314,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                             balance =
                                                 '${balanceStore.fiatFullBalance} $symbol';
                                           }
-
+                                          
                                           return Text(balance,
                                               style: TextStyle(
                                                   color: Palette.wildDarkBlue,
@@ -611,6 +528,15 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
 
                 if (item is TransactionListItem) {
                   final transaction = item.transaction;
+                  final savedDisplayMode = settingsStore.balanceDisplayMode;
+                  final formattedAmount = savedDisplayMode.serialize() ==
+                          BalanceDisplayMode.hiddenBalance.serialize()
+                      ? '---'
+                      : transaction.amount();
+                  final formattedFiatAmount = savedDisplayMode.serialize() ==
+                          BalanceDisplayMode.hiddenBalance.serialize()
+                      ? '---'
+                      : transaction.fiatAmount();
 
                   return TransactionRow(
                       onTap: () => Navigator.of(context).pushNamed(
@@ -619,13 +545,21 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                       direction: transaction.direction,
                       formattedDate:
                           transactionDateFormat.format(transaction.date),
-                      formattedAmount: transaction.amount(),
-                      formattedFiatAmount: transaction.fiatAmount(),
-                      isPending: transaction.isPending);
+                      formattedAmount: formattedAmount,
+                      formattedFiatAmount: formattedFiatAmount,
+                      isPending: transaction.isPending,
+                      isDarkTheme: _isDarkTheme);
                 }
 
                 if (item is TradeListItem) {
                   final trade = item.trade;
+                  final savedDisplayMode = settingsStore.balanceDisplayMode;
+                  final formattedAmount = trade.amount != null
+                      ? savedDisplayMode.serialize() ==
+                              BalanceDisplayMode.hiddenBalance.serialize()
+                          ? '---'
+                          : trade.amount
+                      : trade.amount;
 
                   return TradeRow(
                       onTap: () => Navigator.of(context)
@@ -635,7 +569,8 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                       to: trade.to,
                       createdAtFormattedDate:
                           DateFormat("dd.MM.yyyy, H:m").format(trade.createdAt),
-                      formattedAmount: trade.amount);
+                      formattedAmount: formattedAmount,
+                      isDarkTheme: _isDarkTheme);
                 }
 
                 return Container();

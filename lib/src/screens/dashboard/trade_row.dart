@@ -10,6 +10,7 @@ class TradeRow extends StatelessWidget {
   final CryptoCurrency to;
   final String createdAtFormattedDate;
   final String formattedAmount;
+  final bool isDarkTheme;
 
   TradeRow(
       {this.provider,
@@ -17,11 +18,11 @@ class TradeRow extends StatelessWidget {
       this.to,
       this.createdAtFormattedDate,
       this.formattedAmount,
+      this.isDarkTheme,
       @required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    final _isDarkTheme = false;
     final amountCrypto = provider == ExchangeProviderDescription.xmrto
         ? to.toString()
         : from.toString();
@@ -49,7 +50,7 @@ class TradeRow extends StatelessWidget {
                         Text('${from.toString()} → ${to.toString()}',
                             style: TextStyle(
                                 fontSize: 16,
-                                color: _isDarkTheme
+                                color: isDarkTheme
                                     ? Palette.blueGrey
                                     : Colors.black)),
                         formattedAmount != null
