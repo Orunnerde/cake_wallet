@@ -8,11 +8,13 @@ class SettingsItem {
   final Image image;
   final Widget widget;
   final Attributes attribute;
+  final WidgetBuilder widgetBuilder;
 
   SettingsItem({this.onTaped,
     this.title,
     this.link,
     this.image,
     this.widget,
-    this.attribute});
+    this.attribute,
+    this.widgetBuilder});
 }

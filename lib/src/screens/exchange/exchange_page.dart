@@ -34,13 +34,8 @@ class ExchangePage extends BasePage {
   @override
   Widget middle(BuildContext context) {
     final exchangeStore = Provider.of<ExchangeStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
+    final _themeChanger = Provider.of<ThemeChanger>(context);
+    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return FlatButton(
       onPressed: () => _presentProviderPicker(context),
@@ -90,19 +85,19 @@ class ExchangePage extends BasePage {
       _isDarkTheme = false;
 
     return SizedBox(
-            width: 50,
-            child: FlatButton(
-                padding: EdgeInsets.all(0),
-                child: Text(
-                  'Clear',
-                  style: TextStyle(
-                      color: _isDarkTheme
-                          ? PaletteDark.darkThemeTitleViolet
-                          : Palette.wildDarkBlue,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16),
-                ),
-                onPressed: () => exchangeStore.reset()));
+        width: 50,
+        child: FlatButton(
+            padding: EdgeInsets.all(0),
+            child: Text(
+              'Clear',
+              style: TextStyle(
+                  color: _isDarkTheme
+                      ? PaletteDark.darkThemeTitleViolet
+                      : Palette.wildDarkBlue,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16),
+            ),
+            onPressed: () => exchangeStore.reset()));
   }
 
   @override
@@ -110,12 +105,13 @@ class ExchangePage extends BasePage {
 
   void _presentProviderPicker(BuildContext context) {
     final exchangeStore = Provider.of<ExchangeStore>(context);
-
+    final items = exchangeStore.providersForCurrentPair();
+    final selectedItem = items.indexOf(exchangeStore.provider);
+    
     showDialog(
         builder: (_) => Picker(
-            items: exchangeStore.providerList,
-            selectedAtIndex:
-                exchangeStore.providerList.indexOf(exchangeStore.provider),
+            items: items,
+            selectedAtIndex: selectedItem,
             title: 'Change Exchange Provider',
             onItemSelected: (provider) =>
                 exchangeStore.changeProvider(provider: provider)),
@@ -158,14 +154,8 @@ class ExchangeFormState extends State<ExchangeForm> {
 
     WidgetsBinding.instance.addPostFrameCallback(
         (_) => _setReactions(context, exchangeStore, walletStore));
-
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
+    final _themeChanger = Provider.of<ThemeChanger>(context);
+    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return ScrollableWithBottomSection(
       contentPadding: EdgeInsets.only(left: 20, right: 20),

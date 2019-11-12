@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +20,8 @@ abstract class SettingsStoreBase with Store {
   static const currentTransactionPriorityKey = 'current_fee_priority';
   static const currentBalanceDisplayModeKey = 'current_balance_display_mode';
   static const shouldSaveRecipientAddressKey = 'save_recipient_address';
-  static const allowBiometricalAuthenticationKey = 'allow_biometrical_authentication';
+  static const allowBiometricalAuthenticationKey =
+      'allow_biometrical_authentication';
   static const currentDarkTheme = 'dark_theme';
   static const displayActionListModeKey = 'display_list_mode';
 
@@ -37,10 +40,11 @@ abstract class SettingsStoreBase with Store {
     final shouldSaveRecipientAddress =
         sharedPreferences.getBool(shouldSaveRecipientAddressKey);
     final allowBiometricalAuthentication =
-    sharedPreferences.getBool(allowBiometricalAuthenticationKey) == null ? false
-        : sharedPreferences.getBool(allowBiometricalAuthenticationKey);
-    final savedDarkTheme =
-    sharedPreferences.getBool(currentDarkTheme) == null ? false
+        sharedPreferences.getBool(allowBiometricalAuthenticationKey) == null
+            ? false
+            : sharedPreferences.getBool(allowBiometricalAuthenticationKey);
+    final savedDarkTheme = sharedPreferences.getBool(currentDarkTheme) == null
+        ? false
         : sharedPreferences.getBool(currentDarkTheme);
     final actionlistDisplayMode = ObservableList();
     actionlistDisplayMode.addAll(deserializeActionlistDisplayModes(
@@ -53,7 +57,7 @@ abstract class SettingsStoreBase with Store {
         initialTransactionPriority: currentTransactionPriority,
         initialBalanceDisplayMode: currentBalanceDisplayMode,
         initialSaveRecipientAddress: shouldSaveRecipientAddress,
-        initialAllowBiometricalAuthentication : allowBiometricalAuthentication,
+        initialAllowBiometricalAuthentication: allowBiometricalAuthentication,
         initialDarkTheme: savedDarkTheme,
         actionlistDisplayMode: actionlistDisplayMode);
     await store.loadSettings();
@@ -108,7 +112,7 @@ abstract class SettingsStoreBase with Store {
     isDarkTheme = initialDarkTheme;
 
     actionlistDisplayMode.observe(
-            (dynamic _) => _sharedPreferences.setInt(displayActionListModeKey,
+        (dynamic _) => _sharedPreferences.setInt(displayActionListModeKey,
             serializeActionlistDisplayModes(actionlistDisplayMode)),
         fireImmediately: false);
   }
@@ -117,13 +121,15 @@ abstract class SettingsStoreBase with Store {
   Future setAllowBiometricalAuthentication(
       {@required bool allowBiometricalAuthentication}) async {
     this.allowBiometricalAuthentication = allowBiometricalAuthentication;
-    await _sharedPreferences.setBool(allowBiometricalAuthenticationKey,
-        allowBiometricalAuthentication);
+    await _sharedPreferences.setBool(
+        allowBiometricalAuthenticationKey, allowBiometricalAuthentication);
   }
 
   @action
   Future saveDarkTheme({@required bool isDarkTheme}) async {
     this.isDarkTheme = isDarkTheme;
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: isDarkTheme ? Colors.black : Colors.white));
     await _sharedPreferences.setBool(currentDarkTheme, isDarkTheme);
   }
 

@@ -55,7 +55,7 @@ class TradeState extends EnumerableItem<String> with Serializable<String> {
         title = 'Paid';
         break;
       case 'BTC_SENT':
-        title = 'Btc sen';
+        title = 'Btc sent';
         break;
       case 'TIMED_OUT':
         title = 'Timeout';
