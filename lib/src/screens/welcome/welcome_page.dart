@@ -14,7 +14,17 @@ class WelcomePage extends BasePage {
   final _cakeLogo = Image.asset('assets/images/cake_logo.png');
 
   @override
-  Widget leading(BuildContext context) => Container();
+  Widget build(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme = (_themeChanger.getTheme() == Themes.darkTheme);
+
+    return Scaffold(
+        backgroundColor: _isDarkTheme ? Theme.of(context).backgroundColor
+            : backgroundColor,
+        resizeToAvoidBottomPadding: false,
+        body: SafeArea(child: body(context)),
+    );
+  }
 
   @override
   Widget body(BuildContext context) {
@@ -22,11 +32,7 @@ class WelcomePage extends BasePage {
     final textScaleFactor = _screenWidth < _baseWidth ? 0.76 : 1.0;
 
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-    Color _backgroundColor = Theme.of(context).backgroundColor;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    bool _isDarkTheme = (_themeChanger.getTheme() == Themes.darkTheme);
 
     return Column(children: <Widget>[
       Stack(
@@ -38,72 +44,65 @@ class WelcomePage extends BasePage {
           Positioned(bottom: 0.0, child: _cakeLogo)
         ],
       ),
-      Container(
-        padding: EdgeInsets.only(top: 10.0),
-        child: Column(children: <Widget>[
-          Text(
-            'WELCOME\nTO CAKE WALLET',
-            style: TextStyle(
-              fontSize: 30.0,
-              fontWeight: FontWeight.bold,
-            ),
-            textScaleFactor: textScaleFactor,
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          Text(
-            'Awesome wallet\nfor Monero',
-            style: TextStyle(
-              fontSize: 22.0,
-              color: Palette.lightBlue,
-            ),
-            textScaleFactor: textScaleFactor,
-            textAlign: TextAlign.center,
-          ),
-        ]),
-      ),
       Expanded(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          Text(
-            'Please make selection below to\ncreate or recover your wallet.',
-            style: TextStyle(
-              fontSize: 16.0,
-              color: Palette.lightBlue,
-            ),
-            textScaleFactor: textScaleFactor,
-            textAlign: TextAlign.center,
-          )
-        ],
-      )),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text(
+                'WELCOME\nTO CAKE WALLET',
+                style: TextStyle(
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold,
+                ),
+                textScaleFactor: textScaleFactor,
+                textAlign: TextAlign.center,
+              ),
+              Text(
+                'Awesome wallet\nfor Monero',
+                style: TextStyle(
+                  fontSize: 22.0,
+                  color: Palette.lightBlue,
+                ),
+                textScaleFactor: textScaleFactor,
+                textAlign: TextAlign.center,
+              ),
+              Text(
+                'Please make selection below to\ncreate or recover your wallet.',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Palette.lightBlue,
+                ),
+                textScaleFactor: textScaleFactor,
+                textAlign: TextAlign.center,
+              )
+            ]),
+      ),
       Container(
-          padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
-          child: Column(children: <Widget>[
-            PrimaryButton(
-              onPressed: () {
-                Navigator.pushNamed(context, Routes.newWalletFromWelcome);
-              },
-              text: 'Create New',
-              color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
-                  : Palette.purple,
-              borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
-                  : Palette.deepPink,
-            ),
-            SizedBox(height: 10),
-            PrimaryButton(
-              onPressed: () {
-                Navigator.pushNamed(context, Routes.restoreOptions);
-              },
-              color: _isDarkTheme ? PaletteDark.darkThemeBlueButton
-                  : Palette.brightBlue,
-              borderColor: _isDarkTheme ? PaletteDark.darkThemeBlueButtonBorder
-                  : Palette.cloudySky,
-              text: 'Restore wallet',
-            )
-          ]))
+          padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 20.0),
+          child: Column(
+              children: <Widget>[
+                PrimaryButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, Routes.newWalletFromWelcome);
+                  },
+                  text: 'Create New',
+                  color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
+                      : Palette.purple,
+                  borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
+                      : Palette.deepPink,
+                ),
+                SizedBox(height: 10),
+                PrimaryButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, Routes.restoreOptions);
+                  },
+                  color: _isDarkTheme ? PaletteDark.darkThemeBlueButton
+                      : Palette.brightBlue,
+                  borderColor: _isDarkTheme ? PaletteDark.darkThemeBlueButtonBorder
+                      : Palette.cloudySky,
+                  text: 'Restore wallet',
+                )
+              ]))
     ]);
   }
 }

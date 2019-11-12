@@ -18,12 +18,8 @@ class Picker<Item extends Object> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    final _themeChanger = Provider.of<ThemeChanger>(context);
+    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return GestureDetector(
       onTap: () => Navigator.of(context).pop(),
@@ -60,10 +56,10 @@ class Picker<Item extends Object> extends StatelessWidget {
                                   title,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.normal,
-                                      decoration: TextDecoration.none,
-                                      //color: Colors.black
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal,
+                                    decoration: TextDecoration.none,
+                                    //color: Colors.black
                                   ),
                                 ),
                               ),
@@ -73,26 +69,30 @@ class Picker<Item extends Object> extends StatelessWidget {
                           index -= 1;
                           final item = items[index];
 
-                          return Padding(
-                            padding: EdgeInsets.only(top: 18, bottom: 18),
-                            child: Center(
-                              child: GestureDetector(
-                                  onTap: () {
-                                    if (onItemSelected == null) { return; }
-                                    Navigator.of(context).pop();
-                                    onItemSelected(item);
-                                  },
+                          return GestureDetector(
+                            onTap: () {
+                              if (onItemSelected == null) {
+                                return;
+                              }
+                              Navigator.of(context).pop();
+                              onItemSelected(item);
+                            },
+                            child: Container(
+                              color: Colors.transparent,
+                              padding: EdgeInsets.only(top: 18, bottom: 18),
+                              child: Center(
                                   child: Text(
-                                    item.toString(),
-                                    style: TextStyle(
-                                        decoration: TextDecoration.none,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.normal,
-                                        color: index == selectedAtIndex
-                                            ? Color.fromRGBO(138, 80, 255, 1)
-                                            : _isDarkTheme ? Colors.white : Colors.black
-                                    ),
-                                  )),
+                                item.toString(),
+                                style: TextStyle(
+                                    decoration: TextDecoration.none,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.normal,
+                                    color: index == selectedAtIndex
+                                        ? Color.fromRGBO(138, 80, 255, 1)
+                                        : _isDarkTheme
+                                            ? Colors.white
+                                            : Colors.black),
+                              )),
                             ),
                           );
                         },

@@ -1,4 +1,3 @@
-import 'package:cake_wallet/src/stores/login/login_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -47,12 +46,13 @@ import 'package:cake_wallet/src/stores/action_list/action_list_store.dart';
 import 'package:cake_wallet/src/stores/action_list/trade_filter_store.dart';
 import 'package:cake_wallet/src/stores/action_list/transaction_filter_store.dart';
 import 'package:cake_wallet/src/stores/rescan/rescan_wallet_store.dart';
+import 'package:cake_wallet/src/stores/login/login_store.dart';
+import 'package:cake_wallet/src/stores/price/price_store.dart';
 
 // MARK: Import screens
 
 import 'package:cake_wallet/src/screens/auth/auth_page.dart';
 import 'package:cake_wallet/src/screens/dashboard/dashboard_page.dart';
-import 'package:cake_wallet/src/screens/home/home_page.dart';
 import 'package:cake_wallet/src/screens/login/login_page.dart';
 import 'package:cake_wallet/src/screens/nodes/new_node_page.dart';
 import 'package:cake_wallet/src/screens/nodes/nodes_list_page.dart';
@@ -94,7 +94,8 @@ class Router {
       WalletService walletService,
       UserService userService,
       Database db,
-      RouteSettings settings) {
+      RouteSettings settings,
+      PriceStore priceStore) {
     switch (settings.name) {
       case Routes.welcome:
         return MaterialPageRoute(builder: (_) => WelcomePage());
@@ -198,7 +199,8 @@ class Router {
                   ProxyProvider<SettingsStore, BalanceStore>(
                     builder: (_, settingsStore, __) => BalanceStore(
                         walletService: walletService,
-                        settingsStore: settingsStore),
+                        settingsStore: settingsStore,
+                        priceStore: priceStore),
                   ),
                   ProxyProvider<SettingsStore, WalletStore>(
                       builder: (_, settingsStore, __) => WalletStore(
@@ -212,6 +214,7 @@ class Router {
                       builder: (_, settingsStore, __) => ActionListStore(
                           walletService: walletService,
                           settingsStore: settingsStore,
+                          priceStore: priceStore,
                           tradeHistory: TradeHistory(db: db),
                           transactionFilterStore: TransactionFilterStore(),
                           tradeFilterStore: TradeFilterStore())),
@@ -224,7 +227,8 @@ class Router {
                   ProxyProvider<SettingsStore, BalanceStore>(
                     builder: (_, settingsStore, __) => BalanceStore(
                         walletService: walletService,
-                        settingsStore: settingsStore),
+                        settingsStore: settingsStore,
+                        priceStore: priceStore),
                   ),
                   ProxyProvider<SettingsStore, WalletStore>(
                       builder: (_, settingsStore, __) => WalletStore(
@@ -318,9 +322,6 @@ class Router {
             builder: (_) => Provider<NodeListStore>(
                 builder: (_) => NodeListStore(nodeList: NodeList(db: db)),
                 child: NewNodePage()));
-
-      case Routes.home:
-        return CupertinoPageRoute(builder: (_) => HomePage());
 
       case Routes.login:
         return CupertinoPageRoute(

@@ -30,13 +30,8 @@ class DashboardPage extends BasePage {
 
   @override
   Widget leading(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
+    final _themeChanger = Provider.of<ThemeChanger>(context);
+    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return SizedBox(
         width: 30,
@@ -185,7 +180,7 @@ class DashboardPageBody extends StatefulWidget {
 }
 
 class DashboardPageBodyState extends State<DashboardPageBody> {
-  static final transactionDateFormat = DateFormat("dd.MM.yyyy, HH:mm");
+  static final transactionDateFormat = DateFormat("MMM d, yyyy HH:mm");
 
   final _connectionStatusObserverKey = GlobalKey();
   final _balanceObserverKey = GlobalKey();
@@ -200,13 +195,8 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
     final actionListStore = Provider.of<ActionListStore>(context);
     final syncStore = Provider.of<SyncStore>(context);
     final settingsStore = Provider.of<SettingsStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
+    final _themeChanger = Provider.of<ThemeChanger>(context);
+    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Observer(
         key: _listObserverKey,
@@ -397,7 +387,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                             balance =
                                                 '${balanceStore.fiatFullBalance} $symbol';
                                           }
-
+                                          
                                           return Text(balance,
                                               style: TextStyle(
                                                   color: Palette.wildDarkBlue,
@@ -611,6 +601,15 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
 
                 if (item is TransactionListItem) {
                   final transaction = item.transaction;
+                  final savedDisplayMode = settingsStore.balanceDisplayMode;
+                  final formattedAmount = savedDisplayMode.serialize() ==
+                          BalanceDisplayMode.hiddenBalance.serialize()
+                      ? '---'
+                      : transaction.amount();
+                  final formattedFiatAmount = savedDisplayMode.serialize() ==
+                          BalanceDisplayMode.hiddenBalance.serialize()
+                      ? '---'
+                      : transaction.fiatAmount();
 
                   return TransactionRow(
                       onTap: () => Navigator.of(context).pushNamed(
@@ -619,13 +618,21 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                       direction: transaction.direction,
                       formattedDate:
                           transactionDateFormat.format(transaction.date),
-                      formattedAmount: transaction.amount(),
-                      formattedFiatAmount: transaction.fiatAmount(),
-                      isPending: transaction.isPending);
+                      formattedAmount: formattedAmount,
+                      formattedFiatAmount: formattedFiatAmount,
+                      isPending: transaction.isPending,
+                      isDarkTheme: _isDarkTheme);
                 }
 
                 if (item is TradeListItem) {
                   final trade = item.trade;
+                  final savedDisplayMode = settingsStore.balanceDisplayMode;
+                  final formattedAmount = trade.amount != null
+                      ? savedDisplayMode.serialize() ==
+                              BalanceDisplayMode.hiddenBalance.serialize()
+                          ? '---'
+                          : trade.amount
+                      : trade.amount;
 
                   return TradeRow(
                       onTap: () => Navigator.of(context)
@@ -635,7 +642,8 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                       to: trade.to,
                       createdAtFormattedDate:
                           DateFormat("dd.MM.yyyy, H:m").format(trade.createdAt),
-                      formattedAmount: trade.amount);
+                      formattedAmount: formattedAmount,
+                      isDarkTheme: _isDarkTheme);
                 }
 
                 return Container();
