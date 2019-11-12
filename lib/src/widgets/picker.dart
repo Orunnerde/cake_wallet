@@ -56,10 +56,10 @@ class Picker<Item extends Object> extends StatelessWidget {
                                   title,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.normal,
-                                    decoration: TextDecoration.none,
-                                    //color: Colors.black
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.normal,
+                                      decoration: TextDecoration.none,
+                                      color: _isDarkTheme ? Colors.white : Colors.black
                                   ),
                                 ),
                               ),
