@@ -135,13 +135,23 @@ class WalletListService {
     }
   }
 
+  Future<void> rescanCurrentWallet({int restoreHeight = 0}) async {
+    await rescanWallet(walletService.currentWallet, restoreHeight: restoreHeight);
+  }
+
+  Future<void> rescanWallet(Wallet wallet, {int restoreHeight = 0}) async {
+    final seed = await wallet.getSeed();
+    final name = await wallet.getName();
+    await wallet.close();
+    walletService.currentWallet = null;
+    await remove(WalletDescription(name: name, type: wallet.getType()));
+    await restoreFromSeed(name, seed, restoreHeight);
+  }
+
   Future<void> onWalletChange(Wallet wallet) async {
     walletService.currentWallet = wallet;
     final walletName = await wallet.getName();
     await sharedPreferences.setString('current_wallet_name', walletName);
-    await walletService.connectToNode(
-        uri: 'node.moneroworld.com:18089', login: '', password: '');
-    await walletService.startSync();
   }
 
   Future<void> remove(WalletDescription wallet) async {

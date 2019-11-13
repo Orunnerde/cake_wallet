@@ -39,6 +39,7 @@ class NewSubaddressForm extends StatefulWidget {
 }
 
 class NewSubaddressFormState extends State<NewSubaddressForm> {
+  final _formKey = GlobalKey<FormState>();
   final _labelController = TextEditingController();
 
   @override
@@ -47,52 +48,55 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
         Provider.of<SubadrressCreationStore>(context);
 
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
+    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
-
-    return Stack(children: <Widget>[
-      Center(
-        child: Padding(
-          padding: EdgeInsets.only(left: 35, right: 35),
-          child: TextFormField(
-              controller: _labelController,
-              decoration: InputDecoration(
-                  hintStyle: TextStyle(color: Palette.lightBlue),
-                  hintText: 'Label name',
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Palette.lightGrey, width: 1.0)),
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Palette.lightGrey, width: 1.0))),
-              validator: (value) => null),
+    return Form(
+      key: _formKey,
+      child: Stack(children: <Widget>[
+        Center(
+          child: Padding(
+            padding: EdgeInsets.only(left: 35, right: 35),
+            child: TextFormField(
+                controller: _labelController,
+                decoration: InputDecoration(
+                    hintStyle: TextStyle(color: Palette.lightBlue),
+                    hintText: 'Label name',
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide:
+                        BorderSide(color: Palette.lightGrey, width: 1.0)),
+                    enabledBorder: UnderlineInputBorder(
+                        borderSide:
+                        BorderSide(color: Palette.lightGrey, width: 1.0))),
+                validator: (value) {
+                  subaddressCreationStore.validateSubaddressName(value);
+                  return subaddressCreationStore.errorMessage;
+                }),
+          ),
         ),
-      ),
-      Positioned(
-          bottom: 20,
-          left: 20,
-          right: 20,
-          child: Observer(
-            builder: (_) => LoadingPrimaryButton(
-                onPressed: () async {
-                  await subaddressCreationStore.add(
-                      label: _labelController.text);
-                  Navigator.of(context).pop();
-                },
-                text: 'Create',
-                color: _isDarkTheme
-                    ? PaletteDark.darkThemeIndigoButton
-                    : Palette.indigo,
-                borderColor: _isDarkTheme
-                    ? PaletteDark.darkThemeIndigoButtonBorder
-                    : Palette.deepIndigo,
-                isLoading:
-                    subaddressCreationStore.state is SubaddressIsCreating),
-          ))
-    ]);
+        Positioned(
+            bottom: 20,
+            left: 20,
+            right: 20,
+            child: Observer(
+              builder: (_) => LoadingPrimaryButton(
+                  onPressed: () async {
+                    if (_formKey.currentState.validate()) {
+                      await subaddressCreationStore.add(
+                          label: _labelController.text);
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  text: 'Create',
+                  color: _isDarkTheme
+                      ? PaletteDark.darkThemeIndigoButton
+                      : Palette.indigo,
+                  borderColor: _isDarkTheme
+                      ? PaletteDark.darkThemeIndigoButtonBorder
+                      : Palette.deepIndigo,
+                  isLoading:
+                  subaddressCreationStore.state is SubaddressIsCreating),
+            ))
+      ])
+    );
   }
 }

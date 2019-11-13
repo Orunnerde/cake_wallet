@@ -23,7 +23,6 @@ class Routes {
   static const auth = '/auth';
   static const nodeList = '/node_list';
   static const newNode = '/new_node_list';
-  static const home = '/home';
   static const login = '/login';
   static const splash = '/splash';
   static const accountList = '/account_list';
@@ -38,5 +37,11 @@ class Routes {
   static const exchangeFunds = '/exchange_funds';
   static const exchangeTrade = '/exchange_trade';
   static const subaddressList = '/subaddress_list';
+  static const restoreWalletFromSeedDetails = '/restore_from_seed_details';
+  static const exchange = '/exchange';
+  static const settings = '/settings';
+  static const unlock = '/auth_not_closable';
+  static const rescan = '/rescan';
+  static const faq = '/faq';
   static const changeLanguage = '/change_language';
 }

@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
@@ -22,6 +23,9 @@ import 'package:cake_wallet/themes.dart';
 class ExchangePage extends BasePage {
   String get title => 'Exchange';
 
+  @override
+  bool get isModalBackButton => true;
+
   final Image arrowBottomPurple = Image.asset(
     'assets/images/arrow_bottom_purple_icon.png',
     height: 8,
@@ -30,13 +34,8 @@ class ExchangePage extends BasePage {
   @override
   Widget middle(BuildContext context) {
     final exchangeStore = Provider.of<ExchangeStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
+    final _themeChanger = Provider.of<ThemeChanger>(context);
+    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return FlatButton(
       onPressed: () => _presentProviderPicker(context),
@@ -74,31 +73,6 @@ class ExchangePage extends BasePage {
   }
 
   @override
-  Widget leading(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
-
-    return SizedBox(
-        width: 55,
-        child: FlatButton(
-          padding: EdgeInsets.all(0),
-          child: Text('History',
-              style: TextStyle(
-                  color: _isDarkTheme
-                      ? PaletteDark.darkThemeTitleViolet
-                      : Colors.black,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16)),
-          onPressed: () => Navigator.of(context).pushNamed(Routes.tradeHistory),
-        ));
-  }
-
-  @override
   Widget trailing(BuildContext context) {
     final exchangeStore = Provider.of<ExchangeStore>(context);
 
@@ -131,12 +105,13 @@ class ExchangePage extends BasePage {
 
   void _presentProviderPicker(BuildContext context) {
     final exchangeStore = Provider.of<ExchangeStore>(context);
-
+    final items = exchangeStore.providersForCurrentPair();
+    final selectedItem = items.indexOf(exchangeStore.provider);
+    
     showDialog(
         builder: (_) => Picker(
-            items: exchangeStore.providerList,
-            selectedAtIndex:
-                exchangeStore.providerList.indexOf(exchangeStore.provider),
+            items: items,
+            selectedAtIndex: selectedItem,
             title: 'Change Exchange Provider',
             onItemSelected: (provider) =>
                 exchangeStore.changeProvider(provider: provider)),
@@ -179,18 +154,12 @@ class ExchangeFormState extends State<ExchangeForm> {
 
     WidgetsBinding.instance.addPostFrameCallback(
         (_) => _setReactions(context, exchangeStore, walletStore));
+    final _themeChanger = Provider.of<ThemeChanger>(context);
+    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
-
-    return Container(
-      padding: EdgeInsets.only(left: 20, right: 20),
-      child: SingleChildScrollView(
+    return ScrollableWithBottomSection(
+      contentPadding: EdgeInsets.only(left: 20, right: 20),
+      content: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -258,66 +227,67 @@ class ExchangeFormState extends State<ExchangeForm> {
                           .changeReceiveCurrency(currency: currency),
                       imageArrow: arrowBottomCakeGreen,
                     )),
-            Padding(
-              padding: EdgeInsets.only(top: 35, bottom: 15),
-              child: Observer(builder: (_) {
-                final description =
-                    exchangeStore.provider is XMRTOExchangeProvider
-                        ? 'The receive amount is guaranteed'
-                        : 'The receive amount is an estimate';
-                return Center(
-                  child: Text(
-                    description,
-                    style: TextStyle(color: Palette.blueGrey, fontSize: 12),
-                  ),
-                );
-              }),
-            ),
-            Observer(
-                builder: (_) => LoadingPrimaryButton(
-                      text: 'Exchange',
-                      onPressed: () => exchangeStore.createTrade(),
-                      color: _isDarkTheme
-                          ? PaletteDark.darkThemePurpleButton
-                          : Palette.purple,
-                      borderColor: _isDarkTheme
-                          ? PaletteDark.darkThemePurpleButtonBorder
-                          : Palette.deepPink,
-                      isLoading: exchangeStore.tradeState is TradeIsCreating,
-                    )),
-            Observer(builder: (_) {
-              final title = exchangeStore.provider.description.title;
-              var imageSrc = '';
-
-              switch (exchangeStore.provider.description) {
-                case ExchangeProviderDescription.xmrto:
-                  imageSrc = 'assets/images/xmr_btc.png';
-                  break;
-                case ExchangeProviderDescription.changeNow:
-                  imageSrc = 'assets/images/change_now.png';
-                  break;
-              }
-
-              return Padding(
-                padding: EdgeInsets.only(top: 20, bottom: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Image.asset(imageSrc),
-                    SizedBox(width: 10),
-                    Text(
-                      'Powered by $title',
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Color.fromRGBO(191, 201, 215, 1)),
-                    )
-                  ],
-                ),
-              );
-            })
           ],
         ),
       ),
+      bottomSectionPadding: EdgeInsets.only(top: 35, left: 20, right: 20),
+      bottomSection: Column(children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(bottom: 15),
+          child: Observer(builder: (_) {
+            final description = exchangeStore.provider is XMRTOExchangeProvider
+                ? 'The receive amount is guaranteed'
+                : 'The receive amount is an estimate';
+            return Center(
+              child: Text(
+                description,
+                style: TextStyle(color: Palette.blueGrey, fontSize: 12),
+              ),
+            );
+          }),
+        ),
+        Observer(
+            builder: (_) => LoadingPrimaryButton(
+                  text: 'Exchange',
+                  onPressed: () => exchangeStore.createTrade(),
+                  color: _isDarkTheme
+                      ? PaletteDark.darkThemePurpleButton
+                      : Palette.purple,
+                  borderColor: _isDarkTheme
+                      ? PaletteDark.darkThemePurpleButtonBorder
+                      : Palette.deepPink,
+                  isLoading: exchangeStore.tradeState is TradeIsCreating,
+                )),
+        Observer(builder: (_) {
+          final title = exchangeStore.provider.description.title;
+          var imageSrc = '';
+
+          switch (exchangeStore.provider.description) {
+            case ExchangeProviderDescription.xmrto:
+              imageSrc = 'assets/images/xmr_btc.png';
+              break;
+            case ExchangeProviderDescription.changeNow:
+              imageSrc = 'assets/images/change_now.png';
+              break;
+          }
+
+          return Padding(
+            padding: EdgeInsets.only(top: 20, bottom: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(imageSrc),
+                SizedBox(width: 10),
+                Text(
+                  'Powered by $title',
+                  style: TextStyle(
+                      fontSize: 14, color: Color.fromRGBO(191, 201, 215, 1)),
+                )
+              ],
+            ),
+          );
+        })
+      ]),
     );
   }
 

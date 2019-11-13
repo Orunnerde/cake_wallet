@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,6 +8,7 @@ import 'package:cake_wallet/src/domain/common/node.dart';
 import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
 import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
 import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
+import 'package:cake_wallet/src/stores/action_list/action_list_display_mode.dart';
 
 part 'settings_store.g.dart';
 
@@ -17,6 +20,10 @@ abstract class SettingsStoreBase with Store {
   static const currentTransactionPriorityKey = 'current_fee_priority';
   static const currentBalanceDisplayModeKey = 'current_balance_display_mode';
   static const shouldSaveRecipientAddressKey = 'save_recipient_address';
+  static const allowBiometricalAuthenticationKey =
+      'allow_biometrical_authentication';
+  static const currentDarkTheme = 'dark_theme';
+  static const displayActionListModeKey = 'display_list_mode';
   static const currentLanguageCode = 'language_code';
 
   static Future<SettingsStore> load(
@@ -33,6 +40,16 @@ abstract class SettingsStoreBase with Store {
         raw: sharedPreferences.getInt(currentBalanceDisplayModeKey));
     final shouldSaveRecipientAddress =
         sharedPreferences.getBool(shouldSaveRecipientAddressKey);
+    final allowBiometricalAuthentication =
+        sharedPreferences.getBool(allowBiometricalAuthenticationKey) == null
+            ? false
+            : sharedPreferences.getBool(allowBiometricalAuthenticationKey);
+    final savedDarkTheme = sharedPreferences.getBool(currentDarkTheme) == null
+        ? false
+        : sharedPreferences.getBool(currentDarkTheme);
+    final actionlistDisplayMode = ObservableList();
+    actionlistDisplayMode.addAll(deserializeActionlistDisplayModes(
+        sharedPreferences.getInt(displayActionListModeKey) ?? 11));
     final savedLanguageCode =
     sharedPreferences.getString(currentLanguageCode) == null ? 'en'
         : sharedPreferences.getString(currentLanguageCode);
@@ -43,6 +60,10 @@ abstract class SettingsStoreBase with Store {
         initialFiatCurrency: currentFiatCurrency,
         initialTransactionPriority: currentTransactionPriority,
         initialBalanceDisplayMode: currentBalanceDisplayMode,
+        initialSaveRecipientAddress: shouldSaveRecipientAddress,
+        initialAllowBiometricalAuthentication: allowBiometricalAuthentication,
+        initialDarkTheme: savedDarkTheme,
+        actionlistDisplayMode: actionlistDisplayMode);
         initialSaveRecipientAddress: shouldSaveRecipientAddress,
         initialLanguageCode: savedLanguageCode);
     await store.loadSettings();
@@ -57,6 +78,9 @@ abstract class SettingsStoreBase with Store {
   FiatCurrency fiatCurrency;
 
   @observable
+  ObservableList<ActionListDisplayMode> actionlistDisplayMode;
+
+  @observable
   TransactionPriority transactionPriority;
 
   @observable
@@ -64,6 +88,12 @@ abstract class SettingsStoreBase with Store {
 
   @observable
   bool shouldSaveRecipientAddress;
+
+  @observable
+  bool allowBiometricalAuthentication;
+
+  @observable
+  bool isDarkTheme;
 
   @observable
   String languageCode;
@@ -78,6 +108,10 @@ abstract class SettingsStoreBase with Store {
       @required TransactionPriority initialTransactionPriority,
       @required BalanceDisplayMode initialBalanceDisplayMode,
       @required bool initialSaveRecipientAddress,
+      @required bool initialAllowBiometricalAuthentication,
+      @required bool initialDarkTheme,
+      this.actionlistDisplayMode}) {
+      @required bool initialSaveRecipientAddress,
       @required String initialLanguageCode}) {
     fiatCurrency = initialFiatCurrency;
     transactionPriority = initialTransactionPriority;
@@ -85,6 +119,29 @@ abstract class SettingsStoreBase with Store {
     shouldSaveRecipientAddress = initialSaveRecipientAddress;
     _sharedPreferences = sharedPreferences;
     _nodeList = nodeList;
+    allowBiometricalAuthentication = initialAllowBiometricalAuthentication;
+    isDarkTheme = initialDarkTheme;
+
+    actionlistDisplayMode.observe(
+        (dynamic _) => _sharedPreferences.setInt(displayActionListModeKey,
+            serializeActionlistDisplayModes(actionlistDisplayMode)),
+        fireImmediately: false);
+  }
+
+  @action
+  Future setAllowBiometricalAuthentication(
+      {@required bool allowBiometricalAuthentication}) async {
+    this.allowBiometricalAuthentication = allowBiometricalAuthentication;
+    await _sharedPreferences.setBool(
+        allowBiometricalAuthenticationKey, allowBiometricalAuthentication);
+  }
+
+  @action
+  Future saveDarkTheme({@required bool isDarkTheme}) async {
+    this.isDarkTheme = isDarkTheme;
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: isDarkTheme ? Colors.black : Colors.white));
+    await _sharedPreferences.setBool(currentDarkTheme, isDarkTheme);
     languageCode = initialLanguageCode;
   }
 
@@ -134,6 +191,33 @@ abstract class SettingsStoreBase with Store {
   Future loadSettings() async {
     node = await _fetchCurrentNode();
   }
+
+  @action
+  void toggleTransactionsDisplay() =>
+      actionlistDisplayMode.contains(ActionListDisplayMode.transactions)
+          ? _hideTransaction()
+          : _showTransaction();
+
+  @action
+  void toggleTradesDisplay() =>
+      actionlistDisplayMode.contains(ActionListDisplayMode.trades)
+          ? _hideTrades()
+          : _showTrades();
+
+  @action
+  void _hideTransaction() =>
+      actionlistDisplayMode.remove(ActionListDisplayMode.transactions);
+
+  @action
+  void _hideTrades() =>
+      actionlistDisplayMode.remove(ActionListDisplayMode.trades);
+
+  @action
+  void _showTransaction() =>
+      actionlistDisplayMode.add(ActionListDisplayMode.transactions);
+
+  @action
+  void _showTrades() => actionlistDisplayMode.add(ActionListDisplayMode.trades);
 
   Future<Node> _fetchCurrentNode() async {
     final id = _sharedPreferences.getInt(currentNodeIdKey);

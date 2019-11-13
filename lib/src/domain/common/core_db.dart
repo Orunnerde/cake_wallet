@@ -1,3 +1,4 @@
+import 'package:cake_wallet/src/domain/common/wallet.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:cake_wallet/src/domain/common/contact.dart';
@@ -29,8 +30,11 @@ class CoreDB {
     if (_db == null) {
       _db = await openDatabase(path, version: 1,
           onCreate: (Database db, int version) async {
-        await db.execute(
-            'CREATE TABLE Wallets (id TEXT PRIMARY KEY, name TEXT, is_recovery NUMERIC, restore_height INTEGER)');
+        await db.execute('CREATE TABLE ${Wallet.walletsTable}' +
+            ' (${Wallet.idColumn} TEXT PRIMARY KEY,' +
+            '${Wallet.nameColumn} TEXT,' +
+            '${Wallet.isRecoveryColumn} NUMERIC,' +
+            '${Wallet.restoreHeightColumn} INTEGER)');
         await db.execute('CREATE TABLE ${NodeList.tableName}' +
             '(${NodeList.idColumn} INTEGER PRIMARY KEY,' +
             '${NodeList.uriColumn} TEXT KEY,' +
@@ -47,6 +51,7 @@ class CoreDB {
             '${TradeHistory.providerColumn} NUMERIC,' +
             '${TradeHistory.fromColumn} NUMERIC,' +
             '${TradeHistory.toColumn} NUMERIC,' +
+            '${TradeHistory.amountColumn} TEXT,' +
             '${TradeHistory.dateColumn} INTEGER);');
         await db.execute('CREATE TABLE ${RecipientAddressList.tableName}' +
             '(${RecipientAddressList.idColumn} INTEGER PRIMARY KEY,' +

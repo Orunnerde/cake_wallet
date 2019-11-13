@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/palette.dart';
@@ -12,6 +13,7 @@ import 'package:cake_wallet/themes.dart';
 
 class TradeDetailsPage extends BasePage {
   String get title => 'Trade Details';
+  bool get isModalBackButton => true;
 
   @override
   Widget body(BuildContext context) {
@@ -80,8 +82,20 @@ class TradeDetailsPage extends BasePage {
                       itemCount: items.length,
                       itemBuilder: (BuildContext context, int index) {
                         final item = items[index];
-                        return StandartListRow(
-                            title: '${item.title}', value: '${item.value}');
+                        return GestureDetector(
+                          onTap: () {
+                            Clipboard.setData(ClipboardData(text: '${item.value}'));
+                            Scaffold.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('${item.title} copied to Clipboard'),
+                                backgroundColor: Colors.green,
+                                duration: Duration(milliseconds: 1500),
+                              ),
+                            );
+                          },
+                          child: StandartListRow(
+                              title: '${item.title}', value: '${item.value}')
+                        );
                       });
                 }))
           ],

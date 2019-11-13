@@ -2,7 +2,12 @@ import 'dart:async';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cake_wallet/src/domain/common/wallet.dart';
+import 'package:cake_wallet/src/domain/common/balance.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
+import 'package:cake_wallet/src/domain/monero/monero_balance.dart';
+import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/src/stores/price/price_store.dart';
+import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 
 part 'balance_store.g.dart';
 
@@ -15,36 +20,58 @@ abstract class BalanceStoreBase with Store {
   @observable
   String unlockedBalance;
 
-  @observable
-  String fiatFullBalance;
+  @computed
+  String get fiatFullBalance {
+    if (fullBalance == null) {
+      return '0.0';
+    }
 
-  @observable
-  String fiatUnlockedBalance;
+    final symbol = PriceStoreBase.generateSymbolForPair(
+        fiat: _settingsStore.fiatCurrency, crypto: CryptoCurrency.xmr);
+    final price = _priceStore.prices[symbol];
+    return calculateFiatAmount(price: price, cryptoAmount: fullBalance);
+  }
+
+  @computed
+  String get fiatUnlockedBalance {
+    if (unlockedBalance == null) {
+      return '0.0';
+    }
+
+    final symbol = PriceStoreBase.generateSymbolForPair(
+        fiat: _settingsStore.fiatCurrency, crypto: CryptoCurrency.xmr);
+    final price = _priceStore.prices[symbol];
+    return calculateFiatAmount(price: price, cryptoAmount: unlockedBalance);
+  }
 
   @observable
   bool isReversing;
 
   WalletService _walletService;
   StreamSubscription<Wallet> _onWalletChangeSubscription;
-  StreamSubscription<Wallet> _onBalanceChangeSubscription;
+  StreamSubscription<Balance> _onBalanceChangeSubscription;
+  SettingsStore _settingsStore;
+  PriceStore _priceStore;
 
   BalanceStoreBase(
       {String fullBalance = '0.0',
       String unlockedBalance = '0.0',
-      @required WalletService walletService}) {
+      @required WalletService walletService,
+      @required SettingsStore settingsStore,
+      @required PriceStore priceStore}) {
     fullBalance = fullBalance;
     unlockedBalance = unlockedBalance;
-    fiatFullBalance = '0.0';
-    fiatUnlockedBalance = '0.0';
     isReversing = false;
     _walletService = walletService;
+    _settingsStore = settingsStore;
+    _priceStore = priceStore;
 
     if (_walletService.currentWallet != null) {
       _onWalletChanged(_walletService.currentWallet);
     }
 
     _onWalletChangeSubscription = _walletService.onWalletChange
-        .listen((wallet) => _onBalanceChange(wallet));
+        .listen((wallet) => _onWalletChanged(wallet));
   }
 
   @override
@@ -58,16 +85,15 @@ abstract class BalanceStoreBase with Store {
     super.dispose();
   }
 
-  Future _onBalanceChange(Wallet wallet) async {
-    final fullBalance = await wallet.getFullBalance();
-    final unlockedBalance = await wallet.getUnlockedBalance();
+  Future _onBalanceChange(Balance balance) async {
+    final _balance = balance as MoneroBalance;
 
-    if (this.fullBalance != fullBalance) {
-      this.fullBalance = fullBalance;
+    if (this.fullBalance != _balance.fullBalance) {
+      this.fullBalance = _balance.fullBalance;
     }
 
-    if (this.unlockedBalance != unlockedBalance) {
-      this.unlockedBalance = unlockedBalance;
+    if (this.unlockedBalance != _balance.unlockedBalance) {
+      this.unlockedBalance = _balance.unlockedBalance;
     }
   }
 
@@ -77,7 +103,7 @@ abstract class BalanceStoreBase with Store {
     }
 
     _onBalanceChangeSubscription = _walletService.onBalanceChange
-        .listen((wallet) async => await _onBalanceChange(wallet));
+        .listen((balance) async => await _onBalanceChange(balance));
 
     await _updateBalances(wallet);
   }

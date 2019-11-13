@@ -11,6 +11,7 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
+import android.view.WindowManager.LayoutParams;
 
 import com.cakewallet.wallet.handlers.moneroWalletManager.MoneroWalletManagerHandler;
 import com.cakewallet.wallet.monero.Wallet;
@@ -24,7 +25,11 @@ public class MainActivity extends FlutterActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().addFlags(LayoutParams.FLAG_SECURE);
+
         GeneratedPluginRegistrant.registerWith(this);
+
 
         MethodChannel walletManagerChannel = new MethodChannel(getFlutterView(), MoneroWalletManagerHandler.MONERO_WALLET_MANAGER_CHANNEL);
         walletManagerChannel.setMethodCallHandler(

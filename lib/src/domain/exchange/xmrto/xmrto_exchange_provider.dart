@@ -21,7 +21,6 @@ class XMRTOExchangeProvider extends ExchangeProvider {
   static const _orderStatusUriSufix = '/order_status_query/';
   static const _orderCreateUriSufix = '/order_create/';
   static String _apiUri = '';
-  
 
   static Future<String> getApiUri() async {
     if (_apiUri != null && _apiUri.isNotEmpty) {
@@ -92,6 +91,7 @@ class XMRTOExchangeProvider extends ExchangeProvider {
         from: _request.from,
         to: _request.to,
         state: TradeState.created,
+        amount: _request.amount,
         createdAt: DateTime.now());
   }
 
@@ -114,7 +114,7 @@ class XMRTOExchangeProvider extends ExchangeProvider {
 
       throw TradeNotFoundException(id, provider: description);
     }
-    
+
     final responseJSON = json.decode(response.body);
     final address = responseJSON['xmr_receiving_integrated_address'];
     final paymentId = responseJSON['xmr_required_payment_id_short'];
@@ -148,17 +148,23 @@ class XMRTOExchangeProvider extends ExchangeProvider {
       _rate = await _fetchRates();
     }
 
-    return _rate * amount;
+    final double result = _rate * amount;
+
+    return double.parse(result.toStringAsFixed(12));
   }
 
   Future<double> _fetchRates() async {
-    final url = await getApiUri() + _orderParameterUriSufix;
-    final response =
-        await get(url, headers: {'Content-Type': 'application/json'});
-    final responseJSON = json.decode(response.body);
-    double btcprice = responseJSON['price'];
-    double price = 1 / btcprice;
-
-    return price;
+    try {
+      final url = await getApiUri() + _orderParameterUriSufix;
+      final response =
+          await get(url, headers: {'Content-Type': 'application/json'});
+      final responseJSON = json.decode(response.body);
+      double btcprice = responseJSON['price'];
+      double price = 1 / btcprice;
+      return price;
+    } catch (e) {
+      print(e.toString());
+      return 0.0;
+    }
   }
 }

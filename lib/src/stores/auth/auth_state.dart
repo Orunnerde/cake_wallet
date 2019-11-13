@@ -11,3 +11,10 @@ class AuthenticationFailure extends AuthState {
 
   AuthenticationFailure({this.error});
 }
+
+class AuthenticationBanned extends AuthState {
+  final String error;
+
+  AuthenticationBanned({this.error});
+}
+

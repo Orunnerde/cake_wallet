@@ -1,6 +1,6 @@
+import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
@@ -16,9 +16,6 @@ import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
 
 class NewWalletPage extends BasePage {
-  static const _aspectRatioImage = 1.95;
-  static final _image = Image.asset('assets/images/bitmap.png');
-
   final WalletListService walletsService;
   final WalletService walletService;
   final SharedPreferences sharedPreferences;
@@ -31,40 +28,7 @@ class NewWalletPage extends BasePage {
       @required this.sharedPreferences});
 
   @override
-  Widget body(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(20),
-      child: GestureDetector(
-        onTap: () {
-          SystemChannels.textInput.invokeMethod('TextInput.hide');
-        },
-        child: Column(
-          children: <Widget>[
-            Spacer(
-              flex: 1,
-            ),
-            AspectRatio(
-              aspectRatio: _aspectRatioImage,
-              child: Container(
-                width: double.infinity,
-                child: FittedBox(
-                  fit: BoxFit.contain,
-                  child: _image,
-                ),
-              ),
-            ),
-            Spacer(
-              flex: 1,
-            ),
-            Flexible(
-              flex: 8,
-              child: WalletNameForm(),
-            )
-          ],
-        ),
-      ),
-    );
-  }
+  Widget body(BuildContext context) => WalletNameForm();
 }
 
 class WalletNameForm extends StatefulWidget {
@@ -80,10 +44,7 @@ class _WalletNameFormState extends State<WalletNameForm> {
   Widget build(BuildContext context) {
     final walletCreationStore = Provider.of<WalletCreationStore>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     reaction((_) => walletCreationStore.state, (state) {
       if (state is WalletCreatedSuccessfully) {
@@ -109,71 +70,68 @@ class _WalletNameFormState extends State<WalletNameForm> {
       }
     });
 
-    return Form(
-        key: _formKey,
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(left: 13, right: 13),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: TextFormField(
-                      style: TextStyle(
+    return ScrollableWithBottomSection(
+        content: Column(children: [
+          Padding(
+            padding: EdgeInsets.only(bottom: 10),
+            child: Image.asset('assets/images/bitmap.png',
+                height: 224, width: 400),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+            child: Form(
+                key: _formKey,
+                child: TextFormField(
+                  style: TextStyle(
+                      fontSize: 24.0,
+                      color: _isDarkTheme
+                          ? PaletteDark.wildDarkBlueWithOpacity
+                          : Colors.black),
+                  controller: nameController,
+                  decoration: InputDecoration(
+                      hintStyle: TextStyle(
                           fontSize: 24.0,
-                          color: _isDarkTheme ? PaletteDark.wildDarkBlueWithOpacity
-                              : Colors.black
-                      ),
-                      controller: nameController,
-                      decoration: InputDecoration(
-                          hintStyle: TextStyle(
-                              fontSize: 24.0,
-                              color: _isDarkTheme ? PaletteDark.wildDarkBlueWithOpacity
-                                  : Palette.lightBlue
-                          ),
-                          hintText: 'Wallet name',
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                                      : Palette.lightGrey,
-                                  width: 1.0)),
-                          enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                                      : Palette.lightGrey,
-                                  width: 1.0))),
-                      validator: (value) {
-                        if (value.isEmpty) return 'Please enter a wallet name';
-                        return null;
-                      },
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Expanded(
-                child: Container(
-                    alignment: Alignment.bottomCenter,
-                    child: Observer(
-                      builder: (context) {
-                        return LoadingPrimaryButton(
-                          onPressed: () {
-                            if (_formKey.currentState.validate()) {
-                              walletCreationStore.create(
-                                  name: nameController.text);
-                            }
-                          },
-                          text: 'Continue',
-                          color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
-                              : Palette.purple,
-                          borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
-                              : Palette.deepPink,
-                          isLoading:
-                              walletCreationStore.state is WalletIsCreating,
-                        );
-                      },
-                    )))
-          ],
+                          color: _isDarkTheme
+                              ? PaletteDark.wildDarkBlueWithOpacity
+                              : Palette.lightBlue),
+                      hintText: 'Wallet name',
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: _isDarkTheme
+                                  ? PaletteDark.darkThemeGrey
+                                  : Palette.lightGrey,
+                              width: 1.0)),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: _isDarkTheme
+                                  ? PaletteDark.darkThemeGrey
+                                  : Palette.lightGrey,
+                              width: 1.0))),
+                  validator: (value) {
+                    walletCreationStore.validateWalletName(value);
+                    return walletCreationStore.errorMessage;
+                  },
+                )),
+          )
+        ]),
+        bottomSection: Observer(
+          builder: (context) {
+            return LoadingPrimaryButton(
+              onPressed: () {
+                if (_formKey.currentState.validate()) {
+                  walletCreationStore.create(name: nameController.text);
+                }
+              },
+              text: 'Continue',
+              color: _isDarkTheme
+                  ? PaletteDark.darkThemePurpleButton
+                  : Palette.purple,
+              borderColor: _isDarkTheme
+                  ? PaletteDark.darkThemePurpleButtonBorder
+                  : Palette.deepPink,
+              isLoading: walletCreationStore.state is WalletIsCreating,
+            );
+          },
         ));
   }
 }

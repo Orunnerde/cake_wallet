@@ -21,17 +21,17 @@ class AccountListPage extends BasePage {
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme;
 
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    if (_themeChanger.getTheme() == Themes.darkTheme)
+      _isDarkTheme = true;
+    else
+      _isDarkTheme = false;
 
     return Container(
         width: 28.0,
         height: 28.0,
-        decoration:
-            BoxDecoration(
-                shape: BoxShape.circle,
-                color: _isDarkTheme ? PaletteDark.darkThemeViolet : Palette.purple
-            ),
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: _isDarkTheme ? PaletteDark.darkThemeViolet : Palette.purple),
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
@@ -65,8 +65,7 @@ class AccountListPage extends BasePage {
       _currentColor = PaletteDark.darkThemeViolet;
       _notCurrentColor = Theme.of(context).backgroundColor;
       _isDarkTheme = true;
-    }
-    else {
+    } else {
       _currentColor = Palette.purple;
       _notCurrentColor = Colors.white;
       _isDarkTheme = false;
@@ -96,17 +95,10 @@ class AccountListPage extends BasePage {
                           title: Text(
                             account.label,
                             style: TextStyle(
-                              fontSize: 16.0,
-                              color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                                  : Colors.black
-                            ),
-                          ),
-                          trailing: Container(
-                            width: 10.0,
-                            height: 10.0,
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Palette.green),
+                                fontSize: 16.0,
+                                color: _isDarkTheme
+                                    ? PaletteDark.darkThemeGrey
+                                    : Colors.black),
                           ),
                           onTap: () {
                             if (isCurrent) {
@@ -118,7 +110,8 @@ class AccountListPage extends BasePage {
                           },
                         ),
                         Divider(
-                          color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
+                          color: _isDarkTheme
+                              ? PaletteDark.darkThemeGreyWithOpacity
                               : Palette.lightGrey,
                           height: 1.0,
                         )

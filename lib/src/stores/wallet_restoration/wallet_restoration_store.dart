@@ -2,8 +2,10 @@ import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
+import 'package:cake_wallet/src/domain/common/mnemotic_item.dart';
 import 'package:cake_wallet/src/stores/wallet_restoration/wallet_restoration_state.dart';
 import 'package:cake_wallet/src/stores/authentication/authentication_store.dart';
+import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 
 part 'wallet_restoration_store.g.dart';
 
@@ -21,8 +23,15 @@ abstract class WalleRestorationStoreBase with Store {
   @observable
   String errorMessage;
 
+  @observable
+  bool isValid;
+
+  @observable
+  List<MnemoticItem> seed;
+
   WalleRestorationStoreBase(
-      {@required this.authStore,
+      {this.seed,
+        @required this.authStore,
       @required this.walletListService,
       @required this.sharedPreferences}) {
     state = WalletRestorationStateInitial();
@@ -31,11 +40,12 @@ abstract class WalleRestorationStoreBase with Store {
   @action
   Future restoreFromSeed({String name, String seed, int restoreHeight}) async {
     state = WalletRestorationStateInitial();
+    final _seed = seed ?? _seedText();
 
     try {
       state = WalletIsRestoring();
-      await walletListService.restoreFromSeed(name, seed, restoreHeight);
-      authStore.loggedIn();
+      await walletListService.restoreFromSeed(name, _seed, restoreHeight);
+      authStore.restored();
       state = WalletRestoredSuccessfully();
     } catch (e) {
       state = WalletRestorationFailure(error: e.toString());
@@ -55,10 +65,91 @@ abstract class WalleRestorationStoreBase with Store {
       state = WalletIsRestoring();
       await walletListService.restoreFromKeys(
           name, restoreHeight, address, viewKey, spendKey);
-      authStore.loggedIn();
+      authStore.restored();
       state = WalletRestoredSuccessfully();
     } catch (e) {
       state = WalletRestorationFailure(error: e.toString());
     }
+  }
+
+  @action
+  void setSeed(List<MnemoticItem> seed) {
+    this.seed = seed;
+    validateSeed(seed);
+  }
+
+  @action
+  void validateSeed(List<MnemoticItem> seed) {
+    final _seed = seed != null ? seed : this.seed;
+    bool isValid = _seed.length == 25;
+
+    if (!isValid) {
+      print('_seed.length ${_seed.length}');
+      errorMessage = 'Incorrect seed length';
+      this.isValid = isValid;
+      return;
+    }
+
+    for (final item in _seed) {
+      if (!item.isCorrect()) {
+        isValid = false;
+        break;
+      }
+    }
+
+    if (isValid) {
+      errorMessage = null;
+    }
+
+    this.isValid = isValid;
+    return;
+  }
+
+  String _seedText() {
+    return seed.fold('', (acc, item) => acc + ' ' + item.toString());
+  }
+
+  void validateWalletName(String value) {
+    String p = '^[a-zA-Z0-9_]{1,15}\$';
+    RegExp regExp = new RegExp(p);
+    isValid = regExp.hasMatch(value);
+    errorMessage = isValid ? null : 'Wallet name can only contain letters, '
+                                    'numbers\nand must be between 1 and 15 characters long';
+  }
+
+  void validateAddress(String value, {CryptoCurrency cryptoCurrency}) {
+    // XMR (95), BTC (34), ETH (42), LTC (34), BCH (42), DASH (34)
+    String p = '^[0-9a-zA-Z]{95}\$|^[0-9a-zA-Z]{34}\$|^[0-9a-zA-Z]{42}\$';
+    RegExp regExp = new RegExp(p);
+    isValid = regExp.hasMatch(value);
+    if (isValid && cryptoCurrency != null) {
+      switch (cryptoCurrency.toString()) {
+        case 'XMR':
+          isValid = (value.length == 95);
+          break;
+        case 'BTC':
+          isValid = (value.length == 34);
+          break;
+        case 'ETH':
+          isValid = (value.length == 42);
+          break;
+        case 'LTC':
+          isValid = (value.length == 34);
+          break;
+        case 'BCH':
+          isValid = (value.length == 42);
+          break;
+        case 'DASH':
+          isValid = (value.length == 34);
+      }
+    }
+    errorMessage = isValid ? null : 'Wallet address must correspond to the type of cryptocurrency';
+  }
+
+  void validateKeys(String value) {
+    String p = '^[A-Fa-f0-9]{64}\$';
+    RegExp regExp = new RegExp(p);
+    isValid = regExp.hasMatch(value);
+    errorMessage = isValid ? null : 'Wallet keys can only contain 64 chars in hex';
   }
 }

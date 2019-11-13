@@ -12,9 +12,16 @@ import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
 
 class SeedPage extends BasePage {
+  static final image = Image.asset('assets/images/seed_image.png');
   bool get isModalBackButton => true;
   String get title => 'Seed';
-  static final image = Image.asset('assets/images/seed_image.png');
+
+  final VoidCallback onCloseCallback;
+
+  SeedPage({this.onCloseCallback});
+
+  void onClose(BuildContext context) =>
+      onCloseCallback != null ? onCloseCallback() : Navigator.of(context).pop();
 
   @override
   Widget body(BuildContext context) {
@@ -121,27 +128,32 @@ class SeedPage extends BasePage {
                           )),
                           Flexible(
                               child: Container(
-                            padding: EdgeInsets.only(left: 8.0),
-                            child: PrimaryButton(
-                              onPressed: () {
-                                Clipboard.setData(ClipboardData(text: _seed));
-                                Scaffold.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('Copied to Clipboard'),
-                                    backgroundColor: Colors.green,
-                                    duration: Duration(milliseconds: 1500),
-                                  ),
-                                );
-                              },
-                              text: 'Copy',
-                              color: _isDarkTheme
-                                  ? PaletteDark.darkThemeBlueButton
-                                  : Palette.brightBlue,
-                              borderColor: _isDarkTheme
-                                  ? PaletteDark.darkThemeBlueButtonBorder
-                                  : Palette.cloudySky,
-                            ),
-                          ))
+                                  padding: EdgeInsets.only(left: 8.0),
+                                  child: Builder(
+                                    builder: (context) => PrimaryButton(
+                                      onPressed: () {
+                                        Clipboard.setData(
+                                            ClipboardData(text: _seed));
+                                        Scaffold.of(context).showSnackBar(
+                                          SnackBar(
+                                            content:
+                                                Text('Copied to Clipboard'),
+                                            backgroundColor: Colors.green,
+                                            duration:
+                                                Duration(milliseconds: 1500),
+                                          ),
+                                        );
+                                      },
+                                      text: 'Copy',
+                                      color: _isDarkTheme
+                                          ? PaletteDark.darkThemeBlueButton
+                                          : Palette.brightBlue,
+                                      borderColor: _isDarkTheme
+                                          ? PaletteDark
+                                              .darkThemeBlueButtonBorder
+                                          : Palette.cloudySky,
+                                    ),
+                                  )))
                         ],
                       ),
                     )

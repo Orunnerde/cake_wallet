@@ -1,10 +1,10 @@
 import 'package:cake_wallet/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/palette.dart';
-import 'package:barcode_scan/barcode_scan.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/src/domain/common/contact.dart';
 import 'package:cake_wallet/src/domain/monero/subaddress.dart';
+import 'package:cake_wallet/src/domain/common/qr_scanner.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
 
@@ -20,6 +20,7 @@ class AddressTextField extends StatelessWidget {
   final String placeholder;
   final Function(Uri) onURIScanned;
   final List<AddressTextFieldOption> options;
+  final FormFieldValidator<String> validator;
 
   AddressTextField(
       {@required this.controller,
@@ -29,7 +30,8 @@ class AddressTextField extends StatelessWidget {
         AddressTextFieldOption.qrCode,
         AddressTextFieldOption.addressBook
       ],
-      this.onURIScanned});
+      this.onURIScanned,
+      this.validator});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,7 @@ class AddressTextField extends StatelessWidget {
     else
       _isDarkTheme = false;
 
-    return TextField(
+    return TextFormField(
         enabled: isActive,
         controller: controller,
         decoration: InputDecoration(
@@ -126,12 +128,14 @@ class AddressTextField extends StatelessWidget {
                       ? PaletteDark.darkThemeGreyWithOpacity
                       : Palette.lightGrey,
                   width: 1.0)),
-        ));
+        ),
+      validator: validator,
+    );
   }
 
   Future _presentQRScanner(BuildContext context) async {
     try {
-      String code = await BarcodeScanner.scan();
+      String code = await presentQRScanner();
       var uri = Uri.parse(code);
       var address = '';
 

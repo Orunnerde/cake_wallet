@@ -1,53 +1,63 @@
-import 'dart:async';
-import 'package:cake_wallet/src/stores/authentication/authentication_store.dart';
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mobx/mobx.dart';
-import 'package:cake_wallet/src/domain/services/user_service.dart';
-import 'package:cake_wallet/src/domain/services/wallet_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cake_wallet/src/stores/auth/auth_state.dart';
+import 'package:cake_wallet/src/stores/auth/auth_store.dart';
+import 'package:cake_wallet/src/stores/authentication/authentication_store.dart';
 import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
 
 part 'login_store.g.dart';
 
+abstract class LoginState {}
+
+class InitialLoginState extends LoginState {}
+
+class LoadingCurrentWallet extends LoginState {}
+
+class LoadedCurrentWalletSuccessfully extends LoginState {}
+
+class LoadedCurrentWalletFailure extends LoginState {
+  final String errorMessage;
+
+  LoadedCurrentWalletFailure({this.errorMessage});
+}
+
 class LoginStore = LoginStoreBase with _$LoginStore;
 
-enum LoginState { initial, loading, loggedInt, failure }
-
 abstract class LoginStoreBase with Store {
-  final AuthenticationStore authStore;
-  final UserService userService;
-  final WalletService walletService;
-  final WalletListService walletsService;
+  final AuthenticationStore authenticationStore;
+  final AuthStore authStore;
   final SharedPreferences sharedPreferences;
+  final WalletListService walletsService;
 
   @observable
   LoginState state;
 
-  @observable
-  String errorMessage;
-
   LoginStoreBase(
-      {@required this.authStore,
-      @required this.userService,
-      @required this.walletService,
-      @required this.walletsService,
-      @required this.sharedPreferences}) {
-    state = LoginState.initial;
+      {@required this.authenticationStore,
+      @required this.authStore,
+      @required this.sharedPreferences,
+      @required this.walletsService}) {
+    state = InitialLoginState();
+    reaction((_) => authStore.state, (state) async {
+      if (state is AuthenticatedSuccessfully) {
+        await loadCurrentWallet();
+      }
+    });
   }
 
-  Future auth({String password}) async {
-    state = LoginState.initial;
-    final isAuth = await userService.authenticate(password);
+  @action
+  Future loadCurrentWallet() async {
+    state = InitialLoginState();
 
-    if (isAuth) {
-      state = LoginState.loading;
+    try {
+      state = LoadingCurrentWallet();
       final walletName = sharedPreferences.getString('current_wallet_name');
       await walletsService.openWallet(walletName);
-      authStore.loggedIn();
-      state = LoginState.loggedInt;
-    } else {
-      state = LoginState.failure;
-      errorMessage = 'Incorrect password';
+      authenticationStore.loggedIn();
+      state = LoadedCurrentWalletSuccessfully();
+    } catch (e) {
+      state = LoadedCurrentWalletFailure(errorMessage: e.toString());
     }
   }
 }

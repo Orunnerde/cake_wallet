@@ -32,6 +32,12 @@ abstract class WalletStoreBase with Store {
   SettingsStore _settingsStore;
   StreamSubscription<Wallet> _onWalletChangeSubscription;
 
+  @observable
+  bool isValid;
+
+  @observable
+  String errorMessage;
+
   WalletStoreBase({WalletService walletService, SettingsStore settingsStore}) {
     _walletService = walletService;
     _settingsStore = settingsStore;
@@ -61,7 +67,7 @@ abstract class WalletStoreBase with Store {
 
     if (wallet is MoneroWallet) {
       this.account = account;
-      wallet.account.value = account;
+      wallet.changeAccount(account);
     }
   }
 
@@ -77,10 +83,12 @@ abstract class WalletStoreBase with Store {
 
   @action
   Future reconnect() async {
-    await _walletService.connectToNode(
-        uri: _settingsStore.node.uri,
-        login: _settingsStore.node.login,
-        password: _settingsStore.node.password);
+    await _walletService.connectToNode(node: _settingsStore.node);
+  }
+
+   @action
+  Future rescan({int restoreHeight}) async {
+    await _walletService.rescan(restoreHeight: restoreHeight);
   }
 
   Future _onWalletChanged(Wallet wallet) async {
@@ -88,12 +96,19 @@ abstract class WalletStoreBase with Store {
       return;
     }
 
-    wallet.name.listen((name) => this.name = name);
-    wallet.address.listen((address) => this.address = address);
+    wallet.onNameChange.listen((name) => this.name = name);
+    wallet.onAddressChange.listen((address) => this.address = address);
 
     if (wallet is MoneroWallet) {
-      account = wallet.account.value;
+      account = wallet.account;
       wallet.subaddress.listen((subaddress) => this.subaddress = subaddress);
     }
+  }
+
+  void validateAmount(String value) {
+    String p = '^[0-9]+\$';
+    RegExp regExp = new RegExp(p);
+    isValid = regExp.hasMatch(value);
+    errorMessage = isValid ? null : 'Amount can only contain numbers';
   }
 }
