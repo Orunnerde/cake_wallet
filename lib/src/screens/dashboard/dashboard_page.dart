@@ -26,6 +26,7 @@ import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/src/screens/dashboard/wallet_menu.dart';
 import 'package:cake_wallet/src/widgets/picker.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class DashboardPage extends BasePage {
   final _bodyKey = GlobalKey();
@@ -92,9 +93,9 @@ class DashboardPage extends BasePage {
         builder: (_) => Picker(
             items: walletMenu.items,
             selectedAtIndex: -1,
-            title: 'Wallet Menu',
+            title: S.of(bodyContext).wallet_menu,
             onItemSelected: (item) =>
-                walletMenu.action(item)),
+                walletMenu.action(walletMenu.items.indexOf(item))),
         context: bodyContext);
   }
 }
@@ -164,12 +165,12 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
 
                               if (status is SyncingSyncStatus) {
                                 descriptionText =
-                                    '${syncStore.status.toString()} Blocks Remaining ';
+                                    S.of(context).Blocks_remaining(syncStore.status.toString());
                               }
 
                               if (status is FailedSyncStatus) {
                                 descriptionText =
-                                    'Please try to connect to another node';
+                                    S.of(context).please_try_to_connect_to_another_node;
                               }
 
                               return Container(
@@ -216,7 +217,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                     builder: (_) {
                                       final savedDisplayMode =
                                           settingsStore.balanceDisplayMode;
-                                      var title = 'XMR Hidden';
+                                      var title = S.of(context).XMR_hidden;
                                       BalanceDisplayMode displayMode =
                                           balanceStore.isReversing
                                               ? (savedDisplayMode.serialize() ==
@@ -232,13 +233,13 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                       if (displayMode.serialize() ==
                                           BalanceDisplayMode.availableBalance
                                               .serialize()) {
-                                        title = 'XMR Available Balance';
+                                        title = S.of(context).XMR_available_balance;
                                       }
 
                                       if (displayMode.serialize() ==
                                           BalanceDisplayMode.fullBalance
                                               .serialize()) {
-                                        title = 'XMR Full Balance';
+                                        title = S.of(context).XMR_full_balance;
                                       }
 
                                       return Text(title,
@@ -338,7 +339,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                         'assets/images/send_icon.png',
                                         height: 25,
                                         width: 25),
-                                    text: 'Send',
+                                    text: S.of(context).send,
                                     onPressed: () => Navigator.of(context,
                                             rootNavigator: true)
                                         .pushNamed(Routes.send),
@@ -357,7 +358,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                         'assets/images/receive_icon.png',
                                         height: 25,
                                         width: 25),
-                                    text: 'Receive',
+                                    text: S.of(context).receive,
                                     onPressed: () => Navigator.of(context,
                                             rootNavigator: true)
                                         .pushNamed(Routes.receive),
@@ -387,7 +388,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                               PopupMenuItem(
                                   enabled: false,
                                   value: -1,
-                                  child: Text('Transactions',
+                                  child: Text(S.of(context).transactions,
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black))),
@@ -399,7 +400,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                Text('Incoming'),
+                                                Text(S.of(context).incoming),
                                                 Checkbox(
                                                   value: actionListStore
                                                       .transactionFilterStore
@@ -418,7 +419,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                Text('Outgoing'),
+                                                Text(S.of(context).outgoing),
                                                 Checkbox(
                                                   value: actionListStore
                                                       .transactionFilterStore
@@ -431,12 +432,12 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                               ]))),
                               PopupMenuItem(
                                   value: 2,
-                                  child: Text('Transactions by date')),
+                                  child: Text(S.of(context).transactions_by_date)),
                               PopupMenuDivider(),
                               PopupMenuItem(
                                   enabled: false,
                                   value: -1,
-                                  child: Text('Trades',
+                                  child: Text(S.of(context).trades,
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black))),
@@ -483,7 +484,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                                 )
                                               ])))
                             ],
-                            child: Text('Filters',
+                            child: Text(S.of(context).filters,
                                 style: TextStyle(
                                     fontSize: 16.0,
                                     color: _isDarkTheme

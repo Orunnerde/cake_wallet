@@ -7,6 +7,7 @@ import 'package:cake_wallet/src/stores/auth/auth_store.dart';
 import 'package:cake_wallet/src/screens/pin_code/pin_code.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class AuthPage extends StatefulWidget {
   final Function(bool, AuthPageState) onAuthenticationFinished;
@@ -43,7 +44,7 @@ class AuthPageState extends State<AuthPage> {
           } else {
             _key.currentState.showSnackBar(
               SnackBar(
-                content: Text('Authenticated'),
+                content: Text(S.of(context).authenticated),
                 backgroundColor: Colors.green,
               ),
             );
@@ -55,7 +56,7 @@ class AuthPageState extends State<AuthPage> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _key.currentState.showSnackBar(
             SnackBar(
-              content: Text('Authentication'),
+              content: Text(S.of(context).authentication),
               backgroundColor: Colors.green,
             ),
           );
@@ -67,7 +68,7 @@ class AuthPageState extends State<AuthPage> {
           _pinCodeKey.currentState.clear();
           _key.currentState.showSnackBar(
             SnackBar(
-              content: Text('Failed authentication. ${state.error}'),
+              content: Text(S.of(context).failed_authentication(state.error)),
               backgroundColor: Colors.red,
             ),
           );

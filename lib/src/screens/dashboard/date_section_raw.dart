@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:intl/intl.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class DateSectionRaw extends StatelessWidget {
   static final dateSectionDateFormat = DateFormat("d MMM");
@@ -16,9 +17,9 @@ class DateSectionRaw extends StatelessWidget {
     var title = "";
 
     if (diffDays == 0) {
-      title = "Today";
+      title = S.of(context).today;
     } else if (diffDays == -1) {
-      title = "Yesterday";
+      title = S.of(context).yesterday;
     } else if (diffDays > -7 && diffDays < 0) {
       final dateFormat = DateFormat("EEEE");
       title = dateFormat.format(date);

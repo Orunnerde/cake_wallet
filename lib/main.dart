@@ -113,7 +113,8 @@ class CakeWalletApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ThemeChanger>(
-        builder: (_) => ThemeChanger(Themes.lightTheme),
+        builder: (_) => ThemeChanger(
+            settingsStore.isDarkTheme ? Themes.darkTheme : Themes.lightTheme),
         child: ChangeNotifierProvider<Language>(
           builder: (_) => Language(settingsStore.languageCode),
           child: MaterialAppWithTheme(

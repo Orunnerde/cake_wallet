@@ -7,9 +7,10 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class AccountPage extends BasePage {
-  String get title => 'Account';
+  String get title => S.current.account;
 
   @override
   Widget body(BuildContext context) => AccountForm();
@@ -51,7 +52,7 @@ class AccountFormState extends State<AccountForm> {
                             color: _isDarkTheme ? PaletteDark.darkThemeGrey
                                 : Palette.lightBlue
                         ),
-                        hintText: 'Account',
+                        hintText: S.of(context).account,
                         focusedBorder: UnderlineInputBorder(
                             borderSide:
                             BorderSide(
@@ -83,7 +84,7 @@ class AccountFormState extends State<AccountForm> {
                     label: _textController.text);
                 Navigator.pop(context, _textController.text);
               },
-              text: 'Add',
+              text: S.of(context).add,
               color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
                   : Palette.purple,
               borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
