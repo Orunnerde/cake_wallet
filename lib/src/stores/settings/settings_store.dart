@@ -63,9 +63,9 @@ abstract class SettingsStoreBase with Store {
         initialSaveRecipientAddress: shouldSaveRecipientAddress,
         initialAllowBiometricalAuthentication: allowBiometricalAuthentication,
         initialDarkTheme: savedDarkTheme,
-        actionlistDisplayMode: actionlistDisplayMode);
-        initialSaveRecipientAddress: shouldSaveRecipientAddress,
+        actionlistDisplayMode: actionlistDisplayMode,
         initialLanguageCode: savedLanguageCode);
+
     await store.loadSettings();
 
     return store;
@@ -110,8 +110,7 @@ abstract class SettingsStoreBase with Store {
       @required bool initialSaveRecipientAddress,
       @required bool initialAllowBiometricalAuthentication,
       @required bool initialDarkTheme,
-      this.actionlistDisplayMode}) {
-      @required bool initialSaveRecipientAddress,
+      this.actionlistDisplayMode,
       @required String initialLanguageCode}) {
     fiatCurrency = initialFiatCurrency;
     transactionPriority = initialTransactionPriority;
@@ -121,6 +120,7 @@ abstract class SettingsStoreBase with Store {
     _nodeList = nodeList;
     allowBiometricalAuthentication = initialAllowBiometricalAuthentication;
     isDarkTheme = initialDarkTheme;
+    languageCode = initialLanguageCode;
 
     actionlistDisplayMode.observe(
         (dynamic _) => _sharedPreferences.setInt(displayActionListModeKey,
@@ -142,7 +142,6 @@ abstract class SettingsStoreBase with Store {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: isDarkTheme ? Colors.black : Colors.white));
     await _sharedPreferences.setBool(currentDarkTheme, isDarkTheme);
-    languageCode = initialLanguageCode;
   }
 
   @action

@@ -31,10 +31,7 @@ class ChangeLanguage extends BasePage{
     final currentLanguage = Provider.of<Language>(context);
 
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Container(
       padding: EdgeInsets.only(
