@@ -12,7 +12,7 @@ import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/generated/i18n.dart';
 
 class ExchangeConfirmPage extends BasePage {
-  String get title => S.current.copy_ID;
+  String get title => S.current.copy_id;
 
   final Trade trade;
 
@@ -34,7 +34,7 @@ class ExchangeConfirmPage extends BasePage {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Text(
-                        S.of(context).exchange_result_write_down_trade_ID,
+                        S.of(context).exchange_result_write_down_trade_id,
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 18.0,
                           color: _isDarkTheme ? Palette.wildDarkBlue : Colors.black
@@ -44,7 +44,7 @@ class ExchangeConfirmPage extends BasePage {
                         height: 70.0,
                       ),
                       Text(
-                        S.of(context).trade_ID(trade.id),
+                        S.of(context).trade_id(trade.id),
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 18.0,
                             color: _isDarkTheme ? Palette.wildDarkBlue : Colors.black
@@ -68,7 +68,7 @@ class ExchangeConfirmPage extends BasePage {
                             backgroundColor: Colors.green,
                           ));
                         },
-                        text: S.of(context).copy_ID,
+                        text: S.of(context).copy_id,
                         color: _isDarkTheme ? PaletteDark.darkThemeBlueButton
                             : Palette.brightBlue,
                         borderColor: _isDarkTheme ? PaletteDark.darkThemeBlueButtonBorder
@@ -82,7 +82,7 @@ class ExchangeConfirmPage extends BasePage {
           child: PrimaryButton(
               onPressed: () => Navigator.of(context)
                   .pushReplacementNamed(Routes.exchangeTrade, arguments: trade),
-              text: S.of(context).saved_the_trade_ID,
+              text: S.of(context).saved_the_trade_id,
               color: _isDarkTheme ? PaletteDark.darkThemePurpleButton : Palette.purple,
               borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder : Palette.deepPink,
           ),

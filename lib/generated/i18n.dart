@@ -21,15 +21,12 @@ class S implements WidgetsLocalizations {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
-  String get ID => "ID: ";
-  String get XMR_available_balance => "XMR Available Balance";
-  String get XMR_full_balance => "XMR Full Balance";
-  String get XMR_hidden => "XMR Hidden";
   String get account => "Account";
   String get accounts => "Accounts";
   String get add => "Add";
   String get address_book => "Address Book";
   String get address_book_menu => "Address book";
+  String get all => "ALL";
   String get amount => "Amount: ";
   String get amount_is_estimate => "The receive amount is an estimate";
   String get amount_is_guaranteed => "The receive amount is guaranteed";
@@ -46,8 +43,9 @@ class S implements WidgetsLocalizations {
   String get contact_name => "Contact Name";
   String get continue_text => "Continue";
   String get copied_to_clipboard => "Copied to Clipboard";
-  String get copy_ID => "Copy ID";
+  String get copy => "Copy";
   String get copy_address => "Copy Address";
+  String get copy_id => "Copy ID";
   String get create_new => "Create new";
   String get delete => "Delete";
   String get digit_pin => "-digit Pin";
@@ -57,12 +55,13 @@ class S implements WidgetsLocalizations {
   String get estimated => "Estimated";
   String get exchange => "Exchange";
   String get exchange_result_write_down_ID => "*Please copy or write down your ID shown above.";
-  String get exchange_result_write_down_trade_ID => "Please copy or write down the trade ID to continue.";
+  String get exchange_result_write_down_trade_id => "Please copy or write down the trade ID to continue.";
   String get expired => "Expired";
   String get faq => "FAQ";
   String get fetching => "Fetching";
   String get filters => "Filters";
   String get first_wallet_text => "Awesome wallet\nfor Monero";
+  String get id => "ID: ";
   String get incoming => "Incoming";
   String get loading_your_wallet => "Loading your wallet";
   String get login => "Login";
@@ -77,7 +76,7 @@ class S implements WidgetsLocalizations {
   String get ok => "OK";
   String get outgoing => "Outgoing";
   String get password => "Password";
-  String get payment_ID => "Payment ID: ";
+  String get payment_id => "Payment ID: ";
   String get pending => " (pending)";
   String get please_make_selection => "Please make selection below to\ncreate or recover your wallet.";
   String get please_select => "Please select:";
@@ -93,10 +92,43 @@ class S implements WidgetsLocalizations {
   String get remove_node_message => "Are you sure that you want to remove selected node?";
   String get rescan => "Rescan";
   String get reset => "Reset";
+  String get restore_address => "Address";
+  String get restore_description_from_backup => "You can restore the whole Cake Wallet app from\nyour back-up file";
+  String get restore_description_from_keys => "Restore your wallet from generated\nkeystrokes saved from your private keys";
+  String get restore_description_from_seed => "Restore your wallet from either the 25 word\nor 13 word combination code";
+  String get restore_description_from_seed_keys => "Get back your wallet from seed/keys that you've saved to secure place";
+  String get restore_next => "Next";
+  String get restore_recover => "Recover";
+  String get restore_restore_wallet => "Restore Wallet";
+  String get restore_seed_keys_restore => "Seed/Keys Restore";
+  String get restore_spend_key_private => "Spend key (private)";
+  String get restore_title_from_backup => "Restore from a back-up file";
+  String get restore_title_from_keys => "Restore from keys";
+  String get restore_title_from_seed => "Restore from seed";
+  String get restore_title_from_seed_keys => "Restore from seed/keys";
+  String get restore_view_key_private => "View key (private)";
   String get restore_wallet => "Restore wallet";
+  String get restore_wallet_name => "Wallet name";
+  String get restore_wallet_restore_description => "Wallet restore description";
   String get save => "Save";
-  String get saved_the_trade_ID => "I've saved the trade ID";
+  String get saved_the_trade_id => "I've saved the trade ID";
+  String get seed_alert_first_text => "The next page will show\nyou a seed.";
+  String get seed_alert_menu => " menu.";
+  String get seed_alert_second_text => "Please write these down just in\ncase you lose or wipe your phone.";
+  String get seed_alert_settings => "settings";
+  String get seed_alert_third_text => "You can also see the seed again\nin the ";
+  String get seed_alert_understand => "I understand";
+  String get seed_share => "Share seed";
+  String get seed_title => "Seed";
   String get send => "Send";
+  String get send_creating_transaction => "Creating transaction";
+  String get send_error_currency => "Currency can only contain numbers";
+  String get send_error_minimum_value => "Minimum value of amount is 0.01";
+  String get send_estimated_fee => "Estimated fee:";
+  String get send_monero_address => "Monero address";
+  String get send_payment_id => "Payment ID (optional)";
+  String get send_title => "Send Monero";
+  String get send_your_wallet => "Your wallet";
   String get sending => "Sending";
   String get sent => "Sent";
   String get share_address => "Share address";
@@ -114,6 +146,9 @@ class S implements WidgetsLocalizations {
   String get wallet_name => "Wallet name";
   String get wallets => "Wallets";
   String get welcome => "WELCOME\nTO CAKE WALLET";
+  String get xmr_available_balance => "XMR Available Balance";
+  String get xmr_full_balance => "XMR Full Balance";
+  String get xmr_hidden => "XMR Hidden";
   String get yesterday => "Yesterday";
   String get you_will_get => "You will get";
   String get you_will_send => "You will send";
@@ -126,8 +161,9 @@ class S implements WidgetsLocalizations {
   String max_value(String value, String currency) => "Max: ${value} ${currency}";
   String min_value(String value, String currency) => "Min: ${value} ${currency}";
   String powered_by(String title) => "Powered by ${title}";
+  String send_priority(String transactionPriority) => "Currently the fee is set at ${transactionPriority} priority.\nTransaction priority can be adjusted in the settings";
   String time(String minutes, String seconds) => "${minutes}m ${seconds}s";
-  String trade_ID(String id) => "Trade ID:\n${id}";
+  String trade_id(String id) => "Trade ID:\n${id}";
   String trade_is_powered_by(String provider) => "This trade is powered by ${provider}";
 }
 
@@ -137,112 +173,6 @@ class $ru extends S {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
-  @override
-  String get cancel => "Cancel";
-  @override
-  String get you_will_get => "You will get";
-  @override
-  String get welcome => "Welcome\nto %@";
-  @override
-  String get edit => "Edit";
-  @override
-  String get received => "Received";
-  @override
-  String get reconnection => "Reconnection";
-  @override
-  String get reconnect => "Reconnect";
-  @override
-  String get reconnect_alert_text => "Are you sure to reconnect?";
-  @override
-  String get copy_address => "Copy Address";
-  @override
-  String get nodes_list_reset_to_default_message => "Are you sure that you want to reset settings to default ?";
-  @override
-  String get receive => "Receive";
-  @override
-  String get amount_is_guaranteed => "The receive amount is guaranteed";
-  @override
-  String get confirm => "Confirm";
-  @override
-  String get you_will_send => "You will send";
-  @override
-  String get create_new => "Create new";
-  @override
-  String get confirm_sending => "Confirm sending";
-  @override
-  String get contact => "Contact";
-  @override
-  String get add => "Add";
-  @override
-  String get exchange => "Exchange";
-  @override
-  String get pending => "pending";
-  @override
-  String get remove => "Remove";
-  @override
-  String get please_make_selection => "Please make a selection below to either create a new wallet or restore a wallet";
-  @override
-  String get subaddresses => "Subaddresses";
-  @override
-  String get nodes => "Nodes";
-  @override
-  String get show_seed => "Show seed";
-  @override
-  String get node_new => "New node";
-  @override
-  String get wallet_name => "Wallet name";
-  @override
-  String get node_reset_settings_title => "Reset settings";
-  @override
-  String get wallets => "Wallets";
-  @override
-  String get transactions => "Transactions";
-  @override
-  String get amount_is_estimate => "The receive amount is an estimate";
-  @override
-  String get reset => "Reset";
-  @override
-  String get new_wallet => "New wallet";
-  @override
-  String get status => "Status";
-  @override
-  String get save => "Save";
-  @override
-  String get node_port => "Node port";
-  @override
-  String get contact_name => "Contact name";
-  @override
-  String get change => "Change";
-  @override
-  String get accounts => "Счета";
-  @override
-  String get rescan => "Rescan";
-  @override
-  String get show_keys => "Show keys";
-  @override
-  String get sent => "Sent";
-  @override
-  String get send => "Send";
-  @override
-  String get delete => "Remove";
-  @override
-  String get restore_wallet => "Restore Wallet";
-  @override
-  String get ok => "OK";
-  @override
-  String get authentication => "Authentication";
-  @override
-  String get amount => "Amount";
-  @override
-  String get node_address => "Node address";
-  @override
-  String get clear => "Clear";
-  @override
-  String get enter_your_pin => "Enter your PIN";
-  @override
-  String get address_book => "Address book";
-  @override
-  String get first_wallet_text => "The first iOS wallet\nfor Monero";
 }
 
 class $en extends S {

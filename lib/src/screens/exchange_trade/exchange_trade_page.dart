@@ -69,7 +69,7 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            S.of(context).ID,
+                            S.of(context).id,
                             style: TextStyle(
                                 height: 2,
                                 fontWeight: FontWeight.bold,
@@ -118,7 +118,7 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  S.of(context).payment_ID,
+                                  S.of(context).payment_id,
                                   style: TextStyle(
                                       height: 2,
                                       fontWeight: FontWeight.bold,
@@ -243,7 +243,7 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                     child: CopyButton(
                       onPressed: () =>
                           Clipboard.setData(ClipboardData(text: trade.id)),
-                      text: S.of(context).copy_ID,
+                      text: S.of(context).copy_id,
                       color: _isDarkTheme
                           ? PaletteDark.darkThemeIndigoButton
                           : Palette.indigo,

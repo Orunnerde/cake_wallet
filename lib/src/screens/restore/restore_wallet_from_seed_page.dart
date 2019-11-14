@@ -14,13 +14,14 @@ import 'package:cake_wallet/src/stores/wallet_restoration/wallet_restoration_sto
 import 'package:cake_wallet/src/widgets/seed_widget.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class RestoreWalletFromSeedPage extends BasePage {
   final WalletListService walletsService;
   final WalletService walletService;
   final SharedPreferences sharedPreferences;
 
-  String get title => 'Restore from seed';
+  String get title => S.current.restore_title_from_seed;
 
   RestoreWalletFromSeedPage(
       {@required this.walletsService,
@@ -74,7 +75,7 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
                         Routes.restoreWalletFromSeedDetails,
                         arguments: _seedKey.currentState.items);
                   },
-                  text: 'Next',
+                  text: S.of(context).restore_next,
                   color: _isDarkTheme
                       ? PaletteDark.darkThemePurpleButton
                       : Palette.purple,

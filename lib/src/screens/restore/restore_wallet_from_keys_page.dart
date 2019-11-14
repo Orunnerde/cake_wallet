@@ -16,13 +16,14 @@ import 'package:cake_wallet/src/widgets/blockchain_height_widget.dart';
 import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class RestoreWalletFromKeysPage extends BasePage {
   final WalletListService walletsService;
   final WalletService walletService;
   final SharedPreferences sharedPreferences;
 
-  String get title => 'Restore from keys';
+  String get title => S.current.restore_title_from_keys;
 
   RestoreWalletFromKeysPage(
       {@required this.walletsService,
@@ -66,7 +67,7 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                   content: Text(state.error),
                   actions: <Widget>[
                     FlatButton(
-                      child: Text("OK"),
+                      child: Text(S.of(context).ok),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ],
@@ -99,7 +100,7 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                                 color: _isDarkTheme
                                     ? PaletteDark.darkThemeGrey
                                     : Palette.lightBlue),
-                            hintText: 'Wallet name',
+                            hintText: S.of(context).restore_wallet_name,
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                     color: _isDarkTheme
@@ -135,7 +136,7 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                                 color: _isDarkTheme
                                     ? PaletteDark.darkThemeGrey
                                     : Palette.lightBlue),
-                            hintText: 'Address',
+                            hintText: S.of(context).restore_address,
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                     color: _isDarkTheme
@@ -169,7 +170,7 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                                 color: _isDarkTheme
                                     ? PaletteDark.darkThemeGrey
                                     : Palette.lightBlue),
-                            hintText: 'View key (private)',
+                            hintText: S.of(context).restore_view_key_private,
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                     color: _isDarkTheme
@@ -203,7 +204,7 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                                 color: _isDarkTheme
                                     ? PaletteDark.darkThemeGrey
                                     : Palette.lightBlue),
-                            hintText: 'Spend key (private)',
+                            hintText: S.of(context).restore_spend_key_private,
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                     color: _isDarkTheme
@@ -242,7 +243,7 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                   restoreHeight: _blockchainHeightKey.currentState.height);
             }
           },
-          text: 'Recover',
+          text: S.of(context).restore_recover,
           color:
               _isDarkTheme ? PaletteDark.darkThemePurpleButton : Palette.purple,
           borderColor: _isDarkTheme

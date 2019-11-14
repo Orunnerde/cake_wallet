@@ -17,9 +17,10 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class SendPage extends BasePage {
-  String get title => 'Send Monero';
+  String get title => S.current.send_title;
   bool get isModalBackButton => true;
   bool get resizeToAvoidBottomPadding => false;
 
@@ -93,7 +94,7 @@ class SendFormState extends State<SendForm> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text('Your wallet',
+                        Text(S.of(context).send_your_wallet,
                             style: TextStyle(
                                 fontSize: 12, color: Palette.lightViolet)),
                         Text(walletStore.name,
@@ -109,7 +110,7 @@ class SendFormState extends State<SendForm> {
                   return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text('XMR Available Balance',
+                        Text(S.of(context).xmr_available_balance,
                             style: TextStyle(
                               fontSize: 12,
                               color: _isDarkTheme
@@ -138,7 +139,7 @@ class SendFormState extends State<SendForm> {
                     Column(children: <Widget>[
                       AddressTextField(
                           controller: _addressController,
-                          placeholder: 'Monero address',
+                          placeholder: S.of(context).send_monero_address,
                           onURIScanned: (uri) {
                             var address = '';
                             var amount = '';
@@ -180,7 +181,7 @@ class SendFormState extends State<SendForm> {
                                     color: _isDarkTheme
                                         ? PaletteDark.darkThemeGrey
                                         : Palette.lightBlue),
-                                hintText: 'Payment ID (optional)',
+                                hintText: S.of(context).send_payment_id,
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
                                         color: _isDarkTheme
@@ -228,7 +229,7 @@ class SendFormState extends State<SendForm> {
                                   child: Center(
                                     child: InkWell(
                                         onTap: () => sendStore.setSendAll(balanceStore.unlockedBalance),
-                                        child: Text('ALL',
+                                        child: Text(S.of(context).all,
                                             style: TextStyle(
                                                 fontSize: 10,
                                                 color: _isDarkTheme
@@ -312,9 +313,9 @@ class SendFormState extends State<SendForm> {
                                   availableAmount *= fiatAmount/cryptoAmount;
                                   sendStore.validateFiat(value, availableAmount);
                                   return sendStore.errorMessage;
-                                } else return "Minimum value of amount is 0.01";
+                                } else return S.of(context).send_error_minimum_value;
                               } catch (e) {
-                                return "Currency can only contain numbers";
+                                return S.of(context).send_error_currency;
                               }
                             }
                         ),
@@ -324,7 +325,7 @@ class SendFormState extends State<SendForm> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text('Estimated fee:',
+                            Text(S.of(context).send_estimated_fee,
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -346,7 +347,7 @@ class SendFormState extends State<SendForm> {
                       SizedBox(
                         width: double.infinity,
                         child: Text(
-                            'Currently the fee is set at ${settingsStore.transactionPriority.toString()} priority.\nTransaction priority can be adjusted in the settings',
+                            S.of(context).send_priority(settingsStore.transactionPriority.toString()),
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
@@ -366,11 +367,11 @@ class SendFormState extends State<SendForm> {
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
-                                      title: Text('Creating transaction'),
-                                      content: Text('Confirm sending'),
+                                      title: Text(S.of(context).send_creating_transaction),
+                                      content: Text(S.of(context).confirm_sending),
                                       actions: <Widget>[
                                         FlatButton(
-                                            child: Text("Send"),
+                                            child: Text(S.of(context).send),
                                             onPressed: () async {
                                               Navigator.of(context).popAndPushNamed(
                                                   Routes.auth, arguments:
@@ -389,7 +390,7 @@ class SendFormState extends State<SendForm> {
                                               });
                                             }),
                                         FlatButton(
-                                            child: Text("Cancel"),
+                                            child: Text(S.of(context).cancel),
                                             onPressed: () =>
                                                 Navigator.of(context).pop())
                                       ],
@@ -397,7 +398,7 @@ class SendFormState extends State<SendForm> {
                                   });
                             }
                           },
-                          text: 'Send',
+                          text: S.of(context).send,
                           color: _isDarkTheme
                               ? PaletteDark.darkThemeIndigoButton
                               : Palette.indigo,
@@ -455,11 +456,11 @@ class SendFormState extends State<SendForm> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text('Error'),
+                  title: Text(S.of(context).error),
                   content: Text(state.error),
                   actions: <Widget>[
                     FlatButton(
-                        child: Text("OK"),
+                        child: Text(S.of(context).ok),
                         onPressed: () => Navigator.of(context).pop())
                   ],
                 );
@@ -473,18 +474,18 @@ class SendFormState extends State<SendForm> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text('Confirm sending'),
+                  title: Text(S.of(context).confirm_sending),
                   content: Text(
-                      'Commit transaction\nAmount: ${sendStore.pendingTransaction.amount}\nFee: ${sendStore.pendingTransaction.fee}'),
+                    S.of(context).commit_transaction_amount_fee(sendStore.pendingTransaction.amount, sendStore.pendingTransaction.fee)),
                   actions: <Widget>[
                     FlatButton(
-                        child: Text("OK"),
+                        child: Text(S.of(context).ok),
                         onPressed: () {
                           Navigator.of(context).pop();
                           sendStore.commitTransaction();
                         }),
                     FlatButton(
-                      child: Text("Cancel"),
+                      child: Text(S.of(context).cancel),
                       onPressed: () => Navigator.of(context).pop(),
                     )
                   ],
@@ -499,11 +500,11 @@ class SendFormState extends State<SendForm> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text('Sending'),
-                  content: Text('Transaction sent!'),
+                  title: Text(S.of(context).sending),
+                  content: Text(S.of(context).transaction_sent),
                   actions: <Widget>[
                     FlatButton(
-                        child: Text("OK"),
+                        child: Text(S.of(context).ok),
                         onPressed: () {
                           _addressController.text = '';
                           _cryptoAmountController.text = '';

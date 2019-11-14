@@ -217,7 +217,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                     builder: (_) {
                                       final savedDisplayMode =
                                           settingsStore.balanceDisplayMode;
-                                      var title = S.of(context).XMR_hidden;
+                                      var title = S.of(context).xmr_hidden;
                                       BalanceDisplayMode displayMode =
                                           balanceStore.isReversing
                                               ? (savedDisplayMode.serialize() ==
@@ -233,13 +233,13 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                       if (displayMode.serialize() ==
                                           BalanceDisplayMode.availableBalance
                                               .serialize()) {
-                                        title = S.of(context).XMR_available_balance;
+                                        title = S.of(context).xmr_available_balance;
                                       }
 
                                       if (displayMode.serialize() ==
                                           BalanceDisplayMode.fullBalance
                                               .serialize()) {
-                                        title = S.of(context).XMR_full_balance;
+                                        title = S.of(context).xmr_full_balance;
                                       }
 
                                       return Text(title,

@@ -10,11 +10,12 @@ import 'package:cake_wallet/src/stores/wallet_seed/wallet_seed_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class SeedPage extends BasePage {
   static final image = Image.asset('assets/images/seed_image.png');
   bool get isModalBackButton => true;
-  String get title => 'Seed';
+  String get title => S.current.seed_title;
 
   final VoidCallback onCloseCallback;
 
@@ -29,12 +30,7 @@ class SeedPage extends BasePage {
     String _seed;
 
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
+    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Form(
         child: GestureDetector(
@@ -117,14 +113,14 @@ class SeedPage extends BasePage {
                             padding: EdgeInsets.only(right: 8.0),
                             child: PrimaryButton(
                                 onPressed: () => Share.text(
-                                    'Share seed', _seed, 'text/plain'),
+                                    S.of(context).seed_share, _seed, 'text/plain'),
                                 color: _isDarkTheme
                                     ? PaletteDark.darkThemePurpleButton
                                     : Palette.purple,
                                 borderColor: _isDarkTheme
                                     ? PaletteDark.darkThemePurpleButtonBorder
                                     : Palette.deepPink,
-                                text: 'Save'),
+                                text: S.of(context).save),
                           )),
                           Flexible(
                               child: Container(
@@ -137,14 +133,14 @@ class SeedPage extends BasePage {
                                         Scaffold.of(context).showSnackBar(
                                           SnackBar(
                                             content:
-                                                Text('Copied to Clipboard'),
+                                                Text(S.of(context).copied_to_clipboard),
                                             backgroundColor: Colors.green,
                                             duration:
                                                 Duration(milliseconds: 1500),
                                           ),
                                         );
                                       },
-                                      text: 'Copy',
+                                      text: S.of(context).copy,
                                       color: _isDarkTheme
                                           ? PaletteDark.darkThemeBlueButton
                                           : Palette.brightBlue,

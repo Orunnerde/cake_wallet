@@ -5,6 +5,7 @@ import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class SeedAlert extends StatelessWidget{
   final imageSeed = Image.asset('assets/images/seedIco.png');
@@ -33,7 +34,7 @@ class SeedAlert extends StatelessWidget{
                     children: <Widget>[
                       imageSeed,
                       Text(
-                        'The next page will show\nyou a seed.',
+                        S.of(context).seed_alert_first_text,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 19.0
@@ -41,7 +42,7 @@ class SeedAlert extends StatelessWidget{
                       ),
                       SizedBox(height: 20.0,),
                       Text(
-                        'Please write these down just in\ncase you lose or wipe your phone.',
+                        S.of(context).seed_alert_second_text,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           letterSpacing: 0.2,
@@ -55,7 +56,7 @@ class SeedAlert extends StatelessWidget{
                         text: TextSpan(
                           children: <TextSpan>[
                             TextSpan(
-                              text: 'You can also see the seed again\nin the ',
+                              text: S.of(context).seed_alert_third_text,
                               style: TextStyle(
                                 letterSpacing: 0.2,
                                 fontSize: 16.0,
@@ -63,7 +64,7 @@ class SeedAlert extends StatelessWidget{
                               )
                             ),
                             TextSpan(
-                              text: 'settings',
+                              text: S.of(context).seed_alert_settings,
                               style: TextStyle(
                                 letterSpacing: 0.2,
                                 fontSize: 16.0,
@@ -71,7 +72,7 @@ class SeedAlert extends StatelessWidget{
                               )
                             ),
                             TextSpan(
-                              text: ' menu.',
+                              text: S.of(context).seed_alert_menu,
                               style: TextStyle(
                                 letterSpacing: 0.2,
                                 fontSize: 16.0,
@@ -87,7 +88,7 @@ class SeedAlert extends StatelessWidget{
               ),
               PrimaryButton(
                 onPressed: (){},
-                text: 'I understand',
+                text: S.of(context).seed_alert_understand,
                 color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
                     : Palette.purple,
                 borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder

@@ -30,9 +30,9 @@
   "wallet_menu" : "Wallet Menu",
   "Blocks_remaining" : "${status} Blocks Remaining",
   "please_try_to_connect_to_another_node" : "Please try to connect to another node",
-  "XMR_hidden" : "XMR Hidden",
-  "XMR_available_balance" : "XMR Available Balance",
-  "XMR_full_balance" : "XMR Full Balance",
+  "xmr_hidden" : "XMR Hidden",
+  "xmr_available_balance" : "XMR Available Balance",
+  "xmr_full_balance" : "XMR Full Balance",
   "send" : "Send",
   "receive" : "Receive",
   "transactions" : "Transactions",
@@ -71,15 +71,15 @@
   "change_currency" : "Change Currency",
 
 
-  "copy_ID" : "Copy ID",
-  "exchange_result_write_down_trade_ID" : "Please copy or write down the trade ID to continue.",
-  "trade_ID" : "Trade ID:\n${id}",
+  "copy_id" : "Copy ID",
+  "exchange_result_write_down_trade_id" : "Please copy or write down the trade ID to continue.",
+  "trade_id" : "Trade ID:\n${id}",
   "copied_to_clipboard" : "Copied to Clipboard",
-  "saved_the_trade_ID" : "I've saved the trade ID",
+  "saved_the_trade_id" : "I've saved the trade ID",
   "fetching" : "Fetching",
-  "ID" : "ID: ",
+  "id" : "ID: ",
   "amount" : "Amount: ",
-  "payment_ID" : "Payment ID: ",
+  "payment_id" : "Payment ID: ",
   "status" : "Status: ",
   "offer_expires_in" : "Offer expires in: ",
   "trade_is_powered_by" : "This trade is powered by ${provider}",
@@ -130,6 +130,49 @@
 
   "share_address" : "Share address",
   "receive_amount" : "Amount",
-  "subaddresses" : "Subaddresses"
+  "subaddresses" : "Subaddresses",
 
+
+  "restore_restore_wallet" : "Restore Wallet",
+  "restore_title_from_seed_keys" : "Restore from seed/keys",
+  "restore_description_from_seed_keys" : "Get back your wallet from seed/keys that you've saved to secure place",
+  "restore_next" : "Next",
+  "restore_title_from_backup" : "Restore from a back-up file",
+  "restore_description_from_backup" : "You can restore the whole Cake Wallet app from\nyour back-up file",
+  "restore_seed_keys_restore" : "Seed/Keys Restore",
+  "restore_title_from_seed" : "Restore from seed",
+  "restore_description_from_seed" : "Restore your wallet from either the 25 word\nor 13 word combination code",
+  "restore_title_from_keys" : "Restore from keys",
+  "restore_description_from_keys" : "Restore your wallet from generated\nkeystrokes saved from your private keys",
+  "restore_wallet_name" : "Wallet name",
+  "restore_address" : "Address",
+  "restore_view_key_private" : "View key (private)",
+  "restore_spend_key_private" : "Spend key (private)",
+  "restore_recover" : "Recover",
+  "restore_wallet_restore_description" : "Wallet restore description",
+
+
+  "seed_title" : "Seed",
+  "seed_share" : "Share seed",
+  "copy" : "Copy",
+
+
+  "seed_alert_first_text" : "The next page will show\nyou a seed.",
+  "seed_alert_second_text" : "Please write these down just in\ncase you lose or wipe your phone.",
+  "seed_alert_third_text" : "You can also see the seed again\nin the ",
+  "seed_alert_settings" : "settings",
+  "seed_alert_menu" : " menu.",
+  "seed_alert_understand" : "I understand",
+
+
+  "send_title" : "Send Monero",
+  "send_your_wallet" : "Your wallet",
+  "send_monero_address" : "Monero address",
+  "send_payment_id" : "Payment ID (optional)",
+  "all" : "ALL",
+  "send_error_minimum_value" : "Minimum value of amount is 0.01",
+  "send_error_currency" : "Currency can only contain numbers",
+  "send_estimated_fee" : "Estimated fee:",
+  "send_priority" : "Currently the fee is set at ${transactionPriority} priority.\nTransaction priority can be adjusted in the settings",
+  "send_creating_transaction" : "Creating transaction"
 }
