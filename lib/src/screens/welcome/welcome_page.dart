@@ -50,7 +50,7 @@ class WelcomePage extends BasePage {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Text(
-                S.of(context).wallet,
+                S.of(context).welcome,
                 style: TextStyle(
                   fontSize: 30.0,
                   fontWeight: FontWeight.bold,

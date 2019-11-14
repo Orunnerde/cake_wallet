@@ -21,251 +21,114 @@ class S implements WidgetsLocalizations {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
-  String get InsufficientFunds => "Your sending amount is more than your balance of %@.";
-  String get InsufficientFundsWithAmount => "Your sending amount of %@ (amount of %@ + fee of %@ is more than your balance of %@).";
-  String get OverallBalance => "Your sending amount is more than your balance of %@.";
-  String get OverallBalanceWithAmonut => "Your sending amount of %@ is more than your balance of %@.";
+  String get ID => "ID: ";
   String get XMR_available_balance => "XMR Available Balance";
   String get XMR_full_balance => "XMR Full Balance";
   String get XMR_hidden => "XMR Hidden";
-  String get _continue => "Continue";
-  String get accept => "Accept";
   String get account => "Account";
   String get accounts => "Accounts";
   String get add => "Add";
-  String get address => "Address";
   String get address_book => "Address Book";
   String get address_book_menu => "Address book";
-  String get advanced => "Advanced";
-  String get all => "ALL";
-  String get allow_biometric_authentication => "Allow biometric authentication";
-  String get amount => "Amount";
+  String get amount => "Amount: ";
   String get amount_is_estimate => "The receive amount is an estimate";
   String get amount_is_guaranteed => "The receive amount is guaranteed";
-  String get ask_to_remove_message => "This action will PERMANENTLY delete the wallet %@ and all its seed and private keys. Do you wish to continue?";
   String get authenticated => "Authenticated";
   String get authentication => "Authentication";
-  String get auto_backup => "Auto backup to iCloud";
-  String get auto_switch_node => "Auto switch node";
-  String get backup => "Backup";
-  String get backup_now => "Backup now to iCloud";
-  String get backup_password => "Backup password";
-  String get backup_password_has_changed => "Backup password has changed successfuly";
-  String get backup_uploaded => "Backup uploaded";
-  String get backup_uploaded_icloud => "Backup has uploaded to your iCloud";
-  String get balance_display_type_full => "Full Balance";
-  String get balance_display_type_hidden => "Hidden";
-  String get balance_display_type_unlocked => "Available Balance";
-  String get balance_type_title => "Display Balance As";
   String get cancel => "Cancel";
   String get change => "Change";
-  String get change_backup_password => "Change backup password";
-  String get change_backup_warning => "If you will change the Backup password for backups, the previous MANUAL backups will not work with the new password. Auto backups will continue to work with the new password.";
-  String get change_current_node_message => "Are you sure to change current node to %@ ?";
-  String get change_language => "Change language";
-  String get change_language_ask => "Change application language to %@ ?";
-  String get change_master_password => "Change/Set master password";
-  String get change_pin => "Change pin";
-  String get change_transaction_priority => "Transaction priority can be adjusted in the settings";
+  String get change_currency => "Change Currency";
+  String get change_exchange_provider => "Change Exchange Provider";
   String get clear => "Clear";
-  String get commit_transaction => "Commit transaction";
   String get confirm => "Confirm";
   String get confirm_sending => "Confirm sending";
-  String get connecting => "Connecting";
   String get contact => "Contact";
   String get contact_name => "Contact Name";
-  String get continue_restore => "Continue restore";
-  String get copied => "Copied";
-  String get copy => "Copy";
+  String get continue_text => "Continue";
+  String get copied_to_clipboard => "Copied to Clipboard";
+  String get copy_ID => "Copy ID";
   String get copy_address => "Copy Address";
-  String get copy_id => "Copy ID";
-  String get create_exchange => "Create a new exchange";
   String get create_new => "Create new";
-  String get create_new_wallet => "Create New Wallet";
-  String get create_pin => "Create PIN";
-  String get creating_backup => "Creating backup";
-  String get creating_transaction => "Creating transaction";
-  String get creating_wallet => "Creating new wallet with name -";
-  String get currency => "Currency";
-  String get current_node => "Current node";
-  String get currently_the_fee_is_set_at => "Currently the fee is set at";
-  String get dark_mode_setting_title => "Dark mode";
-  String get date => "Date";
-  String get delete => "Remove";
-  String get delete_node => "Remove node";
-  String get delete_node_message => "Are you sure that you want to remove selected node ?";
-  String get deposit => "Deposit";
-  String get done => "Done";
+  String get delete => "Delete";
+  String get digit_pin => "-digit Pin";
   String get edit => "Edit";
-  String get enable_icloud => "Please enable iCloud in the iPhone settings";
-  String get enjoy_this_wallet => "Please enjoy this wallet.";
-  String get enter_height_while_restore_alert => "Don't be stupid, enter restore height!";
-  String get enter_new_password => "Enter new password";
-  String get enter_wallet_name => "Enter wallet name";
   String get enter_your_pin => "Enter your PIN";
-  String get estimated_fee => "Estimated fee";
+  String get error => "Error";
+  String get estimated => "Estimated";
   String get exchange => "Exchange";
-  String get exchange_id => "Exchange ID";
-  String get exchange_provider => "Exchange provider";
-  String get exchange_result_confirm_sending => "Please press confirm to continue or go back to change the amounts.";
-  String get exchange_result_confirm_text => "By pressing confirm, you will be sending %@ from your wallet called %@ to the address shown above. Or you can send from your external wallet to the above address/QR code.";
-  String get exchange_result_description_text => "Please send %@ to the address shown above";
-  String get exchange_result_write_down_trade_id => "Please copy or write down your ID shown above";
-  String get exchange_trade_state_complete => "Complete";
-  String get exchange_trade_state_confirming => "Confirming";
-  String get exchange_trade_state_pending => "Pending";
-  String get exchange_trade_state_processing => "Processing";
-  String get exchange_trade_state_traded => "Traded";
-  String get exchange_trade_state_trading => "Trading";
-  String get failed_connection_to_node => "Failed connect to the node";
-  String get fee => "Fee";
-  String get fee_priority => "Fee priority";
+  String get exchange_result_write_down_ID => "*Please copy or write down your ID shown above.";
+  String get exchange_result_write_down_trade_ID => "Please copy or write down the trade ID to continue.";
+  String get expired => "Expired";
+  String get faq => "FAQ";
+  String get fetching => "Fetching";
   String get filters => "Filters";
   String get first_wallet_text => "Awesome wallet\nfor Monero";
-  String get from_keys => "From keys";
-  String get from_seed => "From seed";
-  String get generate_new_password => "Generate new";
-  String get height => "Height";
-  String get hide_options => "Hide options";
-  String get i_saved_sec_key => "I have saved the trade ID";
-  String get i_understand => "I understand";
   String get incoming => "Incoming";
-  String get incorrect_deposit_amount => "Incorrect deposit amount";
-  String get incorrect_pin => "Incorrect PIN";
-  String get last_block_received => "Last block received:";
-  String get load_wallet => "Load wallet";
-  String get loading_wallet => "Loading wallet with name";
-  String get love_your_feedback => "We would love your feedback!";
-  String get manage_nodes => "Manage remote nodes";
-  String get manual_backup => "Manual backup";
-  String get max => "Max";
-  String get min => "Min";
-  String get minutes_to_unlock => "minutes to unlock full balance";
-  String get more_options => "More options";
-  String get new_subaddress_label => "New subaddress label";
-  String get new_wallet => "New wallet";
-  String get next_page_seed => "The next page will show you a seed";
-  String get next_page_seed_instructions => "Please write these down in case you loose or wipe your phone.\n\nYou can also see the seed again in the settings menu.";
-  String get no_contacts => "No contacts yet";
-  String get no_trades => "No trades yet";
-  String get node_address => "Node address";
-  String get node_new => "New node";
+  String get loading_your_wallet => "Loading your wallet";
+  String get login => "Login";
+  String get new_wallet => "New Wallet";
+  String get node_address => "Node Address";
+  String get node_new => "New Node";
   String get node_port => "Node port";
   String get node_reset_settings_title => "Reset settings";
   String get nodes => "Nodes";
-  String get nodes_list_reset_to_default => "Reset nodes list to default";
-  String get nodes_list_reset_to_default_message => "Are you sure that you want to reset settings to default ?";
-  String get not_connected => "Not connected";
+  String get nodes_list_reset_to_default_message => "Are you sure that you want to reset settings to default?";
+  String get offer_expires_in => "Offer expires in: ";
   String get ok => "OK";
-  String get optional => "Optional";
-  String get or => "or";
-  String get order_created => "Trade is created";
   String get outgoing => "Outgoing";
-  String get pair => "Pair";
+  String get password => "Password";
+  String get payment_ID => "Payment ID: ";
   String get pending => " (pending)";
-  String get personal => "Personal";
-  String get pin_setup_success => "Your PIN has been set up successfully!";
   String get please_make_selection => "Please make selection below to\ncreate or recover your wallet.";
-  String get please_save_sec_key => "Please copy or write down the trade ID to continue.\n\nTrade ID: %@";
   String get please_select => "Please select:";
   String get please_try_to_connect_to_another_node => "Please try to connect to another node";
-  String get priority => "priority";
-  String get re_enter_your_pin => "Re-enter your PIN";
   String get receive => "Receive";
-  String get receive_address_is_empty => "Receive address is empty";
+  String get receive_amount => "Amount";
   String get received => "Received";
-  String get recipient_address => "Recipient address";
   String get reconnect => "Reconnect";
   String get reconnect_alert_text => "Are you sure to reconnect?";
   String get reconnection => "Reconnection";
-  String get recover => "Recover";
-  String get refund_address => "Refund address";
-  String get refund_address_is_empty => "Refund address is empty";
-  String get remember_pin => "Remember pin";
   String get remove => "Remove";
-  String get removing_wallet => "Removing wallet with name";
+  String get remove_node => "Remove node";
+  String get remove_node_message => "Are you sure that you want to remove selected node?";
   String get rescan => "Rescan";
   String get reset => "Reset";
-  String get restore_from_backup => "Restore from a back-up file";
-  String get restore_from_backup_long => "Restore the whole Cake Wallet app from your back-up file";
-  String get restore_from_date => "Restore from date";
-  String get restore_from_seed_keys => "Restore from seed/keys";
-  String get restore_from_seed_keys_long => "Restore your wallet from your seed or keys";
-  String get restore_height => "Restore from blockheight";
-  String get restore_keys_card_description => "Restore your wallet from your private keys";
-  String get restore_keys_card_title => "Restore from keys";
-  String get restore_seed_card_description => "Restore your wallet from either the 25 word or 13 word seed";
-  String get restore_seed_card_title => "Restore from seed";
-  String get restore_selection_text => "There are two ways to restore your wallet. You can either enter your seed, which is a 25 word phrase, or you can enter your keys. Please select one below.";
   String get restore_wallet => "Restore wallet";
-  String get restore_your_wallet => "Restore Your Wallet";
-  String get restoring_wallet => "Restoring wallet";
   String get save => "Save";
-  String get save_backup_file => "Save backup file to other location";
-  String get save_backup_password => "Did you save your backup password?";
-  String get save_recipient_address => "Save recipient address";
-  String get saved => "Saved";
-  String get saving => "Saving";
-  String get seed => "Seed";
-  String get seed_disclaimer => "Please copy, or write down your seed. The seed is used to recover your wallet. This is your PRIVATE seed. DO NOT SHARE this seed with other people!";
+  String get saved_the_trade_ID => "I've saved the trade ID";
   String get send => "Send";
-  String get send_monero => "Send Monero";
+  String get sending => "Sending";
   String get sent => "Sent";
-  String get set_restore_height => "Set restore height";
-  String get settings => "Settings";
-  String get setup_pin => "Setup PIN";
-  String get show_backup_password => "Show backup password";
+  String get share_address => "Share address";
   String get show_keys => "Show keys";
-  String get show_password => "Show password";
   String get show_seed => "Show seed";
-  String get spend_key_private => "Spend key (private)";
-  String get spend_key_public => "Spend key (public)";
-  String get starting_creation_selection => "Please make a selection below for either creating a new wallet or recovering your existing wallet.";
-  String get starting_rescan => "Starting rescan";
-  String get starting_sync => "Starting sync";
-  String get state => "State";
-  String get status => "Status";
+  String get status => "Status: ";
   String get subaddresses => "Subaddresses";
-  String get support => "Support";
-  String get switch_exchange => "Switch exchange";
-  String get synchronized => "Synchronized";
-  String get synchronizing => "Synchronizing";
-  String get terms => "Legal Disclaimer And Terms of Use";
-  String get terms_accepting_message => "By using this app, you agree to the Terms of Agreement set forth below";
-  String get terms_of_use_agree => "I agree to Terms of Use";
   String get today => "Today";
-  String get trade_id => "Trade ID";
-  String get trade_is_powered => "This trade is powered by %@";
-  String get trade_not_found => "Trade is not found";
   String get trades => "Trades";
-  String get trades_history => "Trades history";
-  String get transaction_created => "Transaction created";
-  String get transaction_details => "Transaction details";
-  String get transaction_id => "Transaction ID";
-  String get transaction_key => "Transaction key";
+  String get transaction_sent => "Transaction sent!";
   String get transactions => "Transactions";
   String get transactions_by_date => "Transactions by date";
-  String get unlock_wallet => "To unlock your wallet";
-  String get use_4_pin => "Use 4-digits PIN";
-  String get use_6_pin => "Use 6-digits PIN";
-  String get use_pin_password => "Use Pin password";
-  String get version => "Version";
-  String get view_key_private => "View key (private)";
-  String get view_key_public => "View key (public)";
-  String get wallet => "Wallet";
-  String get wallet_keys => "Wallet keys";
+  String get use => "Use ";
   String get wallet_menu => "Wallet Menu";
   String get wallet_name => "Wallet name";
   String get wallets => "Wallets";
   String get welcome => "WELCOME\nTO CAKE WALLET";
-  String get yes => "Yes";
   String get yesterday => "Yesterday";
   String get you_will_get => "You will get";
-  String get you_will_receive => "You will receive";
   String get you_will_send => "You will send";
-  String get your_wallet => "Your wallet";
   String Blocks_remaining(String status) => "${status} Blocks Remaining";
+  String change_current_node(String node) => "Are you sure to change current node to ${node}?";
+  String commit_transaction_amount_fee(String amount, String fee) => "Commit transaction\nAmount: ${amount}\nFee: ${fee}";
+  String exchange_result_confirm(String fetchingLabel, String from, String walletName) => "By pressing confirm, you will be sending ${fetchingLabel} ${from} from your wallet called ${walletName} to the address shown above. Or you can send from your external wallet to the above address/QR code.\n\nPlease press confirm to continue or go back to change the amounts.\n\n";
+  String exchange_result_description(String fetchingLabel, String from) => "Please send ${fetchingLabel} ${from} to the address shown above.\n\n'";
   String failed_authentication(String state_error) => "Failed authentication. ${state_error}";
+  String max_value(String value, String currency) => "Max: ${value} ${currency}";
+  String min_value(String value, String currency) => "Min: ${value} ${currency}";
+  String powered_by(String title) => "Powered by ${title}";
+  String time(String minutes, String seconds) => "${minutes}m ${seconds}s";
+  String trade_ID(String id) => "Trade ID:\n${id}";
+  String trade_is_powered_by(String provider) => "This trade is powered by ${provider}";
 }
 
 class $ru extends S {
@@ -275,127 +138,23 @@ class $ru extends S {
   TextDirection get textDirection => TextDirection.ltr;
 
   @override
-  String get restore_keys_card_description => "Restore your wallet from your private keys";
-  @override
   String get cancel => "Cancel";
-  @override
-  String get next_page_seed => "The next page will show you a seed";
-  @override
-  String get your_wallet => "Your wallet";
-  @override
-  String get starting_creation_selection => "Please make a selection below for either creating a new wallet or recovering your existing wallet.";
-  @override
-  String get pin_setup_success => "Your PIN has been set up successfully!";
-  @override
-  String get i_understand => "I understand";
-  @override
-  String get backup_uploaded => "Backup uploaded";
-  @override
-  String get exchange_trade_state_complete => "Complete";
-  @override
-  String get saved => "Saved";
-  @override
-  String get starting_sync => "Starting sync";
-  @override
-  String get continue_restore => "Continue restore";
   @override
   String get you_will_get => "You will get";
   @override
-  String get trade_id => "Trade ID";
-  @override
-  String get exchange_result_description_text => "Please send %@ to the address shown above";
-  @override
-  String get synchronizing => "Synchronizing";
-  @override
-  String get refund_address => "Refund address";
-  @override
-  String get refund_address_is_empty => "Refund address is empty";
-  @override
-  String get state => "State";
-  @override
   String get welcome => "Welcome\nto %@";
-  @override
-  String get height => "Height";
-  @override
-  String get transaction_id => "Transaction ID";
-  @override
-  String get more_options => "More options";
   @override
   String get edit => "Edit";
   @override
-  String get spend_key_public => "Spend key (public)";
-  @override
   String get received => "Received";
-  @override
-  String get optional => "Optional";
-  @override
-  String get personal => "Personal";
-  @override
-  String get restore_from_backup => "Restore from a back-up file";
-  @override
-  String get save_backup_file => "Save backup file to other location";
-  @override
-  String get change_backup_password => "Change backup password";
-  @override
-  String get no_trades => "No trades yet";
-  @override
-  String get version => "Version";
-  @override
-  String get accept => "Accept";
-  @override
-  String get not_connected => "Not connected";
-  @override
-  String get transaction_key => "Transaction key";
-  @override
-  String get setup_pin => "Setup PIN";
-  @override
-  String get nodes_list_reset_to_default => "Reset nodes list to default";
-  @override
-  String get deposit => "Deposit";
-  @override
-  String get restore_selection_text => "There are two ways to restore your wallet. You can either enter your seed, which is a 25 word phrase, or you can enter your keys. Please select one below.";
-  @override
-  String get change_current_node_message => "Are you sure to change current node to %@ ?";
-  @override
-  String get view_key_private => "View key (private)";
-  @override
-  String get create_new_wallet => "Create New Wallet";
-  @override
-  String get InsufficientFundsWithAmount => "Your sending amount of %@ (amount of %@ + fee of %@ is more than your balance of %@).";
-  @override
-  String get seed => "Seed";
-  @override
-  String get exchange_result_confirm_text => "By pressing confirm, you will be sending %@ from your wallet called %@ to the address shown above. Or you can send from your external wallet to the above address/QR code.";
   @override
   String get reconnection => "Reconnection";
   @override
-  String get restore_height => "Restore from blockheight";
-  @override
-  String get trade_is_powered => "This trade is powered by %@";
-  @override
-  String get wallet_keys => "Wallet keys";
-  @override
   String get reconnect => "Reconnect";
-  @override
-  String get min => "Min";
   @override
   String get reconnect_alert_text => "Are you sure to reconnect?";
   @override
-  String get exchange_provider => "Exchange provider";
-  @override
-  String get exchange_trade_state_processing => "Processing";
-  @override
   String get copy_address => "Copy Address";
-  @override
-  String get restore_seed_card_description => "Restore your wallet from either the 25 word or 13 word seed";
-  @override
-  String get currency => "Currency";
-  @override
-  String get enter_new_password => "Enter new password";
-  @override
-  String get new_subaddress_label => "New subaddress label";
-  @override
-  String get auto_backup => "Auto backup to iCloud";
   @override
   String get nodes_list_reset_to_default_message => "Are you sure that you want to reset settings to default ?";
   @override
@@ -403,101 +162,23 @@ class $ru extends S {
   @override
   String get amount_is_guaranteed => "The receive amount is guaranteed";
   @override
-  String get address => "Address";
-  @override
-  String get order_created => "Trade is created";
-  @override
-  String get exchange_trade_state_trading => "Trading";
-  @override
-  String get enable_icloud => "Please enable iCloud in the iPhone settings";
-  @override
   String get confirm => "Confirm";
-  @override
-  String get love_your_feedback => "We would love your feedback!";
-  @override
-  String get create_pin => "Create PIN";
-  @override
-  String get change_pin => "Change pin";
   @override
   String get you_will_send => "You will send";
   @override
   String get create_new => "Create new";
   @override
-  String get backup_now => "Backup now to iCloud";
-  @override
-  String get current_node => "Current node";
-  @override
-  String get enter_height_while_restore_alert => "Don't be stupid, enter restore height!";
-  @override
   String get confirm_sending => "Confirm sending";
-  @override
-  String get transaction_details => "Transaction details";
-  @override
-  String get backup_uploaded_icloud => "Backup has uploaded to your iCloud";
-  @override
-  String get incorrect_pin => "Incorrect PIN";
   @override
   String get contact => "Contact";
   @override
-  String get last_block_received => "Last block received:";
-  @override
-  String get OverallBalance => "Your sending amount is more than your balance of %@.";
-  @override
   String get add => "Add";
-  @override
-  String get change_master_password => "Change/Set master password";
-  @override
-  String get generate_new_password => "Generate new";
-  @override
-  String get terms_accepting_message => "By using this app, you agree to the Terms of Agreement set forth below";
-  @override
-  String get commit_transaction => "Commit transaction";
-  @override
-  String get save_recipient_address => "Save recipient address";
-  @override
-  String get please_save_sec_key => "Please copy or write down the trade ID to continue.\n\nTrade ID: %@";
-  @override
-  String get allow_biometric_authentication => "Allow biometric authentication";
   @override
   String get exchange => "Exchange";
   @override
-  String get support => "Support";
-  @override
-  String get no_contacts => "No contacts yet";
-  @override
-  String get restore_from_date => "Restore from date";
-  @override
-  String get manage_nodes => "Manage remote nodes";
-  @override
   String get pending => "pending";
   @override
-  String get you_will_receive => "You will receive";
-  @override
-  String get change_transaction_priority => "Transaction priority can be adjusted in the settings";
-  @override
   String get remove => "Remove";
-  @override
-  String get use_6_pin => "Use 6-digits PIN";
-  @override
-  String get dark_mode_setting_title => "Dark mode";
-  @override
-  String get next_page_seed_instructions => "Please write these down in case you loose or wipe your phone.\n\nYou can also see the seed again in the settings menu.";
-  @override
-  String get restore_from_backup_long => "Restore the whole Cake Wallet app from your back-up file";
-  @override
-  String get use_pin_password => "Use Pin password";
-  @override
-  String get switch_exchange => "Switch exchange";
-  @override
-  String get yes => "Yes";
-  @override
-  String get balance_display_type_unlocked => "Available Balance";
-  @override
-  String get pair => "Pair";
-  @override
-  String get i_saved_sec_key => "I have saved the trade ID";
-  @override
-  String get copy_id => "Copy ID";
   @override
   String get please_make_selection => "Please make a selection below to either create a new wallet or restore a wallet";
   @override
@@ -505,45 +186,11 @@ class $ru extends S {
   @override
   String get nodes => "Nodes";
   @override
-  String get exchange_trade_state_pending => "Pending";
-  @override
-  String get show_backup_password => "Show backup password";
-  @override
-  String get trade_not_found => "Trade is not found";
-  @override
-  String get InsufficientFunds => "Your sending amount is more than your balance of %@.";
-  @override
   String get show_seed => "Show seed";
-  @override
-  String get backup => "Backup";
-  @override
-  String get advanced => "Advanced";
-  @override
-  String get re_enter_your_pin => "Re-enter your PIN";
-  @override
-  String get restore_keys_card_title => "Restore from keys";
-  @override
-  String get delete_node => "Remove node";
-  @override
-  String get estimated_fee => "Estimated fee";
-  @override
-  String get OverallBalanceWithAmonut => "Your sending amount of %@ is more than your balance of %@.";
-  @override
-  String get minutes_to_unlock => "minutes to unlock full balance";
-  @override
-  String get terms => "Legal Disclaimer And Terms of Use";
   @override
   String get node_new => "New node";
   @override
-  String get receive_address_is_empty => "Receive address is empty";
-  @override
-  String get hide_options => "Hide options";
-  @override
-  String get change_language => "Change language";
-  @override
   String get wallet_name => "Wallet name";
-  @override
-  String get from_seed => "From seed";
   @override
   String get node_reset_settings_title => "Reset settings";
   @override
@@ -551,181 +198,51 @@ class $ru extends S {
   @override
   String get transactions => "Transactions";
   @override
-  String get removing_wallet => "Removing wallet with name";
-  @override
-  String get priority => "priority";
-  @override
-  String get auto_switch_node => "Auto switch node";
-  @override
-  String get balance_type_title => "Display Balance As";
-  @override
   String get amount_is_estimate => "The receive amount is an estimate";
-  @override
-  String get enter_wallet_name => "Enter wallet name";
-  @override
-  String get saving => "Saving";
-  @override
-  String get load_wallet => "Load wallet";
-  @override
-  String get restore_from_seed_keys_long => "Restore your wallet from your seed or keys";
   @override
   String get reset => "Reset";
   @override
-  String get use_4_pin => "Use 4-digits PIN";
-  @override
   String get new_wallet => "New wallet";
-  @override
-  String get create_exchange => "Create a new exchange";
   @override
   String get status => "Status";
   @override
-  String get starting_rescan => "Starting rescan";
-  @override
   String get save => "Save";
-  @override
-  String get terms_of_use_agree => "I agree to Terms of Use";
-  @override
-  String get enjoy_this_wallet => "Please enjoy this wallet.";
-  @override
-  String get exchange_trade_state_traded => "Traded";
-  @override
-  String get creating_transaction => "Creating transaction";
-  @override
-  String get currently_the_fee_is_set_at => "Currently the fee is set at";
-  @override
-  String get creating_wallet => "Creating new wallet with name -";
-  @override
-  String get manual_backup => "Manual backup";
-  @override
-  String get delete_node_message => "Are you sure that you want to remove selected node ?";
-  @override
-  String get copy => "Copy";
   @override
   String get node_port => "Node port";
   @override
-  String get restoring_wallet => "Restoring wallet";
-  @override
   String get contact_name => "Contact name";
-  @override
-  String get transaction_created => "Transaction created";
-  @override
-  String get wallet => "Wallet";
-  @override
-  String get exchange_result_write_down_trade_id => "Please copy or write down your ID shown above";
-  @override
-  String get max => "Max";
-  @override
-  String get restore_seed_card_title => "Restore from seed";
   @override
   String get change => "Change";
   @override
-  String get balance_display_type_full => "Full Balance";
-  @override
-  String get loading_wallet => "Loading wallet with name";
-  @override
-  String get backup_password_has_changed => "Backup password has changed successfuly";
-  @override
-  String get ask_to_remove_message => "This action will PERMANENTLY delete the wallet %@ and all its seed and private keys. Do you wish to continue?";
-  @override
   String get accounts => "Счета";
-  @override
-  String get connecting => "Connecting";
   @override
   String get rescan => "Rescan";
   @override
-  String get unlock_wallet => "To unlock your wallet";
-  @override
   String get show_keys => "Show keys";
-  @override
-  String get exchange_trade_state_confirming => "Confirming";
-  @override
-  String get date => "Date";
-  @override
-  String get synchronized => "Synchronized";
-  @override
-  String get copied => "Copied";
-  @override
-  String get save_backup_password => "Did you save your backup password?";
-  @override
-  String get fee => "Fee";
-  @override
-  String get remember_pin => "Remember pin";
-  @override
-  String get spend_key_private => "Spend key (private)";
-  @override
-  String get creating_backup => "Creating backup";
-  @override
-  String get all => "ALL";
-  @override
-  String get settings => "Settings";
-  @override
-  String get from_keys => "From keys";
   @override
   String get sent => "Sent";
   @override
-  String get done => "Done";
-  @override
-  String get change_language_ask => "Change application language to %@ ?";
-  @override
-  String get view_key_public => "View key (public)";
-  @override
-  String get set_restore_height => "Set restore height";
-  @override
-  String get restore_your_wallet => "Restore Your Wallet";
-  @override
   String get send => "Send";
   @override
-  String get send_monero => "Send Monero";
-  @override
-  String get exchange_result_confirm_sending => "Please press confirm to continue or go back to change the amounts.";
-  @override
   String get delete => "Remove";
-  @override
-  String get exchange_id => "Exchange ID";
-  @override
-  String get balance_display_type_hidden => "Hidden";
-  @override
-  String get fee_priority => "Fee priority";
-  @override
-  String get incorrect_deposit_amount => "Incorrect deposit amount";
   @override
   String get restore_wallet => "Restore Wallet";
   @override
   String get ok => "OK";
   @override
-  String get show_password => "Show password";
-  @override
   String get authentication => "Authentication";
-  @override
-  String get trades_history => "Trades history";
   @override
   String get amount => "Amount";
   @override
-  String get seed_disclaimer => "Please copy, or write down your seed. The seed is used to recover your wallet. This is your PRIVATE seed. DO NOT SHARE this seed with other people!";
-  @override
   String get node_address => "Node address";
   @override
-  String get recover => "Recover";
-  @override
-  String get or => "or";
-  @override
   String get clear => "Clear";
-  @override
-  String get recipient_address => "Recipient address";
   @override
   String get enter_your_pin => "Enter your PIN";
   @override
   String get address_book => "Address book";
   @override
-  String get change_backup_warning => "If you will change the Backup password for backups, the previous MANUAL backups will not work with the new password. Auto backups will continue to work with the new password.";
-  @override
-  String get backup_password => "Backup password";
-  @override
-  String get restore_from_seed_keys => "Restore from seed/keys";
-  @override
   String get first_wallet_text => "The first iOS wallet\nfor Monero";
-  @override
-  String get failed_connection_to_node => "Failed connect to the node";
 }
 
 class $en extends S {

@@ -7,10 +7,11 @@ import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class NewNodePage extends BasePage {
   @override
-  String get title => 'New Node';
+  String get title => S.current.node_new;
 
   @override
   Widget body(BuildContext context) => NewNodePageForm();
@@ -65,7 +66,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
                             decoration: InputDecoration(
                                 hintStyle:
                                     TextStyle(color: Palette.wildDarkBlue),
-                                hintText: 'Node Address',
+                                hintText: S.of(context).node_address,
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
                                         color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
@@ -98,7 +99,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
                             decoration: InputDecoration(
                                 hintStyle:
                                     TextStyle(color: Palette.wildDarkBlue),
-                                hintText: 'Node port',
+                                hintText: S.of(context).node_port,
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
                                         color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
@@ -129,7 +130,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
                             decoration: InputDecoration(
                                 hintStyle:
                                     TextStyle(color: Palette.wildDarkBlue),
-                                hintText: 'Login',
+                                hintText: S.of(context).login,
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
                                         color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
@@ -157,7 +158,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
                             decoration: InputDecoration(
                                 hintStyle:
                                     TextStyle(color: Palette.wildDarkBlue),
-                                hintText: 'Password',
+                                hintText: S.of(context).password,
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
                                         color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
@@ -192,7 +193,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
                         _loginController.text = '';
                         _passwordController.text = '';
                       },
-                      text: 'Reset',
+                      text: S.of(context).reset,
                       color: _isDarkTheme ? PaletteDark.darkThemeIndigoButton
                           : Palette.indigo,
                       borderColor: _isDarkTheme ? PaletteDark.darkThemeIndigoButtonBorder
@@ -255,7 +256,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
                           // }
                           // }
                         },
-                        text: 'Save',
+                        text: S.of(context).save,
                         color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
                             : Palette.purple,
                         borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder

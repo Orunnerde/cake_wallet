@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class TimerWidget extends StatefulWidget {
   final DateTime expiratedAt;
@@ -51,9 +52,9 @@ class TimerWidgetState extends State<TimerWidget> {
   @override
   Widget build(BuildContext context) {
     return _isExpired
-        ? Text('Expired', style: TextStyle(fontSize: 14.0, color: Colors.red))
+        ? Text(S.of(context).expired, style: TextStyle(fontSize: 14.0, color: Colors.red))
         : Text(
-            '${_minutes}m ${_seconds}s',
+            S.of(context).time(_minutes.toString(), _seconds.toString()),
             style: TextStyle(fontSize: 14.0, color: widget.color),
           );
   }

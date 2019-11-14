@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:cake_wallet/src/screens/pin_code/pin_code.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/stores/auth/auth_store.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class LoginPage extends BasePage {
   @override
@@ -25,7 +26,7 @@ class _LoginPinCode extends PinCode {
 
 class _LoginPinCodeState extends PinCodeState<_LoginPinCode> {
   LoginStore _loginStore;
-  String title = 'Enter your PIN';
+  String title = S.current.enter_your_pin;
 
   @override
   Future onPinCodeEntered(PinCodeState state) async {
@@ -78,7 +79,7 @@ class _LoginPinCodeState extends PinCodeState<_LoginPinCode> {
           Scaffold.of(context).hideCurrentSnackBar();
           Scaffold.of(context).showSnackBar(
             SnackBar(
-              content: Text('Authentication'),
+              content: Text(S.of(context).authentication),
               backgroundColor: Colors.green,
             ),
           );
@@ -104,7 +105,7 @@ class _LoginPinCodeState extends PinCodeState<_LoginPinCode> {
           Scaffold.of(context).hideCurrentSnackBar();
           Scaffold.of(context).showSnackBar(
             SnackBar(
-              content: Text('Loading your wallet'),
+              content: Text(S.of(context).loading_your_wallet),
               backgroundColor: Colors.green,
             ),
           );
