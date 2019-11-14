@@ -6,6 +6,7 @@ import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/src/widgets/standart_switch.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class SettingsSwitchListRow extends StatelessWidget {
   final String title;
@@ -16,7 +17,7 @@ class SettingsSwitchListRow extends StatelessWidget {
     final settingsStore = Provider.of<SettingsStore>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
 
-    if (title == 'Save recipient address') {
+    if (title == S.of(context).settings_save_recipient_address) {
       return Observer(
           builder: (_) => StandartSwitch(
               value: settingsStore.shouldSaveRecipientAddress,
@@ -27,7 +28,7 @@ class SettingsSwitchListRow extends StatelessWidget {
               }));
     }
 
-    if (title == 'Allow biometrical authentication') {
+    if (title == S.of(context).settings_allow_biometrical_authentication) {
       return Observer(
           builder: (_) => StandartSwitch(
               value: settingsStore.allowBiometricalAuthentication,
@@ -39,7 +40,7 @@ class SettingsSwitchListRow extends StatelessWidget {
               }));
     }
 
-    if (title == 'Dark mode') {
+    if (title == S.of(context).settings_dark_mode) {
       return Observer(
           builder: (_) => StandartSwitch(
               value: settingsStore.isDarkTheme,

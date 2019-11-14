@@ -7,6 +7,7 @@ import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 const Map<String,String> _languages = {
   'en' : 'English',
@@ -23,7 +24,7 @@ const Map<String,String> _languages = {
 };
 
 class ChangeLanguage extends BasePage{
-  get title => 'Change language';
+  get title => S.current.settings_change_language;
 
   @override
   Widget body(BuildContext context) {

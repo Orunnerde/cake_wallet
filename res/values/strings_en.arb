@@ -174,5 +174,30 @@
   "send_error_currency" : "Currency can only contain numbers",
   "send_estimated_fee" : "Estimated fee:",
   "send_priority" : "Currently the fee is set at ${transactionPriority} priority.\nTransaction priority can be adjusted in the settings",
-  "send_creating_transaction" : "Creating transaction"
+  "send_creating_transaction" : "Creating transaction",
+
+
+  "settings_title" : "Settings",
+  "settings_nodes" : "Nodes",
+  "settings_current_node" : "Current node",
+  "settings_wallets" : "Wallets",
+  "settings_display_balance_as" : "Display balance as",
+  "settings_currency" : "Currency",
+  "settings_fee_priority" : "Fee priority",
+  "settings_save_recipient_address" : "Save recipient address",
+  "settings_personal" : "Personal",
+  "settings_change_pin" : "Change PIN",
+  "settings_change_language" : "Change language",
+  "settings_allow_biometrical_authentication" : "Allow biometrical authentication",
+  "settings_dark_mode" : "Dark mode",
+  "settings_transactions" : "Transactions",
+  "settings_trades" : "Trades",
+  "settings_display_on_dashboard_list" : "Display on dashboard list",
+  "settings_all" : "ALL",
+  "settings_only_trades" : "Only trades",
+  "settings_only_transactions" : "Only transactions",
+  "settings_none" : "None",
+  "settings_support" : "Support",
+  "settings_terms_and_conditions" : "Terms and conditions",
+  "pin_is_incorrect" : "PIN is incorrect"
 }
