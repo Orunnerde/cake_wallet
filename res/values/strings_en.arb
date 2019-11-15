@@ -199,5 +199,117 @@
   "settings_none" : "None",
   "settings_support" : "Support",
   "settings_terms_and_conditions" : "Terms and conditions",
-  "pin_is_incorrect" : "PIN is incorrect"
+  "pin_is_incorrect" : "PIN is incorrect",
+
+
+  "setup_pin" : "Setup PIN",
+  "enter_your_pin_again" : "Enter your pin again",
+  "setup_successful" : "Your PIN has been set up successfully!",
+
+
+  "wallet_keys" : "Wallet keys",
+  "view_key_private" : "View key (private)",
+  "view_key_public" : "View key (public)",
+  "spend_key_private" : "Spend key (private)",
+  "spend_key_public" : "Spend key (public)",
+  "copied_key_to_clipboard" : "Copied ${key} to Clipboard",
+
+
+  "new_subaddress_title" : "New subaddress",
+  "new_subaddress_label_name" : "Label name",
+  "new_subaddress_create" : "Create",
+
+
+  "subaddress_title" : "Subaddress list",
+
+
+  "trade_details_title" : "Trade Details",
+  "trade_details_id" : "ID",
+  "trade_details_state" : "State",
+  "trade_details_fetching" : "Fetching",
+  "trade_details_provider" : "Provider",
+  "trade_details_created_at" : "Created at",
+  "trade_details_pair" : "Pair",
+  "trade_details_copied" : "${title} copied to Clipboard",
+
+
+  "trade_history_title" : "Trade history",
+
+
+  "transaction_details_title" : "Transaction Details",
+  "transaction_details_transaction_id" : "Transaction ID",
+  "transaction_details_date" : "Date",
+  "transaction_details_height" : "Height",
+  "transaction_details_amount" : "Amount",
+  "transaction_details_copied" : "${title} copied to Clipboard",
+  "transaction_details_recipient_address" : "Recipient address",
+
+
+  "wallet_list_title" : "Monero Wallet",
+  "wallet_list_create_new_wallet" : "Create New Wallet",
+  "wallet_list_restore_wallet" : "Restore Wallet",
+  "wallet_list_load_wallet" : "Load wallet",
+  "wallet_list_loading_wallet" : "Loading ${wallet_name} wallet",
+  "wallet_list_failed_to_load" : "Failed to load ${wallet_name} wallet. ${error}",
+  "wallet_list_removing_wallet" : "Removing ${wallet_name} wallet",
+  "wallet_list_failed_to_remove" : "Failed to remove ${wallet_name} wallet. ${error}",
+
+
+  "widgets_address" : "Address",
+  "widgets_restore_from_blockheight" : "Restore from blockheight",
+  "widgets_restore_from_date" : "Restore from date",
+  "widgets_or" : "or",
+  "widgets_seed" : "Seed",
+
+
+  "router_no_route" : "No route defined for ${name}",
+
+
+  "error_text_account_name" : "Account name can only contain letters, numbers\nand must be between 1 and 15 characters long",
+  "error_text_contact_name" : "Contact name can't contain ` , ' \" symbols\nand must be between 1 and 32 characters long",
+  "error_text_address" : "Wallet address must correspond to the type\nof cryptocurrency",
+  "error_text_node_address" : "Please enter a iPv4 address",
+  "error_text_node_port" : "Node port can only contain numbers between 0 and 65535",
+  "error_text_payment_id" : "Payment ID can only contain from 16 to 64 chars in hex",
+  "error_text_xmr" : "XMR value can't exceed available balance.\nThe number of fraction digits must be less or equal to 12",
+  "error_text_fiat" : "Value of amount can't exceed available balance.\nThe number of fraction digits must be less or equal to 2",
+  "error_text_subaddress_name" : "Subaddress name can't contain ` , ' \" symbols\nand must be between 1 and 20 characters long",
+  "error_text_amount" : "Amount can only contain numbers",
+  "error_text_wallet_name" : "Wallet name can only contain letters, numbers\nand must be between 1 and 15 characters long",
+  "error_text_keys" : "Wallet keys can only contain 64 chars in hex",
+
+
+  "auth_store_ban_timeout" : "ban_timeout",
+  "auth_store_banned_for" : "Banned for ",
+  "auth_store_banned_minutes" : " minutes",
+  "auth_store_incorrect_password" : "Incorrect password",
+  "wallet_store_monero_wallet" : "Monero Wallet",
+  "wallet_restoration_store_incorrect_seed_length" : "Incorrect seed length",
+
+
+  "full_balance" : "Full Balance",
+  "available_balance" : "Available Balance",
+  "hidden_balance" : "Hidden Balance",
+
+
+  "sync_status_syncronizing" : "SYNCRONIZING",
+  "sync_status_syncronized" : "SYNCHRONIZED",
+  "sync_status_not_connected" : "NOT CONNECTED",
+  "sync_status_starting_sync" : "STARTING SYNC",
+  "sync_status_failed_connect" : "FAILED CONNECT TO THE NODE",
+  "sync_status_connecting" : "CONNECTING",
+  "sync_status_connected" : "CONNECTED",
+
+
+  "transaction_priority_slow" : "Slow",
+  "transaction_priority_regular" : "Regular",
+  "transaction_priority_medium" : "Medium",
+  "transaction_priority_fast" : "Fast",
+  "transaction_priority_fastest" : "Fastest",
+
+
+  "trade_for_not_created" : "Trade for ${title} is not created.",
+  "trade_not_created" : "Trade not created.",
+  "trade_id_not_found" : "Trade ${tradeId} of ${title} not found.",
+  "trade_not_found" : "Trade not found."
 }

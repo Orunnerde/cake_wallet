@@ -1,3 +1,5 @@
+import 'package:cake_wallet/generated/i18n.dart';
+
 abstract class SyncStatus {
   const SyncStatus();
 
@@ -19,7 +21,7 @@ class SyncingSyncStatus extends SyncStatus {
     return diff < 0 ? 0.0 : diff / line;
   }
 
-  String title() => 'SYNCRONIZING';
+  String title() => S.current.sync_status_syncronizing;
 
   @override
   String toString() => '${blockchainHeight - height}';
@@ -28,7 +30,7 @@ class SyncingSyncStatus extends SyncStatus {
 class SyncedSyncStatus extends SyncStatus {
   double progress() => 1.0;
 
-  String title() => 'SYNCHRONIZED';
+  String title() => S.current.sync_status_syncronized;
 }
 
 class NotConnectedSyncStatus extends SyncStatus {
@@ -36,29 +38,29 @@ class NotConnectedSyncStatus extends SyncStatus {
 
   double progress() => 0.0;
 
-  String title() => 'NOT CONNECTED';
+  String title() => S.current.sync_status_not_connected;
 }
 
 class StartingSyncStatus extends SyncStatus {
   double progress() => 0.0;
 
-  String title() => 'STARTING SYNC';
+  String title() => S.current.sync_status_starting_sync;
 }
 
 class FailedSyncStatus extends SyncStatus {
   double progress() => 1.0;
 
-  String title() => 'FAILED CONNECT TO THE NODE';
+  String title() => S.current.sync_status_failed_connect;
 }
 
 class ConnectingSyncStatus extends SyncStatus {
   double progress() => 0.0;
 
-  String title() => 'CONNECTING';
+  String title() => S.current.sync_status_connecting;
 }
 
 class ConnectedSyncStatus extends SyncStatus {
   double progress() => 0.0;
 
-  String title() => 'CONNECTED';
+  String title() => S.current.sync_status_connected;
 }

@@ -8,10 +8,11 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class ShowKeysPage extends BasePage {
   bool get isModalBackButton => true;
-  String get title => 'Wallet keys';
+  String get title => S.current.wallet_keys;
 
   @override
   Widget body(BuildContext context) {
@@ -29,10 +30,10 @@ class ShowKeysPage extends BasePage {
         child: Observer(
           builder: (_) {
             Map<String, String> keysMap = {
-              'View key (public)': walletKeysStore.publicViewKey,
-              'View key (private)': walletKeysStore.privateViewKey,
-              'Spend key (public)': walletKeysStore.publicSpendKey,
-              'Spend key (private)': walletKeysStore.privateViewKey
+              S.of(context).view_key_public: walletKeysStore.publicViewKey,
+              S.of(context).view_key_private: walletKeysStore.privateViewKey,
+              S.of(context).spend_key_public: walletKeysStore.publicSpendKey,
+              S.of(context).spend_key_private: walletKeysStore.privateViewKey
             };
 
             return ListView.separated(
@@ -56,7 +57,7 @@ class ShowKeysPage extends BasePage {
                             text: keysMap.values.elementAt(index)));
                         Scaffold.of(context).showSnackBar(SnackBar(
                           content: Text(
-                            'Copied $key to Clipboard',
+                            S.of(context).copied_key_to_clipboard(key),
                             textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.white),
                           ),

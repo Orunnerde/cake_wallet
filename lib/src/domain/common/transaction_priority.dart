@@ -26,9 +26,12 @@ class TransactionPriority extends EnumerableItem<int> with Serializable<int> {
         title = 'Regular';
         break;
       case 2:
-        title = 'Fast';
+        title = 'Medium';
         break;
       case 3:
+        title = 'Fast';
+        break;
+      case 4:
         title = 'Fastest';
         break;
       default:

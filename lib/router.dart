@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:cake_wallet/routes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 // MARK: Import domains
 
@@ -534,7 +535,7 @@ class Router {
         return MaterialPageRoute(
             builder: (_) => Scaffold(
                   body: Center(
-                      child: Text('No route defined for ${settings.name}')),
+                      child: Text(S.current.router_no_route(settings.name))),
                 ));
     }
   }

@@ -7,6 +7,7 @@ import 'package:cake_wallet/src/domain/monero/subaddress.dart';
 import 'package:cake_wallet/src/domain/common/qr_scanner.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 enum AddressTextFieldOption { qrCode, addressBook, subaddressList }
 
@@ -17,7 +18,7 @@ class AddressTextField extends StatelessWidget {
 
   final TextEditingController controller;
   final bool isActive;
-  final String placeholder;
+  String placeholder;
   final Function(Uri) onURIScanned;
   final List<AddressTextFieldOption> options;
   final FormFieldValidator<String> validator;
@@ -25,13 +26,13 @@ class AddressTextField extends StatelessWidget {
   AddressTextField(
       {@required this.controller,
       this.isActive = true,
-      this.placeholder = 'Address',
+      String placeholder,
       this.options = const [
         AddressTextFieldOption.qrCode,
         AddressTextFieldOption.addressBook
       ],
       this.onURIScanned,
-      this.validator});
+      this.validator}) {placeholder != null ? this.placeholder = placeholder : this.placeholder = S.current.widgets_address;}
 
   @override
   Widget build(BuildContext context) {

@@ -5,12 +5,13 @@ import 'package:provider/provider.dart';
 import 'package:cake_wallet/src/stores/user/user_store.dart';
 import 'package:cake_wallet/src/screens/pin_code/pin_code.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class SetupPinCodePage extends BasePage {
   final Function(BuildContext, String) onPinCodeSetup;
 
   @override
-  String get title => 'Setup PIN';
+  String get title => S.current.setup_pin;
 
   SetupPinCodePage({this.onPinCodeSetup});
 
@@ -39,14 +40,14 @@ class _SetupPinCodeFormState<WidgetType extends SetupPinCodeForm>
   UserStore _userStore;
 
   _SetupPinCodeFormState() {
-    title = "Enter your pin";
+    title = S.of(context).enter_your_pin;
   }
 
   @override
   void onPinCodeEntered(PinCodeState state) {
     if (!isEnteredOriginalPin()) {
       _originalPin = state.pin;
-      state.title = 'Enter your pin again';
+      state.title = S.of(context).enter_your_pin_again;
       state.clear();
     } else {
       if (listEquals<int>(state.pin, _originalPin)) {
@@ -58,10 +59,10 @@ class _SetupPinCodeFormState<WidgetType extends SetupPinCodeForm>
             barrierDismissible: false,
             builder: (BuildContext context) {
               return AlertDialog(
-                content: Text("Your PIN has been set up successfully!"),
+                content: Text(S.of(context).setup_successful),
                 actions: <Widget>[
                   FlatButton(
-                    child: Text("OK"),
+                    child: Text(S.of(context).ok),
                     onPressed: () {
                       Navigator.of(context).pop();
                       widget.onPinCodeSetup(context, pin);
@@ -76,10 +77,10 @@ class _SetupPinCodeFormState<WidgetType extends SetupPinCodeForm>
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                content: Text("PIN is incorrect"),
+                content: Text(S.of(context).pin_is_incorrect),
                 actions: <Widget>[
                   FlatButton(
-                    child: Text("OK"),
+                    child: Text(S.of(context).ok),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -95,7 +96,7 @@ class _SetupPinCodeFormState<WidgetType extends SetupPinCodeForm>
 
   void reset() {
     clear();
-    setTitle('Enter your pin');
+    setTitle(S.of(context).enter_your_pin);
     _originalPin = [];
   }
 

@@ -7,6 +7,7 @@ import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/domain/monero/mnemonics/english.dart';
 import 'package:cake_wallet/src/domain/common/mnemotic_item.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class SeedWidget extends StatefulWidget {
   final Function(List<MnemoticItem>) onMnemoticChange;
@@ -191,7 +192,7 @@ class SeedWidgetState extends State<SeedWidget> {
                   color: _isDarkTheme
                       ? PaletteDark.darkThemeGrey
                       : Palette.lightBlue),
-              hintText: 'Seed',
+              hintText: S.of(context).widgets_seed,
               focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
                       color: _isDarkTheme

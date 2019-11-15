@@ -6,6 +6,7 @@ import 'package:cake_wallet/src/domain/monero/monero_wallet.dart';
 import 'package:cake_wallet/src/domain/monero/account.dart';
 import 'package:cake_wallet/src/domain/monero/account_list.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 part 'account_list_store.g.dart';
 
@@ -77,7 +78,6 @@ abstract class AcountListStoreBase with Store {
     String p = '^[a-zA-Z0-9_]{1,15}\$';
     RegExp regExp = new RegExp(p);
     isValid = regExp.hasMatch(value);
-    errorMessage = isValid ? null : 'Account name can only contain letters, '
-        'numbers\nand must be between 1 and 15 characters long';
+    errorMessage = isValid ? null : S.current.error_text_account_name;
   }
 }

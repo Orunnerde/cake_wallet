@@ -10,9 +10,10 @@ import 'package:cake_wallet/src/screens/transaction_details/standart_list_row.da
 import 'package:cake_wallet/src/stores/exchange_trade/exchange_trade_store.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class TradeDetailsPage extends BasePage {
-  String get title => 'Trade Details';
+  String get title => S.current.trade_details_title;
   bool get isModalBackButton => true;
 
   @override
@@ -46,28 +47,28 @@ class TradeDetailsPage extends BasePage {
                 child: Observer(builder: (_) {
                   final trade = exchangeStore.trade;
                   final items = [
-                    StandartListItem(title: 'ID', value: trade.id),
+                    StandartListItem(title: S.of(context).trade_details_id, value: trade.id),
                     StandartListItem(
-                        title: 'State',
+                        title: S.of(context).trade_details_state,
                         value: trade.state != null
                             ? trade.state.toString()
-                            : 'Fetching')
+                            : S.of(context).trade_details_fetching)
                   ];
 
                   if (trade.provider != null) {
                     items.add(StandartListItem(
-                        title: 'Provider', value: trade.provider.toString()));
+                        title: S.of(context).trade_details_provider, value: trade.provider.toString()));
                   }
 
                   if (trade.createdAt != null) {
                     items.add(StandartListItem(
-                        title: 'Created at',
+                        title: S.of(context).trade_details_created_at,
                         value: trade.createdAt.toString()));
                   }
 
                   if (trade.from != null && trade.to != null) {
                     items.add(StandartListItem(
-                        title: 'Pair',
+                        title: S.of(context).trade_details_pair,
                         value:
                             '${trade.from.toString()} → ${trade.to.toString()}'));
                   }
@@ -87,7 +88,7 @@ class TradeDetailsPage extends BasePage {
                             Clipboard.setData(ClipboardData(text: '${item.value}'));
                             Scaffold.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('${item.title} copied to Clipboard'),
+                                content: Text(S.of(context).trade_details_copied(item.title)),
                                 backgroundColor: Colors.green,
                                 duration: Duration(milliseconds: 1500),
                               ),

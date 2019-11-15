@@ -11,10 +11,11 @@ import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
 import 'package:cake_wallet/src/stores/wallet_list/wallet_list_store.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class WalletListPage extends BasePage {
   bool get isModalBackButton => true;
-  String get title => 'Monero Wallet';
+  String get title => S.current.wallet_list_title;
   AppBarStyle get appBarStyle => AppBarStyle.withShadow;
 
   @override
@@ -38,7 +39,7 @@ class WalletListBodyState extends State<WalletListBody> {
               actions: _generateActionsForWalletActionSheets(
                   wallet, isCurrentWallet, context, bodyContext),
               cancelButton: CupertinoActionSheetAction(
-                  child: const Text('Cancel'),
+                  child: Text(S.of(context).cancel),
                   isDefaultAction: true,
                   onPressed: () => Navigator.of(context).pop()),
             )
@@ -111,13 +112,13 @@ class WalletListBodyState extends State<WalletListBody> {
               iconColor: Palette.violet,
               iconBackgroundColor:
                   _isDarkTheme ? PaletteDark.darkThemeViolet : Colors.white,
-              text: 'Create New Wallet'),
+              text: S.of(context).wallet_list_create_new_wallet),
           SizedBox(height: 10.0),
           PrimaryIconButton(
             onPressed: () =>
                 Navigator.of(context).pushNamed(Routes.restoreWalletOptions),
             iconData: Icons.refresh,
-            text: 'Restore Wallet',
+            text: S.of(context).wallet_list_restore_wallet,
             color: _isDarkTheme
                 ? PaletteDark.darkThemeIndigoButton
                 : Palette.indigo,
@@ -138,7 +139,7 @@ class WalletListBodyState extends State<WalletListBody> {
 
     if (!isCurrentWallet) {
       actions.add(CupertinoActionSheetAction(
-          child: const Text('Load wallet'),
+          child: Text(S.of(context).wallet_list_load_wallet),
           onPressed: () async {
             Navigator.of(context).popAndPushNamed(Routes.auth,
                 arguments: (isAuthenticatedSuccessfully, auth) async {
@@ -147,20 +148,20 @@ class WalletListBodyState extends State<WalletListBody> {
               }
 
               try {
-                auth.changeProcessText('Loading ${wallet.name} wallet');
+                auth.changeProcessText(S.of(context).wallet_list_loading_wallet(wallet.name));
                 await _walletListStore.loadWallet(wallet);
                 auth.close();
                 Navigator.of(bodyContext).pop();
               } catch (e) {
                 auth.changeProcessText(
-                    'Failed to load ${wallet.name} wallet. ${e.toString()}');
+                    S.of(context).wallet_list_failed_to_load(wallet.name, e.toString()));
               }
             });
           }));
     }
 
     actions.add(CupertinoActionSheetAction(
-        child: const Text('Show seed'),
+        child: Text(S.of(context).show_seed),
         onPressed: () async {
           Navigator.of(context).popAndPushNamed(Routes.auth,
               arguments: (isAuthenticatedSuccessfully, auth) async {
@@ -174,7 +175,7 @@ class WalletListBodyState extends State<WalletListBody> {
 
     if (!isCurrentWallet) {
       actions.add(CupertinoActionSheetAction(
-          child: const Text('Remove'),
+          child: Text(S.of(context).remove),
           isDestructiveAction: true,
           onPressed: () {
             Navigator.of(context).popAndPushNamed(Routes.auth,
@@ -184,12 +185,12 @@ class WalletListBodyState extends State<WalletListBody> {
               }
 
               try {
-                auth.changeProcessText('Removing ${wallet.name} wallet');
+                auth.changeProcessText(S.of(context).wallet_list_removing_wallet(wallet.name));
                 await _walletListStore.remove(wallet);
                 auth.close();
               } catch (e) {
                 auth.changeProcessText(
-                    'Failed to remove ${wallet.name} wallet. ${e.toString()}');
+                    S.of(context).wallet_list_failed_to_remove(wallet.name, e.toString()));
               }
             });
           }));
@@ -197,7 +198,7 @@ class WalletListBodyState extends State<WalletListBody> {
 
     if (isCurrentWallet) {
       actions.add(CupertinoActionSheetAction(
-          child: const Text('Rescan'), onPressed: () async {}));
+          child: Text(S.of(context).rescan), onPressed: () async {}));
     }
 
     return actions;

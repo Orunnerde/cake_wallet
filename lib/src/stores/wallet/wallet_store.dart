@@ -7,6 +7,7 @@ import 'package:cake_wallet/src/domain/monero/subaddress.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 part 'wallet_store.g.dart';
 
@@ -41,7 +42,7 @@ abstract class WalletStoreBase with Store {
   WalletStoreBase({WalletService walletService, SettingsStore settingsStore}) {
     _walletService = walletService;
     _settingsStore = settingsStore;
-    name = "Monero Wallet";
+    name = S.current.wallet_store_monero_wallet;
     type = CryptoCurrency.xmr;
 
     if (_walletService.currentWallet != null) {
@@ -109,6 +110,6 @@ abstract class WalletStoreBase with Store {
     String p = '^[0-9]+\$';
     RegExp regExp = new RegExp(p);
     isValid = regExp.hasMatch(value);
-    errorMessage = isValid ? null : 'Amount can only contain numbers';
+    errorMessage = isValid ? null : S.current.error_text_amount;
   }
 }

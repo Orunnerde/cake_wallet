@@ -8,10 +8,11 @@ import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class SubaddressListPage extends BasePage {
   bool get isModalBackButton => true;
-  String get title => 'Subaddress list';
+  String get title => S.current.subaddress_title;
 
   SubaddressListPage();
 

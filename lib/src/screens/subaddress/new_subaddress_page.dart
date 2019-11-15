@@ -10,9 +10,10 @@ import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class NewSubaddressPage extends BasePage {
-  String get title => 'New subaddress';
+  String get title => S.current.new_subaddress_title;
 
   @override
   Widget body(BuildContext context) => NewSubaddressForm();
@@ -60,7 +61,7 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
                 controller: _labelController,
                 decoration: InputDecoration(
                     hintStyle: TextStyle(color: Palette.lightBlue),
-                    hintText: 'Label name',
+                    hintText: S.of(context).new_subaddress_label_name,
                     focusedBorder: UnderlineInputBorder(
                         borderSide:
                         BorderSide(color: Palette.lightGrey, width: 1.0)),
@@ -86,7 +87,7 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
                       Navigator.of(context).pop();
                     }
                   },
-                  text: 'Create',
+                  text: S.of(context).new_subaddress_create,
                   color: _isDarkTheme
                       ? PaletteDark.darkThemeIndigoButton
                       : Palette.indigo,

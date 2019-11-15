@@ -1,6 +1,7 @@
 import 'package:mobx/mobx.dart';
 import 'package:cake_wallet/src/domain/common/node.dart';
 import 'package:cake_wallet/src/domain/common/node_list.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 part 'node_list_store.g.dart';
 
@@ -60,7 +61,7 @@ abstract class NodeListBase with Store {
     String p = '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\$';
     RegExp regExp = new RegExp(p);
     isValid = regExp.hasMatch(value);
-    errorMessage = isValid ? null : 'Please enter a iPv4 address';
+    errorMessage = isValid ? null : S.current.error_text_node_address;
   }
 
   void validateNodePort(String value) {
@@ -74,6 +75,6 @@ abstract class NodeListBase with Store {
         isValid = false;
       }
     } else isValid = false;
-    errorMessage = isValid ? null : 'Node port can only contain numbers between 0 and 65535';
+    errorMessage = isValid ? null : S.current.error_text_node_port;
   }
 }
