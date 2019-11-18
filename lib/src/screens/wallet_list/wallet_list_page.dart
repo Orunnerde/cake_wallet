@@ -11,6 +11,8 @@ import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
 import 'package:cake_wallet/src/stores/wallet_list/wallet_list_store.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/src/screens/wallet_list/wallet_menu.dart';
+import 'package:cake_wallet/src/widgets/picker.dart';
 
 class WalletListPage extends BasePage {
   bool get isModalBackButton => true;
@@ -30,20 +32,18 @@ class WalletListBodyState extends State<WalletListBody> {
 
   void presetMenuForWallet(WalletDescription wallet, bool isCurrentWallet,
       BuildContext bodyContext) {
+    final walletMenu = WalletMenu(bodyContext);
+    List<String> items = walletMenu.generateItemsForWalletMenu(isCurrentWallet);
+
     showDialog(
         context: bodyContext,
-        builder: (context) {
-          return Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-            CupertinoActionSheet(
-              actions: _generateActionsForWalletActionSheets(
-                  wallet, isCurrentWallet, context, bodyContext),
-              cancelButton: CupertinoActionSheetAction(
-                  child: const Text('Cancel'),
-                  isDefaultAction: true,
-                  onPressed: () => Navigator.of(context).pop()),
-            )
-          ]);
-        });
+        builder: (_) => Picker(
+            items: items,
+            selectedAtIndex: -1,
+            title: 'Wallet Menu',
+            onItemSelected: (item) =>
+                walletMenu.action(item, wallet, isCurrentWallet)),
+        );
   }
 
   @override
@@ -130,76 +130,5 @@ class WalletListBodyState extends State<WalletListBody> {
                 : Colors.white,
           )
         ]));
-  }
-
-  List<Widget> _generateActionsForWalletActionSheets(WalletDescription wallet,
-      bool isCurrentWallet, BuildContext context, BuildContext bodyContext) {
-    List<Widget> actions = [];
-
-    if (!isCurrentWallet) {
-      actions.add(CupertinoActionSheetAction(
-          child: const Text('Load wallet'),
-          onPressed: () async {
-            Navigator.of(context).popAndPushNamed(Routes.auth,
-                arguments: (isAuthenticatedSuccessfully, auth) async {
-              if (!isAuthenticatedSuccessfully) {
-                return;
-              }
-
-              try {
-                auth.changeProcessText('Loading ${wallet.name} wallet');
-                await _walletListStore.loadWallet(wallet);
-                auth.close();
-                Navigator.of(bodyContext).pop();
-              } catch (e) {
-                auth.changeProcessText(
-                    'Failed to load ${wallet.name} wallet. ${e.toString()}');
-              }
-            });
-          }));
-    }
-
-    actions.add(CupertinoActionSheetAction(
-        child: const Text('Show seed'),
-        onPressed: () async {
-          Navigator.of(context).popAndPushNamed(Routes.auth,
-              arguments: (isAuthenticatedSuccessfully, auth) async {
-            if (!isAuthenticatedSuccessfully) {
-              return;
-            }
-            auth.close();
-            Navigator.of(bodyContext).popAndPushNamed(Routes.seed);
-          });
-        }));
-
-    if (!isCurrentWallet) {
-      actions.add(CupertinoActionSheetAction(
-          child: const Text('Remove'),
-          isDestructiveAction: true,
-          onPressed: () {
-            Navigator.of(context).popAndPushNamed(Routes.auth,
-                arguments: (isAuthenticatedSuccessfully, auth) async {
-              if (!isAuthenticatedSuccessfully) {
-                return;
-              }
-
-              try {
-                auth.changeProcessText('Removing ${wallet.name} wallet');
-                await _walletListStore.remove(wallet);
-                auth.close();
-              } catch (e) {
-                auth.changeProcessText(
-                    'Failed to remove ${wallet.name} wallet. ${e.toString()}');
-              }
-            });
-          }));
-    }
-
-    if (isCurrentWallet) {
-      actions.add(CupertinoActionSheetAction(
-          child: const Text('Rescan'), onPressed: () async {}));
-    }
-
-    return actions;
   }
 }
