@@ -161,7 +161,7 @@ abstract class SendStoreBase with Store {
           isValid = (value.length == 34);
       }
     }
-    errorMessage = isValid ? null : 'Wallet address must correspond to the type of cryptocurrency';
+    errorMessage = isValid ? null : 'Wallet address must correspond to the type\nof cryptocurrency';
   }
 
   void validatePaymentID(String value) {
@@ -204,7 +204,7 @@ abstract class SendStoreBase with Store {
         isValid = false;
       }
     } else isValid = false;
-    errorMessage = isValid ? null : "Value of amount can't exceed available balance."
+    errorMessage = isValid ? null : "Value of amount can't exceed available balance.\n"
                                     "The number of fraction digits must be less or equal to 2";
   }
 }

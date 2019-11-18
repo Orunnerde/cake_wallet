@@ -127,6 +127,7 @@ class ExchangeForm extends StatefulWidget {
 class ExchangeFormState extends State<ExchangeForm> {
   final depositKey = GlobalKey<ExchangeCardState>();
   final receiveKey = GlobalKey<ExchangeCardState>();
+  final _formKey = GlobalKey<FormState>();
   var _isReactionsSet = false;
 
   final Image arrowBottomPurple = Image.asset(
@@ -157,48 +158,18 @@ class ExchangeFormState extends State<ExchangeForm> {
     final _themeChanger = Provider.of<ThemeChanger>(context);
     final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
-    return ScrollableWithBottomSection(
-      contentPadding: EdgeInsets.only(left: 20, right: 20),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 10, bottom: 20),
-              child: Text(
-                'You will send',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    height: 1.1,
-                    color: _isDarkTheme
-                        ? PaletteDark.darkThemeTitle
-                        : Colors.black),
-              ),
-            ),
-            ExchangeCard(
-              key: depositKey,
-              initialCurrency: exchangeStore.depositCurrency,
-              initialWalletName: depositWalletName,
-              initialAddress: exchangeStore.depositCurrency == walletStore.type
-                  ? walletStore.address
-                  : null,
-              initialIsAmountEditable:
-                  !(exchangeStore.provider is XMRTOExchangeProvider),
-              initialIsAddressEditable:
-                  !(exchangeStore.provider is XMRTOExchangeProvider),
-              isAmountEstimated:
-                  exchangeStore.provider is XMRTOExchangeProvider,
-              currencies: CryptoCurrency.all,
-              onCurrencySelected: (currency) =>
-                  exchangeStore.changeDepositCurrency(currency: currency),
-              imageArrow: arrowBottomPurple,
-            ),
-            SizedBox(height: 35),
-            Padding(
-                padding: EdgeInsets.only(bottom: 20),
+    return Form(
+      key: _formKey,
+      child: ScrollableWithBottomSection(
+        contentPadding: EdgeInsets.only(left: 20, right: 20),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(top: 10, bottom: 20),
                 child: Text(
-                  'You will get',
+                  'You will send',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
@@ -206,88 +177,139 @@ class ExchangeFormState extends State<ExchangeForm> {
                       color: _isDarkTheme
                           ? PaletteDark.darkThemeTitle
                           : Colors.black),
-                )),
-            Observer(
-                builder: (_) => ExchangeCard(
-                      key: receiveKey,
-                      initialCurrency: exchangeStore.receiveCurrency,
-                      initialWalletName: receiveWalletName,
-                      initialAddress:
-                          exchangeStore.receiveCurrency == walletStore.type
-                              ? walletStore.address
-                              : null,
-                      initialIsAmountEditable:
-                          exchangeStore.provider is XMRTOExchangeProvider,
-                      initialIsAddressEditable:
-                          exchangeStore.provider is XMRTOExchangeProvider,
-                      isAmountEstimated:
-                          !(exchangeStore.provider is XMRTOExchangeProvider),
-                      currencies: CryptoCurrency.all,
-                      onCurrencySelected: (currency) => exchangeStore
-                          .changeReceiveCurrency(currency: currency),
-                      imageArrow: arrowBottomCakeGreen,
-                    )),
-          ],
+                ),
+              ),
+              ExchangeCard(
+                key: depositKey,
+                initialCurrency: exchangeStore.depositCurrency,
+                initialWalletName: depositWalletName,
+                initialAddress: exchangeStore.depositCurrency == walletStore.type
+                    ? walletStore.address
+                    : null,
+                initialIsAmountEditable:
+                !(exchangeStore.provider is XMRTOExchangeProvider),
+                initialIsAddressEditable:
+                !(exchangeStore.provider is XMRTOExchangeProvider),
+                isAmountEstimated:
+                exchangeStore.provider is XMRTOExchangeProvider,
+                currencies: CryptoCurrency.all,
+                onCurrencySelected: (currency) =>
+                    exchangeStore.changeDepositCurrency(currency: currency),
+                imageArrow: arrowBottomPurple,
+                currencyValueValidator: (value) {
+                  exchangeStore.validateCryptoCurrency(value);
+                  return exchangeStore.errorMessage;
+                },
+                addressTextFieldValidator: (value) {
+                  exchangeStore.validateAddress(value, cryptoCurrency: exchangeStore.depositCurrency);
+                  return exchangeStore.errorMessage;
+                },
+              ),
+              SizedBox(height: 35),
+              Padding(
+                  padding: EdgeInsets.only(bottom: 20),
+                  child: Text(
+                    'You will get',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        height: 1.1,
+                        color: _isDarkTheme
+                            ? PaletteDark.darkThemeTitle
+                            : Colors.black),
+                  )),
+              Observer(
+                  builder: (_) => ExchangeCard(
+                    key: receiveKey,
+                    initialCurrency: exchangeStore.receiveCurrency,
+                    initialWalletName: receiveWalletName,
+                    initialAddress:
+                    exchangeStore.receiveCurrency == walletStore.type
+                        ? walletStore.address
+                        : null,
+                    initialIsAmountEditable:
+                    exchangeStore.provider is XMRTOExchangeProvider,
+                    initialIsAddressEditable:
+                    exchangeStore.provider is XMRTOExchangeProvider,
+                    isAmountEstimated:
+                    !(exchangeStore.provider is XMRTOExchangeProvider),
+                    currencies: CryptoCurrency.all,
+                    onCurrencySelected: (currency) => exchangeStore
+                        .changeReceiveCurrency(currency: currency),
+                    imageArrow: arrowBottomCakeGreen,
+                    currencyValueValidator: (value) {
+                      exchangeStore.validateCryptoCurrency(value);
+                      return exchangeStore.errorMessage;
+                    },
+                    addressTextFieldValidator: (value) {
+                      exchangeStore.validateAddress(value, cryptoCurrency: exchangeStore.receiveCurrency);
+                      return exchangeStore.errorMessage;
+                    },
+                  )),
+            ],
+          ),
         ),
-      ),
-      bottomSectionPadding: EdgeInsets.only(top: 35, left: 20, right: 20),
-      bottomSection: Column(children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(bottom: 15),
-          child: Observer(builder: (_) {
-            final description = exchangeStore.provider is XMRTOExchangeProvider
-                ? 'The receive amount is guaranteed'
-                : 'The receive amount is an estimate';
-            return Center(
-              child: Text(
-                description,
-                style: TextStyle(color: Palette.blueGrey, fontSize: 12),
+        bottomSectionPadding: EdgeInsets.only(top: 35, left: 20, right: 20),
+        bottomSection: Column(children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(bottom: 15),
+            child: Observer(builder: (_) {
+              final description = exchangeStore.provider is XMRTOExchangeProvider
+                  ? 'The receive amount is guaranteed'
+                  : 'The receive amount is an estimate';
+              return Center(
+                child: Text(
+                  description,
+                  style: TextStyle(color: Palette.blueGrey, fontSize: 12),
+                ),
+              );
+            }),
+          ),
+          Observer(
+              builder: (_) => LoadingPrimaryButton(
+                text: 'Exchange',
+                onPressed: () {
+                  if (_formKey.currentState.validate()) exchangeStore.createTrade();
+                },
+                color: _isDarkTheme
+                    ? PaletteDark.darkThemePurpleButton
+                    : Palette.purple,
+                borderColor: _isDarkTheme
+                    ? PaletteDark.darkThemePurpleButtonBorder
+                    : Palette.deepPink,
+                isLoading: exchangeStore.tradeState is TradeIsCreating,
+              )),
+          Observer(builder: (_) {
+            final title = exchangeStore.provider.description.title;
+            var imageSrc = '';
+
+            switch (exchangeStore.provider.description) {
+              case ExchangeProviderDescription.xmrto:
+                imageSrc = 'assets/images/xmr_btc.png';
+                break;
+              case ExchangeProviderDescription.changeNow:
+                imageSrc = 'assets/images/change_now.png';
+                break;
+            }
+
+            return Padding(
+              padding: EdgeInsets.only(top: 20, bottom: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset(imageSrc),
+                  SizedBox(width: 10),
+                  Text(
+                    'Powered by $title',
+                    style: TextStyle(
+                        fontSize: 14, color: Color.fromRGBO(191, 201, 215, 1)),
+                  )
+                ],
               ),
             );
-          }),
-        ),
-        Observer(
-            builder: (_) => LoadingPrimaryButton(
-                  text: 'Exchange',
-                  onPressed: () => exchangeStore.createTrade(),
-                  color: _isDarkTheme
-                      ? PaletteDark.darkThemePurpleButton
-                      : Palette.purple,
-                  borderColor: _isDarkTheme
-                      ? PaletteDark.darkThemePurpleButtonBorder
-                      : Palette.deepPink,
-                  isLoading: exchangeStore.tradeState is TradeIsCreating,
-                )),
-        Observer(builder: (_) {
-          final title = exchangeStore.provider.description.title;
-          var imageSrc = '';
-
-          switch (exchangeStore.provider.description) {
-            case ExchangeProviderDescription.xmrto:
-              imageSrc = 'assets/images/xmr_btc.png';
-              break;
-            case ExchangeProviderDescription.changeNow:
-              imageSrc = 'assets/images/change_now.png';
-              break;
-          }
-
-          return Padding(
-            padding: EdgeInsets.only(top: 20, bottom: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.asset(imageSrc),
-                SizedBox(width: 10),
-                Text(
-                  'Powered by $title',
-                  style: TextStyle(
-                      fontSize: 14, color: Color.fromRGBO(191, 201, 215, 1)),
-                )
-              ],
-            ),
-          );
-        })
-      ]),
+          })
+        ]),
+      )
     );
   }
 
