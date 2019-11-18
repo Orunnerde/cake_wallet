@@ -36,10 +36,6 @@
     "answer" : "Unfortunately, as soon as a transaction has been submitted to the blockchain, there is no way to undo it. You can always cancel the transaction before it’s sent though, so always double-check the address before you send a transaction.\n"
   },
   {
-    "question" : "Can I add a wallet for another cryptocurrency?",
-    "answer" : "Not yet... This is a planned feature, though!\n"
-  },
-  {
     "question" : "What are subaddresses, and how do I use them?",
     "answer" : "A subaddress is basically a unique address that you can generate at any time. Coins sent to it will still arrive in your main wallet, but the person sending the coins can’t tell what your main address is. Subaddresses always start with 8.\nYou can make a new subaddress in the Receive screen by tapping the + next to the Subaddresses button. Enter a name for the subaddress and tap Add. Then just tap on the subaddress name when you want to use it!\nIf you’re paranoid, you should probably create a new subaddress every time you receive Monero.\n"
   },
@@ -54,10 +50,6 @@
   {
     "question" : "I didn't receive my coins from the exchange in the app. What can I do?",
     "answer" : "If you're having issues with an exchange, the best option is to contact the exchange itself. We're partnered with XMR.TO, Morph and ChangeNow, so your best bet is to go to http://xmr.to, http://changenow.io, or http://morphtoken.com and contact their support.\n"
-  },
-  {
-    "question" : "How do I restore from a backup?",
-    "answer" : "If you're looking to restore Cake Wallet from a file or iCloud backup, you will need to reinstall the app, and on the first screen, select 'Restore Backup'. Then select the file, and just wait!\n"
   },
   {
     "question" : "How do I contact Cake Wallet support?",
