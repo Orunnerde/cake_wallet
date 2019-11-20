@@ -16,6 +16,7 @@ import 'package:cake_wallet/src/stores/action_list/action_list_display_mode.dart
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/screens/settings/attributes.dart';
 import 'package:cake_wallet/src/screens/settings/items/settings_item.dart';
+import 'package:url_launcher/url_launcher.dart';
 // Settings widgets
 import 'package:cake_wallet/src/screens/settings/widgets/settings_arrow_list_row.dart';
 import 'package:cake_wallet/src/screens/settings/widgets/settings_header_list_row.dart';
@@ -46,8 +47,19 @@ class SettingsFormState extends State<SettingsForm> {
   final _changeNowImage = Image.asset('assets/images/change_now.png');
   final _morphImage = Image.asset('assets/images/morph_icon.png');
   final _xmrBtcImage = Image.asset('assets/images/xmr_btc.png');
+  
+  final _emailUrl = 'mailto:support@cakewallet.io';
+  final _telegramUrl = 'https:t.me/cake_wallet';
+  final _twitterUrl = 'https:twitter.com/CakewalletXMR';
+  final _changeNowUrl = 'mailto:support@changenow.io';
+  final _morphUrl = 'mailto:contact@morphtoken.com';
+  final _xmrToUrl = 'mailto:support@xmr.to';
 
   List<SettingsItem> _items = List<SettingsItem>();
+  
+  _launchUrl(String url) async {
+    if (await canLaunch(url)) await launch(url);
+  }
 
   _setSettingsList() {
     final settingsStore = Provider.of<SettingsStore>(context);
@@ -228,37 +240,37 @@ class SettingsFormState extends State<SettingsForm> {
           attribute: Attributes.rawWidget),
       SettingsItem(title: 'Support', attribute: Attributes.header),
       SettingsItem(
-          onTaped: () {},
+          onTaped: () => _launchUrl(_emailUrl),
           title: 'Email',
           link: 'support@cakewallet.io',
           image: null,
           attribute: Attributes.link),
       SettingsItem(
-          onTaped: () {},
+          onTaped: () => _launchUrl(_telegramUrl),
           title: 'Telegram',
           link: 't.me/cake_wallet',
           image: _telegramImage,
           attribute: Attributes.link),
       SettingsItem(
-          onTaped: () {},
+          onTaped: () => _launchUrl(_twitterUrl),
           title: 'Twitter',
           link: 'twitter.com/CakewalletXMR',
           image: _twitterImage,
           attribute: Attributes.link),
       SettingsItem(
-          onTaped: () {},
+          onTaped: () => _launchUrl(_changeNowUrl),
           title: 'ChangeNow',
           link: 'support@changenow.io',
           image: _changeNowImage,
           attribute: Attributes.link),
       SettingsItem(
-          onTaped: () {},
+          onTaped: () => _launchUrl(_morphUrl),
           title: 'Morph',
           link: 'contact@morphtoken.com',
           image: _morphImage,
           attribute: Attributes.link),
       SettingsItem(
-          onTaped: () {},
+          onTaped: () => _launchUrl(_xmrToUrl),
           title: 'XMR.to',
           link: 'support@xmr.to',
           image: _xmrBtcImage,
