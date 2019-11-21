@@ -28,6 +28,15 @@ abstract class WalletStoreBase with Store {
   @observable
   CryptoCurrency type;
 
+  @observable
+  String amountValue;
+
+  @observable
+  bool isValid;
+
+  @observable
+  String errorMessage;
+
   WalletService _walletService;
   SettingsStore _settingsStore;
   StreamSubscription<Wallet> _onWalletChangeSubscription;
@@ -38,6 +47,7 @@ abstract class WalletStoreBase with Store {
     _settingsStore = settingsStore;
     name = "Monero Wallet";
     type = CryptoCurrency.xmr;
+    amountValue = '';
 
     if (_walletService.currentWallet != null) {
       _onWalletChanged(_walletService.currentWallet)
@@ -98,5 +108,34 @@ abstract class WalletStoreBase with Store {
       account = wallet.account;
       wallet.subaddress.listen((subaddress) => this.subaddress = subaddress);
     }
+  }
+
+  @action
+  onChangedAmountValue(String value) {
+    amountValue = value.isNotEmpty ? '?tx_amount=' + value : '';
+  }
+
+  @action
+  void validateAmount(String value) {
+    const double maxValue = 18446744.073709551616;
+
+    if (value.isEmpty) {
+      isValid = true;
+    } else {
+      String p = '^([0-9]+([.][0-9]{0,12})?|[.][0-9]{1,12})\$';
+      RegExp regExp = new RegExp(p);
+      if (regExp.hasMatch(value)) {
+        try {
+          double dValue = double.parse(value);
+          isValid = dValue <= maxValue;
+        } catch (e) {
+          isValid = false;
+        }
+      } else isValid = false;
+    }
+
+    errorMessage = isValid ? null : "Amount can only contain numbers.\n"
+        "Amount can't exceed available maximum.\n"
+        "The number of fraction digits must be less or equal to 12";
   }
 }

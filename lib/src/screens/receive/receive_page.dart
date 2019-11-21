@@ -45,11 +45,12 @@ class ReceiveBody extends StatefulWidget {
 }
 
 class ReceiveBodyState extends State<ReceiveBody> {
-  final _amountController = TextEditingController();
+  final amountController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
-    _amountController.dispose();
+    amountController.dispose();
     super.dispose();
   }
 
@@ -71,6 +72,12 @@ class ReceiveBodyState extends State<ReceiveBody> {
       _notCurrentColor = Colors.white;
       _isDarkTheme = false;
     }
+
+    amountController.addListener(() {
+      if (_formKey.currentState.validate()) {
+        walletStore.onChangedAmountValue(amountController.text);
+      } else walletStore.onChangedAmountValue('');
+    });
 
     return SafeArea(
         child: SingleChildScrollView(
@@ -96,10 +103,7 @@ class ReceiveBodyState extends State<ReceiveBody> {
                                     padding: EdgeInsets.all(5),
                                     color:  Colors.white,
                                     child: QrImage(
-                                      data: (_amountController.text.isNotEmpty)?
-                                      walletStore.subaddress.address + '?tx_amount=' +
-                                          _amountController.text
-                                          : walletStore.subaddress.address,
+                                      data: walletStore.subaddress.address + walletStore.amountValue,
                                       backgroundColor: Colors.transparent,
                                     ),
                                   ),
@@ -148,32 +152,40 @@ class ReceiveBodyState extends State<ReceiveBody> {
                       Row(
                         children: <Widget>[
                           Expanded(
-                              child: TextField(
-                                keyboardType:
-                                TextInputType.numberWithOptions(decimal: true),
-                                inputFormatters: [BlacklistingTextInputFormatter(new RegExp('[\\-|\\ |\\,|\\.]'))],
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                ),
-                                decoration: InputDecoration(
-                                    hintStyle: TextStyle(
-                                        color: _isDarkTheme
-                                            ? PaletteDark.darkThemeGrey
-                                            : Palette.lightBlue),
-                                    hintText: 'Amount',
-                                    focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: _isDarkTheme
-                                                ? PaletteDark.darkThemeGreyWithOpacity
-                                                : Palette.lightGrey,
-                                            width: 1.0)),
-                                    enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: _isDarkTheme
-                                                ? PaletteDark.darkThemeGreyWithOpacity
-                                                : Palette.lightGrey,
-                                            width: 1.0))),
-                                controller: _amountController,
+                              child: Form(
+                                key: _formKey,
+                                child: TextFormField(
+                                  keyboardType:
+                                  TextInputType.numberWithOptions(decimal: true),
+                                  inputFormatters: [BlacklistingTextInputFormatter(new RegExp('[\\-|\\ |\\,]'))],
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                  ),
+                                  decoration: InputDecoration(
+                                      hintStyle: TextStyle(
+                                          color: _isDarkTheme
+                                              ? PaletteDark.darkThemeGrey
+                                              : Palette.lightBlue),
+                                      hintText: 'Amount',
+                                      focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: _isDarkTheme
+                                                  ? PaletteDark.darkThemeGreyWithOpacity
+                                                  : Palette.lightGrey,
+                                              width: 1.0)),
+                                      enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: _isDarkTheme
+                                                  ? PaletteDark.darkThemeGreyWithOpacity
+                                                  : Palette.lightGrey,
+                                              width: 1.0))),
+                                  validator: (value) {
+                                    walletStore.validateAmount(value);
+                                    return walletStore.errorMessage;
+                                  },
+                                  autovalidate: true,
+                                  controller: amountController,
+                                )
                               ))
                         ],
                       )
