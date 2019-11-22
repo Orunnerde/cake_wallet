@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:jsonrpc2/jsonrpc_io_client.dart';
 import 'dart:convert';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 
 class Node {
   final int id;
@@ -26,25 +25,14 @@ class Node {
     };
   }
 
-  Future <bool> isNodeOnline() async {
-    final uri = Uri.http(this.uri, '');
-    final response = await get(uri.toString());
+  isNodeOnline(String uri) async {
 
-    if (response.statusCode != 200) {
-      print('ERROR');
-      print('${response.statusCode}');
-      return false;
-    } else {
-      //final responseJSON = json.decode(response.body);
-      print('OK');
-      return true;
-    }
-
-    /*final proxy = ServerProxy('http://opennode.xmr-tw.org:18089');
-  proxy.call('get_info', [])
-      .then((returned)=>proxy.checkError(returned))
-      .then((result){print('RESULT = $result');})
-      .catchError((error){print(error);});*/
+    final url = Uri.http(uri, '/json_rpc');
+    var response = await http.post(url.toString(), headers: {"Content-Type": "application/json"}, body: {"jsonrpc":"2.0","id":"0","method":"get_info"});
+    var resBody = json.decode(response.body);
+    var isOffline = resBody["offline"];
+    print("URL = $url");
+    print("Is offline $uri: $isOffline");
 
   }
 }

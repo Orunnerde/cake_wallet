@@ -21,10 +21,7 @@ class NodeListPage extends BasePage {
     final nodeList = Provider.of<NodeListStore>(context);
 
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -131,6 +128,8 @@ class NodeListPage extends BasePage {
                 itemBuilder: (BuildContext context, int index) {
                   final node = nodeList.nodes[index];
 
+                  node.isNodeOnline(node.uri);
+
                   return Observer(builder: (_) {
                     final isCurrent = settings.node == null
                         ? false
@@ -151,7 +150,7 @@ class NodeListPage extends BasePage {
                             height: 10.0,
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: isCurrent ? Palette.green : Palette.red),
+                                color: isCurrent ? Palette.green : Palette.red), // FIX!!!
                           ),
                           onTap: () async {
                             if (!isCurrent) {
