@@ -399,7 +399,7 @@ class Router {
                   builder: (_) => AddressBookStore(
                       addressBookService: AddressBookService(db: db)))
             ],
-            child: ContactPage(),
+            child: ContactPage(contact: settings.arguments),
           );
         });
 

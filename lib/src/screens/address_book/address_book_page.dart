@@ -9,6 +9,7 @@ import 'package:cake_wallet/src/stores/address_book/address_book_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class AddressBookPage extends BasePage {
   bool get isModalBackButton => true;
@@ -27,12 +28,7 @@ class AddressBookPage extends BasePage {
 
     final addressBookStore = Provider.of<AddressBookStore>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
+    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Container(
         width: 28.0,
@@ -82,42 +78,81 @@ class AddressBookPage extends BasePage {
               itemBuilder: (BuildContext context, int index) {
                 final contact = addressBookStore.contactList[index];
 
-                return InkWell(
-                  onTap: () =>
-                      !isEditable ? Navigator.of(context).pop(contact) : null,
-                  child: Container(
-                    child: Column(
-                      children: <Widget>[
-                        ListTile(
-                          leading: Container(
-                            height: 25.0,
-                            width: 48.0,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: _getCurrencyBackgroundColor(contact.type),
-                              borderRadius: BorderRadius.circular(6.0),
-                            ),
-                            child: Text(
-                              contact.type.toString(),
-                              style: TextStyle(
-                                fontSize: 11.0,
-                                color: _getCurrencyTextColor(contact.type),
-                              ),
-                            ),
-                          ),
-                          title: Text(
-                            contact.name,
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeTitle
-                                    : Colors.black),
-                          ),
-                        )
-                      ],
+                final content = ListTile(
+                  leading: Container(
+                    height: 25.0,
+                    width: 48.0,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: _getCurrencyBackgroundColor(contact.type),
+                      borderRadius: BorderRadius.circular(6.0),
+                    ),
+                    child: Text(
+                      contact.type.toString(),
+                      style: TextStyle(
+                        fontSize: 11.0,
+                        color: _getCurrencyTextColor(contact.type),
+                      ),
                     ),
                   ),
+                  title: Text(
+                    contact.name,
+                    style: TextStyle(
+                        fontSize: 16.0,
+                        color: _isDarkTheme
+                            ? PaletteDark.darkThemeTitle
+                            : Colors.black),
+                  ),
                 );
+
+                return !isEditable ?
+                  InkWell(
+                  onTap: () => Navigator.of(context).pop(contact),
+                  child: Container(
+                    child: content,
+                  ),
+                )
+                : Slidable(
+                    key: Key(contact.id.toString()),
+                    actionPane: SlidableDrawerActionPane(),
+                    child: content,
+                    secondaryActions: <Widget>[
+                      IconSlideAction(
+                        caption: 'Edit',
+                        color: Colors.blue,
+                        icon: Icons.edit,
+                        onTap: () async {
+                          await Navigator.of(context)
+                              .pushNamed(Routes.addressBookAddContact, arguments: contact);
+                          await addressBookStore.updateContactList();
+                        },
+                      ),
+                      IconSlideAction(
+                        caption: 'Delete',
+                        color: Colors.red,
+                        icon: CupertinoIcons.delete,
+                        onTap: () async {
+                          await showAlertDialog(context).then((isDelete) async{
+                            if (isDelete != null && isDelete) {
+                              await addressBookStore.delete(contact: contact);
+                              await addressBookStore.updateContactList();
+                            }
+                          });
+                        },
+                      ),
+                    ],
+                  dismissal: SlidableDismissal(
+                    child: SlidableDrawerDismissal(),
+                    onDismissed: (actionType) async {
+                      await addressBookStore.delete(contact: contact);
+                      await addressBookStore.updateContactList();
+                    },
+                    onWillDismiss: (actionType) async {
+                      return await showAlertDialog(context);
+                    },
+                  ),
+
+                  );
               }),
         ));
   }
@@ -162,5 +197,32 @@ class AddressBookPage extends BasePage {
         color = Colors.white;
     }
     return color;
+  }
+
+  Future<bool> showAlertDialog(BuildContext context) async {
+    return await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text(
+              'Remove contact',
+              textAlign: TextAlign.center,
+            ),
+            content: const Text(
+              'Are you sure that you want to remove selected contact?',
+              textAlign: TextAlign.center,
+            ),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () =>
+                      Navigator.pop(context, false),
+                  child: const Text('Cancel')),
+              FlatButton(
+                  onPressed: () =>
+                      Navigator.pop(context, true),
+                  child: const Text('Remove')),
+            ],
+          );
+        });
   }
 }
