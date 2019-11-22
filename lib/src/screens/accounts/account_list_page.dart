@@ -19,12 +19,7 @@ class AccountListPage extends BasePage {
     final accountListStore = Provider.of<AccountListStore>(context);
 
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
+    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Container(
         width: 28.0,
@@ -123,7 +118,13 @@ class AccountListPage extends BasePage {
                       caption: 'Edit',
                       color: Colors.blue,
                       icon: Icons.edit,
-                      onTap: () => null,
+                      onTap: () async {
+                        await Navigator.of(context)
+                            .pushNamed(Routes.accountCreation, arguments: account);
+                        await accountListStore.updateAccountList().then((_) {
+                          if (isCurrent) walletStore.setAccount(accountListStore.accounts[index]);
+                        });
+                      },
                     )
                   ],
                 );
