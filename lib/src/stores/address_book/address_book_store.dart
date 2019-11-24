@@ -70,6 +70,6 @@ abstract class AddressBookStoreBase with Store {
           isValid = (value.length == 34);
       }
     }
-    errorMessage = isValid ? null : 'Wallet address must correspond to the type of cryptocurrency';
+    errorMessage = isValid ? null : 'Wallet address must correspond to the type\nof cryptocurrency';
   }
 }

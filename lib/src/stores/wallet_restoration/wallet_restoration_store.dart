@@ -143,7 +143,7 @@ abstract class WalleRestorationStoreBase with Store {
           isValid = (value.length == 34);
       }
     }
-    errorMessage = isValid ? null : 'Wallet address must correspond to the type of cryptocurrency';
+    errorMessage = isValid ? null : 'Wallet address must correspond to the type\nof cryptocurrency';
   }
 
   void validateKeys(String value) {
