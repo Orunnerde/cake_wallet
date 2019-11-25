@@ -234,7 +234,7 @@ class SendFormState extends State<SendForm> {
                                   padding: EdgeInsets.only(top: 0),
                                   child: Center(
                                     child: InkWell(
-                                        onTap: () => sendStore.setSendAll(balanceStore.unlockedBalance),
+                                        onTap: () => sendStore.setSendAll(),
                                         child: Text('ALL',
                                             style: TextStyle(
                                                 fontSize: 10,
@@ -311,17 +311,22 @@ class SendFormState extends State<SendForm> {
                                             : Palette.lightGrey,
                                         width: 1.0))),
                             validator: (value) {
-                              try {
-                                double cryptoAmount = double.parse(_cryptoAmountController.text);
-                                double fiatAmount = double.parse(_fiatAmountController.text);
-                                double availableAmount = double.parse(balanceStore.unlockedBalance);
-                                if (cryptoAmount > 0) {
-                                  availableAmount *= fiatAmount/cryptoAmount;
-                                  sendStore.validateFiat(value, availableAmount);
-                                  return sendStore.errorMessage;
-                                } else return "Minimum value of amount is 0.01";
-                              } catch (e) {
-                                return "Currency can only contain numbers";
+                              if (value.isEmpty) {
+                                sendStore.validateFiat(value);
+                                return sendStore.errorMessage;
+                              } else {
+                                try {
+                                  double cryptoAmount = double.parse(_cryptoAmountController.text);
+                                  double fiatAmount = double.parse(_fiatAmountController.text);
+                                  double availableAmount = double.parse(balanceStore.unlockedBalance);
+                                  if (cryptoAmount > 0) {
+                                    availableAmount *= fiatAmount/cryptoAmount;
+                                    sendStore.validateFiat(value, maxValue: availableAmount);
+                                    return sendStore.errorMessage;
+                                  } else return "Minimum value of amount is 0.01";
+                                } catch (e) {
+                                  return "Currency can only contain numbers";
+                                }
                               }
                             }
                         ),

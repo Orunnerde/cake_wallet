@@ -95,10 +95,9 @@ abstract class SendStoreBase with Store {
   }
 
   @action
-  void setSendAll(String availableBalance) {
-    /*cryptoAmount = 'ALL';
-    fiatAmount = '';*/
-    changeCryptoAmount(availableBalance);
+  void setSendAll() {
+    cryptoAmount = 'ALL';
+    fiatAmount = '';
   }
 
   @action
@@ -177,33 +176,39 @@ abstract class SendStoreBase with Store {
 
   void validateXMR(String value, String availableBalance) {
     const double maxValue = 18446744.073709551616;
-    String p = '^([0-9]+([.][0-9]{0,12})?|[.][0-9]{1,12})\$';
+    String p = '^([0-9]+([.][0-9]{0,12})?|[.][0-9]{1,12})\$|ALL';
     RegExp regExp = new RegExp(p);
     if (regExp.hasMatch(value)) {
-      try {
-        double dValue = double.parse(value);
-        double maxAvailable = double.parse(availableBalance);
-        isValid = (dValue <= maxAvailable && dValue <= maxValue && dValue > 0);
-      } catch (e) {
-        isValid = false;
+      if (value == 'ALL') isValid = true;
+      else {
+        try {
+          double dValue = double.parse(value);
+          double maxAvailable = double.parse(availableBalance);
+          isValid = (dValue <= maxAvailable && dValue <= maxValue && dValue > 0);
+        } catch (e) {
+          isValid = false;
+        }
       }
     } else isValid = false;
     errorMessage = isValid ? null : "XMR value can't exceed available balance.\n"
                                     "The number of fraction digits must be less or equal to 12";
   }
 
-  void validateFiat(String value, double maxValue) {
+  void validateFiat(String value, {double maxValue}) {
     const double minValue = 0.01;
-    String p = '^([0-9]+([.][0-9]{0,2})?|[.][0-9]{1,2})\$';
-    RegExp regExp = new RegExp(p);
-    if (regExp.hasMatch(value)) {
-      try {
-        double dValue = double.parse(value);
-        isValid = (dValue >= minValue && dValue <= maxValue);
-      } catch (e) {
-        isValid = false;
-      }
-    } else isValid = false;
+    if (value.isEmpty && cryptoAmount == 'ALL') isValid = true;
+    else {
+      String p = '^([0-9]+([.][0-9]{0,2})?|[.][0-9]{1,2})\$';
+      RegExp regExp = new RegExp(p);
+      if (regExp.hasMatch(value)) {
+        try {
+          double dValue = double.parse(value);
+          isValid = (dValue >= minValue && dValue <= maxValue);
+        } catch (e) {
+          isValid = false;
+        }
+      } else isValid = false;
+    }
     errorMessage = isValid ? null : "Value of amount can't exceed available balance.\n"
                                     "The number of fraction digits must be less or equal to 2";
   }
