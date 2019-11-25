@@ -14,6 +14,7 @@ import 'package:cake_wallet/themes.dart';
 class SeedPage extends BasePage {
   static final image = Image.asset('assets/images/seed_image.png');
   String get title => 'Seed';
+  bool get isModalBackButton => true;
 
   final VoidCallback onCloseCallback;
 
@@ -24,30 +25,7 @@ class SeedPage extends BasePage {
 
   @override
   Widget leading(BuildContext context) {
-    final _closeButtonImage = Image.asset('assets/images/close_button.png');
-    final _closeButtonImageDarkTheme =
-    Image.asset('assets/images/close_button_dark_theme.png');
-
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    Image _closeButton = _themeChanger.getTheme() == Themes.darkTheme ?
-    _closeButtonImageDarkTheme
-    : _closeButtonImage;
-
-    return SizedBox(
-      height: 37,
-      width:  37,
-      child: ButtonTheme(
-        minWidth: double.minPositive,
-        child: onCloseCallback != null ?
-        Offstage()
-        : FlatButton(
-            highlightColor: Colors.transparent,
-            splashColor: Colors.transparent,
-            padding: EdgeInsets.all(0),
-            onPressed: () => onClose(context),
-            child: _closeButton),
-      ),
-    );
+    return onCloseCallback != null ? Offstage() : super.leading(context);
   }
 
   @override
