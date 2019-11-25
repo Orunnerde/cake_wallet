@@ -17,8 +17,6 @@ class ReceivePage extends BasePage {
   bool get isModalBackButton => true;
   String get title => 'Receive';
 
-  final _shareButtonImage = Image.asset('assets/images/share_button.png');
-
   @override
   Widget trailing(BuildContext context) {
     final walletStore = Provider.of<WalletStore>(context);
@@ -28,7 +26,7 @@ class ReceivePage extends BasePage {
       child: FlatButton(
           onPressed: () => Share.text(
               'Share address', walletStore.subaddress.address, 'text/plain'),
-          child: _shareButtonImage),
+          child: Icon(Icons.share)),
     );
   }
 
