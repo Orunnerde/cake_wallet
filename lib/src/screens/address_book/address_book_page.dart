@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/routes.dart';
@@ -79,6 +80,21 @@ class AddressBookPage extends BasePage {
                 final contact = addressBookStore.contactList[index];
 
                 final content = ListTile(
+                  onTap: () async {
+                    bool isCopied = await showNameAndAddressDialog(context, contact.name, contact.address);
+                    if (isCopied) {
+                      Clipboard.setData(ClipboardData(text: contact.address));
+                      Scaffold.of(context).showSnackBar(
+                        SnackBar(
+                          content:
+                          Text('Copied to Clipboard'),
+                          backgroundColor: Colors.green,
+                          duration:
+                          Duration(milliseconds: 1500),
+                        ),
+                      );
+                    }
+                  },
                   leading: Container(
                     height: 25.0,
                     width: 48.0,
@@ -105,13 +121,7 @@ class AddressBookPage extends BasePage {
                   ),
                 );
 
-                return !isEditable ?
-                  InkWell(
-                  onTap: () => Navigator.of(context).pop(contact),
-                  child: Container(
-                    child: content,
-                  ),
-                )
+                return !isEditable ? content
                 : Slidable(
                     key: Key(contact.id.toString()),
                     actionPane: SlidableDrawerActionPane(),
@@ -224,5 +234,32 @@ class AddressBookPage extends BasePage {
             ],
           );
         });
+  }
+
+  showNameAndAddressDialog(BuildContext context, String name, String address) async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            name,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: Text(
+            address,
+            textAlign: TextAlign.center,
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text('Cancel')),
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text('Copy'))
+          ],
+        );
+      }
+    );
   }
 }
