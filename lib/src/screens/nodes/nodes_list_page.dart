@@ -127,8 +127,8 @@ class NodeListPage extends BasePage {
                 itemCount: nodeList.nodes.length,
                 itemBuilder: (BuildContext context, int index) {
                   final node = nodeList.nodes[index];
+                  final isNodeOffline = node.requestNode(node.uri, login: node.login, password: node.password);
 
-                  node.isNodeOnline(node.uri);
 
                   return Observer(builder: (_) {
                     final isCurrent = settings.node == null
