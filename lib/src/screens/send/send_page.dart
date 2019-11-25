@@ -393,11 +393,15 @@ class SendFormState extends State<SendForm> {
                                                 }
 
                                                 Navigator.of(auth.context).pop();
+
                                                 sendStore.createTransaction(
                                                     address:
                                                     _addressController.text,
                                                     paymentId:
-                                                    _paymentIdController.text);
+                                                    _paymentIdController.text,
+                                                    amount: _cryptoAmountController.text == 'ALL'?
+                                                    balanceStore.unlockedBalance : null
+                                                );
                                               });
                                             }),
                                         FlatButton(
