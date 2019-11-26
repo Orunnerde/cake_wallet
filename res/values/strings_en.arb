@@ -311,5 +311,22 @@
   "trade_for_not_created" : "Trade for ${title} is not created.",
   "trade_not_created" : "Trade not created.",
   "trade_id_not_found" : "Trade ${tradeId} of ${title} not found.",
-  "trade_not_found" : "Trade not found."
+  "trade_not_found" : "Trade not found.",
+
+
+  "trade_state_pending" : "Pending",
+  "trade_state_confirming" : "Confirming",
+  "trade_state_trading" : "Trading",
+  "trade_state_traded" : "Traded",
+  "trade_state_complete" : "Complete",
+  "trade_state_to_be_created" : "To be created",
+  "trade_state_unpaid" : "Unpaid",
+  "trade_state_underpaid" : "Underpaid",
+  "trade_state_paid_unconfirmed" : "Paid unconfirmed",
+  "trade_state_paid" : "Paid",
+  "trade_state_btc_sent" : "Btc sent",
+  "trade_state_timeout" : "Timeout",
+  "trade_state_created" : "Created",
+  "trade_state_finished" : "Finished"
+
 }

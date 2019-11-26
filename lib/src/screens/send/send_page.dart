@@ -17,6 +17,7 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
 import 'package:cake_wallet/generated/i18n.dart';
 
 class SendPage extends BasePage {
@@ -347,7 +348,7 @@ class SendFormState extends State<SendForm> {
                       SizedBox(
                         width: double.infinity,
                         child: Text(
-                            S.of(context).send_priority(settingsStore.transactionPriority.toString()),
+                            S.of(context).send_priority(_getTransactionPriority(settingsStore.transactionPriority)),
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
@@ -412,6 +413,30 @@ class SendFormState extends State<SendForm> {
         )
       ])
     );
+  }
+
+  String _getTransactionPriority(TransactionPriority transactionPriority) {
+    String currentTransactionPriority;
+    switch(transactionPriority.title) {
+      case 'Slow':
+        currentTransactionPriority = S.of(context).transaction_priority_slow;
+        break;
+      case 'Regular':
+        currentTransactionPriority = S.of(context).transaction_priority_regular;
+        break;
+      case 'Medium':
+        currentTransactionPriority = S.of(context).transaction_priority_medium;
+        break;
+      case 'Fast':
+        currentTransactionPriority = S.of(context).transaction_priority_fast;
+        break;
+      case 'Fastest':
+        currentTransactionPriority = S.of(context).transaction_priority_fastest;
+        break;
+      default:
+        break;
+    }
+    return currentTransactionPriority;
   }
 
   void _setEffects(BuildContext context) {

@@ -416,12 +416,13 @@ class SettingsFormState extends State<SettingsForm> {
 
   void _setBalance(BuildContext context) async {
     final settingsStore = Provider.of<SettingsStore>(context);
+    final balanceList = _getBalanceList(BalanceDisplayMode.all);
     final selectedDisplayMode =
-        await _presentPicker(context, BalanceDisplayMode.all);
+        await _presentPicker(context, balanceList);
 
     if (selectedDisplayMode != null) {
       settingsStore.setCurrentBalanceDisplayMode(
-          balanceDisplayMode: selectedDisplayMode);
+          balanceDisplayMode: _setSelectedItem(selectedDisplayMode, balanceList, BalanceDisplayMode.all));
     }
   }
 
@@ -436,11 +437,63 @@ class SettingsFormState extends State<SettingsForm> {
 
   void _setTransactionPriority(BuildContext context) async {
     final settingsStore = Provider.of<SettingsStore>(context);
+    final transactionPriorityList = _getTransactionPriorityList(TransactionPriority.all);
     final selectedPriority =
-        await _presentPicker(context, TransactionPriority.all);
+        await _presentPicker(context, transactionPriorityList);
 
     if (selectedPriority != null) {
-      settingsStore.setCurrentTransactionPriority(priority: selectedPriority);
+      settingsStore.setCurrentTransactionPriority(priority: _setSelectedItem(selectedPriority,
+          transactionPriorityList, TransactionPriority.all));
     }
+  }
+
+  List<String> _getBalanceList(List<BalanceDisplayMode> list) {
+    List<String> balanceList = new List();
+    for(int i = 0; i < list.length; i++) {
+      switch(list[ i ].title) {
+        case 'Full Balance':
+          balanceList.add(S.of(context).full_balance);
+          break;
+        case 'Available Balance':
+          balanceList.add(S.of(context).available_balance);
+          break;
+        case 'Hidden Balance':
+          balanceList.add(S.of(context).hidden_balance);
+          break;
+        default:
+          break;
+      }
+    }
+    return balanceList;
+  }
+
+  List<String> _getTransactionPriorityList(List<TransactionPriority> list) {
+    List<String> transactionPriorityList = new List();
+    for(int i = 0; i < list.length; i++) {
+      switch(list[ i ].title) {
+        case 'Slow':
+          transactionPriorityList.add(S.of(context).transaction_priority_slow);
+          break;
+        case 'Regular':
+          transactionPriorityList.add(S.of(context).transaction_priority_regular);
+          break;
+        case 'Medium':
+          transactionPriorityList.add(S.of(context).transaction_priority_medium);
+          break;
+        case 'Fast':
+          transactionPriorityList.add(S.of(context).transaction_priority_fast);
+          break;
+        case 'Fastest':
+          transactionPriorityList.add(S.of(context).transaction_priority_fastest);
+          break;
+        default:
+          break;
+      }
+    }
+    return transactionPriorityList;
+  }
+
+  _setSelectedItem<T extends Object> (String selectedItem, List<String> list, List<T> itemsList) {
+    return itemsList[list.indexOf(selectedItem)];
   }
 }
