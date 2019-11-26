@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
-import 'package:cake_wallet/src/domain/common/fetch_price.dart';
+import 'package:cake_wallet/src/domain/monero/monero_amount_format.dart';
 import 'package:cake_wallet/src/stores/price/price_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
@@ -63,7 +63,8 @@ abstract class ActionListBase with Store {
 
     _transactions.forEach((item) {
       final amount = calculateFiatAmountRaw(
-          cryptoAmount: item.transaction.amountRaw(), price: price);
+          cryptoAmount: moneroAmountToDouble(amount: item.transaction.amount),
+          price: price);
       item.transaction.changeFiatAmount(amount);
     });
 

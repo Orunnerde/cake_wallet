@@ -42,14 +42,14 @@ abstract class WalleRestorationStoreBase with Store {
     state = WalletRestorationStateInitial();
     final _seed = seed ?? _seedText();
 
-    try {
+    // try {
       state = WalletIsRestoring();
       await walletListService.restoreFromSeed(name, _seed, restoreHeight);
       authStore.restored();
       state = WalletRestoredSuccessfully();
-    } catch (e) {
-      state = WalletRestorationFailure(error: e.toString());
-    }
+    // } catch (e) {
+    //   state = WalletRestorationFailure(error: e.toString());
+    // }
   }
 
   @action

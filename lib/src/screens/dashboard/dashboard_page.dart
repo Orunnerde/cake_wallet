@@ -532,7 +532,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                   final formattedAmount = savedDisplayMode.serialize() ==
                           BalanceDisplayMode.hiddenBalance.serialize()
                       ? '---'
-                      : transaction.amount();
+                      : transaction.amountFormatted();
                   final formattedFiatAmount = savedDisplayMode.serialize() ==
                           BalanceDisplayMode.hiddenBalance.serialize()
                       ? '---'

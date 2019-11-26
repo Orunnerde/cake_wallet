@@ -1,20 +1,19 @@
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:cw_monero/account_list.dart' as accountListAPI;
 import 'package:cake_wallet/src/domain/monero/account.dart';
 
 class AccountList {
-  get subaddresses => _subaddress.stream;
-  BehaviorSubject<List<Account>> _subaddress;
+  get subaddresses => _accounts.stream;
+  BehaviorSubject<List<Account>> _accounts;
 
-  MethodChannel _platform;
   bool _isRefreshing;
   bool _isUpdating;
 
-  AccountList({MethodChannel platform}) {
-    this._platform = platform;
+  AccountList() {
     _isRefreshing = false;
     _isUpdating = false;
-    _subaddress = BehaviorSubject<List<Account>>();
+    _accounts = BehaviorSubject<List<Account>>();
   }
 
   Future update() async {
@@ -24,9 +23,9 @@ class AccountList {
 
     try {
       _isUpdating = true;
-      await refresh(accountIndex: 0);
-      final transactions = await getAll();
-      _subaddress.add(transactions);
+      await refresh();
+      final accounts = getAll();
+      _accounts.add(accounts);
       _isUpdating = false;
     } catch (e) {
       _isUpdating = false;
@@ -34,37 +33,30 @@ class AccountList {
     }
   }
 
-  Future<List<Account>> getAll() async {
-    List accounts = await _platform.invokeMethod('getAllAccounts');
-    return accounts.map((acc) {
-      // Replace label of first account from Primary account to Primary
-      if (acc['id'] == "0" && acc['label'] == "Primary account") {
-        acc['label'] = 'Primary';
-      }
-
-      return Account.fromMap(acc);
-    }).toList();
+  List<Account> getAll() {
+    return accountListAPI
+        .getAllAccount()
+        .map((accountRow) => Account.fromRow(accountRow))
+        .toList();
   }
 
-  Future addAccount({String label}) async {
-    final arguments = {'label': label};
-    await _platform.invokeMethod('addAccount', arguments);
+  addAccount({String label}) {
+    accountListAPI.addAccount(label: label);
   }
 
-  Future setLabelSubaddress({int accountIndex, String label}) async {
-    final arguments = {'accountIndex': accountIndex, 'label': label};
-    await _platform.invokeMethod('setLabelAccount', arguments);
+  setLabelSubaddress({int accountIndex, String label}) {
+    accountListAPI.setLabelForAccount(accountIndex: accountIndex, label: label);
     update();
   }
 
-  Future refresh({int accountIndex}) async {
+  refresh() {
     if (_isRefreshing) {
       return;
     }
 
     try {
       _isRefreshing = true;
-      await _platform.invokeMethod('refreshAccounts');
+      accountListAPI.refreshAccounts();
       _isRefreshing = false;
     } on PlatformException catch (e) {
       _isRefreshing = false;

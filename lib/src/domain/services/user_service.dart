@@ -8,7 +8,7 @@ class UserService {
 
   UserService({this.sharedPreferences, this.secureStorage});
 
-  Future<void> setPassword(String password) async {
+  Future setPassword(String password) async {
     final key = generateStoreKeyFor(key: SecretStoreKey.pinCodePassword);
     try {
       await secureStorage.write(key: key, value: password);

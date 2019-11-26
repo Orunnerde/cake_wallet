@@ -76,15 +76,15 @@ class WalletService extends Wallet {
 
   Future<bool> isConnected() => _currentWallet.isConnected();
 
-  Future<void> close() => _currentWallet.close();
+  Future close() => _currentWallet.close();
 
-  Future<void> connectToNode({Node node, bool useSSL = false, bool isLightWallet = false}) =>
+  Future connectToNode({Node node, bool useSSL = false, bool isLightWallet = false}) =>
       _currentWallet.connectToNode(
           node: node,
           useSSL: useSSL,
           isLightWallet: isLightWallet);
 
-  Future<void> startSync() => _currentWallet.startSync();
+  Future startSync() => _currentWallet.startSync();
 
   TransactionHistory getHistory() => _currentWallet.getHistory();
 
