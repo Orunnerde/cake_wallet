@@ -14,5 +14,5 @@ abstract class WalletsManager {
 
   Future<bool> isWalletExit(String name);
 
-  Future<void> remove(WalletDescription wallet);
+  Future remove(WalletDescription wallet);
 }

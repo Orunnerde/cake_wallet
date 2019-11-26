@@ -75,6 +75,9 @@
 # External libs
 monero_android/
 android/app/.externalNativeBuild/
+cw_monero/ios/External/
+cw_monero/cw_monero/android/.externalNativeBuild/
+cw_monero/cw_monero/android/.cxx/
 
 # Generated dart files
 **/*.g.dart

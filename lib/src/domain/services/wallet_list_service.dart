@@ -19,9 +19,7 @@ class WalletIsExistException implements Exception {
   WalletIsExistException(this.name);
 
   @override
-  String toString() {
-    return "Wallet with name $name is already exist!";
-  }
+  String toString() => "Wallet with name $name is already exist!";
 }
 
 class WalletListService {
@@ -48,7 +46,7 @@ class WalletListService {
     return wallets;
   }
 
-  Future<void> create(String name) async {
+  Future create(String name) async {
     if (await walletsManager.isWalletExit(name)) {
       throw WalletIsExistException(name);
     }
@@ -67,8 +65,7 @@ class WalletListService {
     await onWalletChange(wallet);
   }
 
-  Future<void> restoreFromSeed(
-      String name, String seed, int restoreHeight) async {
+  Future restoreFromSeed(String name, String seed, int restoreHeight) async {
     if (await walletsManager.isWalletExit(name)) {
       throw WalletIsExistException(name);
     }
@@ -88,7 +85,7 @@ class WalletListService {
     await onWalletChange(wallet);
   }
 
-  Future<void> restoreFromKeys(String name, int restoreHeight, String address,
+  Future restoreFromKeys(String name, int restoreHeight, String address,
       String viewKey, String spendKey) async {
     if (await walletsManager.isWalletExit(name)) {
       throw WalletIsExistException(name);
@@ -109,7 +106,7 @@ class WalletListService {
     await onWalletChange(wallet);
   }
 
-  Future<void> openWallet(String name) async {
+  Future openWallet(String name) async {
     if (walletService.currentWallet != null) {
       await walletService.close();
     }
@@ -122,7 +119,7 @@ class WalletListService {
     await onWalletChange(wallet);
   }
 
-  Future<void> changeWalletManger({WalletType walletType}) async {
+  Future changeWalletManger({WalletType walletType}) async {
     switch (walletType) {
       case WalletType.monero:
         final dbHelper = await CoreDB.getInstance();
@@ -135,11 +132,12 @@ class WalletListService {
     }
   }
 
-  Future<void> rescanCurrentWallet({int restoreHeight = 0}) async {
-    await rescanWallet(walletService.currentWallet, restoreHeight: restoreHeight);
+  Future rescanCurrentWallet({int restoreHeight = 0}) async {
+    await rescanWallet(walletService.currentWallet,
+        restoreHeight: restoreHeight);
   }
 
-  Future<void> rescanWallet(Wallet wallet, {int restoreHeight = 0}) async {
+  Future rescanWallet(Wallet wallet, {int restoreHeight = 0}) async {
     final seed = await wallet.getSeed();
     final name = await wallet.getName();
     await wallet.close();
@@ -148,13 +146,13 @@ class WalletListService {
     await restoreFromSeed(name, seed, restoreHeight);
   }
 
-  Future<void> onWalletChange(Wallet wallet) async {
+  Future onWalletChange(Wallet wallet) async {
     walletService.currentWallet = wallet;
     final walletName = await wallet.getName();
     await sharedPreferences.setString('current_wallet_name', walletName);
   }
 
-  Future<void> remove(WalletDescription wallet) async {
+  Future remove(WalletDescription wallet) async {
     await walletsManager.remove(wallet);
   }
 }
