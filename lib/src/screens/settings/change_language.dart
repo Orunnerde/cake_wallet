@@ -8,6 +8,7 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/generated/i18n.dart';
+import 'package:cake_wallet/routes.dart';
 
 const Map<String,String> _languages = {
   'en' : 'English',
@@ -25,6 +26,9 @@ const Map<String,String> _languages = {
 
 class ChangeLanguage extends BasePage{
   get title => S.current.settings_change_language;
+
+  @override
+  void onClose(BuildContext context) => Navigator.of(context).popAndPushNamed(Routes.settings);
 
   @override
   Widget body(BuildContext context) {
@@ -58,7 +62,7 @@ class ChangeLanguage extends BasePage{
               onTap: (){
                 settingsStore.saveLanguageCode(languageCode: _languages.keys.elementAt(index));
                 currentLanguage.setCurrentLanguage(_languages.keys.elementAt(index));
-                Navigator.pop(context);
+                Navigator.of(context).popAndPushNamed(Routes.settings);
               },
             ),
           );

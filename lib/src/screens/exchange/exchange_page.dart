@@ -81,19 +81,21 @@ class ExchangePage extends BasePage {
     bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return SizedBox(
-        width: 50,
-        child: FlatButton(
-            padding: EdgeInsets.all(0),
-            child: Text(
-              S.of(context).clear,
-              style: TextStyle(
-                  color: _isDarkTheme
-                      ? PaletteDark.darkThemeTitleViolet
-                      : Palette.wildDarkBlue,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16),
-            ),
-            onPressed: () => exchangeStore.reset()));
+        child: ButtonTheme(
+          minWidth: double.minPositive,
+          child: FlatButton(
+              padding: EdgeInsets.all(0),
+              child: Text(
+                S.of(context).clear,
+                style: TextStyle(
+                    color: _isDarkTheme
+                        ? PaletteDark.darkThemeTitleViolet
+                        : Palette.wildDarkBlue,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16),
+              ),
+              onPressed: () => exchangeStore.reset()),
+        ));
   }
 
   @override

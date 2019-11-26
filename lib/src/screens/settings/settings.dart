@@ -6,7 +6,6 @@ import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
-import 'package:cake_wallet/src/screens/settings/change_language.dart';
 import 'package:cake_wallet/src/screens/disclaimer/disclaimer_page.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +40,7 @@ class SettingsForm extends StatefulWidget {
   createState() => SettingsFormState();
 }
 
-class SettingsFormState extends State<SettingsForm> {
+class SettingsFormState extends State<SettingsForm> with WidgetsBindingObserver {
   final _telegramImage = Image.asset('assets/images/Telegram.png');
   final _twitterImage = Image.asset('assets/images/Twitter.png');
   final _changeNowImage = Image.asset('assets/images/change_now.png');
@@ -59,7 +58,7 @@ class SettingsFormState extends State<SettingsForm> {
       SettingsItem(title: S.of(context).settings_nodes, attribute: Attributes.header),
       SettingsItem(
           onTaped: () => Navigator.of(context).pushNamed(Routes.nodeList),
-          title: S.of(context).settings_current_node,
+          title: S.current.settings_current_node,
           widget: Observer(
               builder: (_) => Text(
                     settingsStore.node == null ? '' : settingsStore.node.uri,
@@ -76,7 +75,7 @@ class SettingsFormState extends State<SettingsForm> {
           title: S.of(context).settings_display_balance_as,
           widget: Observer(
               builder: (_) => Text(
-                    settingsStore.balanceDisplayMode.toString(),
+                    _getCurrentBalanceMode(settingsStore.balanceDisplayMode.toString()),
                     style: TextStyle(
                         fontSize: 16.0,
                         color: _isDarkTheme
@@ -102,7 +101,7 @@ class SettingsFormState extends State<SettingsForm> {
           title: S.of(context).settings_fee_priority,
           widget: Observer(
               builder: (_) => Text(
-                    settingsStore.transactionPriority.toString(),
+                    _getCurrentTransactionPriority(settingsStore.transactionPriority.toString()),
                     style: TextStyle(
                         fontSize: 16.0,
                         color: _isDarkTheme
@@ -126,12 +125,7 @@ class SettingsFormState extends State<SettingsForm> {
           title: S.of(context).settings_change_pin,
           attribute: Attributes.arrow),
       SettingsItem(
-          onTaped: () {
-            Navigator.push(
-                context,
-                CupertinoPageRoute(
-                    builder: (BuildContext context) => ChangeLanguage()));
-          },
+          onTaped: () => Navigator.popAndPushNamed(context, Routes.changeLanguage),
           title: S.of(context).settings_change_language,
           attribute: Attributes.arrow),
       SettingsItem(
@@ -416,13 +410,13 @@ class SettingsFormState extends State<SettingsForm> {
 
   void _setBalance(BuildContext context) async {
     final settingsStore = Provider.of<SettingsStore>(context);
-    final balanceList = _getBalanceList(BalanceDisplayMode.all);
+    final balanceList = _getBalanceModeList(BalanceDisplayMode.all);
     final selectedDisplayMode =
         await _presentPicker(context, balanceList);
 
     if (selectedDisplayMode != null) {
       settingsStore.setCurrentBalanceDisplayMode(
-          balanceDisplayMode: _setSelectedItem(selectedDisplayMode, balanceList, BalanceDisplayMode.all));
+          balanceDisplayMode: _getSelectedItem(selectedDisplayMode, balanceList, BalanceDisplayMode.all));
     }
   }
 
@@ -442,29 +436,29 @@ class SettingsFormState extends State<SettingsForm> {
         await _presentPicker(context, transactionPriorityList);
 
     if (selectedPriority != null) {
-      settingsStore.setCurrentTransactionPriority(priority: _setSelectedItem(selectedPriority,
+      settingsStore.setCurrentTransactionPriority(priority: _getSelectedItem(selectedPriority,
           transactionPriorityList, TransactionPriority.all));
     }
   }
 
-  List<String> _getBalanceList(List<BalanceDisplayMode> list) {
-    List<String> balanceList = new List();
+  List<String> _getBalanceModeList(List<BalanceDisplayMode> list) {
+    List<String> balanceModeList = new List();
     for(int i = 0; i < list.length; i++) {
       switch(list[ i ].title) {
         case 'Full Balance':
-          balanceList.add(S.of(context).full_balance);
+          balanceModeList.add(S.of(context).full_balance);
           break;
         case 'Available Balance':
-          balanceList.add(S.of(context).available_balance);
+          balanceModeList.add(S.of(context).available_balance);
           break;
         case 'Hidden Balance':
-          balanceList.add(S.of(context).hidden_balance);
+          balanceModeList.add(S.of(context).hidden_balance);
           break;
         default:
           break;
       }
     }
-    return balanceList;
+    return balanceModeList;
   }
 
   List<String> _getTransactionPriorityList(List<TransactionPriority> list) {
@@ -493,7 +487,49 @@ class SettingsFormState extends State<SettingsForm> {
     return transactionPriorityList;
   }
 
-  _setSelectedItem<T extends Object> (String selectedItem, List<String> list, List<T> itemsList) {
+  _getSelectedItem<T extends Object> (String selectedItem, List<String> list, List<T> itemsList) {
     return itemsList[list.indexOf(selectedItem)];
+  }
+
+  String _getCurrentBalanceMode(String balanceMode) {
+    String currentBalanceMode;
+    switch(balanceMode) {
+      case 'Full Balance':
+        currentBalanceMode = S.of(context).full_balance;
+        break;
+      case 'Available Balance':
+        currentBalanceMode = S.of(context).available_balance;
+        break;
+      case 'Hidden Balance':
+        currentBalanceMode = S.of(context).hidden_balance;
+        break;
+      default:
+        break;
+    }
+    return currentBalanceMode;
+  }
+
+  String _getCurrentTransactionPriority(String transactionPriority) {
+    String currentTransactionPriority;
+    switch(transactionPriority) {
+      case 'Slow':
+        currentTransactionPriority = S.of(context).transaction_priority_slow;
+        break;
+      case 'Regular':
+        currentTransactionPriority = S.of(context).transaction_priority_regular;
+        break;
+      case 'Medium':
+        currentTransactionPriority = S.of(context).transaction_priority_medium;
+        break;
+      case 'Fast':
+        currentTransactionPriority = S.of(context).transaction_priority_fast;
+        break;
+      case 'Fastest':
+        currentTransactionPriority = S.of(context).transaction_priority_fastest;
+        break;
+      default:
+        break;
+    }
+    return currentTransactionPriority;
   }
 }
