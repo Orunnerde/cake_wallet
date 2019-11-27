@@ -9,6 +9,7 @@ import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
 import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
 import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
 import 'package:cake_wallet/src/stores/action_list/action_list_display_mode.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 part 'settings_store.g.dart';
 
@@ -98,6 +99,9 @@ abstract class SettingsStoreBase with Store {
   @observable
   String languageCode;
 
+  @observable
+  Map<String,String> itemHeaders;
+
   SharedPreferences _sharedPreferences;
   NodeList _nodeList;
 
@@ -121,6 +125,9 @@ abstract class SettingsStoreBase with Store {
     allowBiometricalAuthentication = initialAllowBiometricalAuthentication;
     isDarkTheme = initialDarkTheme;
     languageCode = initialLanguageCode;
+    itemHeaders = Map();
+
+    setItemHeaders();
 
     actionlistDisplayMode.observe(
         (dynamic _) => _sharedPreferences.setInt(displayActionListModeKey,
@@ -221,5 +228,17 @@ abstract class SettingsStoreBase with Store {
   Future<Node> _fetchCurrentNode() async {
     final id = _sharedPreferences.getInt(currentNodeIdKey);
     return await _nodeList.findBy(id: id);
+  }
+
+  void setItemHeaders() {
+    itemHeaders.addAll({
+      "Nodes" : S.current.settings_nodes,
+      "Current node" : S.current.settings_current_node,
+      "Wallets" : S.current.settings_wallets,
+      "Display balance as" : S.current.settings_display_balance_as,
+      "Currency" : S.current.settings_currency,
+      "Fee priority" : S.current.settings_fee_priority,
+      "Save recipient address" : S.current.settings_save_recipient_address
+    });
   }
 }
