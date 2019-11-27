@@ -12,11 +12,10 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/generated/i18n.dart';
 
 class TransactionDetailsPage extends BasePage {
   bool get isModalBackButton => true;
-  String get title => S.current.transaction_details_title;
+  String get title => 'Transaction Details';
 
   final TransactionInfo transactionInfo;
 
@@ -56,12 +55,12 @@ class TransactionDetailsFormState extends State<TransactionDetailsForm> {
   void initState() {
     _items.addAll([
       StandartListItem(
-          title: S.of(context).transaction_details_transaction_id, value: widget.transactionInfo.id),
+          title: 'Transaction ID', value: widget.transactionInfo.id),
       StandartListItem(
-          title: S.of(context).transaction_details_date,
+          title: 'Date',
           value: _dateFormat.format(widget.transactionInfo.date)),
-      StandartListItem(title: S.of(context).transaction_details_height, value: widget.transactionInfo.height),
-      StandartListItem(title: S.of(context).transaction_details_amount, value: widget.transactionInfo.amount())
+      StandartListItem(title: 'Height', value: '${widget.transactionInfo.height}'),
+      StandartListItem(title: 'Amount', value: widget.transactionInfo.amountFormatted())
     ]);
 
     if (widget.settingsStore.shouldSaveRecipientAddress) {
@@ -105,7 +104,7 @@ class TransactionDetailsFormState extends State<TransactionDetailsForm> {
                 Clipboard.setData(ClipboardData(text: item.value));
                 Scaffold.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(S.of(context).transaction_details_copied(item.title)),
+                    content: Text('${item.title} copied to Clipboard'),
                     backgroundColor: Colors.green,
                     duration: Duration(milliseconds: 1500),
                   ),
@@ -119,6 +118,6 @@ class TransactionDetailsFormState extends State<TransactionDetailsForm> {
 
   void _addRecipientAddress({String address}) {
     setState(() => _items
-        .add(StandartListItem(title: S.of(context).transaction_details_recipient_address, value: address)));
+        .add(StandartListItem(title: 'Recipient address', value: address)));
   }
 }

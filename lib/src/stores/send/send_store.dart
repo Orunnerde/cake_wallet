@@ -10,7 +10,6 @@ import 'package:cake_wallet/src/domain/monero/monero_transaction_creation_creden
 import 'package:cake_wallet/src/domain/common/recipient_address_list.dart';
 import 'package:cake_wallet/src/stores/send/sending_state.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
-import 'package:cake_wallet/generated/i18n.dart';
 
 part 'send_store.g.dart';
 
@@ -53,14 +52,14 @@ abstract class SendStoreBase with Store {
   }
 
   @action
-  Future<void> createTransaction(
+  Future createTransaction(
       {String address, String paymentId, String amount}) async {
     state = CreatingTransaction();
 
     try {
       final _amount = amount != null
           ? amount
-          : cryptoAmount == S.current.all ? null : cryptoAmount.replaceAll(',', '.');
+          : cryptoAmount == 'ALL' ? null : cryptoAmount.replaceAll(',', '.');
       final credentials = MoneroTransactionCreationCredentials(
           address: address,
           paymentId: paymentId ?? '',
@@ -76,7 +75,7 @@ abstract class SendStoreBase with Store {
   }
 
   @action
-  Future<void> commitTransaction() async {
+  Future commitTransaction() async {
     try {
       final transactionId = _pendingTransaction.hash;
       state = TransactionCommiting();
@@ -162,7 +161,7 @@ abstract class SendStoreBase with Store {
           isValid = (value.length == 34);
       }
     }
-    errorMessage = isValid ? null : S.current.error_text_address;
+    errorMessage = isValid ? null : 'Wallet address must correspond to the type\nof cryptocurrency';
   }
 
   void validatePaymentID(String value) {
@@ -173,7 +172,7 @@ abstract class SendStoreBase with Store {
       RegExp regExp = new RegExp(p);
       isValid = regExp.hasMatch(value);
     }
-    errorMessage = isValid ? null : S.current.error_text_payment_id;
+    errorMessage = isValid ? null : 'Payment ID can only contain from 16 to 64 chars in hex';
   }
 
   void validateXMR(String value, String availableBalance) {
@@ -189,7 +188,8 @@ abstract class SendStoreBase with Store {
         isValid = false;
       }
     } else isValid = false;
-    errorMessage = isValid ? null : S.current.error_text_xmr;
+    errorMessage = isValid ? null : "XMR value can't exceed available balance.\n"
+                                    "The number of fraction digits must be less or equal to 12";
   }
 
   void validateFiat(String value, double maxValue) {
@@ -204,6 +204,7 @@ abstract class SendStoreBase with Store {
         isValid = false;
       }
     } else isValid = false;
-    errorMessage = isValid ? null : S.current.error_text_fiat;
+    errorMessage = isValid ? null : "Value of amount can't exceed available balance.\n"
+                                    "The number of fraction digits must be less or equal to 2";
   }
 }

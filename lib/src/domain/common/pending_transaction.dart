@@ -1,29 +1,26 @@
+import 'dart:ffi';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
+import 'package:cw_monero/transaction_history.dart' as transactionHistory;
+import 'package:cw_monero/structs/pending_transaction.dart';
+import 'package:cake_wallet/src/domain/monero/monero_amount_format.dart';
 
 class PendingTransaction {
-  final int id;
   final String amount;
   final String fee;
   final String hash;
-  final MethodChannel platform;
+
+  int _pointerAddress;
 
   PendingTransaction(
-      {@required this.id,
-      @required this.amount,
-      @required this.fee,
-      @required this.hash,
-      @required this.platform});
+      {@required this.amount, @required this.fee, @required this.hash});
 
-  PendingTransaction.fromMap(Map map, MethodChannel platform):
-    id = int.parse(map['id']),
-    amount = map['amount'] ?? '',
-    fee = map['fee'] ?? '',
-    hash = map['hash'] ?? '',
-    platform = platform;
+  PendingTransaction.fromTransactionDescription(
+      PendingTransactionDescription transactionDescription)
+      : amount = moneroAmountToString(amount: transactionDescription.amount),
+        fee = moneroAmountToString(amount: transactionDescription.fee),
+        hash = transactionDescription.hash,
+        _pointerAddress = transactionDescription.pointerAddress;
 
-  Future<void> commit() async {
-    final arguments = {'id': id};
-    await platform.invokeMethod('commitTransaction', arguments);
-  }
+  Future commit() async => transactionHistory
+      .commitTransactionFromPointerAddress(address: _pointerAddress);
 }

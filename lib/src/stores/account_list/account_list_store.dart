@@ -6,7 +6,6 @@ import 'package:cake_wallet/src/domain/monero/monero_wallet.dart';
 import 'package:cake_wallet/src/domain/monero/account.dart';
 import 'package:cake_wallet/src/domain/monero/account_list.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
-import 'package:cake_wallet/generated/i18n.dart';
 
 part 'account_list_store.g.dart';
 
@@ -24,7 +23,6 @@ abstract class AcountListStoreBase with Store {
 
   AccountList _accountList;
   StreamSubscription<Wallet> _onWalletChangeSubscription;
-  // StreamSubscription<List<Account>> _onSubaddressesChangeSubscription;
 
   AcountListStoreBase({@required WalletService walletService}) {
     accounts = [];
@@ -39,20 +37,16 @@ abstract class AcountListStoreBase with Store {
 
   @override
   void dispose() {
-    // if (_onSubaddressesChangeSubscription != null) {
-    //   _onSubaddressesChangeSubscription.cancel();
-    // }
-
     _onWalletChangeSubscription.cancel();
     super.dispose();
   }
 
   Future updateAccountList() async {
-    await _accountList.refresh(accountIndex: 0);
-    accounts = await _accountList.getAll();
+    await _accountList.refresh();
+    accounts = _accountList.getAll();
   }
 
-  Future addAccount({String label} ) async {
+  Future addAccount({String label}) async {
     await _accountList.addAccount(label: label);
     await updateAccountList();
   }
@@ -78,6 +72,9 @@ abstract class AcountListStoreBase with Store {
     String p = '^[a-zA-Z0-9_]{1,15}\$';
     RegExp regExp = new RegExp(p);
     isValid = regExp.hasMatch(value);
-    errorMessage = isValid ? null : S.current.error_text_account_name;
+    errorMessage = isValid
+        ? null
+        : 'Account name can only contain letters, '
+            'numbers\nand must be between 1 and 15 characters long';
   }
 }

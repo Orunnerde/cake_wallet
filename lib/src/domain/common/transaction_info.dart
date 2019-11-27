@@ -1,3 +1,5 @@
+import 'package:cake_wallet/src/domain/monero/monero_amount_format.dart';
+import 'package:cw_monero/structs/transaction_info_row.dart';
 import 'package:cake_wallet/src/domain/common/parseBoolFromString.dart';
 import 'package:cake_wallet/src/domain/common/transaction_direction.dart';
 
@@ -25,12 +27,12 @@ String formatAmount(String originAmount) {
 
 class TransactionInfo {
   final String id;
-  final String height;
+  final int height;
   final TransactionDirection direction;
   final DateTime date;
   final int accountIndex;
   final bool isPending;
-  final String _amount;
+  final int amount;
   String _fiatAmount;
 
   TransactionInfo.fromMap(Map map)
@@ -41,25 +43,25 @@ class TransactionInfo {
         date = DateTime.fromMillisecondsSinceEpoch(
             (int.parse(map['timestamp']) ?? 0) * 1000),
         isPending = parseBoolFromString(map['isPending']),
-        _amount = map['amount'],
+        amount = map['amount'],
         accountIndex = int.parse(map['accountIndex']);
 
+  TransactionInfo.fromRow(TransactionInfoRow row)
+      : id = row.getHash(),
+        height = row.blockHeight,
+        direction = parseTransactionDirectionFromInt(row.direction) ??
+            TransactionDirection.incoming,
+        date = DateTime.fromMillisecondsSinceEpoch(row.datetime * 1000),
+        isPending = row.isPending != 0,
+        amount = row.getAmount(),
+        accountIndex = row.subaddrAccount;
+
   TransactionInfo(this.id, this.height, this.direction, this.date,
-      this.isPending, this._amount, this.accountIndex);
+      this.isPending, this.amount, this.accountIndex);
 
-  double amountRaw() {
-    return double.parse(_amount);
-  }
+  String amountFormatted() => '${moneroAmountToString(amount: amount)} XMR';
 
-  String amount() {
-    return '${formatAmount(_amount)} XMR';
-  }
+  String fiatAmount() => _fiatAmount ?? '';
 
-  String fiatAmount() {
-    return _fiatAmount ?? '';
-  }
-
-  void changeFiatAmount(String amount) {
-    _fiatAmount = amount;
-  }
+  changeFiatAmount(String amount) => _fiatAmount = amount;
 }

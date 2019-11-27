@@ -6,6 +6,7 @@ import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/src/screens/settings/change_language.dart';
 import 'package:cake_wallet/src/screens/disclaimer/disclaimer_page.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +16,7 @@ import 'package:cake_wallet/src/stores/action_list/action_list_display_mode.dart
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/screens/settings/attributes.dart';
 import 'package:cake_wallet/src/screens/settings/items/settings_item.dart';
-import 'package:cake_wallet/generated/i18n.dart';
+import 'package:url_launcher/url_launcher.dart';
 // Settings widgets
 import 'package:cake_wallet/src/screens/settings/widgets/settings_arrow_list_row.dart';
 import 'package:cake_wallet/src/screens/settings/widgets/settings_header_list_row.dart';
@@ -25,7 +26,7 @@ import 'package:cake_wallet/src/screens/settings/widgets/settings_text_list_row.
 import 'package:cake_wallet/src/screens/settings/widgets/settings_raw_widget_list_row.dart';
 
 class SettingsPage extends BasePage {
-  String get title => S.current.settings_title;
+  String get title => 'Settings';
   bool get isModalBackButton => true;
   Color get backgroundColor => Palette.lightGrey2;
 
@@ -40,14 +41,25 @@ class SettingsForm extends StatefulWidget {
   createState() => SettingsFormState();
 }
 
-class SettingsFormState extends State<SettingsForm> with WidgetsBindingObserver {
+class SettingsFormState extends State<SettingsForm> {
   final _telegramImage = Image.asset('assets/images/Telegram.png');
   final _twitterImage = Image.asset('assets/images/Twitter.png');
   final _changeNowImage = Image.asset('assets/images/change_now.png');
   final _morphImage = Image.asset('assets/images/morph_icon.png');
   final _xmrBtcImage = Image.asset('assets/images/xmr_btc.png');
+  
+  final _emailUrl = 'mailto:support@cakewallet.io';
+  final _telegramUrl = 'https:t.me/cake_wallet';
+  final _twitterUrl = 'https:twitter.com/CakewalletXMR';
+  final _changeNowUrl = 'mailto:support@changenow.io';
+  final _morphUrl = 'mailto:contact@morphtoken.com';
+  final _xmrToUrl = 'mailto:support@xmr.to';
 
   List<SettingsItem> _items = List<SettingsItem>();
+  
+  _launchUrl(String url) async {
+    if (await canLaunch(url)) await launch(url);
+  }
 
   _setSettingsList() {
     final settingsStore = Provider.of<SettingsStore>(context);
@@ -55,10 +67,10 @@ class SettingsFormState extends State<SettingsForm> with WidgetsBindingObserver 
     final _isDarkTheme = (_themeChanger.getTheme() == Themes.darkTheme);
 
     _items.addAll([
-      SettingsItem(title: S.of(context).settings_nodes, attribute: Attributes.header),
+      SettingsItem(title: 'Nodes', attribute: Attributes.header),
       SettingsItem(
           onTaped: () => Navigator.of(context).pushNamed(Routes.nodeList),
-          title: S.current.settings_current_node,
+          title: 'Current node',
           widget: Observer(
               builder: (_) => Text(
                     settingsStore.node == null ? '' : settingsStore.node.uri,
@@ -69,13 +81,13 @@ class SettingsFormState extends State<SettingsForm> with WidgetsBindingObserver 
                             : Palette.wildDarkBlue),
                   )),
           attribute: Attributes.widget),
-      SettingsItem(title: S.of(context).settings_wallets, attribute: Attributes.header),
+      SettingsItem(title: 'Wallets', attribute: Attributes.header),
       SettingsItem(
           onTaped: () => _setBalance(context),
-          title: S.of(context).settings_display_balance_as,
+          title: 'Display balance as',
           widget: Observer(
               builder: (_) => Text(
-                    _getCurrentBalanceMode(settingsStore.balanceDisplayMode.toString()),
+                    settingsStore.balanceDisplayMode.toString(),
                     style: TextStyle(
                         fontSize: 16.0,
                         color: _isDarkTheme
@@ -85,7 +97,7 @@ class SettingsFormState extends State<SettingsForm> with WidgetsBindingObserver 
           attribute: Attributes.widget),
       SettingsItem(
           onTaped: () => _setCurrency(context),
-          title: S.of(context).settings_currency,
+          title: 'Currency',
           widget: Observer(
               builder: (_) => Text(
                     settingsStore.fiatCurrency.toString(),
@@ -98,10 +110,10 @@ class SettingsFormState extends State<SettingsForm> with WidgetsBindingObserver 
           attribute: Attributes.widget),
       SettingsItem(
           onTaped: () => _setTransactionPriority(context),
-          title: S.of(context).settings_fee_priority,
+          title: 'Fee priority',
           widget: Observer(
               builder: (_) => Text(
-                    _getCurrentTransactionPriority(settingsStore.transactionPriority.toString()),
+                    settingsStore.transactionPriority.toString(),
                     style: TextStyle(
                         fontSize: 16.0,
                         color: _isDarkTheme
@@ -110,8 +122,8 @@ class SettingsFormState extends State<SettingsForm> with WidgetsBindingObserver 
                   )),
           attribute: Attributes.widget),
       SettingsItem(
-          title: S.of(context).settings_save_recipient_address, attribute: Attributes.switcher),
-      SettingsItem(title: S.of(context).settings_personal, attribute: Attributes.header),
+          title: 'Save recipient address', attribute: Attributes.switcher),
+      SettingsItem(title: 'Personal', attribute: Attributes.header),
       SettingsItem(
           onTaped: () {
             Navigator.of(context).pushNamed(Routes.auth,
@@ -122,16 +134,21 @@ class SettingsFormState extends State<SettingsForm> with WidgetsBindingObserver 
                                 Navigator.of(context).pop())
                         : null);
           },
-          title: S.of(context).settings_change_pin,
+          title: 'Change PIN',
           attribute: Attributes.arrow),
       SettingsItem(
-          onTaped: () => Navigator.popAndPushNamed(context, Routes.changeLanguage),
-          title: S.of(context).settings_change_language,
+          onTaped: () {
+            Navigator.push(
+                context,
+                CupertinoPageRoute(
+                    builder: (BuildContext context) => ChangeLanguage()));
+          },
+          title: 'Change language',
           attribute: Attributes.arrow),
       SettingsItem(
-          title: S.of(context).settings_allow_biometrical_authentication,
+          title: 'Allow biometrical authentication',
           attribute: Attributes.switcher),
-      SettingsItem(title: S.of(context).settings_dark_mode, attribute: Attributes.switcher),
+      SettingsItem(title: 'Dark mode', attribute: Attributes.switcher),
       SettingsItem(
           widgetBuilder: (context) {
             final _themeChanger = Provider.of<ThemeChanger>(context);
@@ -146,7 +163,7 @@ class SettingsFormState extends State<SettingsForm> with WidgetsBindingObserver 
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(S.of(context).settings_transactions),
+                                        Text('Transactions'),
                                         Checkbox(
                                           value: settingsStore
                                               .actionlistDisplayMode
@@ -163,7 +180,7 @@ class SettingsFormState extends State<SettingsForm> with WidgetsBindingObserver 
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(S.of(context).settings_trades),
+                                        Text('Trades'),
                                         Checkbox(
                                           value: settingsStore
                                               .actionlistDisplayMode
@@ -180,7 +197,7 @@ class SettingsFormState extends State<SettingsForm> with WidgetsBindingObserver 
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(S.of(context).settings_display_on_dashboard_list,
+                        Text('Display on dashboard list',
                             style: TextStyle(
                                 fontSize: 16,
                                 color: _isDarkTheme
@@ -191,23 +208,23 @@ class SettingsFormState extends State<SettingsForm> with WidgetsBindingObserver 
 
                           if (settingsStore.actionlistDisplayMode.length ==
                               ActionListDisplayMode.values.length) {
-                            title = S.of(context).settings_all;
+                            title = 'ALL';
                           }
 
                           if (title.isEmpty &&
                               settingsStore.actionlistDisplayMode
                                   .contains(ActionListDisplayMode.trades)) {
-                            title = S.of(context).settings_only_trades;
+                            title = 'Only trades';
                           }
 
                           if (title.isEmpty &&
                               settingsStore.actionlistDisplayMode.contains(
                                   ActionListDisplayMode.transactions)) {
-                            title = S.of(context).settings_only_transactions;
+                            title = 'Only transactions';
                           }
 
                           if (title.isEmpty) {
-                            title = S.of(context).settings_none;
+                            title = 'None';
                           }
 
                           return Text(title,
@@ -221,39 +238,39 @@ class SettingsFormState extends State<SettingsForm> with WidgetsBindingObserver 
                 ));
           },
           attribute: Attributes.rawWidget),
-      SettingsItem(title: S.of(context).settings_support, attribute: Attributes.header),
+      SettingsItem(title: 'Support', attribute: Attributes.header),
       SettingsItem(
-          onTaped: () {},
+          onTaped: () => _launchUrl(_emailUrl),
           title: 'Email',
           link: 'support@cakewallet.io',
           image: null,
           attribute: Attributes.link),
       SettingsItem(
-          onTaped: () {},
+          onTaped: () => _launchUrl(_telegramUrl),
           title: 'Telegram',
           link: 't.me/cake_wallet',
           image: _telegramImage,
           attribute: Attributes.link),
       SettingsItem(
-          onTaped: () {},
+          onTaped: () => _launchUrl(_twitterUrl),
           title: 'Twitter',
           link: 'twitter.com/CakewalletXMR',
           image: _twitterImage,
           attribute: Attributes.link),
       SettingsItem(
-          onTaped: () {},
+          onTaped: () => _launchUrl(_changeNowUrl),
           title: 'ChangeNow',
           link: 'support@changenow.io',
           image: _changeNowImage,
           attribute: Attributes.link),
       SettingsItem(
-          onTaped: () {},
+          onTaped: () => _launchUrl(_morphUrl),
           title: 'Morph',
           link: 'contact@morphtoken.com',
           image: _morphImage,
           attribute: Attributes.link),
       SettingsItem(
-          onTaped: () {},
+          onTaped: () => _launchUrl(_xmrToUrl),
           title: 'XMR.to',
           link: 'support@xmr.to',
           image: _xmrBtcImage,
@@ -265,11 +282,11 @@ class SettingsFormState extends State<SettingsForm> with WidgetsBindingObserver 
                 CupertinoPageRoute(
                     builder: (BuildContext context) => DisclaimerPage()));
           },
-          title: S.of(context).settings_terms_and_conditions,
+          title: 'Terms and conditions',
           attribute: Attributes.arrow),
       SettingsItem(
           onTaped: () => Navigator.pushNamed(context, Routes.faq),
-          title: S.of(context).faq,
+          title: 'FAQ',
           attribute: Attributes.arrow)
     ]);
     setState(() {});
@@ -382,7 +399,7 @@ class SettingsFormState extends State<SettingsForm> with WidgetsBindingObserver 
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text(S.of(context).please_select),
+            title: Text('Please select:'),
             backgroundColor: Theme.of(context).backgroundColor,
             content: Container(
               height: 150.0,
@@ -399,10 +416,10 @@ class SettingsFormState extends State<SettingsForm> with WidgetsBindingObserver 
             actions: <Widget>[
               FlatButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: Text(S.of(context).cancel)),
+                  child: Text('Cancel')),
               FlatButton(
                   onPressed: () => Navigator.of(context).pop(_value),
-                  child: Text(S.of(context).ok))
+                  child: Text('OK'))
             ],
           );
         });
@@ -410,13 +427,12 @@ class SettingsFormState extends State<SettingsForm> with WidgetsBindingObserver 
 
   void _setBalance(BuildContext context) async {
     final settingsStore = Provider.of<SettingsStore>(context);
-    final balanceList = _getBalanceModeList(BalanceDisplayMode.all);
     final selectedDisplayMode =
-        await _presentPicker(context, balanceList);
+        await _presentPicker(context, BalanceDisplayMode.all);
 
     if (selectedDisplayMode != null) {
       settingsStore.setCurrentBalanceDisplayMode(
-          balanceDisplayMode: _getSelectedItem(selectedDisplayMode, balanceList, BalanceDisplayMode.all));
+          balanceDisplayMode: selectedDisplayMode);
     }
   }
 
@@ -431,105 +447,11 @@ class SettingsFormState extends State<SettingsForm> with WidgetsBindingObserver 
 
   void _setTransactionPriority(BuildContext context) async {
     final settingsStore = Provider.of<SettingsStore>(context);
-    final transactionPriorityList = _getTransactionPriorityList(TransactionPriority.all);
     final selectedPriority =
-        await _presentPicker(context, transactionPriorityList);
+        await _presentPicker(context, TransactionPriority.all);
 
     if (selectedPriority != null) {
-      settingsStore.setCurrentTransactionPriority(priority: _getSelectedItem(selectedPriority,
-          transactionPriorityList, TransactionPriority.all));
+      settingsStore.setCurrentTransactionPriority(priority: selectedPriority);
     }
-  }
-
-  List<String> _getBalanceModeList(List<BalanceDisplayMode> list) {
-    List<String> balanceModeList = new List();
-    for(int i = 0; i < list.length; i++) {
-      switch(list[ i ].title) {
-        case 'Full Balance':
-          balanceModeList.add(S.of(context).full_balance);
-          break;
-        case 'Available Balance':
-          balanceModeList.add(S.of(context).available_balance);
-          break;
-        case 'Hidden Balance':
-          balanceModeList.add(S.of(context).hidden_balance);
-          break;
-        default:
-          break;
-      }
-    }
-    return balanceModeList;
-  }
-
-  List<String> _getTransactionPriorityList(List<TransactionPriority> list) {
-    List<String> transactionPriorityList = new List();
-    for(int i = 0; i < list.length; i++) {
-      switch(list[ i ].title) {
-        case 'Slow':
-          transactionPriorityList.add(S.of(context).transaction_priority_slow);
-          break;
-        case 'Regular':
-          transactionPriorityList.add(S.of(context).transaction_priority_regular);
-          break;
-        case 'Medium':
-          transactionPriorityList.add(S.of(context).transaction_priority_medium);
-          break;
-        case 'Fast':
-          transactionPriorityList.add(S.of(context).transaction_priority_fast);
-          break;
-        case 'Fastest':
-          transactionPriorityList.add(S.of(context).transaction_priority_fastest);
-          break;
-        default:
-          break;
-      }
-    }
-    return transactionPriorityList;
-  }
-
-  _getSelectedItem<T extends Object> (String selectedItem, List<String> list, List<T> itemsList) {
-    return itemsList[list.indexOf(selectedItem)];
-  }
-
-  String _getCurrentBalanceMode(String balanceMode) {
-    String currentBalanceMode;
-    switch(balanceMode) {
-      case 'Full Balance':
-        currentBalanceMode = S.of(context).full_balance;
-        break;
-      case 'Available Balance':
-        currentBalanceMode = S.of(context).available_balance;
-        break;
-      case 'Hidden Balance':
-        currentBalanceMode = S.of(context).hidden_balance;
-        break;
-      default:
-        break;
-    }
-    return currentBalanceMode;
-  }
-
-  String _getCurrentTransactionPriority(String transactionPriority) {
-    String currentTransactionPriority;
-    switch(transactionPriority) {
-      case 'Slow':
-        currentTransactionPriority = S.of(context).transaction_priority_slow;
-        break;
-      case 'Regular':
-        currentTransactionPriority = S.of(context).transaction_priority_regular;
-        break;
-      case 'Medium':
-        currentTransactionPriority = S.of(context).transaction_priority_medium;
-        break;
-      case 'Fast':
-        currentTransactionPriority = S.of(context).transaction_priority_fast;
-        break;
-      case 'Fastest':
-        currentTransactionPriority = S.of(context).transaction_priority_fastest;
-        break;
-      default:
-        break;
-    }
-    return currentTransactionPriority;
   }
 }

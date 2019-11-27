@@ -1,4 +1,5 @@
 import 'package:cake_wallet/routes.dart';
+import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -108,6 +109,12 @@ class SendFormState extends State<SendForm> {
                       ]);
                 }),
                 Observer(builder: (context) {
+                  final savedDisplayMode = settingsStore.balanceDisplayMode;
+                  final availableBalance = savedDisplayMode.serialize() ==
+                      BalanceDisplayMode.hiddenBalance.serialize()
+                      ? '---'
+                      : balanceStore.unlockedBalance;
+
                   return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -118,7 +125,7 @@ class SendFormState extends State<SendForm> {
                                   ? PaletteDark.darkThemeGrey
                                   : Palette.nightBlue,
                             )),
-                        Text(balanceStore.unlockedBalance,
+                        Text(availableBalance,
                             style: TextStyle(
                                 fontSize: 22,
                                 color: _isDarkTheme

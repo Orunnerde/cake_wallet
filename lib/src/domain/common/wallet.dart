@@ -15,7 +15,7 @@ abstract class Wallet {
   static final isRecoveryColumn = 'is_recovery';
   static final restoreHeightColumn = 'restore_height';
 
-  static Future<void> setInitialWalletData(
+  static Future setInitialWalletData(
       {Database db,
       bool isRecovery,
       String name,
@@ -30,7 +30,7 @@ abstract class Wallet {
     });
   }
 
-  static Future<void> updateWalletData(
+  static Future updateWalletData(
       {Database db, bool isRecovery, String name, WalletType type}) async {
     final id = walletTypeToString(type).toLowerCase() + '_' + name;
     await db.update(walletsTable, {'$isRecoveryColumn': isRecovery},
@@ -90,13 +90,13 @@ abstract class Wallet {
 
   Future<bool> isConnected();
 
-  Future<void> close();
+  Future close();
 
   TransactionHistory getHistory();
 
-  Future<void> connectToNode({Node node, bool useSSL = false, bool isLightWallet = false});
+  Future connectToNode({Node node, bool useSSL = false, bool isLightWallet = false});
 
-  Future<void> startSync();
+  Future startSync();
 
   Future<PendingTransaction> createTransaction(
       TransactionCreationCredentials credentials);

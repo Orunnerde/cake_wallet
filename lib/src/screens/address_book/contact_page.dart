@@ -50,9 +50,8 @@ class ContactFormState extends State<ContactForm> {
   }
 
   _setCurrencyType(BuildContext context) async {
-    _currencyTypeController.text =
-        CryptoCurrency.all[0].toString();
-    _selectectCrypto = CryptoCurrency.all[0];
+    String currencyType = CryptoCurrency.all[0].toString();
+    CryptoCurrency selectedCurrency = CryptoCurrency.all[0];
     await showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -68,9 +67,8 @@ class ContactFormState extends State<ContactForm> {
                       : Colors.white,
                   itemExtent: 45.0,
                   onSelectedItemChanged: (int index) {
-                    _selectectCrypto = CryptoCurrency.all[index];
-                    _currencyTypeController.text =
-                        CryptoCurrency.all[index].toString();
+                    selectedCurrency = CryptoCurrency.all[index];
+                    currencyType = CryptoCurrency.all[index].toString();
                   },
                   children:
                       List.generate(CryptoCurrency.all.length, (int index) {
@@ -87,6 +85,8 @@ class ContactFormState extends State<ContactForm> {
                   child: Text(S.of(context).cancel)),
               FlatButton(
                   onPressed: () {
+                    _selectectCrypto = selectedCurrency;
+                    _currencyTypeController.text = currencyType;
                     Navigator.of(context).pop();
                   },
                   child: Text(S.of(context).ok))

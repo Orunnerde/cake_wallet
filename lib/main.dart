@@ -28,9 +28,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/domain/common/language.dart';
 
-
-
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   final sharedPreferences = await SharedPreferences.getInstance();
 
   final dbHelper = await CoreDB.getInstance();

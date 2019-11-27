@@ -6,7 +6,6 @@ import 'package:cake_wallet/src/domain/common/mnemotic_item.dart';
 import 'package:cake_wallet/src/stores/wallet_restoration/wallet_restoration_state.dart';
 import 'package:cake_wallet/src/stores/authentication/authentication_store.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
-import 'package:cake_wallet/generated/i18n.dart';
 
 part 'wallet_restoration_store.g.dart';
 
@@ -43,14 +42,14 @@ abstract class WalleRestorationStoreBase with Store {
     state = WalletRestorationStateInitial();
     final _seed = seed ?? _seedText();
 
-    try {
+    // try {
       state = WalletIsRestoring();
       await walletListService.restoreFromSeed(name, _seed, restoreHeight);
       authStore.restored();
       state = WalletRestoredSuccessfully();
-    } catch (e) {
-      state = WalletRestorationFailure(error: e.toString());
-    }
+    // } catch (e) {
+    //   state = WalletRestorationFailure(error: e.toString());
+    // }
   }
 
   @action
@@ -86,7 +85,7 @@ abstract class WalleRestorationStoreBase with Store {
 
     if (!isValid) {
       print('_seed.length ${_seed.length}');
-      errorMessage = S.current.wallet_restoration_store_incorrect_seed_length;
+      errorMessage = 'Incorrect seed length';
       this.isValid = isValid;
       return;
     }
@@ -114,7 +113,8 @@ abstract class WalleRestorationStoreBase with Store {
     String p = '^[a-zA-Z0-9_]{1,15}\$';
     RegExp regExp = new RegExp(p);
     isValid = regExp.hasMatch(value);
-    errorMessage = isValid ? null : S.current.error_text_wallet_name;
+    errorMessage = isValid ? null : 'Wallet name can only contain letters, '
+                                    'numbers\nand must be between 1 and 15 characters long';
   }
 
   void validateAddress(String value, {CryptoCurrency cryptoCurrency}) {
@@ -143,13 +143,13 @@ abstract class WalleRestorationStoreBase with Store {
           isValid = (value.length == 34);
       }
     }
-    errorMessage = isValid ? null : S.current.error_text_address;
+    errorMessage = isValid ? null : 'Wallet address must correspond to the type\nof cryptocurrency';
   }
 
   void validateKeys(String value) {
     String p = '^[A-Fa-f0-9]{64}\$';
     RegExp regExp = new RegExp(p);
     isValid = regExp.hasMatch(value);
-    errorMessage = isValid ? null : S.current.error_text_keys;
+    errorMessage = isValid ? null : 'Wallet keys can only contain 64 chars in hex';
   }
 }
