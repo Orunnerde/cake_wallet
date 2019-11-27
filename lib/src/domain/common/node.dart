@@ -48,7 +48,7 @@ class Node {
       /*final httpAuth = createBasicAuthenticationIoHttpClient(login, password);
       response = await httpAuth.post(url.toString(), headers: headers, body: body);*/
 
-      HttpClient client = new HttpClient();
+      /*HttpClient client = new HttpClient();
       client.addCredentials(
           Uri.parse(url.toString()),
           'realm',
@@ -67,16 +67,16 @@ class Node {
         print("AUTHORIZATION: ${res.statusCode}");
         client.close();
         return true;
-      });
+      });*/
 
-      /*var client = new DigestAuthClient('$login', '$password');
+      var client = new DigestAuthClient(login, password);
       var res = await client.post(url.toString(), headers: headers, body: body);
       var resBody = json.decode(res.body);
       var isOffline = resBody["result"]["offline"];
       print("URL = $url");
       print("Is offline $uri: $isOffline");
       print(resBody);
-      return isOffline;*/
+      return isOffline;
     }
 
     var response = await http.post(url.toString(), headers: headers, body: body);
