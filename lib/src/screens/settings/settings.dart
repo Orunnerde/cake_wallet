@@ -16,15 +16,18 @@ import 'package:cake_wallet/src/stores/action_list/action_list_display_mode.dart
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/screens/settings/attributes.dart';
 import 'package:cake_wallet/src/screens/settings/items/settings_item.dart';
+import 'package:url_launcher/url_launcher.dart';
 // Settings widgets
 import 'package:cake_wallet/src/screens/settings/widgets/settings_arrow_list_row.dart';
 import 'package:cake_wallet/src/screens/settings/widgets/settings_header_list_row.dart';
 import 'package:cake_wallet/src/screens/settings/widgets/settings_link_list_row.dart';
 import 'package:cake_wallet/src/screens/settings/widgets/settings_switch_list_row.dart';
 import 'package:cake_wallet/src/screens/settings/widgets/settings_text_list_row.dart';
+import 'package:cake_wallet/src/screens/settings/widgets/settings_raw_widget_list_row.dart';
 
 class SettingsPage extends BasePage {
   String get title => 'Settings';
+  bool get isModalBackButton => true;
   Color get backgroundColor => Palette.lightGrey2;
 
   @override
@@ -44,13 +47,24 @@ class SettingsFormState extends State<SettingsForm> {
   final _changeNowImage = Image.asset('assets/images/change_now.png');
   final _morphImage = Image.asset('assets/images/morph_icon.png');
   final _xmrBtcImage = Image.asset('assets/images/xmr_btc.png');
+  
+  final _emailUrl = 'mailto:support@cakewallet.io';
+  final _telegramUrl = 'https:t.me/cake_wallet';
+  final _twitterUrl = 'https:twitter.com/CakewalletXMR';
+  final _changeNowUrl = 'mailto:support@changenow.io';
+  final _morphUrl = 'mailto:contact@morphtoken.com';
+  final _xmrToUrl = 'mailto:support@xmr.to';
 
   List<SettingsItem> _items = List<SettingsItem>();
+  
+  _launchUrl(String url) async {
+    if (await canLaunch(url)) await launch(url);
+  }
 
   _setSettingsList() {
     final settingsStore = Provider.of<SettingsStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = (_themeChanger.getTheme() == Themes.darkTheme);
+    final _themeChanger = Provider.of<ThemeChanger>(context);
+    final _isDarkTheme = (_themeChanger.getTheme() == Themes.darkTheme);
 
     _items.addAll([
       SettingsItem(title: 'Nodes', attribute: Attributes.header),
@@ -112,11 +126,13 @@ class SettingsFormState extends State<SettingsForm> {
       SettingsItem(title: 'Personal', attribute: Attributes.header),
       SettingsItem(
           onTaped: () {
-            Navigator.of(context).pushNamed(Routes.auth, arguments: [
-              (auth) => Navigator.of(context).popAndPushNamed(Routes.setupPin,
-                  arguments: (setupPinContext, _) =>
-                      Navigator.of(context).pop())
-            ]);
+            Navigator.of(context).pushNamed(Routes.auth,
+                arguments: (isAuthenticatedSuccessfully, auth) =>
+                    isAuthenticatedSuccessfully
+                        ? Navigator.of(context).popAndPushNamed(Routes.setupPin,
+                            arguments: (setupPinContext, _) =>
+                                Navigator.of(context).pop())
+                        : null);
           },
           title: 'Change PIN',
           attribute: Attributes.arrow),
@@ -134,111 +150,128 @@ class SettingsFormState extends State<SettingsForm> {
           attribute: Attributes.switcher),
       SettingsItem(title: 'Dark mode', attribute: Attributes.switcher),
       SettingsItem(
-          onTaped: () {},
-          title: 'Display on dashboard list',
-          widget: PopupMenuButton<ActionListDisplayMode>(
-              itemBuilder: (context) => [
-                    PopupMenuItem(
-                        value: ActionListDisplayMode.transactions,
-                        child: Observer(
-                            builder: (_) => Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text('Transactions'),
-                                      Checkbox(
-                                        value: settingsStore
-                                            .actionlistDisplayMode
-                                            .contains(ActionListDisplayMode
-                                                .transactions),
-                                        onChanged: (value) => settingsStore
-                                            .toggleTransactionsDisplay(),
-                                      )
-                                    ]))),
-                    PopupMenuItem(
-                        value: ActionListDisplayMode.trades,
-                        child: Observer(
-                            builder: (_) => Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text('Trades'),
-                                      Checkbox(
-                                        value: settingsStore
-                                            .actionlistDisplayMode
-                                            .contains(
-                                                ActionListDisplayMode.trades),
-                                        onChanged: (value) =>
-                                            settingsStore.toggleTradesDisplay(),
-                                      )
-                                    ])))
-                  ],
-              child: Observer(builder: (_) {
-                var title = '';
+          widgetBuilder: (context) {
+            final _themeChanger = Provider.of<ThemeChanger>(context);
+            final _isDarkTheme = (_themeChanger.getTheme() == Themes.darkTheme);
 
-                if (settingsStore.actionlistDisplayMode.length ==
-                    ActionListDisplayMode.values.length) {
-                  title = 'ALL';
-                }
+            return PopupMenuButton<ActionListDisplayMode>(
+                itemBuilder: (context) => [
+                      PopupMenuItem(
+                          value: ActionListDisplayMode.transactions,
+                          child: Observer(
+                              builder: (_) => Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Transactions'),
+                                        Checkbox(
+                                          value: settingsStore
+                                              .actionlistDisplayMode
+                                              .contains(ActionListDisplayMode
+                                                  .transactions),
+                                          onChanged: (value) => settingsStore
+                                              .toggleTransactionsDisplay(),
+                                        )
+                                      ]))),
+                      PopupMenuItem(
+                          value: ActionListDisplayMode.trades,
+                          child: Observer(
+                              builder: (_) => Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Trades'),
+                                        Checkbox(
+                                          value: settingsStore
+                                              .actionlistDisplayMode
+                                              .contains(
+                                                  ActionListDisplayMode.trades),
+                                          onChanged: (value) => settingsStore
+                                              .toggleTradesDisplay(),
+                                        )
+                                      ])))
+                    ],
+                child: Container(
+                  height: 56,
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Display on dashboard list',
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: _isDarkTheme
+                                    ? PaletteDark.darkThemeTitle
+                                    : Colors.black)),
+                        Observer(builder: (_) {
+                          var title = '';
 
-                if (title.isEmpty &&
-                    settingsStore.actionlistDisplayMode
-                        .contains(ActionListDisplayMode.trades)) {
-                  title = 'Only trades';
-                }
+                          if (settingsStore.actionlistDisplayMode.length ==
+                              ActionListDisplayMode.values.length) {
+                            title = 'ALL';
+                          }
 
-                if (title.isEmpty &&
-                    settingsStore.actionlistDisplayMode
-                        .contains(ActionListDisplayMode.transactions)) {
-                  title = 'Only transactions';
-                }
+                          if (title.isEmpty &&
+                              settingsStore.actionlistDisplayMode
+                                  .contains(ActionListDisplayMode.trades)) {
+                            title = 'Only trades';
+                          }
 
-                if (title.isEmpty) {
-                  title = 'None';
-                }
+                          if (title.isEmpty &&
+                              settingsStore.actionlistDisplayMode.contains(
+                                  ActionListDisplayMode.transactions)) {
+                            title = 'Only transactions';
+                          }
 
-                return Text(title,
-                    style: TextStyle(
-                        fontSize: 16.0,
-                        color: _isDarkTheme
-                            ? PaletteDark.darkThemeGrey
-                            : Palette.wildDarkBlue));
-              })),
-          attribute: Attributes.widget),
+                          if (title.isEmpty) {
+                            title = 'None';
+                          }
+
+                          return Text(title,
+                              style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: _isDarkTheme
+                                      ? PaletteDark.darkThemeGrey
+                                      : Palette.wildDarkBlue));
+                        })
+                      ]),
+                ));
+          },
+          attribute: Attributes.rawWidget),
       SettingsItem(title: 'Support', attribute: Attributes.header),
       SettingsItem(
-          onTaped: () {},
+          onTaped: () => _launchUrl(_emailUrl),
           title: 'Email',
           link: 'support@cakewallet.io',
           image: null,
           attribute: Attributes.link),
       SettingsItem(
-          onTaped: () {},
+          onTaped: () => _launchUrl(_telegramUrl),
           title: 'Telegram',
-          link: 'support@cakewallet.io',
+          link: 't.me/cake_wallet',
           image: _telegramImage,
           attribute: Attributes.link),
       SettingsItem(
-          onTaped: () {},
+          onTaped: () => _launchUrl(_twitterUrl),
           title: 'Twitter',
-          link: 'support@cakewallet.io',
+          link: 'twitter.com/CakewalletXMR',
           image: _twitterImage,
           attribute: Attributes.link),
       SettingsItem(
-          onTaped: () {},
+          onTaped: () => _launchUrl(_changeNowUrl),
           title: 'ChangeNow',
           link: 'support@changenow.io',
           image: _changeNowImage,
           attribute: Attributes.link),
       SettingsItem(
-          onTaped: () {},
+          onTaped: () => _launchUrl(_morphUrl),
           title: 'Morph',
           link: 'contact@morphtoken.com',
           image: _morphImage,
           attribute: Attributes.link),
       SettingsItem(
-          onTaped: () {},
-          title: 'Xmr->BTC',
+          onTaped: () => _launchUrl(_xmrToUrl),
+          title: 'XMR.to',
           link: 'support@xmr.to',
           image: _xmrBtcImage,
           attribute: Attributes.link),
@@ -297,6 +330,8 @@ class SettingsFormState extends State<SettingsForm> {
           title: item.title,
           widget: item.widget,
         );
+      case Attributes.rawWidget:
+        return SettingRawWidgetListRow(widgetBuilder: item.widgetBuilder);
       default:
         return Offstage();
     }

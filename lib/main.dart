@@ -7,9 +7,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:cake_wallet/router.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:cake_wallet/src/start_updating_price.dart';
 import 'package:cake_wallet/src/screens/root/root.dart';
 import 'package:cake_wallet/src/stores/authentication/authentication_store.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
+import 'package:cake_wallet/src/stores/price/price_store.dart';
 import 'package:cake_wallet/src/domain/services/user_service.dart';
 import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
 import 'package:cake_wallet/src/domain/common/core_db.dart';
@@ -23,35 +25,8 @@ import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'theme_changer.dart';
 import 'themes.dart';
 
-void autoReconnection(String arg) {
-  // Timer.periodic(Duration(seconds: 10), (_) { print('Test timer'); });
-
-  // if (walletService.currentWallet == null) {
-  //   return;
-  // }
-  // final startDate = DateTime.now();
-  // final isConnected = await walletService.isConnected();
-  // print(
-  //     'Is conncted end ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}');
-
-  // if (!isConnected &&
-  //     !(walletService.syncStatusValue is ConnectingSyncStatus ||
-  //         walletService.syncStatusValue is StartingSyncStatus)) {
-  //   print('Start to reconnect');
-  //   try {
-  //     await walletService.connectToNode(
-  //         uri: 'node.moneroworld.com:18089', login: '', password: '');
-  //   } catch (e) {
-  //     print('Error while reconnection');
-  //     print(e);
-  //   }
-
-  //   print(
-  //       'End: ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}');
-  // }
-}
-
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   final sharedPreferences = await SharedPreferences.getInstance();
 
   final dbHelper = await CoreDB.getInstance();
@@ -82,6 +57,8 @@ void main() async {
       initialTransactionPriority: TransactionPriority.slow,
       initialBalanceDisplayMode: BalanceDisplayMode.availableBalance);
 
+  final priceStore = PriceStore();
+
   reaction((_) => settingsStore.node, (node) async {
     final startDate = DateTime.now();
     await walletService.connectToNode(node: node);
@@ -90,22 +67,14 @@ void main() async {
   });
 
   walletService.onWalletChange.listen((wallet) async {
+    startUpdatingPrice(settingsStore: settingsStore, priceStore: priceStore);
+
     await wallet.connectToNode(node: settingsStore.node);
     await wallet.startSync();
   });
 
-  compute(autoReconnection, null);
-
   final authStore = AuthenticationStore(userService: userService);
   await authStore.started();
-
-  reaction((_) => authStore.state, (state) async {
-    if (state == AuthenticationState.authenticated) {
-      print('Connection after wallet change');
-      final node = settingsStore.node;
-      await walletService.connectToNode(node: node);
-    }
-  });
 
   runApp(Provider(
       builder: (_) => authStore,
@@ -115,7 +84,8 @@ void main() async {
           walletListService: walletListService,
           userService: userService,
           db: db,
-          settingsStore: settingsStore)));
+          settingsStore: settingsStore,
+          priceStore: priceStore)));
 }
 
 class CakeWalletApp extends StatelessWidget {
@@ -125,6 +95,7 @@ class CakeWalletApp extends StatelessWidget {
   final UserService userService;
   final Database db;
   final SettingsStore settingsStore;
+  final PriceStore priceStore;
 
   CakeWalletApp(
       {@required this.sharedPreferences,
@@ -132,21 +103,22 @@ class CakeWalletApp extends StatelessWidget {
       @required this.walletListService,
       @required this.userService,
       @required this.db,
-      @required this.settingsStore});
+      @required this.settingsStore,
+      @required this.priceStore});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ThemeChanger>(
-      builder: (_) => ThemeChanger(
-          settingsStore.isDarkTheme ? Themes.darkTheme : Themes.lightTheme),
-      child: MaterialAppWithTheme(
-          sharedPreferences: sharedPreferences,
-          walletService: walletService,
-          walletListService: walletListService,
-          userService: userService,
-          db: db,
-          settingsStore: settingsStore),
-    );
+        builder: (_) => ThemeChanger(
+            settingsStore.isDarkTheme ? Themes.darkTheme : Themes.lightTheme),
+        child: MaterialAppWithTheme(
+            sharedPreferences: sharedPreferences,
+            walletService: walletService,
+            walletListService: walletListService,
+            userService: userService,
+            db: db,
+            settingsStore: settingsStore,
+            priceStore: priceStore));
   }
 }
 
@@ -157,6 +129,7 @@ class MaterialAppWithTheme extends StatelessWidget {
   final UserService userService;
   final Database db;
   final SettingsStore settingsStore;
+  final PriceStore priceStore;
 
   MaterialAppWithTheme(
       {@required this.sharedPreferences,
@@ -164,7 +137,8 @@ class MaterialAppWithTheme extends StatelessWidget {
       @required this.walletListService,
       @required this.userService,
       @required this.db,
-      @required this.settingsStore});
+      @required this.settingsStore,
+      @required this.priceStore});
 
   @override
   Widget build(BuildContext context) {
@@ -176,12 +150,21 @@ class MaterialAppWithTheme extends StatelessWidget {
         SystemUiOverlayStyle(statusBarColor: _statusBarColor));
 
     return MultiProvider(
-      providers: [Provider<SettingsStore>(builder: (_) => settingsStore)],
+      providers: [
+        Provider<SettingsStore>(builder: (_) => settingsStore),
+        Provider<PriceStore>(builder: (_) => priceStore)
+      ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: theme.getTheme(),
-          onGenerateRoute: (settings) => Router.generateRoute(sharedPreferences,
-              walletListService, walletService, userService, db, settings),
+          onGenerateRoute: (settings) => Router.generateRoute(
+              sharedPreferences,
+              walletListService,
+              walletService,
+              userService,
+              db,
+              settings,
+              priceStore),
           home: MultiProvider(providers: [
             Provider(builder: (_) => sharedPreferences),
             Provider(builder: (_) => walletService),

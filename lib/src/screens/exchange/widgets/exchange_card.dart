@@ -3,6 +3,7 @@ import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/widgets/picker.dart';
 import 'package:cake_wallet/src/widgets/address_text_field.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
@@ -17,6 +18,8 @@ class ExchangeCard extends StatefulWidget {
   final bool initialIsAddressEditable;
   final bool isAmountEstimated;
   final Image imageArrow;
+  final FormFieldValidator<String> currencyValueValidator;
+  final FormFieldValidator<String> addressTextFieldValidator;
 
   ExchangeCard(
       {Key key,
@@ -28,7 +31,9 @@ class ExchangeCard extends StatefulWidget {
       this.isAmountEstimated,
       this.currencies,
       this.onCurrencySelected,
-      this.imageArrow})
+      this.imageArrow,
+      this.currencyValueValidator,
+      this.addressTextFieldValidator})
       : super(key: key);
 
   @override
@@ -100,12 +105,7 @@ class ExchangeCardState extends State<ExchangeCard> {
   @override
   Widget build(BuildContext context) {
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
+    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Container(
       padding: EdgeInsets.fromLTRB(22, 15, 22, 30),
@@ -172,13 +172,14 @@ class ExchangeCardState extends State<ExchangeCard> {
                 Flexible(
                   child: Column(
                     children: [
-                      TextField(
+                      TextFormField(
                           style: TextStyle(fontSize: 23, height: 1.21),
                           controller: amountController,
                           enabled: _isAmountEditable,
                           textAlign: TextAlign.right,
                           keyboardType: TextInputType.numberWithOptions(
                               signed: false, decimal: false),
+                          inputFormatters: [BlacklistingTextInputFormatter(new RegExp('[\\-|\\ |\\,]'))],
                           decoration: InputDecoration(
                               hintStyle: TextStyle(
                                   color: _isDarkTheme
@@ -201,7 +202,8 @@ class ExchangeCardState extends State<ExchangeCard> {
                                               ? PaletteDark
                                                   .darkThemeGreyWithOpacity
                                               : Palette.lightGrey,
-                                      width: 1.0)))),
+                                      width: 1.0))),
+                        validator: widget.currencyValueValidator),
                       SizedBox(height: 5),
                       SizedBox(
                         height: 15,
@@ -256,6 +258,7 @@ class ExchangeCardState extends State<ExchangeCard> {
                       AddressTextFieldOption.addressBook,
                     ]
               : [],
+          validator: widget.addressTextFieldValidator,
         )
       ]),
     );

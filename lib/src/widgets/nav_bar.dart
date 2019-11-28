@@ -91,8 +91,10 @@ class NavBar extends StatelessWidget implements ObstructingPreferredSizeWidget {
   }
 
   @override
-  bool get fullObstruction => false;
+  Size get preferredSize => Size.fromHeight(height);
 
   @override
-  Size get preferredSize => Size.fromHeight(height);
+  bool shouldFullyObstruct(BuildContext context) {
+    return false;
+  }
 }

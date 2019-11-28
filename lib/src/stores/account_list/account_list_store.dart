@@ -15,9 +15,14 @@ abstract class AcountListStoreBase with Store {
   @observable
   List<Account> accounts;
 
+  @observable
+  bool isValid;
+
+  @observable
+  String errorMessage;
+
   AccountList _accountList;
   StreamSubscription<Wallet> _onWalletChangeSubscription;
-  // StreamSubscription<List<Account>> _onSubaddressesChangeSubscription;
 
   AcountListStoreBase({@required WalletService walletService}) {
     accounts = [];
@@ -32,20 +37,16 @@ abstract class AcountListStoreBase with Store {
 
   @override
   void dispose() {
-    // if (_onSubaddressesChangeSubscription != null) {
-    //   _onSubaddressesChangeSubscription.cancel();
-    // }
-
     _onWalletChangeSubscription.cancel();
     super.dispose();
   }
 
   Future updateAccountList() async {
-    await _accountList.refresh(accountIndex: 0);
-    accounts = await _accountList.getAll();
+    await _accountList.refresh();
+    accounts = _accountList.getAll();
   }
 
-  Future addAccount({String label} ) async {
+  Future addAccount({String label}) async {
     await _accountList.addAccount(label: label);
     await updateAccountList();
   }
@@ -65,5 +66,15 @@ abstract class AcountListStoreBase with Store {
     }
 
     print('Incorrect wallet type for this operation (AccountList)');
+  }
+
+  void validateAccountName(String value) {
+    String p = '^[a-zA-Z0-9_]{1,15}\$';
+    RegExp regExp = new RegExp(p);
+    isValid = regExp.hasMatch(value);
+    errorMessage = isValid
+        ? null
+        : 'Account name can only contain letters, '
+            'numbers\nand must be between 1 and 15 characters long';
   }
 }

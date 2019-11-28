@@ -52,7 +52,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
           children: <Widget>[
             Expanded(
                 child: Container(
-              padding: EdgeInsets.all(38.0),
+              padding: EdgeInsets.only(left: 38.0, right: 38.0),
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -78,12 +78,8 @@ class NewNodeFormState extends State<NewNodePageForm> {
                                         width: 1.0))),
                             controller: _nodeAddressController,
                             validator: (value) {
-                              String p = '[^ ]';
-                              RegExp regExp = new RegExp(p);
-                              if (regExp.hasMatch(value))
-                                return null;
-                              else
-                                return 'Please enter a node address';
+                              nodeList.validateNodeAddress(value);
+                              return nodeList.errorMessage;
                             },
                           ),
                         )
@@ -115,7 +111,8 @@ class NewNodeFormState extends State<NewNodePageForm> {
                                         width: 1.0))),
                             controller: _nodePortController,
                             validator: (value) {
-                              return null;
+                              nodeList.validateNodePort(value);
+                              return nodeList.errorMessage;
                             },
                           ),
                         )
@@ -144,9 +141,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
                                             : Palette.lightGrey,
                                         width: 1.0))),
                             controller: _loginController,
-                            validator: (value) {
-                              return null;
-                            },
+                            validator: (value) => null,
                           ),
                         )
                       ],
@@ -174,9 +169,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
                                             : Palette.lightGrey,
                                         width: 1.0))),
                             controller: _passwordController,
-                            validator: (value) {
-                              return null;
-                            },
+                            validator: (value) => null,
                           ),
                         )
                       ],

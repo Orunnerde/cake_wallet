@@ -13,29 +13,6 @@ class AccountPage extends BasePage {
 
   @override
   Widget body(BuildContext context) => AccountForm();
-
-  @override
-  Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
-
-    return Scaffold(
-        backgroundColor: _isDarkTheme ? PaletteDark.darkThemeBackgroundDark
-            : Colors.white,
-        resizeToAvoidBottomPadding: false,
-        appBar: CupertinoNavigationBar(
-          leading: leading(context),
-          middle: middle(context),
-          trailing: trailing(context),
-          backgroundColor: _isDarkTheme ? PaletteDark.darkThemeBackgroundDark
-              : Colors.white,
-          border: null,
-        ),
-        body: SafeArea(child: body(context)));
-  }
 }
 
 class AccountForm extends StatefulWidget {
@@ -56,11 +33,9 @@ class AccountFormState extends State<AccountForm> {
   @override
   Widget build(BuildContext context) {
     final accountListStore = Provider.of<AccountListStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
 
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Form(
       key: _formKey,
@@ -70,22 +45,22 @@ class AccountFormState extends State<AccountForm> {
           children: <Widget>[
             Expanded(
                 child: Center(
-              child: TextFormField(
-                decoration: InputDecoration(
-                    hintStyle: TextStyle(
-                        color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                            : Palette.lightBlue
-                    ),
-                    hintText: 'Account',
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide:
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                        hintStyle: TextStyle(
+                            color: _isDarkTheme ? PaletteDark.darkThemeGrey
+                                : Palette.lightBlue
+                        ),
+                        hintText: 'Account',
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide:
                             BorderSide(
                                 color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
                                     : Palette.lightGrey,
                                 width: 1.0
                             )),
-                    enabledBorder: UnderlineInputBorder(
-                        borderSide:
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide:
                             BorderSide(
                                 color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
                                     : Palette.lightGrey,
@@ -93,27 +68,22 @@ class AccountFormState extends State<AccountForm> {
                             ))),
                 controller: _textController,
                 validator: (value) {
-                  // FIXME: Replace validation logic
-                  String p = '[^ ]';
-                  RegExp regExp = new RegExp(p);
-                  if (regExp.hasMatch(value))
-                    return null;
-                  else
-                    return 'Please enter a name of account';
+                  accountListStore.validateAccountName(value);
+                  return accountListStore.errorMessage;
                 },
               ),
             )),
             PrimaryButton(
-                onPressed: () async {
-                  if (!_formKey.currentState.validate()) {
-                    return;
-                  }
+              onPressed: () async {
+                if (!_formKey.currentState.validate()) {
+                  return;
+                }
 
-                  await accountListStore.addAccount(
-                      label: _textController.text);
-                  Navigator.pop(context, _textController.text);
-                },
-                text: 'Add',
+                await accountListStore.addAccount(
+                    label: _textController.text);
+                Navigator.pop(context, _textController.text);
+              },
+              text: 'Add',
               color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
                   : Palette.purple,
               borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder

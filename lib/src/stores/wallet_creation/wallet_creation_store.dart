@@ -20,6 +20,9 @@ abstract class WalletCreationStoreBase with Store {
   @observable
   String errorMessage;
 
+  @observable
+  bool isValid;
+
   WalletCreationStoreBase( 
       {@required this.authStore,
       @required this.walletListService,
@@ -39,5 +42,13 @@ abstract class WalletCreationStoreBase with Store {
     } catch (e) {
       state = WalletCreationFailure(error: e.toString());
     }
+  }
+
+  void validateWalletName(String value) {
+    String p = '^[a-zA-Z0-9_]{1,15}\$';
+    RegExp regExp = new RegExp(p);
+    isValid = regExp.hasMatch(value);
+    errorMessage = isValid ? null : 'Wallet name can only contain letters, '
+        'numbers\nand must be between 1 and 15 characters long';
   }
 }

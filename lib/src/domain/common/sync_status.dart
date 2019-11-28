@@ -28,7 +28,7 @@ class SyncingSyncStatus extends SyncStatus {
 class SyncedSyncStatus extends SyncStatus {
   double progress() => 1.0;
 
-  String title() => 'SYNCRONIZED';
+  String title() => 'SYNCHRONIZED';
 }
 
 class NotConnectedSyncStatus extends SyncStatus {

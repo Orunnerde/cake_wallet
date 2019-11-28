@@ -17,8 +17,6 @@ class ReceivePage extends BasePage {
   bool get isModalBackButton => true;
   String get title => 'Receive';
 
-  final _shareButtonImage = Image.asset('assets/images/share_button.png');
-
   @override
   Widget trailing(BuildContext context) {
     final walletStore = Provider.of<WalletStore>(context);
@@ -28,7 +26,7 @@ class ReceivePage extends BasePage {
       child: FlatButton(
           onPressed: () => Share.text(
               'Share address', walletStore.subaddress.address, 'text/plain'),
-          child: _shareButtonImage),
+          child: Icon(Icons.share)),
     );
   }
 
@@ -77,9 +75,13 @@ class ReceiveBody extends StatelessWidget {
                         flex: 2,
                         child: AspectRatio(
                           aspectRatio: 1.0,
-                          child: QrImage(
-                            data: walletStore.subaddress.address,
-                            backgroundColor: Colors.white,
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            color:  Colors.white,
+                            child: QrImage(
+                              data: walletStore.subaddress.address,
+                              backgroundColor: Colors.transparent,
+                            ),
                           ),
                         )),
                     Spacer(
@@ -152,6 +154,7 @@ class ReceiveBody extends StatelessWidget {
                                     : Palette.lightGrey,
                                 width: 1.0))),
                     onSubmitted: (value) {
+                      walletStore.validateAmount(value);
                       // _validateAmount(value);
                     },
                   ))

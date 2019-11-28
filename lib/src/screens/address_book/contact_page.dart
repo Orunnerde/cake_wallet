@@ -49,6 +49,8 @@ class ContactFormState extends State<ContactForm> {
   }
 
   _setCurrencyType(BuildContext context) async {
+    String currencyType = CryptoCurrency.all[0].toString();
+    CryptoCurrency selectedCurrency = CryptoCurrency.all[0];
     await showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -64,9 +66,8 @@ class ContactFormState extends State<ContactForm> {
                       : Colors.white,
                   itemExtent: 45.0,
                   onSelectedItemChanged: (int index) {
-                    _selectectCrypto = CryptoCurrency.all[index];
-                    _currencyTypeController.text =
-                        CryptoCurrency.all[index].toString();
+                    selectedCurrency = CryptoCurrency.all[index];
+                    currencyType = CryptoCurrency.all[index].toString();
                   },
                   children:
                       List.generate(CryptoCurrency.all.length, (int index) {
@@ -83,6 +84,8 @@ class ContactFormState extends State<ContactForm> {
                   child: Text('Cancel')),
               FlatButton(
                   onPressed: () {
+                    _selectectCrypto = selectedCurrency;
+                    _currencyTypeController.text = currencyType;
                     Navigator.of(context).pop();
                   },
                   child: Text('OK'))
@@ -129,12 +132,8 @@ class ContactFormState extends State<ContactForm> {
                             width: 1.0))),
                 controller: _contactNameController,
                 validator: (value) {
-                  String p = '[^ ]';
-                  RegExp regExp = new RegExp(p);
-                  if (regExp.hasMatch(value))
-                    return null;
-                  else
-                    return 'Please enter a contact name';
+                  addressBookStore.validateContactName(value);
+                  return addressBookStore.errorMessage;
                 },
               ),
               SizedBox(height: 14.0),
@@ -162,7 +161,6 @@ class ContactFormState extends State<ContactForm> {
                                       : Palette.lightGrey,
                                   width: 1.0))),
                       controller: _currencyTypeController,
-                      validator: (value) => null, // ??
                     ),
                   ),
                 ),
@@ -170,7 +168,12 @@ class ContactFormState extends State<ContactForm> {
               SizedBox(height: 14.0),
               AddressTextField(
                   controller: _addressController,
-                  options: [AddressTextFieldOption.qrCode])
+                  options: [AddressTextFieldOption.qrCode],
+                  validator: (value) {
+                    addressBookStore.validateAddress(value, cryptoCurrency: _selectectCrypto);
+                    return addressBookStore.errorMessage;
+                  },
+              )
             ],
           ),
         ),

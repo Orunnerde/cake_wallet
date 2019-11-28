@@ -9,6 +9,7 @@ class TransactionRow extends StatelessWidget {
   final String formattedAmount;
   final String formattedFiatAmount;
   final bool isPending;
+  final bool isDarkTheme;
 
   TransactionRow(
       {this.direction,
@@ -16,12 +17,11 @@ class TransactionRow extends StatelessWidget {
       this.formattedAmount,
       this.formattedFiatAmount,
       this.isPending,
+      this.isDarkTheme,
       @required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    final _isDarkTheme = false;
-
     return InkWell(
         onTap: onTap,
         child: Container(
@@ -54,7 +54,7 @@ class TransactionRow extends StatelessWidget {
                                 (isPending ? ' (pending)' : ''),
                             style: TextStyle(
                                 fontSize: 16,
-                                color: _isDarkTheme
+                                color: isDarkTheme
                                     ? Palette.blueGrey
                                     : Colors.black)),
                         Text(formattedAmount,

@@ -1,7 +1,11 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:cw_monero/wallet.dart' as moneroWallet;
+import 'package:cw_monero/transaction_history.dart' as transactionHistory;
+import 'package:cw_monero/structs/pending_transaction.dart';
 import 'package:cake_wallet/src/domain/common/wallet.dart';
 import 'package:cake_wallet/src/domain/common/sync_status.dart';
 import 'package:cake_wallet/src/domain/common/transaction_history.dart';
@@ -10,6 +14,7 @@ import 'package:cake_wallet/src/domain/common/pending_transaction.dart';
 import 'package:cake_wallet/src/domain/common/wallet_type.dart';
 import 'package:cake_wallet/src/domain/common/core_db.dart';
 import 'package:cake_wallet/src/domain/common/node.dart';
+import 'package:cake_wallet/src/domain/monero/monero_amount_format.dart';
 import 'package:cake_wallet/src/domain/monero/account.dart';
 import 'package:cake_wallet/src/domain/monero/account_list.dart';
 import 'package:cake_wallet/src/domain/monero/subaddress_list.dart';
@@ -19,53 +24,23 @@ import 'package:cake_wallet/src/domain/monero/subaddress.dart';
 import 'package:cake_wallet/src/domain/common/balance.dart';
 import 'package:cake_wallet/src/domain/monero/monero_balance.dart';
 
-const moneroBlockSize = 1000;
+const monero_block_size = 1000;
 
-String formatAmount(String originAmount) {
-  final int startIndex = originAmount.length - 1;
-  int lastIndex = 0;
+_store(_) => moneroWallet.store();
 
-  for (int i = startIndex; i >= 0; i--) {
-    if (originAmount[i] == "0") {
-      lastIndex = i;
-    } else if (i == startIndex) {
-      lastIndex = i + 1;
-      break;
-    } else {
-      break;
-    }
-  }
+PendingTransactionDescription _createTransaction(List<Object> args) {
+  final credentials = args.first as MoneroTransactionCreationCredentials;
+  final accountIndex = args.last as int;
 
-  if (lastIndex < 3) {
-    return '0.00';
-  }
-
-  return originAmount.substring(0, lastIndex);
+  return transactionHistory.createTransaction(
+      address: credentials.address,
+      paymentId: credentials.paymentId,
+      amount: credentials.amount,
+      priorityRaw: credentials.priority.serialize(),
+      accountIndex: accountIndex);
 }
 
 class MoneroWallet extends Wallet {
-  static final platformBinaryEmptyResponse = ByteData(4);
-  static const platform =
-      const MethodChannel('com.cakewallet.wallet/monero-wallet');
-
-  static const syncStateChannel =
-      BasicMessageChannel('sync_state', BinaryCodec());
-
-  static const walletHeightChannel =
-      BasicMessageChannel('wallet_height', BinaryCodec());
-
-  static const balanceChangeChannel =
-      BasicMessageChannel('balance_change', StringCodec());
-
-  static Future<T> getValue<T>({String key, Map arguments = const {}}) async {
-    try {
-      return await platform.invokeMethod(key, arguments);
-    } on PlatformException catch (e) {
-      print(e);
-      throw e;
-    }
-  }
-
   static Future<MoneroWallet> createdWallet(
       {Database db,
       String name,
@@ -141,6 +116,7 @@ class MoneroWallet extends Wallet {
   int _lastSaveTime;
   int _lastRefreshTime;
   int _refreshHeight;
+  int _lastSyncHeight;
 
   TransactionHistory _cachedTransactionHistory;
   SubaddressList _cachedSubaddressList;
@@ -152,154 +128,60 @@ class MoneroWallet extends Wallet {
     _lastSaveTime = 0;
     _lastRefreshTime = 0;
     _refreshHeight = 0;
+    _lastSyncHeight = 0;
     _name = BehaviorSubject<String>();
     _address = BehaviorSubject<String>();
     _syncStatus = BehaviorSubject<SyncStatus>();
     _onBalanceChange = BehaviorSubject<MoneroBalance>();
     _account = BehaviorSubject<Account>()..add(Account(id: 0));
     _subaddress = BehaviorSubject<Subaddress>();
-
-    walletHeightChannel.setMessageHandler((h) async {
-      final height = h.getUint64(0);
-      final nodeHeight = await getNodeHeightOrUpdate(height);
-
-      if (_refreshHeight <= 0) {
-        _refreshHeight = height;
-      }
-
-      if (height > 0 && ((nodeHeight - height) < moneroBlockSize)) {
-        _syncStatus.add(SyncedSyncStatus());
-      } else {
-        _syncStatus.add(SyncingSyncStatus(height, nodeHeight, _refreshHeight));
-      }
-
-      return platformBinaryEmptyResponse;
-    });
-
-    balanceChangeChannel.setMessageHandler((_) async {
-      askForUpdateBalance();
-
-      getHistory()
-          .update()
-          .then((_) => print('ask to update transaction history'));
-
-      return '';
-    });
-
-    syncStateChannel.setMessageHandler((_) async {
-      final startDate = DateTime.now();
-
-      final currentHeight = await getCurrentHeight();
-      final nodeHeight = await getNodeHeightOrUpdate(currentHeight);
-
-      // print(
-      //     'Ended fetching of node height ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}');
-
-      getHistory().update().then((_) => print(
-          'Updated transaction history: ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}'));
-
-      if (currentHeight == 0) {
-        return platformBinaryEmptyResponse;
-      }
-
-      if (_syncStatus.value is FailedSyncStatus) {
-        return platformBinaryEmptyResponse;
-      }
-
-      _syncStatus.add(SyncedSyncStatus());
-
-      if (isRecovery && (nodeHeight - currentHeight < moneroBlockSize)) {
-        await setAsRecovered();
-        askForUpdateBalance();
-        print(
-            'Ended set as recovered ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}');
-      }
-
-      final now = DateTime.now().millisecondsSinceEpoch;
-      final diff = now - _lastRefreshTime;
-
-      if (diff >= 0 && diff < 60000) {
-        return ByteData(0);
-      }
-
-      await store();
-      print(
-          'Ended storing while syncing ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}');
-
-      _lastRefreshTime = now;
-
-      return platformBinaryEmptyResponse;
-    });
-
-    getAccountList()
-      ..refresh()
-      ..getAll().then((account) => this._account.add(account[0]));
+    setListeners();
   }
 
   Future updateInfo() async {
     _name.value = await getName();
-    _address.value = await getAddress();
+    final acccountList = getAccountList();
+    await acccountList.refresh();
+    _account.value = acccountList.getAll().first;
     final subaddressList = getSubaddress();
     await subaddressList.refresh(
         accountIndex: _account.value != null ? _account.value.id : 0);
-    final subaddresses = await subaddressList.getAll();
+    final subaddresses = subaddressList.getAll();
     _subaddress.value = subaddresses.first;
+    _address.value = await getAddress();
   }
 
-  Future<String> getFilename() async {
-    return getValue(key: 'getFilename');
-  }
+  Future<String> getFilename() async => moneroWallet.getFilename();
 
-  Future<String> getName() async {
-    return getValue(key: 'getName');
-  }
+  Future<String> getName() async => getFilename()
+      .then((filename) => filename.split('/'))
+      .then((splitted) => splitted.last);
 
-  Future<String> getAddress() async {
-    return getValue(key: 'getAddress');
-  }
+  Future<String> getAddress() async => moneroWallet.getAddress(
+      accountIndex: _account.value.id, addressIndex: _subaddress.value.id);
 
-  Future<String> getSeed() async {
-    return getValue(key: 'getSeed');
-  }
+  Future<String> getSeed() async => moneroWallet.getSeed();
 
-  Future<String> getFullBalance() async {
-    return formatAmount(
-        await getValue(key: 'getBalance', arguments: {'account_index': 0}));
-  }
+  Future<String> getFullBalance() async => moneroAmountToString(
+      amount: moneroWallet.getFullBalance(accountIndex: _account.value.id));
 
-  Future<String> getUnlockedBalance() async {
-    return formatAmount(await getValue(
-        key: 'getUnlockedBalance', arguments: {'account_index': 0}));
-  }
+  Future<String> getUnlockedBalance() async => moneroAmountToString(
+      amount: moneroWallet.getUnlockedBalance(accountIndex: _account.value.id));
 
-  Future<int> getCurrentHeight() async {
-    return getValue(key: 'getCurrentHeight');
-  }
+  Future<int> getCurrentHeight() async => moneroWallet.getCurrentHeight();
 
-  Future<int> getNodeHeight() async {
-    return getValue(key: 'getNodeHeight');
-  }
+  Future<int> getNodeHeight() async => moneroWallet.getNodeHeight();
 
-  Future<Map<String, String>> getKeys() async {
-    final map = await getValue(key: 'getKeys');
-
-    return {
-      'publicViewKey': map['publicViewKey'],
-      'privateViewKey': map['privateViewKey'],
-      'publicSpendKey': map['publicSpendKey'],
-      'privateSpendKey': map['privateSpendKey'],
-    };
-  }
+  Future<Map<String, String>> getKeys() async => {
+        'publicViewKey': moneroWallet.getPublicViewKey(),
+        'privateViewKey': moneroWallet.getSecretViewKey(),
+        'publicSpendKey': moneroWallet.getPublicSpendKey(),
+        'privateSpendKey': moneroWallet.getSecretSpendKey()
+      };
 
   Future close() async {
-    try {
-      print('Start closing');
-      await platform.invokeMethod('close');
-      print('Closed');
-    } on PlatformException catch (e) {
-      print(e);
-      throw e;
-    }
+    moneroWallet.closeListeners();
+    moneroWallet.closeCurrentWallet();
   }
 
   Future connectToNode(
@@ -307,28 +189,24 @@ class MoneroWallet extends Wallet {
     try {
       _syncStatus.value = ConnectingSyncStatus();
 
-      final arguments = {
-        'uri': node.uri,
-        'login': node.login,
-        'password': node.password,
-        'use_ssl': useSSL,
-        'is_light_wallet': isLightWallet
-      };
-
-      await platform.invokeMethod('connectToNode', arguments);
+      moneroWallet.setupNode(
+          address: node.uri,
+          login: node.login ?? '',
+          password: node.password ?? '',
+          useSSL: useSSL,
+          isLightWallet: isLightWallet);
 
       _syncStatus.value = ConnectedSyncStatus();
     } on PlatformException catch (e) {
       _syncStatus.value = FailedSyncStatus();
       print(e);
-      // throw e;
     }
   }
 
   Future startSync() async {
     try {
       _syncStatus.value = StartingSyncStatus();
-      await platform.invokeMethod('startSync');
+      moneroWallet.startRefresh();
     } on PlatformException catch (e) {
       _syncStatus.value = FailedSyncStatus();
       print(e);
@@ -338,13 +216,7 @@ class MoneroWallet extends Wallet {
 
   TransactionHistory getHistory() {
     if (_cachedTransactionHistory == null) {
-      _cachedTransactionHistory = MoneroTransactionHistory(platform: platform);
-
-      syncStatus.listen((status) async {
-        if (status is SyncedSyncStatus) {
-          await _cachedTransactionHistory.update();
-        }
-      });
+      _cachedTransactionHistory = MoneroTransactionHistory();
     }
 
     return _cachedTransactionHistory;
@@ -352,7 +224,7 @@ class MoneroWallet extends Wallet {
 
   SubaddressList getSubaddress() {
     if (_cachedSubaddressList == null) {
-      _cachedSubaddressList = SubaddressList(platform: platform);
+      _cachedSubaddressList = SubaddressList();
     }
 
     return _cachedSubaddressList;
@@ -360,7 +232,7 @@ class MoneroWallet extends Wallet {
 
   AccountList getAccountList() {
     if (_cachedAccountList == null) {
-      _cachedAccountList = AccountList(platform: platform);
+      _cachedAccountList = AccountList();
     }
 
     return _cachedAccountList;
@@ -388,39 +260,18 @@ class MoneroWallet extends Wallet {
       TransactionCreationCredentials credentials) async {
     MoneroTransactionCreationCredentials _credentials =
         credentials as MoneroTransactionCreationCredentials;
+    final transactionDescription =
+        await compute(_createTransaction, [_credentials, _account.value.id]);
 
-    final arguments = {
-      'address': _credentials.address,
-      'paymentId': _credentials.paymentId,
-      'amount': _credentials.amount,
-      'priority': _credentials.priority.serialize(),
-      'accountIndex': _account.value.id
-    };
-
-    final Map transaction =
-        await platform.invokeMethod('createTransaction', arguments);
-    return PendingTransaction.fromMap(transaction, platform);
+    return PendingTransaction.fromTransactionDescription(
+        transactionDescription);
   }
 
-  Future setRecoveringFromSeed() async {
-    try {
-      await platform
-          .invokeMethod('setRecoveringFromSeed', const {'isRecovering': true});
-    } on PlatformException catch (e) {
-      print(e);
-      throw e;
-    }
-  }
+  setRecoveringFromSeed() =>
+      moneroWallet.setRecoveringFromSeed(isRecovery: true);
 
-  Future setRefreshFromBlockHeight({int height}) async {
-    try {
-      _refreshHeight = height;
-      await platform.invokeMethod('setRecoveringFromSeed', {'height': height});
-    } on PlatformException catch (e) {
-      print(e);
-      throw e;
-    }
-  }
+  setRefreshFromBlockHeight({int height}) =>
+      moneroWallet.setRefreshFromBlockHeight(height: height);
 
   Future setAsRecovered() async {
     final helper = await CoreDB.getInstance();
@@ -447,13 +298,14 @@ class MoneroWallet extends Wallet {
         fullBalance: fullBalance, unlockedBalance: unlockedBalance));
   }
 
+  Future askForUpdateTransactionHistory() async => await getHistory().update();
+
   Future rescan({int restoreHeight = 0}) async {}
 
-  void changeCurrentSubaddress(Subaddress subaddress) {
-    _subaddress.value = subaddress;
-  }
+  changeCurrentSubaddress(Subaddress subaddress) =>
+      _subaddress.value = subaddress;
 
-  void changeAccount(Account account) {
+  changeAccount(Account account) {
     _account.add(account);
 
     getSubaddress()
@@ -463,48 +315,93 @@ class MoneroWallet extends Wallet {
   }
 
   Future store() async {
-    print('Store start');
-
-    final start = DateTime.now();
-
     if (_isSaving) {
       return;
     }
 
     try {
       _isSaving = true;
-      await platform.invokeMethod('store');
+      await compute(_store, 0);
       _isSaving = false;
     } on PlatformException catch (e) {
       print(e);
       _isSaving = false;
       throw e;
     }
-
-    print('Store end');
-    print(
-        'Store time: ${DateTime.now().millisecondsSinceEpoch - start.millisecondsSinceEpoch}');
   }
 
-  Future<bool> isConnected() async {
-    print('isConnected start');
+  Future<bool> isConnected() async => moneroWallet.isConnected();
 
-    final start = DateTime.now();
+  setListeners() => moneroWallet.setListeners(
+      _onNewBlock, _onNeedToRefresh, _onNewTransaction);
 
-    bool isConnected = false;
-
+  Future _onNewBlock(int height) async {
     try {
-      _isSaving = true;
-      isConnected = await platform.invokeMethod('getIsConnected');
-    } on PlatformException catch (e) {
+      final nodeHeight = await getNodeHeightOrUpdate(height);
+
+      if (isRecovery && _refreshHeight <= 0) {
+        _refreshHeight = height;
+      }
+
+      if (isRecovery &&
+          (_lastSyncHeight == 0 ||
+              (height - _lastSyncHeight) > monero_block_size)) {
+        _lastSyncHeight = height;
+        askForUpdateBalance();
+        askForUpdateTransactionHistory();
+      }
+
+      if (height > 0 && ((nodeHeight - height) < monero_block_size)) {
+        _syncStatus.add(SyncedSyncStatus());
+      } else {
+        _syncStatus.add(SyncingSyncStatus(height, nodeHeight, _refreshHeight));
+      }
+    } catch (e) {
       print(e);
-      throw e;
     }
+  }
 
-    print('isConnected end');
-    print(
-        'isConnected time: ${DateTime.now().millisecondsSinceEpoch - start.millisecondsSinceEpoch}');
+  Future _onNeedToRefresh() async {
+    try {
+      final currentHeight = await getCurrentHeight();
+      final nodeHeight = await getNodeHeightOrUpdate(currentHeight);
 
-    return isConnected;
+      if (currentHeight == 0) {
+        return;
+      }
+
+      if (_syncStatus.value is FailedSyncStatus) {
+        return;
+      }
+
+      askForUpdateBalance();
+
+      _syncStatus.add(SyncedSyncStatus());
+
+      if (isRecovery) {
+        askForUpdateTransactionHistory();
+      }
+
+      if (isRecovery && (nodeHeight - currentHeight < monero_block_size)) {
+        await setAsRecovered();
+      }
+
+      final now = DateTime.now().millisecondsSinceEpoch;
+      final diff = now - _lastRefreshTime;
+
+      if (diff >= 0 && diff < 60000) {
+        return;
+      }
+
+      await store();
+      _lastRefreshTime = now;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future _onNewTransaction() async {
+    await askForUpdateBalance();
+    await askForUpdateTransactionHistory();
   }
 }

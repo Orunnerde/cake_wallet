@@ -41,14 +41,8 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
     final tradeStore = Provider.of<ExchangeTradeStore>(context);
     final sendStore = Provider.of<SendStore>(context);
     final walletStore = Provider.of<WalletStore>(context);
-
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
+    final _themeChanger = Provider.of<ThemeChanger>(context);
+    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     _setEffects(context);
 
@@ -190,13 +184,11 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                     ],
                   ),
                   SizedBox(width: 10),
-                  SizedBox(
-                    width: 125,
-                    child: QrImage(
-                      data: trade.inputAddress ?? fetchingLabel,
-                      backgroundColor: Colors.white,
-                    ),
-                  )
+                  Container(
+                      constraints: BoxConstraints(minWidth: 100, maxWidth: 125),
+                      child: QrImage(
+                          data: trade.inputAddress ?? fetchingLabel,
+                          backgroundColor: Colors.white))
                 ],
               ),
             ),
@@ -233,18 +225,8 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                       child: Container(
                     padding: EdgeInsets.only(right: 5.0),
                     child: CopyButton(
-                      onPressed: () {
-                        Clipboard.setData(
-                            ClipboardData(text: trade.inputAddress));
-                        // Scaffold.of(context).showSnackBar(SnackBar(
-                        //   content: Text(
-                        //     'Copied to Clipboard',
-                        //     textAlign: TextAlign.center,
-                        //     style: TextStyle(color: Colors.black),
-                        //   ),
-                        //   backgroundColor: Palette.purple,
-                        // ));
-                      },
+                      onPressed: () => Clipboard.setData(
+                          ClipboardData(text: trade.inputAddress)),
                       text: 'Copy Address',
                       color: _isDarkTheme
                           ? PaletteDark.darkThemeIndigoButton
@@ -258,17 +240,8 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                       child: Container(
                     padding: EdgeInsets.only(left: 5.0),
                     child: CopyButton(
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(text: trade.id));
-                        // Scaffold.of(context).showSnackBar(SnackBar(
-                        //   content: Text(
-                        //     'Copied to Clipboard',
-                        //     textAlign: TextAlign.center,
-                        //     style: TextStyle(color: Colors.black),
-                        //   ),
-                        //   backgroundColor: Palette.purple,
-                        // ));
-                      },
+                      onPressed: () =>
+                          Clipboard.setData(ClipboardData(text: trade.id)),
                       text: 'Copy ID',
                       color: _isDarkTheme
                           ? PaletteDark.darkThemeIndigoButton
@@ -311,23 +284,6 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
           ],
         );
       }),
-      // bottomSection: tradeStore.isSendable
-      //     ? Container(
-      //         padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-      //         child: PrimaryButton(
-      //           onPressed: () => sendStore.createTransaction(
-      //               address: tradeStore.trade.inputAddress,
-      //               amount: tradeStore.trade.amount),
-      //           text: 'Confirm',
-      //           color: _isDarkTheme
-      //               ? PaletteDark.darkThemePurpleButton
-      //               : Palette.purple,
-      //           borderColor: _isDarkTheme
-      //               ? PaletteDark.darkThemePurpleButtonBorder
-      //               : Palette.deepPink,
-      //         ),
-      //       )
-      //     : Container(),
       bottomSection: Container(
         padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
         child: PrimaryButton(
@@ -343,16 +299,6 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
         ),
       ),
     );
-
-    // return Observer(builder: (_) {
-    //   final trade = tradeStore.trade;
-    //   final walletName = walletStore.name;
-
-    //   return Container(
-    //     padding: EdgeInsets.only(left: 30.0, right: 30.0),
-    //     child: ,
-    //   );
-    // });
   }
 
   void _setEffects(BuildContext context) {
@@ -416,7 +362,9 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                   title: Text('Sending'),
                   content: Text('Transaction sent!'),
                   actions: <Widget>[
-                    FlatButton(child: Text("OK"), onPressed: () => null)
+                    FlatButton(
+                        child: Text("OK"),
+                        onPressed: () => Navigator.of(context).pop())
                   ],
                 );
               });

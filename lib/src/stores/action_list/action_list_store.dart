@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
-import 'package:cake_wallet/src/domain/common/fetch_price.dart';
+import 'package:cake_wallet/src/domain/monero/monero_amount_format.dart';
+import 'package:cake_wallet/src/stores/price/price_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cake_wallet/src/domain/monero/account.dart';
@@ -54,8 +55,24 @@ abstract class ActionListBase with Store {
     return formattedList;
   }
 
+  @computed
+  List<TransactionListItem> get transactions {
+    final symbol = PriceStoreBase.generateSymbolForPair(
+        fiat: _settingsStore.fiatCurrency, crypto: CryptoCurrency.xmr);
+    final price = _priceStore.prices[symbol];
+
+    _transactions.forEach((item) {
+      final amount = calculateFiatAmountRaw(
+          cryptoAmount: moneroAmountToDouble(amount: item.transaction.amount),
+          price: price);
+      item.transaction.changeFiatAmount(amount);
+    });
+
+    return _transactions;
+  }
+
   @observable
-  List<TransactionListItem> transactions;
+  List<TransactionListItem> _transactions;
 
   @observable
   List<TradeListItem> trades;
@@ -85,6 +102,7 @@ abstract class ActionListBase with Store {
   TransactionHistory _history;
   TradeHistory _tradeHistory;
   SettingsStore _settingsStore;
+  PriceStore _priceStore;
   Account _account;
   StreamSubscription<Wallet> _onWalletChangeSubscription;
   StreamSubscription<List<TransactionInfo>> _onTransactionsChangeSubscription;
@@ -94,12 +112,14 @@ abstract class ActionListBase with Store {
       {@required WalletService walletService,
       @required TradeHistory tradeHistory,
       @required SettingsStore settingsStore,
+      @required PriceStore priceStore,
       @required this.transactionFilterStore,
       @required this.tradeFilterStore}) {
-    transactions = List<TransactionListItem>();
     trades = List<TradeListItem>();
+    _transactions = List<TransactionListItem>();
     _walletService = walletService;
     _settingsStore = settingsStore;
+    _priceStore = priceStore;
     _tradeHistory = tradeHistory;
 
     if (walletService.currentWallet != null) {
@@ -163,28 +183,15 @@ abstract class ActionListBase with Store {
   }
 
   Future _setTransactions(List<TransactionInfo> transactions) async {
-    List<TransactionInfo> _transactions;
-
     final wallet = _walletService.currentWallet;
+    List<TransactionInfo> sortedTransactions = transactions;
 
     if (wallet is MoneroWallet) {
-      _transactions =
+      sortedTransactions =
           transactions.where((tx) => tx.accountIndex == _account.id).toList();
-    } else {
-      _transactions = transactions;
     }
 
-    final __transactions = await Future.wait(_transactions.map((tx) async {
-      final amount = await calculateAmountFromRaw(
-          amount: tx.amountRaw(),
-          crypto: CryptoCurrency.xmr,
-          fiat: _settingsStore.fiatCurrency);
-      final fiatAmount = '$amount ${_settingsStore.fiatCurrency}';
-      tx.changeFiatAmount(fiatAmount);
-      return tx;
-    }));
-
-    this.transactions = __transactions
+    this._transactions = sortedTransactions
         .map((transaction) => TransactionListItem(transaction: transaction))
         .toList();
   }

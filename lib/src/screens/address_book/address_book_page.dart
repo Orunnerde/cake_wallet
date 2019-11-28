@@ -137,7 +137,7 @@ class AddressBookPage extends BasePage {
       case CryptoCurrency.ltc:
         color = Colors.blue[200];
         break;
-      case CryptoCurrency.btc:
+      case CryptoCurrency.bch:
         color = Colors.orangeAccent;
         break;
       case CryptoCurrency.dash:
