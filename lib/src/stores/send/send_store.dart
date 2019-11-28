@@ -10,6 +10,7 @@ import 'package:cake_wallet/src/domain/monero/monero_transaction_creation_creden
 import 'package:cake_wallet/src/domain/common/recipient_address_list.dart';
 import 'package:cake_wallet/src/stores/send/sending_state.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 part 'send_store.g.dart';
 
@@ -59,7 +60,7 @@ abstract class SendStoreBase with Store {
     try {
       final _amount = amount != null
           ? amount
-          : cryptoAmount == 'ALL' ? null : cryptoAmount.replaceAll(',', '.');
+          : cryptoAmount == S.current.all ? null : cryptoAmount.replaceAll(',', '.');
       final credentials = MoneroTransactionCreationCredentials(
           address: address,
           paymentId: paymentId ?? '',
@@ -161,7 +162,7 @@ abstract class SendStoreBase with Store {
           isValid = (value.length == 34);
       }
     }
-    errorMessage = isValid ? null : 'Wallet address must correspond to the type\nof cryptocurrency';
+    errorMessage = isValid ? null : S.current.error_text_address;
   }
 
   void validatePaymentID(String value) {
@@ -172,7 +173,7 @@ abstract class SendStoreBase with Store {
       RegExp regExp = new RegExp(p);
       isValid = regExp.hasMatch(value);
     }
-    errorMessage = isValid ? null : 'Payment ID can only contain from 16 to 64 chars in hex';
+    errorMessage = isValid ? null : S.current.error_text_payment_id;
   }
 
   void validateXMR(String value, String availableBalance) {
@@ -188,8 +189,7 @@ abstract class SendStoreBase with Store {
         isValid = false;
       }
     } else isValid = false;
-    errorMessage = isValid ? null : "XMR value can't exceed available balance.\n"
-                                    "The number of fraction digits must be less or equal to 12";
+    errorMessage = isValid ? null : S.current.error_text_xmr;
   }
 
   void validateFiat(String value, double maxValue) {
@@ -204,7 +204,6 @@ abstract class SendStoreBase with Store {
         isValid = false;
       }
     } else isValid = false;
-    errorMessage = isValid ? null : "Value of amount can't exceed available balance.\n"
-                                    "The number of fraction digits must be less or equal to 2";
+    errorMessage = isValid ? null : S.current.error_text_fiat;
   }
 }

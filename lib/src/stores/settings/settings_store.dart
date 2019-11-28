@@ -9,6 +9,7 @@ import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
 import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
 import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
 import 'package:cake_wallet/src/stores/action_list/action_list_display_mode.dart';
+import 'package:cake_wallet/src/screens/settings/items/item_headers.dart';
 import 'package:cake_wallet/generated/i18n.dart';
 
 part 'settings_store.g.dart';
@@ -127,8 +128,6 @@ abstract class SettingsStoreBase with Store {
     languageCode = initialLanguageCode;
     itemHeaders = Map();
 
-    setItemHeaders();
-
     actionlistDisplayMode.observe(
         (dynamic _) => _sharedPreferences.setInt(displayActionListModeKey,
             serializeActionlistDisplayModes(actionlistDisplayMode)),
@@ -230,15 +229,25 @@ abstract class SettingsStoreBase with Store {
     return await _nodeList.findBy(id: id);
   }
 
+  @action
   void setItemHeaders() {
+    itemHeaders.clear();
     itemHeaders.addAll({
-      "Nodes" : S.current.settings_nodes,
-      "Current node" : S.current.settings_current_node,
-      "Wallets" : S.current.settings_wallets,
-      "Display balance as" : S.current.settings_display_balance_as,
-      "Currency" : S.current.settings_currency,
-      "Fee priority" : S.current.settings_fee_priority,
-      "Save recipient address" : S.current.settings_save_recipient_address
+      ItemHeaders.nodes : S.current.settings_nodes,
+      ItemHeaders.currentNode : S.current.settings_current_node,
+      ItemHeaders.wallets : S.current.settings_wallets,
+      ItemHeaders.displayBalanceAs : S.current.settings_display_balance_as,
+      ItemHeaders.currency : S.current.settings_currency,
+      ItemHeaders.feePriority : S.current.settings_fee_priority,
+      ItemHeaders.saveRecipientAddress : S.current.settings_save_recipient_address,
+      ItemHeaders.personal : S.current.settings_personal,
+      ItemHeaders.changePIN : S.current.settings_change_pin,
+      ItemHeaders.changeLanguage : S.current.settings_change_language,
+      ItemHeaders.allowBiometricalAuthentication : S.current.settings_allow_biometrical_authentication,
+      ItemHeaders.darkMode : S.current.settings_dark_mode,
+      ItemHeaders.support : S.current.settings_support,
+      ItemHeaders.termsAndConditions : S.current.settings_terms_and_conditions,
+      ItemHeaders.faq : S.current.faq
     });
   }
 }

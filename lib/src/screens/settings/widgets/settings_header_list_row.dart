@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:provider/provider.dart';
 
 class SettingsHeaderListRow extends StatelessWidget {
   final String title;
@@ -8,6 +11,8 @@ class SettingsHeaderListRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settingsStore = Provider.of<SettingsStore>(context);
+
     return Column(
       children: <Widget>[
         SizedBox(
@@ -18,11 +23,12 @@ class SettingsHeaderListRow extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Text(
-                title,
-                style: TextStyle(
-                    fontSize: 15.0, color: Palette.wildDarkBlue),
-              )
+              Observer(
+                  builder: (_) => Text(
+                    settingsStore.itemHeaders[title],
+                    style: TextStyle(
+                        fontSize: 15.0, color: Palette.wildDarkBlue),
+                  ))
             ],
           ),
         ),

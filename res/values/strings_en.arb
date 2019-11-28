@@ -277,6 +277,7 @@
   "error_text_amount" : "Amount can only contain numbers",
   "error_text_wallet_name" : "Wallet name can only contain letters, numbers\nand must be between 1 and 15 characters long",
   "error_text_keys" : "Wallet keys can only contain 64 chars in hex",
+  "error_text_crypto_currency" : "The number of fraction digits\nmust be less or equal to 12",
 
 
   "auth_store_ban_timeout" : "ban_timeout",

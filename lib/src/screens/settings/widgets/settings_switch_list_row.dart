@@ -17,7 +17,7 @@ class SettingsSwitchListRow extends StatelessWidget {
     final settingsStore = Provider.of<SettingsStore>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
 
-    if (title == S.of(context).settings_save_recipient_address) {
+    if (settingsStore.itemHeaders[title] == S.of(context).settings_save_recipient_address) {
       return Observer(
           builder: (_) => StandartSwitch(
               value: settingsStore.shouldSaveRecipientAddress,
@@ -28,7 +28,7 @@ class SettingsSwitchListRow extends StatelessWidget {
               }));
     }
 
-    if (title == S.of(context).settings_allow_biometrical_authentication) {
+    if (settingsStore.itemHeaders[title] == S.of(context).settings_allow_biometrical_authentication) {
       return Observer(
           builder: (_) => StandartSwitch(
               value: settingsStore.allowBiometricalAuthentication,
@@ -40,7 +40,7 @@ class SettingsSwitchListRow extends StatelessWidget {
               }));
     }
 
-    if (title == S.of(context).settings_dark_mode) {
+    if (settingsStore.itemHeaders[title] == S.of(context).settings_dark_mode) {
       return Observer(
           builder: (_) => StandartSwitch(
               value: settingsStore.isDarkTheme,
@@ -57,6 +57,7 @@ class SettingsSwitchListRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settingsStore = Provider.of<SettingsStore>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme = (_themeChanger.getTheme() == Themes.darkTheme);
 
@@ -64,13 +65,14 @@ class SettingsSwitchListRow extends StatelessWidget {
       color: _isDarkTheme ? PaletteDark.darkThemeMidGrey : Colors.white,
       child: ListTile(
           contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
-          title: Text(
-            title,
-            style: TextStyle(
-                fontSize: 16.0,
-                color:
+          title: Observer(
+              builder: (_) => Text(
+                settingsStore.itemHeaders[title],
+                style: TextStyle(
+                    fontSize: 16.0,
+                    color:
                     _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black),
-          ),
+              )),
           trailing: _getSwitch(context)),
     );
   }

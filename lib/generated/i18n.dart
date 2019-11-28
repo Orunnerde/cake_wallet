@@ -62,6 +62,7 @@ class S implements WidgetsLocalizations {
   String get error_text_address => "Wallet address must correspond to the type\nof cryptocurrency";
   String get error_text_amount => "Amount can only contain numbers";
   String get error_text_contact_name => "Contact name can't contain ` , ' \" symbols\nand must be between 1 and 32 characters long";
+  String get error_text_crypto_currency => "The number of fraction digits\nmust be less or equal to 12";
   String get error_text_fiat => "Value of amount can't exceed available balance.\nThe number of fraction digits must be less or equal to 2";
   String get error_text_keys => "Wallet keys can only contain 64 chars in hex";
   String get error_text_node_address => "Please enter a iPv4 address";
@@ -436,6 +437,8 @@ class $ru extends S {
   String get full_balance => "Полный баланс";
   @override
   String get sync_status_not_connected => "Нет подключения";
+  @override
+  String get error_text_crypto_currency => "Количество цифр после запятой\nдолжно быть меньше или равно 12";
   @override
   String get error_text_contact_name => "Имя контакта не может включать ` , ' \" символы\n и может быть от 1 до 32 символов в длину";
   @override
