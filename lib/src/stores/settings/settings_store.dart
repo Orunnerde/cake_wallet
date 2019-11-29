@@ -24,6 +24,7 @@ abstract class SettingsStoreBase with Store {
       'allow_biometrical_authentication';
   static const currentDarkTheme = 'dark_theme';
   static const displayActionListModeKey = 'display_list_mode';
+  static const currentPinLength = 'current_pin_length';
 
   static Future<SettingsStore> load(
       {@required SharedPreferences sharedPreferences,
@@ -49,6 +50,9 @@ abstract class SettingsStoreBase with Store {
     final actionlistDisplayMode = ObservableList();
     actionlistDisplayMode.addAll(deserializeActionlistDisplayModes(
         sharedPreferences.getInt(displayActionListModeKey) ?? 11));
+    final defaultPinLength = sharedPreferences.getInt(currentPinLength) == null
+        ? 4
+        : sharedPreferences.getInt(currentPinLength);
 
     final store = SettingsStore(
         sharedPreferences: sharedPreferences,
@@ -59,7 +63,8 @@ abstract class SettingsStoreBase with Store {
         initialSaveRecipientAddress: shouldSaveRecipientAddress,
         initialAllowBiometricalAuthentication: allowBiometricalAuthentication,
         initialDarkTheme: savedDarkTheme,
-        actionlistDisplayMode: actionlistDisplayMode);
+        actionlistDisplayMode: actionlistDisplayMode,
+        initialPinLength: defaultPinLength);
     await store.loadSettings();
 
     return store;
@@ -89,6 +94,9 @@ abstract class SettingsStoreBase with Store {
   @observable
   bool isDarkTheme;
 
+  @observable
+  int defaultPinLength;
+
   SharedPreferences _sharedPreferences;
   NodeList _nodeList;
 
@@ -101,7 +109,8 @@ abstract class SettingsStoreBase with Store {
       @required bool initialSaveRecipientAddress,
       @required bool initialAllowBiometricalAuthentication,
       @required bool initialDarkTheme,
-      this.actionlistDisplayMode}) {
+      this.actionlistDisplayMode,
+      @required int initialPinLength}) {
     fiatCurrency = initialFiatCurrency;
     transactionPriority = initialTransactionPriority;
     balanceDisplayMode = initialBalanceDisplayMode;
@@ -110,6 +119,7 @@ abstract class SettingsStoreBase with Store {
     _nodeList = nodeList;
     allowBiometricalAuthentication = initialAllowBiometricalAuthentication;
     isDarkTheme = initialDarkTheme;
+    defaultPinLength = initialPinLength;
 
     actionlistDisplayMode.observe(
         (dynamic _) => _sharedPreferences.setInt(displayActionListModeKey,
@@ -200,6 +210,12 @@ abstract class SettingsStoreBase with Store {
 
   @action
   void _showTrades() => actionlistDisplayMode.add(ActionListDisplayMode.trades);
+
+  @action
+  void setDefaultPinLength({@required int pinLength}) async {
+    this.defaultPinLength = pinLength;
+    await _sharedPreferences.setInt(currentPinLength, pinLength);
+  }
 
   Future<Node> _fetchCurrentNode() async {
     final id = _sharedPreferences.getInt(currentNodeIdKey);

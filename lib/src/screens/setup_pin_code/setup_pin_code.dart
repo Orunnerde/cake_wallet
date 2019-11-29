@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:cake_wallet/src/stores/user/user_store.dart';
 import 'package:cake_wallet/src/screens/pin_code/pin_code.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 
 class SetupPinCodePage extends BasePage {
   final Function(BuildContext, String) onPinCodeSetup;
@@ -37,6 +38,7 @@ class _SetupPinCodeFormState<WidgetType extends SetupPinCodeForm>
   Function(BuildContext) onPinCodeSetup;
   List<int> _originalPin = [];
   UserStore _userStore;
+  SettingsStore _settingsStore;
 
   _SetupPinCodeFormState() {
     title = "Enter your pin";
@@ -52,6 +54,7 @@ class _SetupPinCodeFormState<WidgetType extends SetupPinCodeForm>
       if (listEquals<int>(state.pin, _originalPin)) {
         final String pin = state.pin.fold("", (ac, val) => ac + '$val');
         _userStore.set(password: pin);
+        _settingsStore.setDefaultPinLength(pinLength: state.pinLength);
 
         showDialog(
             context: context,
@@ -102,6 +105,7 @@ class _SetupPinCodeFormState<WidgetType extends SetupPinCodeForm>
   @override
   Widget build(BuildContext context) {
     _userStore = Provider.of<UserStore>(context);
+    _settingsStore = Provider.of<SettingsStore>(context);
 
     return body(context);
   }
