@@ -1,22 +1,17 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-/*import 'package:http/http.dart' show BaseClient;
-import 'dart:io'
-    show HttpClient, HttpClientBasicCredentials, HttpClientCredentials;
-import 'dart:async' show Future;
-
-import 'package:http/io_client.dart';*/
-
-import 'package:http_auth/http_auth.dart';
+import 'package:dio/dio.dart' as Dio;
+import 'package:crypto/crypto.dart' as crypto;
+import 'dart:math' as math;
 
 class Node {
   final int id;
   final String uri;
   final String login;
   final String password;
+
+  final md5 = crypto.md5;
 
   Node({this.id, @required this.uri, this.login, this.password});
 
@@ -35,6 +30,100 @@ class Node {
     };
   }
 
+  String generateCnonce() {
+    final rnd = math.Random.secure();
+    var values = List<int>.generate(32, (i) => rnd.nextInt(256));
+    return base64Url.encode(values).substring(0, 8);
+  }
+
+  String generateHA1({String realm, String username, String password}) {
+    final ha1CredentialsData =
+    Utf8Encoder().convert('$username:$realm:$password');
+    final ha1 = md5.convert(ha1CredentialsData).toString();
+
+    return ha1;
+  }
+
+  String generateHA2({String method, String uri}) {
+    final ha2Data = Utf8Encoder().convert('$method:$uri');
+    final ha2 = md5.convert(ha2Data).toString();
+
+    return ha2;
+  }
+
+  String generateResponseString(
+      {String ha1,
+        String ha2,
+        String nonce,
+        String nonceCount,
+        String cnonce,
+        String qop}) {
+    final responseData =
+    Utf8Encoder().convert('$ha1:$nonce:$nonceCount:$cnonce:$qop:$ha2');
+    final response = md5.convert(responseData).toString();
+
+    return response;
+  }
+
+  Map<String, String> parsetAuthorizationHeader({String source}) {
+    final authHeaderParts =
+    source.substring(7).split(',').map((item) => item.trim());
+    var authenticate = Map<String, String>();
+
+    for (final part in authHeaderParts) {
+      final kv = part.split('=');
+      authenticate[kv[0]] =
+          kv.getRange(1, kv.length).join('=').replaceAll('"', '');
+    }
+
+    return authenticate;
+  }
+
+  Future<Dio.Response> digestRequest(
+      {String uri, String login, String password}) async {
+    final path = '/json_rpc';
+    final method = 'POST';
+    final url = Uri.http(uri, path);
+    final dio = Dio.Dio();
+
+    Map<String, String> headers = {'Content-type': 'application/json'};
+    String body =
+    json.encode({"jsonrpc": "2.0", "id": "0", "method": "get_info"});
+
+    var credentialsResponse = await dio.post(url.toString(),
+        options: Dio.Options(headers: headers, validateStatus: (_) => true));
+    var resHeaeders = credentialsResponse.headers;
+    final authenticate =
+    parsetAuthorizationHeader(source: resHeaeders['www-authenticate'].first);
+    final qop = authenticate['qop'];
+    final algorithm = 'MD5';
+    final realm = 'monero-rpc';
+    final nonce = authenticate['nonce'];
+    final cnonce = generateCnonce();
+
+    var nonceCount = '00000001';
+
+    final ha1 = generateHA1(realm: realm, username: login, password: password);
+    final ha2 = generateHA2(method: method, uri: path);
+    final response = generateResponseString(
+        ha1: ha1,
+        ha2: ha2,
+        nonce: nonce,
+        nonceCount: nonceCount,
+        cnonce: cnonce,
+        qop: qop);
+
+    final authorizationHeaders = {
+      'Content-type': 'application/json',
+      'Authorization':
+      'Digest username="$login",realm="$realm",nonce="$nonce",uri="$path",algorithm="$algorithm",qop=$qop,nc=$nonceCount,cnonce="$cnonce",response="$response"'
+    };
+
+    final res = await dio.post(url.toString(),
+        options: Dio.Options(headers: authorizationHeaders), data: body);
+    return res;
+  }
+
   Future<bool> requestNode(String uri, {String login, String password}) async {
 
     final url = Uri.http(uri, '/json_rpc');
@@ -42,41 +131,13 @@ class Node {
     String body = json.encode({"jsonrpc":"2.0","id":"0","method":"get_info"});
 
     if (login != null && password != null) {
-      /*String basicAuth = 'Basic ' + base64Encode(utf8.encode('$login:$password'));
-      headers.addAll({HttpHeaders.authorizationHeader: basicAuth});
-      print("HEADERS = ${headers.toString()}");*/
-      /*final httpAuth = createBasicAuthenticationIoHttpClient(login, password);
-      response = await httpAuth.post(url.toString(), headers: headers, body: body);*/
-
-      /*HttpClient client = new HttpClient();
-      client.addCredentials(
-          Uri.parse(url.toString()),
-          'realm',
-          new HttpClientBasicCredentials(login, password)
-      );
-
-      client.getUrl(Uri.parse(url.toString()))
-          .then((HttpClientRequest req) {
-        req.headers
-          ..add(HttpHeaders.ACCEPT, 'application/json')
-          ..add(HttpHeaders.CONTENT_TYPE, 'application/json');
-
-        return req.close();
-      })
-          .then((HttpClientResponse res) {
-        print("AUTHORIZATION: ${res.statusCode}");
-        client.close();
-        return true;
-      });*/
-
-      var client = new DigestAuthClient(login, password);
-      var res = await client.post(url.toString(), headers: headers, body: body);
-      var resBody = json.decode(res.body);
+      var res = await digestRequest(uri: uri, login: login, password: password);
+      var resBody = res.data;
       var isOffline = resBody["result"]["offline"];
       print("URL = $url");
       print("Is offline $uri: $isOffline");
       print(resBody);
-      return isOffline;
+      return !isOffline;
     }
 
     var response = await http.post(url.toString(), headers: headers, body: body);
@@ -85,27 +146,7 @@ class Node {
     print("URL = $url");
     print("Is offline $uri: $isOffline");
     print(resBody);
-    return isOffline;
+    return !isOffline;
   }
 
 }
-
-  /*HttpAuthenticationCallback _basicAuthenticationCallback(
-      HttpClient client, HttpClientCredentials credentials) =>
-          (Uri uri, String scheme, String realm) {
-        client.addCredentials(uri, realm, credentials);
-        return new Future.value(true);
-      };
-
-  BaseClient createBasicAuthenticationIoHttpClient(
-      String userName, String password) {
-    final credentials = new HttpClientBasicCredentials(userName, password);
-
-    final client = new HttpClient();
-    client.authenticate = _basicAuthenticationCallback(client, credentials);
-    return new IOClient(client);
-  }*/
-
-
-/*typedef Future<bool> HttpAuthenticationCallback(
-    Uri uri, String scheme, String realm);*/

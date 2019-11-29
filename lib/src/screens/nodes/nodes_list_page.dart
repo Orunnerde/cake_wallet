@@ -9,7 +9,7 @@ import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/src/widgets/standart_switch.dart';
+import 'package:cake_wallet/src/screens/nodes/node_indicator.dart';
 
 class NodeListPage extends BasePage {
   NodeListPage();
@@ -95,7 +95,21 @@ class NodeListPage extends BasePage {
   }
 
   @override
-  Widget body(context) {
+  Widget body(context) => NodeListPageBody();
+
+}
+
+class NodeListPageBody extends StatefulWidget {
+
+  @override
+  createState() => NodeListPageBodyState();
+
+}
+
+class NodeListPageBodyState extends State<NodeListPageBody> {
+
+  @override
+  Widget build(BuildContext context) {
     final nodeList = Provider.of<NodeListStore>(context);
     final settings = Provider.of<SettingsStore>(context);
 
@@ -127,8 +141,6 @@ class NodeListPage extends BasePage {
                 itemCount: nodeList.nodes.length,
                 itemBuilder: (BuildContext context, int index) {
                   final node = nodeList.nodes[index];
-                  final isNodeOffline = node.requestNode(node.uri, login: node.login, password: node.password);
-
 
                   return Observer(builder: (_) {
                     final isCurrent = settings.node == null
@@ -145,13 +157,16 @@ class NodeListPage extends BasePage {
                                 color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
                             ),
                           ),
-                          trailing: Container(
-                            width: 10.0,
-                            height: 10.0,
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: isCurrent ? Palette.green : Palette.red), // FIX!!!
-                          ),
+                          trailing: FutureBuilder(
+                              future: nodeList.isNodeOnline(node),
+                              builder: (context, snapshot) {
+                                switch (snapshot.connectionState) {
+                                  case ConnectionState.done:
+                                    return NodeIndicator(color: (snapshot.data != null && snapshot.data) ? Palette.green : Palette.red);
+                                  default:
+                                    return NodeIndicator();
+                                }
+                              }),
                           onTap: () async {
                             if (!isCurrent) {
                               await showDialog(
@@ -160,7 +175,7 @@ class NodeListPage extends BasePage {
                                     return AlertDialog(
                                       content: Text(
                                         'Are you sure to change current node to '
-                                        '${node.uri}?',
+                                            '${node.uri}?',
                                         textAlign: TextAlign.center,
                                       ),
                                       actions: <Widget>[
@@ -185,59 +200,59 @@ class NodeListPage extends BasePage {
                     return isCurrent
                         ? content
                         : Dismissible(
-                            key: Key(node.id.toString()),
-                            confirmDismiss: (direction) async {
-                              return await showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text(
-                                        'Remove node',
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      content: const Text(
-                                        'Are you sure that you want to remove selected node?',
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context, false),
-                                            child: const Text('Cancel')),
-                                        FlatButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context, true),
-                                            child: const Text('Remove')),
-                                      ],
-                                    );
-                                  });
-                            },
-                            onDismissed: (direction) async {
-                              await nodeList.remove(node: node);
-                              // setState(() {
-                              //   _nodes.remove(_nodes.keys.elementAt(index));
-                              // });
-                            },
-                            direction: DismissDirection.endToStart,
-                            background: Container(
-                                padding: EdgeInsets.only(right: 10.0),
-                                alignment: AlignmentDirectional.centerEnd,
-                                color: Palette.red,
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    const Icon(
-                                      CupertinoIcons.delete,
-                                      color: Colors.white,
-                                    ),
-                                    const Text(
-                                      'Delete',
-                                      style: TextStyle(color: Colors.white),
-                                    )
+                        key: Key(node.id.toString()),
+                        confirmDismiss: (direction) async {
+                          return await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text(
+                                    'Remove node',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  content: const Text(
+                                    'Are you sure that you want to remove selected node?',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, false),
+                                        child: const Text('Cancel')),
+                                    FlatButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, true),
+                                        child: const Text('Remove')),
                                   ],
-                                )),
-                            child: content);
+                                );
+                              });
+                        },
+                        onDismissed: (direction) async {
+                          await nodeList.remove(node: node);
+                          // setState(() {
+                          //   _nodes.remove(_nodes.keys.elementAt(index));
+                          // });
+                        },
+                        direction: DismissDirection.endToStart,
+                        background: Container(
+                            padding: EdgeInsets.only(right: 10.0),
+                            alignment: AlignmentDirectional.centerEnd,
+                            color: Palette.red,
+                            child: Column(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                const Icon(
+                                  CupertinoIcons.delete,
+                                  color: Colors.white,
+                                ),
+                                const Text(
+                                  'Delete',
+                                  style: TextStyle(color: Colors.white),
+                                )
+                              ],
+                            )),
+                        child: content);
                   });
                 });
           }))
