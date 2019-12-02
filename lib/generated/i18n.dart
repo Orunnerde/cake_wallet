@@ -821,6 +821,538 @@ class $en extends S {
   const $en();
 }
 
+class $es extends S {
+  const $es();
+
+  @override
+  TextDirection get textDirection => TextDirection.ltr;
+
+  @override
+  String get cancel => "Cancelar";
+  @override
+  String get trade_state_unpaid => "No pagado";
+  @override
+  String get authenticated => "Autenticados";
+  @override
+  String get new_subaddress_create => "Crear";
+  @override
+  String get restore_view_key_private => "View clave (privado)";
+  @override
+  String get transaction_priority_fast => "Rápido";
+  @override
+  String get error_text_amount => "La cantidad solo puede contener números";
+  @override
+  String get hidden_balance => "Balance oculto";
+  @override
+  String get transaction_sent => "Transacción enviada!";
+  @override
+  String get password => "Contraseña";
+  @override
+  String get you_will_get => "Conseguirás";
+  @override
+  String get restore_description_from_seed => "Restaure su billetera desde el código de combinación de 25 palabras \ni de 13 palabras";
+  @override
+  String get trade_state_underpaid => "Poco pagado";
+  @override
+  String get welcome => "Bienvenido\n CAKE WALLET";
+  @override
+  String get share_address => "Compartir dirección";
+  @override
+  String get please_try_to_connect_to_another_node => "Intenta conectarte a otro nodo";
+  @override
+  String get trade_state_traded => "Negociado";
+  @override
+  String get edit => "Editar";
+  @override
+  String get spend_key_public => "Spend clave (público)";
+  @override
+  String get sync_status_syncronizing => "SINCRONIZANDO";
+  @override
+  String get received => "Recibido";
+  @override
+  String get auth_store_banned_minutes => " minutos";
+  @override
+  String get restore_title_from_seed_keys => "Restaurar desde semilla/claves";
+  @override
+  String get settings_none => "Ninguno";
+  @override
+  String get wallet_list_create_new_wallet => "Crear nueva billetera";
+  @override
+  String get seed_alert_third_text => "También puede ver la semilla nuevamente \nen el ";
+  @override
+  String get setup_pin => "PIN de configuración";
+  @override
+  String get transaction_details_recipient_address => "Dirección del receptor";
+  @override
+  String get receive_amount => "Cantidad";
+  @override
+  String get settings_allow_biometrical_authentication => "Permitir autenticación biométrica";
+  @override
+  String get view_key_private => "View clave (privado)";
+  @override
+  String get restore_next => "Próximo";
+  @override
+  String get trade_state_trading => "Comercio";
+  @override
+  String get error_text_address => "La dirección de la billetera debe corresponder al tipo \nde criptomoneda";
+  @override
+  String get send_your_wallet => "Tu billetera";
+  @override
+  String get remove_node_message => "¿Está seguro de que desea eliminar el nodo seleccionado?";
+  @override
+  String get error_text_account_name => "El nombre de la cuenta solo puede contener letras, números \ny debe tener entre 1 y 15 caracteres de longitud";
+  @override
+  String get reconnection => "Reconexión";
+  @override
+  String get available_balance => "Balance disponible";
+  @override
+  String get restore_title_from_keys => "De las claves";
+  @override
+  String get wallet_keys => "Billetera clave";
+  @override
+  String get reconnect => "Volver a conectar";
+  @override
+  String get reconnect_alert_text => "¿Estás seguro de reconectar?";
+  @override
+  String get send_error_minimum_value => "El valor mínimo de la cantidad es 0.01";
+  @override
+  String get copy_address => "Copiar dirección ";
+  @override
+  String get error_text_subaddress_name => "El nombre de la subdirección no puede contener símbolos `, '\" \ny debe tener entre 1 y 20 caracteres de longitud";
+  @override
+  String get settings_all => "TODOS";
+  @override
+  String get nodes_list_reset_to_default_message => "¿Está seguro de que desea restablecer la configuración predeterminada?";
+  @override
+  String get receive => "Recibir";
+  @override
+  String get amount_is_guaranteed => "El monto recibido está garantizado";
+  @override
+  String get auth_store_banned_for => "Prohibido para ";
+  @override
+  String get trade_details_pair => "Par";
+  @override
+  String get confirm => "Confirmar";
+  @override
+  String get settings_display_balance_as => "Mostrar saldo como";
+  @override
+  String get trade_details_provider => "Proveedor";
+  @override
+  String get you_will_send => "Enviarás";
+  @override
+  String get create_new => "Crear nuevo";
+  @override
+  String get trade_details_fetching => "Cargando";
+  @override
+  String get seed_alert_menu => " menú .";
+  @override
+  String get confirm_sending => "Confirmar envío";
+  @override
+  String get settings_title => "Configuraciones";
+  @override
+  String get address_book_menu => "Libreta de direcciones";
+  @override
+  String get wallet_restoration_store_incorrect_seed_length => "Longitud de semilla incorrecta";
+  @override
+  String get contact => "Contacto";
+  @override
+  String get auth_store_incorrect_password => "Contraseña PIN";
+  @override
+  String get transaction_priority_slow => "Lento";
+  @override
+  String get add => "Añadir";
+  @override
+  String get remove_node => "Eliminar nodo";
+  @override
+  String get trade_state_paid_unconfirmed => "Pagado sin confirmar";
+  @override
+  String get please_select => "Por favor seleccione:";
+  @override
+  String get restore_title_from_backup => "Restaurar desde un archivo de respaldo";
+  @override
+  String get full_balance => "Balance completo";
+  @override
+  String get sync_status_not_connected => "NO CONECTADO";
+  @override
+  String get error_text_crypto_currency => "El número de dígitos fraccionarios \ndebe ser menor o igual a 12";
+  @override
+  String get error_text_contact_name => "El nombre del contacto no puede contener símbolos `, '\" \ny debe tener entre 1 y 32 caracteres de longitud";
+  @override
+  String get restore_seed_keys_restore => "Restauración de semillas / llaves";
+  @override
+  String get xmr_hidden => "XMR Oculto";
+  @override
+  String get exchange => "Intercambiar";
+  @override
+  String get sync_status_failed_connect => "CONEXIÓN FALLIDA AL NODO";
+  @override
+  String get send_estimated_fee => "Tarifa estimada:";
+  @override
+  String get outgoing => "Saliente";
+  @override
+  String get sync_status_connected => "CONECTADO";
+  @override
+  String get trade_state_pending => "Pendiente";
+  @override
+  String get pending => " (pendiente)";
+  @override
+  String get setup_successful => "Su PIN se ha configurado correctamente!";
+  @override
+  String get fetching => "Cargando";
+  @override
+  String get settings_nodes => "Nodos";
+  @override
+  String get widgets_or => "o";
+  @override
+  String get remove => "Retirar";
+  @override
+  String get yesterday => "Ayer";
+  @override
+  String get expired => "Muerto";
+  @override
+  String get transaction_priority_regular => "Regular";
+  @override
+  String get trade_details_created_at => "Creado en";
+  @override
+  String get settings_wallets => "Carteras";
+  @override
+  String get settings_only_transactions => "Solo transacciones";
+  @override
+  String get estimated => "Estimado";
+  @override
+  String get filters => "Filtros";
+  @override
+  String get settings_current_node => "Nodo actual";
+  @override
+  String get copy_id => "Copiar ID";
+  @override
+  String get please_make_selection => "Seleccione a continuación para\ncrear o recuperar su billetera.";
+  @override
+  String get loading_your_wallet => "Cargando tu billetera";
+  @override
+  String get subaddresses => "Subdirecciones";
+  @override
+  String get trade_state_timeout => "Se acabó el tiempo";
+  @override
+  String get nodes => "Nodos";
+  @override
+  String get seed_share => "Compartir semillas";
+  @override
+  String get widgets_restore_from_blockheight => "Restaurar desde blockheight";
+  @override
+  String get new_subaddress_label_name => "Nombre de etiqueta";
+  @override
+  String get trade_not_found => "Comercio no encontrado.";
+  @override
+  String get transaction_details_date => "Fecha";
+  @override
+  String get show_seed => "Mostrar semilla";
+  @override
+  String get send_error_currency => "La moneda solo puede contener números";
+  @override
+  String get subaddress_title => "Lista de subdirecciones";
+  @override
+  String get wallet_store_monero_wallet => "Monedero Monero";
+  @override
+  String get send_creating_transaction => "Creando transacción";
+  @override
+  String get trade_state_complete => "Completar";
+  @override
+  String get error_text_xmr => "El valor XMR no puede exceder el saldo disponible.\nTEl número de dígitos de fracción debe ser menor o igual a 12";
+  @override
+  String get xmr_available_balance => "XMR Available Balance";
+  @override
+  String get trade_state_paid => "Pagado";
+  @override
+  String get node_new => "Nuevo nodo";
+  @override
+  String get trade_state_created => "Creado";
+  @override
+  String get faq => "FAQ";
+  @override
+  String get id => "ID: ";
+  @override
+  String get saved_the_trade_id => "He salvado comercial ID";
+  @override
+  String get settings_currency => "Moneda";
+  @override
+  String get wallet_name => "Nombre de la billetera";
+  @override
+  String get error_text_payment_id => "La ID de pago solo puede contener de 16 a 64 caracteres en hexadecimal";
+  @override
+  String get seed_alert_second_text => "Anótelos solo en caso de que pierda\no limpie su teléfono.";
+  @override
+  String get node_reset_settings_title => "Reiniciar ajustes";
+  @override
+  String get wallets => "Carteras";
+  @override
+  String get enter_your_pin_again => "Ingrese su PIN nuevamente";
+  @override
+  String get transactions => "Actas";
+  @override
+  String get amount_is_estimate => "El monto recibido es un estimado";
+  @override
+  String get error_text_node_address => "Por favor, introduzca una dirección iPv4";
+  @override
+  String get widgets_restore_from_date => "Restaurar desde fecha";
+  @override
+  String get restore_recover => "Recuperar";
+  @override
+  String get reset => "Reiniciar";
+  @override
+  String get new_wallet => "Nueva billetera";
+  @override
+  String get settings_display_on_dashboard_list => "Mostrar en la lista del tablero";
+  @override
+  String get transaction_details_title => "Detalles de la transacción";
+  @override
+  String get status => "Estado: ";
+  @override
+  String get restore_spend_key_private => "Spend clave (privado)";
+  @override
+  String get sync_status_syncronized => "SINCRONIZADO";
+  @override
+  String get transaction_priority_medium => "Medio";
+  @override
+  String get transaction_details_transaction_id => "ID de transacción";
+  @override
+  String get save => "Salvar";
+  @override
+  String get login => "Iniciar sesión";
+  @override
+  String get wallet_list_load_wallet => "Billetera de carga";
+  @override
+  String get sending => "Enviando";
+  @override
+  String get restore_restore_wallet => "Recuperar Cartera";
+  @override
+  String get restore_description_from_seed_keys => "Recupere su billetera de las semillas/claves que ha guardado en un lugar seguro";
+  @override
+  String get copy => "Dupdo";
+  @override
+  String get node_port => "Puerto de nodo";
+  @override
+  String get change_currency => "Cambiar moneda";
+  @override
+  String get transaction_details_amount => "Cantidad";
+  @override
+  String get widgets_address => "Dirección";
+  @override
+  String get contact_name => "Nombre de contacto";
+  @override
+  String get exchange_result_write_down_ID => "*Copie o escriba su identificación que se muestra arriba.";
+  @override
+  String get exchange_result_write_down_trade_id => "Por favor, copia o escribe el ID.";
+  @override
+  String get new_subaddress_title => "Nueva subdirección";
+  @override
+  String get change => "Cambio";
+  @override
+  String get seed_alert_first_text => "La siguiente página te mostrará \nuna semilla.";
+  @override
+  String get trade_state_finished => "Terminado";
+  @override
+  String get pin_is_incorrect => "PIN es incorrecto";
+  @override
+  String get trade_not_created => "Comercio no se crea.";
+  @override
+  String get restore_wallet_name => "Nombre de la billetera";
+  @override
+  String get widgets_seed => "Semilla";
+  @override
+  String get settings_fee_priority => "Prioridad de tasa";
+  @override
+  String get settings_personal => "Personal";
+  @override
+  String get seed_title => "Semilla";
+  @override
+  String get accounts => "Cuentas";
+  @override
+  String get rescan => "Reescanear";
+  @override
+  String get seed_alert_understand => "Entiendo";
+  @override
+  String get show_keys => "Mostrar llaves";
+  @override
+  String get error_text_fiat => "El valor de la cantidad no puede exceder el saldo disponible.\nEl número de dígitos de fracción debe ser menor o igual a 2";
+  @override
+  String get transactions_by_date => "Transacciones por fecha";
+  @override
+  String get use => "Utilizar ";
+  @override
+  String get trade_details_state => "Estado";
+  @override
+  String get spend_key_private => "Spend clave (privado)";
+  @override
+  String get settings_only_trades => "Solo comercia";
+  @override
+  String get trade_state_to_be_created => "Ser creado";
+  @override
+  String get all => "TODOS";
+  @override
+  String get xmr_full_balance => "XMR Saldo disponible";
+  @override
+  String get incoming => "Entrante";
+  @override
+  String get trade_history_title => "Historia del comercio";
+  @override
+  String get error_text_wallet_name => "El nombre de la billetera solo puede contener letras, números \ny debe tener entre 1 y 15 caracteres de longitud";
+  @override
+  String get restore_description_from_keys => "Restaure su billetera de las pulsaciones de teclas generadas\nguardadas de sus claves privadas";
+  @override
+  String get sent => "Expedido";
+  @override
+  String get view_key_public => "View clave (público)";
+  @override
+  String get trade_details_id => "ID";
+  @override
+  String get trade_state_confirming => "Confirmando";
+  @override
+  String get send => "Enviar";
+  @override
+  String get send_title => "Enviar Monero";
+  @override
+  String get error_text_keys => "Las llaves de billetera solo pueden contener 64 caracteres en hexadecimal";
+  @override
+  String get settings_save_recipient_address => "Guardar dirección del destinatario";
+  @override
+  String get seed_alert_settings => "de configuración";
+  @override
+  String get change_exchange_provider => "Cambiar proveedor de intercambio";
+  @override
+  String get send_payment_id => "ID de pago (opcional)";
+  @override
+  String get trade_details_title => "Detalles comerciales";
+  @override
+  String get settings_terms_and_conditions => "Términos y Condiciones";
+  @override
+  String get auth_store_ban_timeout => "prohibición de tiempo de espera";
+  @override
+  String get sync_status_connecting => "CONECTANDO";
+  @override
+  String get settings_transactions => "Transacciones";
+  @override
+  String get transaction_priority_fastest => "Lo más rápido";
+  @override
+  String get error => "Error";
+  @override
+  String get delete => "Borrar";
+  @override
+  String get sync_status_starting_sync => "INICIAL SINC";
+  @override
+  String get copied_to_clipboard => "Copiado al portapapeles";
+  @override
+  String get offer_expires_in => "Oferta expira en: ";
+  @override
+  String get continue_text => "Continuar";
+  @override
+  String get transaction_details_height => "Altura";
+  @override
+  String get wallet_menu => "Menú de billetera";
+  @override
+  String get settings_dark_mode => "Modo oscuro";
+  @override
+  String get payment_id => "ID de pago: ";
+  @override
+  String get restore_address => "Dirección";
+  @override
+  String get restore_wallet_restore_description => "Restaurar billetera";
+  @override
+  String get today => "Hoy";
+  @override
+  String get settings_support => "Apoyo";
+  @override
+  String get restore_wallet => "Restaurar billetera";
+  @override
+  String get ok => "OK";
+  @override
+  String get wallet_list_title => "Monedero Monero";
+  @override
+  String get authentication => "Autenticación";
+  @override
+  String get amount => "Cantidad: ";
+  @override
+  String get node_address => "Dirección de nodo";
+  @override
+  String get settings_change_language => "Cambiar idioma";
+  @override
+  String get clear => "Claro";
+  @override
+  String get settings_change_pin => "Cambiar PIN";
+  @override
+  String get trades => "Cambios";
+  @override
+  String get trade_state_btc_sent => "Btc expedido";
+  @override
+  String get address_book => "Libreta de direcciones";
+  @override
+  String get enter_your_pin => "Introduce tu PIN";
+  @override
+  String get wallet_list_restore_wallet => "Restaurar billetera";
+  @override
+  String get restore_title_from_seed => "De la semilla";
+  @override
+  String get restore_description_from_backup => "Puede restaurar toda la aplicación Cake Wallet desde \nysu archivo de respaldo";
+  @override
+  String get send_monero_address => "Dirección de Monero";
+  @override
+  String get error_text_node_port => "El puerto de nodo solo puede contener números entre 0 y 65535";
+  @override
+  String get digit_pin => "-dígito Pin";
+  @override
+  String get first_wallet_text => "Impresionante billetera\npara Monero";
+  @override
+  String get settings_trades => "Comercia";
+  @override
+  String get account => "Cuenta";
+  @override
+  String change_current_node(String node) => "¿Está seguro de cambiar el nodo actual a ${node}?";
+  @override
+  String trade_id(String id) => "Comercial ID:\n${id}";
+  @override
+  String wallet_list_loading_wallet(String wallet_name) => "Billetera ${wallet_name} de carga";
+  @override
+  String router_no_route(String name) => "No hay ruta definida para ${name}";
+  @override
+  String trade_id_not_found(String tradeId, String title) => "Comercio ${tradeId} de ${title} no encontrado.";
+  @override
+  String transaction_details_copied(String title) => "${title} Copiado al portapapeles";
+  @override
+  String trade_details_copied(String title) => "${title} Copiado al portapapeles";
+  @override
+  String powered_by(String title) => "Energizado por ${title}";
+  @override
+  String send_priority(String transactionPriority) => "Actualmente la tarifa se establece en ${transactionPriority} prioridad.\nLa prioridad de la transacción se puede ajustar en la configuración";
+  @override
+  String trade_for_not_created(String title) => "Comercio por ${title} no se crea.";
+  @override
+  String trade_is_powered_by(String provider) => "Este comercio es impulsado por ${provider}";
+  @override
+  String time(String minutes, String seconds) => "${minutes}m ${seconds}s";
+  @override
+  String max_value(String value, String currency) => "Max: ${value} ${currency}";
+  @override
+  String min_value(String value, String currency) => "Min: ${value} ${currency}";
+  @override
+  String failed_authentication(String state_error) => "Autenticación fallida. ${state_error}";
+  @override
+  String Blocks_remaining(String status) => "${status} Bloques restantes";
+  @override
+  String exchange_result_confirm(String fetchingLabel, String from, String walletName) => "Al presionar confirmar, enviará ${fetchingLabel} ${from} desde su billetera llamada ${walletName} a la dirección que se muestra arriba.  O puede enviar desde su billetera externa a la dirección / código QR anterior.\n\nPresione confirmar para continuar o regrese para cambiar los montos.\n\n";
+  @override
+  String exchange_result_description(String fetchingLabel, String from) => "Envíe ${fetchingLabel} ${from} a la dirección que se muestra arriba.\n\n'";
+  @override
+  String commit_transaction_amount_fee(String amount, String fee) => "Confirmar transacción\nCantidad: ${amount}\nCuota: ${fee}";
+  @override
+  String wallet_list_failed_to_remove(String wallet_name, String error) => "Error al elimina ${wallet_name} billetera. ${error}";
+  @override
+  String copied_key_to_clipboard(String key) => "Copiado ${key} al portapapeles";
+  @override
+  String wallet_list_failed_to_load(String wallet_name, String error) => "No se pudo cargar  ${wallet_name} la billetera. ${error}";
+  @override
+  String wallet_list_removing_wallet(String wallet_name) => "Retirar ${wallet_name} billetera";
+}
+
 class GeneratedLocalizationsDelegate extends LocalizationsDelegate<S> {
   const GeneratedLocalizationsDelegate();
 
@@ -828,6 +1360,7 @@ class GeneratedLocalizationsDelegate extends LocalizationsDelegate<S> {
     return const <Locale>[
       Locale("ru", ""),
       Locale("en", ""),
+      Locale("es", ""),
     ];
   }
 
@@ -857,6 +1390,9 @@ class GeneratedLocalizationsDelegate extends LocalizationsDelegate<S> {
           return SynchronousFuture<S>(S.current);
         case "en":
           S.current = const $en();
+          return SynchronousFuture<S>(S.current);
+        case "es":
+          S.current = const $es();
           return SynchronousFuture<S>(S.current);
         default:
           // NO-OP.

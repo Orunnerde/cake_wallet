@@ -8,6 +8,7 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/generated/i18n.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 const Map<String,String> _languages = {
   'en' : 'English',
@@ -32,38 +33,55 @@ class ChangeLanguage extends BasePage{
     final currentLanguage = Provider.of<Language>(context);
 
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
+    bool isDarkTheme;
+    Color currentColor, notCurrentColor;
+
+    if (_themeChanger.getTheme() == Themes.darkTheme) {
+      currentColor = PaletteDark.darkThemeViolet;
+      notCurrentColor = PaletteDark.darkThemeMidGrey;
+      isDarkTheme = true;
+    }
+    else {
+      currentColor = Palette.purple;
+      notCurrentColor = Palette.lightGrey2;
+      isDarkTheme = false;
+    }
 
     return Container(
       padding: EdgeInsets.only(
           top: 10.0,
           bottom: 10.0
       ),
-      child: ListView.builder(
-        itemCount: _languages.values.length,
-        itemBuilder: (BuildContext context, int index){
-          return Container(
-            margin: EdgeInsets.only(
-                top: 10.0,
-                bottom: 10.0
-            ),
-            color: _isDarkTheme ? PaletteDark.darkThemeMidGrey : Palette.lightGrey2,
-            child: ListTile(
-              title: Text(_languages.values.elementAt(index),
-                style: TextStyle(
-                    fontSize: 16.0,
-                    color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
-                ),
+      child: Observer(
+        builder: (_) => ListView.builder(
+          itemCount: _languages.values.length,
+          itemBuilder: (BuildContext context, int index){
+            final isCurrent = _languages.keys.elementAt(index) == settingsStore.languageCode;
+
+            return Container(
+              margin: EdgeInsets.only(
+                  top: 10.0,
+                  bottom: 10.0
               ),
-              onTap: (){
-                settingsStore.saveLanguageCode(languageCode: _languages.keys.elementAt(index));
-                currentLanguage.setCurrentLanguage(_languages.keys.elementAt(index));
-                Navigator.of(context).pop();
-              },
-            ),
-          );
-        },
-      ),
+              color: isCurrent ? currentColor : notCurrentColor,
+              child: ListTile(
+                title: Text(_languages.values.elementAt(index),
+                  style: TextStyle(
+                      fontSize: 16.0,
+                      color: isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
+                  ),
+                ),
+                onTap: (){
+                  if (!isCurrent) {
+                    settingsStore.saveLanguageCode(languageCode: _languages.keys.elementAt(index));
+                    currentLanguage.setCurrentLanguage(_languages.keys.elementAt(index));
+                    //Navigator.of(context).pop();
+                  }
+                },
+              ),
+            );
+          },
+        ))
     );
   }
 }
