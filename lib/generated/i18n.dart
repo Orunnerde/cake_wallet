@@ -33,7 +33,7 @@ class S implements WidgetsLocalizations {
   String get auth_store_ban_timeout => "ban_timeout";
   String get auth_store_banned_for => "Banned for ";
   String get auth_store_banned_minutes => " minutes";
-  String get auth_store_incorrect_password => "Incorrect password";
+  String get auth_store_incorrect_password => "Wrong PIN";
   String get authenticated => "Authenticated";
   String get authentication => "Authentication";
   String get available_balance => "Available Balance";

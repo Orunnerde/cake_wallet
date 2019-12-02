@@ -283,7 +283,7 @@
   "auth_store_ban_timeout" : "ban_timeout",
   "auth_store_banned_for" : "Banned for ",
   "auth_store_banned_minutes" : " minutes",
-  "auth_store_incorrect_password" : "Incorrect password",
+  "auth_store_incorrect_password" : "Wrong PIN",
   "wallet_store_monero_wallet" : "Monero Wallet",
   "wallet_restoration_store_incorrect_seed_length" : "Incorrect seed length",
 
