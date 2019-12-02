@@ -59,8 +59,8 @@ class TransactionDetailsFormState extends State<TransactionDetailsForm> {
       StandartListItem(
           title: 'Date',
           value: _dateFormat.format(widget.transactionInfo.date)),
-      StandartListItem(title: 'Height', value: widget.transactionInfo.height),
-      StandartListItem(title: 'Amount', value: widget.transactionInfo.amount())
+      StandartListItem(title: 'Height', value: '${widget.transactionInfo.height}'),
+      StandartListItem(title: 'Amount', value: widget.transactionInfo.amountFormatted())
     ]);
 
     if (widget.settingsStore.shouldSaveRecipientAddress) {

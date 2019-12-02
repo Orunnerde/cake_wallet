@@ -52,7 +52,7 @@ abstract class SendStoreBase with Store {
   }
 
   @action
-  Future<void> createTransaction(
+  Future createTransaction(
       {String address, String paymentId, String amount}) async {
     state = CreatingTransaction();
 
@@ -75,7 +75,7 @@ abstract class SendStoreBase with Store {
   }
 
   @action
-  Future<void> commitTransaction() async {
+  Future commitTransaction() async {
     try {
       final transactionId = _pendingTransaction.hash;
       state = TransactionCommiting();

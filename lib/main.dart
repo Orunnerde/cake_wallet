@@ -25,9 +25,8 @@ import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'theme_changer.dart';
 import 'themes.dart';
 
-
-
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   final sharedPreferences = await SharedPreferences.getInstance();
 
   final dbHelper = await CoreDB.getInstance();
@@ -69,7 +68,7 @@ void main() async {
 
   walletService.onWalletChange.listen((wallet) async {
     startUpdatingPrice(settingsStore: settingsStore, priceStore: priceStore);
-    
+
     await wallet.connectToNode(node: settingsStore.node);
     await wallet.startSync();
   });

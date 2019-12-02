@@ -1,45 +1,38 @@
+import 'dart:core';
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:cw_monero/transaction_history.dart' as moneroTransactionHistory;
 import 'package:cake_wallet/src/domain/common/transaction_history.dart';
 import 'package:cake_wallet/src/domain/common/transaction_info.dart';
 
+List<TransactionInfo> _getAllTransactions(_) => moneroTransactionHistory
+    .getAllTransations()
+    .map((row) => TransactionInfo.fromRow(row))
+    .toList();
+
 class MoneroTransactionHistory extends TransactionHistory {
-  
   get transactions => _transactions.stream;
   BehaviorSubject<List<TransactionInfo>> _transactions;
 
   bool _isUpdating = false;
   bool _isRefreshing = false;
   bool _needToCheckForRefresh = false;
-  
-  MethodChannel _platform;
 
-  MoneroTransactionHistory({MethodChannel platform}) {
-    this._platform = platform;
-    _transactions = BehaviorSubject<List<TransactionInfo>>.seeded([]);
-  }
+  MoneroTransactionHistory()
+      : _transactions = BehaviorSubject<List<TransactionInfo>>.seeded([]);
 
-  Future<void> update() async {
-    if (_isUpdating) { return; }
-    
-    
+  Future update() async {
+    if (_isUpdating) {
+      return;
+    }
+
     try {
       _isUpdating = true;
-      final _isNeedToRefresh = _needToCheckForRefresh ? await isNeedToRefresh() : true;
-      var transactions;
-      
-      if (_isNeedToRefresh) {
-        await refresh();
-        transactions = await getAll();
-      } else {
-        transactions = _transactions.value;
-      }
-      
-      _transactions.add(transactions);
-      
+      await refresh();
+      _transactions.value = await getAll(force: true);
       _isUpdating = false;
 
-      if (!_needToCheckForRefresh) { 
+      if (!_needToCheckForRefresh) {
         _needToCheckForRefresh = true;
       }
     } catch (e) {
@@ -49,40 +42,19 @@ class MoneroTransactionHistory extends TransactionHistory {
     }
   }
 
-  Future<List<TransactionInfo>> getAll() async {
-    try {
-      List transactions = await _platform.invokeMethod('getAllTransactions');
-      return transactions.map((tx) => TransactionInfo.fromMap(tx)).toList();
-    } on PlatformException catch (e) {
-      print(e);
-      throw e;
-    }
-  }
+  Future<List<TransactionInfo>> getAll({bool force = false}) async =>
+      _getAllTransactions(null);
 
-  Future<int> count() async {
-    try {
-      return await _platform.invokeMethod('getTransactionsCount');
-    } on PlatformException catch (e) {
-      print(e);
-      throw e;
-    }
-  }
+  Future<int> count() async => moneroTransactionHistory.countOfTransactions();
 
-  Future<bool> isNeedToRefresh() async {
-    try {
-      return await _platform.invokeMethod('isNeedToRefresh');
-    } on PlatformException catch (e) {
-      print(e);
-      throw e;
+  Future refresh() async {
+    if (_isRefreshing) {
+      return;
     }
-  }
-
-  Future<void> refresh() async {
-    if (_isRefreshing) { return; }
 
     try {
       _isRefreshing = true;
-      await _platform.invokeMethod('refreshTransactionHistory');
+      moneroTransactionHistory.refreshTransactions();
       _isRefreshing = false;
     } on PlatformException catch (e) {
       _isRefreshing = false;

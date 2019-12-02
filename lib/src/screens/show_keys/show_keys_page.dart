@@ -32,7 +32,7 @@ class ShowKeysPage extends BasePage {
               'View key (public)': walletKeysStore.publicViewKey,
               'View key (private)': walletKeysStore.privateViewKey,
               'Spend key (public)': walletKeysStore.publicSpendKey,
-              'Spend key (private)': walletKeysStore.privateViewKey
+              'Spend key (private)': walletKeysStore.privateSpendKey
             };
 
             return ListView.separated(
