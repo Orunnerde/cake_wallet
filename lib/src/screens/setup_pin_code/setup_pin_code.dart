@@ -40,14 +40,14 @@ class _SetupPinCodeFormState<WidgetType extends SetupPinCodeForm>
   UserStore _userStore;
 
   _SetupPinCodeFormState() {
-    title = S.of(context).enter_your_pin;
+    title = S.current.enter_your_pin;
   }
 
   @override
   void onPinCodeEntered(PinCodeState state) {
     if (!isEnteredOriginalPin()) {
       _originalPin = state.pin;
-      state.title = S.of(context).enter_your_pin_again;
+      state.title = S.current.enter_your_pin_again;
       state.clear();
     } else {
       if (listEquals<int>(state.pin, _originalPin)) {
@@ -96,7 +96,7 @@ class _SetupPinCodeFormState<WidgetType extends SetupPinCodeForm>
 
   void reset() {
     clear();
-    setTitle(S.of(context).enter_your_pin);
+    setTitle(S.current.enter_your_pin);
     _originalPin = [];
   }
 

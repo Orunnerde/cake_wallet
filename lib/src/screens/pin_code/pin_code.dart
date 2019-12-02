@@ -239,10 +239,10 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
   }
 
   String _changePinLengthText() {
-    return S.of(context).use +
+    return S.current.use +
         (pinLength == PinCodeState.fourPinLength
             ? '${PinCodeState.sixPinLength}'
             : '${PinCodeState.fourPinLength}') +
-        S.of(context).digit_pin;
+        S.current.digit_pin;
   }
 }

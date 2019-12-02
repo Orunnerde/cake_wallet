@@ -8,7 +8,6 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/generated/i18n.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 
 const Map<String,String> _languages = {
   'en' : 'English',
@@ -52,36 +51,35 @@ class ChangeLanguage extends BasePage{
           top: 10.0,
           bottom: 10.0
       ),
-      child: Observer(
-        builder: (_) => ListView.builder(
-          itemCount: _languages.values.length,
-          itemBuilder: (BuildContext context, int index){
-            final isCurrent = _languages.keys.elementAt(index) == settingsStore.languageCode;
+      child: ListView.builder(
+        itemCount: _languages.values.length,
+        itemBuilder: (BuildContext context, int index){
+          final isCurrent = settingsStore.languageCode == null ? false
+          : _languages.keys.elementAt(index) == settingsStore.languageCode;
 
-            return Container(
-              margin: EdgeInsets.only(
-                  top: 10.0,
-                  bottom: 10.0
-              ),
-              color: isCurrent ? currentColor : notCurrentColor,
-              child: ListTile(
-                title: Text(_languages.values.elementAt(index),
-                  style: TextStyle(
-                      fontSize: 16.0,
-                      color: isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
-                  ),
+          return Container(
+            margin: EdgeInsets.only(
+                top: 10.0,
+                bottom: 10.0
+            ),
+            color: isCurrent ? currentColor : notCurrentColor,
+            child: ListTile(
+              title: Text(_languages.values.elementAt(index),
+                style: TextStyle(
+                    fontSize: 16.0,
+                    color: isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
                 ),
-                onTap: (){
-                  if (!isCurrent) {
-                    settingsStore.saveLanguageCode(languageCode: _languages.keys.elementAt(index));
-                    currentLanguage.setCurrentLanguage(_languages.keys.elementAt(index));
-                    //Navigator.of(context).pop();
-                  }
-                },
               ),
-            );
-          },
-        ))
+              onTap: (){
+                if (!isCurrent) {
+                  settingsStore.saveLanguageCode(languageCode: _languages.keys.elementAt(index));
+                  currentLanguage.setCurrentLanguage(_languages.keys.elementAt(index));
+                }
+              },
+            ),
+          );
+        },
+      )
     );
   }
 }
