@@ -70,10 +70,36 @@ class ChangeLanguage extends BasePage{
                     color: isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
                 ),
               ),
-              onTap: (){
+              onTap: () async {
                 if (!isCurrent) {
-                  settingsStore.saveLanguageCode(languageCode: _languages.keys.elementAt(index));
-                  currentLanguage.setCurrentLanguage(_languages.keys.elementAt(index));
+                  await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text(
+                          S.of(context).change_language,
+                          textAlign: TextAlign.center,
+                        ),
+                        content: Text(
+                          S.of(context).change_language_to(_languages.values.elementAt(index)),
+                          textAlign: TextAlign.center,
+                        ),
+                        actions: <Widget>[
+                          FlatButton(
+                              onPressed: () =>
+                                  Navigator.of(context).pop(),
+                              child: Text(S.of(context).cancel)),
+                          FlatButton(
+                              onPressed: () {
+                                settingsStore.saveLanguageCode(languageCode: _languages.keys.elementAt(index));
+                                currentLanguage.setCurrentLanguage(_languages.keys.elementAt(index));
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(S.of(context).change)),
+                        ],
+                      );
+                    }
+                  );
                 }
               },
             ),

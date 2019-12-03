@@ -328,6 +328,8 @@
   "trade_state_btc_sent" : "Btc sent",
   "trade_state_timeout" : "Timeout",
   "trade_state_created" : "Created",
-  "trade_state_finished" : "Finished"
+  "trade_state_finished" : "Finished",
 
+  "change_language" : "Change language",
+  "change_language_to" : "Change language to ${language}?"
 }

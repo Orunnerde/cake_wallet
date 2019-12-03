@@ -328,6 +328,8 @@
   "trade_state_btc_sent" : "Btc отправлен",
   "trade_state_timeout" : "Timeout",
   "trade_state_created" : "Создано",
-  "trade_state_finished" : "Окончено"
+  "trade_state_finished" : "Окончено",
 
+  "change_language" : "Изменить язык",
+  "change_language_to" : "Изменить язык на ${language}?"
 }

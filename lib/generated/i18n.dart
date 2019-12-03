@@ -41,6 +41,7 @@ class S implements WidgetsLocalizations {
   String get change => "Change";
   String get change_currency => "Change Currency";
   String get change_exchange_provider => "Change Exchange Provider";
+  String get change_language => "Change language";
   String get clear => "Clear";
   String get confirm => "Confirm";
   String get confirm_sending => "Confirm sending";
@@ -262,6 +263,7 @@ class S implements WidgetsLocalizations {
   String get you_will_send => "You will send";
   String Blocks_remaining(String status) => "${status} Blocks Remaining";
   String change_current_node(String node) => "Are you sure to change current node to ${node}?";
+  String change_language_to(String language) => "Change language to ${language}?";
   String commit_transaction_amount_fee(String amount, String fee) => "Commit transaction\nAmount: ${amount}\nFee: ${fee}";
   String copied_key_to_clipboard(String key) => "Copied ${key} to Clipboard";
   String exchange_result_confirm(String fetchingLabel, String from, String walletName) => "By pressing confirm, you will be sending ${fetchingLabel} ${from} from your wallet called ${walletName} to the address shown above. Or you can send from your external wallet to the above address/QR code.\n\nPlease press confirm to continue or go back to change the amounts.\n\n";
@@ -540,6 +542,8 @@ class $ru extends S {
   @override
   String get settings_currency => "Валюта";
   @override
+  String get change_language => "Изменить язык";
+  @override
   String get wallet_name => "Имя кошелька";
   @override
   String get error_text_payment_id => "ID транзакции может включать от 16 до 64 символа в hex";
@@ -769,6 +773,8 @@ class $ru extends S {
   String get settings_trades => "Сделки";
   @override
   String get account => "Аккаунт";
+  @override
+  String change_language_to(String language) => "Изменить язык на ${language}?";
   @override
   String change_current_node(String node) => "Вы уверены, что хотите изменить текущую ноду на ${node}?";
   @override
@@ -1076,6 +1082,8 @@ class $es extends S {
   @override
   String get settings_currency => "Moneda";
   @override
+  String get change_language => "Cambiar idioma";
+  @override
   String get wallet_name => "Nombre de la billetera";
   @override
   String get error_text_payment_id => "La ID de pago solo puede contener de 16 a 64 caracteres en hexadecimal";
@@ -1305,6 +1313,8 @@ class $es extends S {
   String get settings_trades => "Comercia";
   @override
   String get account => "Cuenta";
+  @override
+  String change_language_to(String language) => "Cambiar el idioma a ${language}?";
   @override
   String change_current_node(String node) => "¿Está seguro de cambiar el nodo actual a ${node}?";
   @override
