@@ -37,6 +37,8 @@ class Palette {
   static const Color separator = Color.fromRGBO(240, 241, 244, 1);
   static const Color containerLavender = Color.fromRGBO(226, 235, 238, 0.4);
   static const Color purpleBlue = Color.fromRGBO(84, 92, 139, 1);
+  static const Color floatingActionButton = Color.fromRGBO(213, 56, 99, 1);
+  static const Color failure = Color.fromRGBO(226, 35, 35, 1);
 }
 
 class PaletteDark {

@@ -1,12 +1,9 @@
 import 'package:cake_wallet/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/palette.dart';
-import 'package:provider/provider.dart';
 import 'package:cake_wallet/src/domain/common/contact.dart';
 import 'package:cake_wallet/src/domain/monero/subaddress.dart';
 import 'package:cake_wallet/src/domain/common/qr_scanner.dart';
-import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/theme_changer.dart';
 
 enum AddressTextFieldOption { qrCode, addressBook, subaddressList }
 
@@ -35,13 +32,6 @@ class AddressTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
 
     return TextFormField(
         enabled: isActive,
@@ -112,21 +102,15 @@ class AddressTextField extends StatelessWidget {
               ],
             ),
           ),
-          hintStyle: TextStyle(
-              color:
-                  _isDarkTheme ? PaletteDark.darkThemeGrey : Palette.lightBlue),
+          hintStyle: TextStyle(color: Theme.of(context).hintColor),
           hintText: placeholder,
           focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(
-                  color: _isDarkTheme
-                      ? PaletteDark.darkThemeGreyWithOpacity
-                      : Palette.lightGrey,
+                  color: Theme.of(context).focusColor,
                   width: 1.0)),
           enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(
-                  color: _isDarkTheme
-                      ? PaletteDark.darkThemeGreyWithOpacity
-                      : Palette.lightGrey,
+                  color: Theme.of(context).focusColor,
                   width: 1.0)),
         ),
       validator: validator,

@@ -32,8 +32,6 @@ class DashboardPage extends BasePage {
 
   @override
   Widget leading(BuildContext context) {
-    final _themeChanger = Provider.of<ThemeChanger>(context);
-    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return SizedBox(
         width: 30,
@@ -41,7 +39,7 @@ class DashboardPage extends BasePage {
             padding: EdgeInsets.all(0),
             onPressed: () => _presentWalletMenu(context),
             child: Image.asset('assets/images/more.png',
-                color: _isDarkTheme ? Colors.white : Colors.black, width: 30)));
+                color: Theme.of(context).primaryTextTheme.caption.color, width: 30)));
   }
 
   @override
@@ -52,11 +50,17 @@ class DashboardPage extends BasePage {
       return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(walletStore.name),
+            Text(walletStore.name,
+              style: TextStyle(
+                color: Theme.of(context).primaryTextTheme.title.color
+              ),
+            ),
             SizedBox(height: 5),
             Text(
               walletStore.account != null ? walletStore.account.label : '',
-              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 10),
+              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 10,
+                color: Theme.of(context).primaryTextTheme.title.color
+              ),
             ),
           ]);
     });
@@ -81,7 +85,7 @@ class DashboardPage extends BasePage {
   Widget floatingActionButton(BuildContext context) => FloatingActionButton(
       child: Image.asset('assets/images/exchange_icon.png',
           color: Colors.white, height: 26, width: 22),
-      backgroundColor: Color.fromRGBO(213, 56, 99, 1),
+      backgroundColor: Palette.floatingActionButton,
       onPressed: () => Navigator.of(context, rootNavigator: true)
           .pushNamed(Routes.exchange));
 
@@ -122,8 +126,6 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
     final actionListStore = Provider.of<ActionListStore>(context);
     final syncStore = Provider.of<SyncStore>(context);
     final settingsStore = Provider.of<SettingsStore>(context);
-    final _themeChanger = Provider.of<ThemeChanger>(context);
-    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Observer(
         key: _listObserverKey,
@@ -141,9 +143,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                   return Container(
                     margin: EdgeInsets.only(bottom: 20),
                     decoration: BoxDecoration(
-                        color: _isDarkTheme
-                            ? Theme.of(context).backgroundColor
-                            : Colors.white,
+                        color: Theme.of(context).backgroundColor,
                         boxShadow: [
                           BoxShadow(
                               color: Palette.shadowGreyWithOpacity,
@@ -191,7 +191,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                             color: isFialure
-                                                ? Color.fromRGBO(226, 35, 35, 1)
+                                                ? Palette.failure
                                                 : Palette.cakeGreen)),
                                     Text(descriptionText,
                                         style: TextStyle(
@@ -282,9 +282,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                       return Text(
                                         balance,
                                         style: TextStyle(
-                                            color: _isDarkTheme
-                                                ? Colors.white
-                                                : Colors.black87,
+                                            color: Theme.of(context).primaryTextTheme.caption.color,
                                             fontSize: 42),
                                       );
                                     }),
@@ -342,13 +340,8 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                     onPressed: () => Navigator.of(context,
                                             rootNavigator: true)
                                         .pushNamed(Routes.send),
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemePurpleButton
-                                        : Palette.purple,
-                                    borderColor: _isDarkTheme
-                                        ? PaletteDark
-                                            .darkThemePurpleButtonBorder
-                                        : Palette.deepPink,
+                                    color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+                                    borderColor: Theme.of(context).primaryTextTheme.button.decorationColor,
                                   )),
                                   SizedBox(width: 10),
                                   Expanded(
@@ -361,12 +354,8 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                     onPressed: () => Navigator.of(context,
                                             rootNavigator: true)
                                         .pushNamed(Routes.receive),
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeBlueButton
-                                        : Palette.brightBlue,
-                                    borderColor: _isDarkTheme
-                                        ? PaletteDark.darkThemeBlueButtonBorder
-                                        : Palette.cloudySky,
+                                    color: Theme.of(context).accentTextTheme.caption.backgroundColor,
+                                    borderColor: Theme.of(context).accentTextTheme.caption.decorationColor,
                                   ))
                                 ],
                               ),
@@ -486,9 +475,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                             child: Text('Filters',
                                 style: TextStyle(
                                     fontSize: 16.0,
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeGrey
-                                        : Palette.wildDarkBlue)),
+                                    color: Theme.of(context).primaryTextTheme.subtitle.color)),
                             onSelected: (item) async {
                               if (item == 2) {
                                 final List<DateTime> picked =
@@ -547,8 +534,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                           transactionDateFormat.format(transaction.date),
                       formattedAmount: formattedAmount,
                       formattedFiatAmount: formattedFiatAmount,
-                      isPending: transaction.isPending,
-                      isDarkTheme: _isDarkTheme);
+                      isPending: transaction.isPending);
                 }
 
                 if (item is TradeListItem) {
@@ -569,8 +555,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                       to: trade.to,
                       createdAtFormattedDate:
                           DateFormat("dd.MM.yyyy, H:m").format(trade.createdAt),
-                      formattedAmount: formattedAmount,
-                      isDarkTheme: _isDarkTheme);
+                      formattedAmount: formattedAmount);
                 }
 
                 return Container();

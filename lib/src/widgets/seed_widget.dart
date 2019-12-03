@@ -1,9 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/domain/monero/mnemonics/english.dart';
 import 'package:cake_wallet/src/domain/common/mnemotic_item.dart';
@@ -135,8 +132,6 @@ class SeedWidgetState extends State<SeedWidget> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Container(
       child: Column(children: [
@@ -188,22 +183,16 @@ class SeedWidgetState extends State<SeedWidget> {
               ),
               errorText: errorMessage,
               hintStyle: TextStyle(
-                  color: _isDarkTheme
-                      ? PaletteDark.darkThemeGrey
-                      : Palette.lightBlue),
+                  color: Theme.of(context).hintColor),
               hintText: 'Seed',
               focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
-                      color: _isDarkTheme
-                          ? PaletteDark.darkThemeGreyWithOpacity
-                          : Palette.lightGrey,
+                      color: Theme.of(context).focusColor,
                       width: 1.0)),
               enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
                       color: isValid
-                          ? (_isDarkTheme
-                              ? PaletteDark.darkThemeGreyWithOpacity
-                              : Palette.lightGrey)
+                          ? Theme.of(context).focusColor
                           : Palette.red,
                       width: 1.0))),
         ),

@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/domain/common/contact.dart';
 import 'package:cake_wallet/src/stores/address_book/address_book_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:provider/provider.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/src/widgets/address_text_field.dart';
 import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
 
@@ -32,8 +29,6 @@ class ContactFormState extends State<ContactForm> {
 
   CryptoCurrency _selectectCrypto = CryptoCurrency.xmr;
 
-  bool _isDarkTheme;
-
   @override
   void initState() {
     super.initState();
@@ -56,14 +51,11 @@ class ContactFormState extends State<ContactForm> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Please select:'),
-            backgroundColor:
-                _isDarkTheme ? Theme.of(context).backgroundColor : Colors.white,
+            backgroundColor: Theme.of(context).backgroundColor,
             content: Container(
               height: 150.0,
               child: CupertinoPicker(
-                  backgroundColor: _isDarkTheme
-                      ? Theme.of(context).backgroundColor
-                      : Colors.white,
+                  backgroundColor: Theme.of(context).backgroundColor,
                   itemExtent: 45.0,
                   onSelectedItemChanged: (int index) {
                     selectedCurrency = CryptoCurrency.all[index];
@@ -72,7 +64,12 @@ class ContactFormState extends State<ContactForm> {
                   children:
                       List.generate(CryptoCurrency.all.length, (int index) {
                     return Center(
-                      child: Text(CryptoCurrency.all[index].toString()),
+                      child: Text(
+                        CryptoCurrency.all[index].toString(),
+                        style: TextStyle(
+                          color: Theme.of(context).primaryTextTheme.caption.color
+                        ),
+                      ),
                     );
                   })),
             ),
@@ -97,8 +94,6 @@ class ContactFormState extends State<ContactForm> {
   @override
   Widget build(BuildContext context) {
     final addressBookStore = Provider.of<AddressBookStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return ScrollableWithBottomSection(
         content: Form(
@@ -109,26 +104,18 @@ class ContactFormState extends State<ContactForm> {
               TextFormField(
                 style: TextStyle(
                     fontSize: 14.0,
-                    color: _isDarkTheme
-                        ? PaletteDark.darkThemeGrey
-                        : Colors.black),
+                    color: Theme.of(context).primaryTextTheme.headline.color),
                 decoration: InputDecoration(
                     hintStyle: TextStyle(
-                        color: _isDarkTheme
-                            ? PaletteDark.darkThemeGrey
-                            : Palette.wildDarkBlue),
+                        color: Theme.of(context).hintColor),
                     hintText: 'Contact Name',
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
-                            color: _isDarkTheme
-                                ? PaletteDark.darkThemeGreyWithOpacity
-                                : Palette.lightGrey,
+                            color: Theme.of(context).focusColor,
                             width: 1.0)),
                     enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
-                            color: _isDarkTheme
-                                ? PaletteDark.darkThemeGreyWithOpacity
-                                : Palette.lightGrey,
+                            color: Theme.of(context).focusColor,
                             width: 1.0))),
                 controller: _contactNameController,
                 validator: (value) {
@@ -144,21 +131,15 @@ class ContactFormState extends State<ContactForm> {
                     child: TextFormField(
                       style: TextStyle(
                           fontSize: 14.0,
-                          color: _isDarkTheme
-                              ? PaletteDark.darkThemeGrey
-                              : Colors.black),
+                          color: Theme.of(context).primaryTextTheme.headline.color),
                       decoration: InputDecoration(
                           focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
-                                  color: _isDarkTheme
-                                      ? PaletteDark.darkThemeGreyWithOpacity
-                                      : Palette.lightGrey,
+                                  color: Theme.of(context).focusColor,
                                   width: 1.0)),
                           enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
-                                  color: _isDarkTheme
-                                      ? PaletteDark.darkThemeGreyWithOpacity
-                                      : Palette.lightGrey,
+                                  color: Theme.of(context).focusColor,
                                   width: 1.0))),
                       controller: _currencyTypeController,
                     ),
@@ -190,12 +171,8 @@ class ContactFormState extends State<ContactForm> {
                   });
                 },
                 text: 'Reset',
-                color: _isDarkTheme
-                    ? PaletteDark.darkThemeIndigoButton
-                    : Palette.indigo,
-                borderColor: _isDarkTheme
-                    ? PaletteDark.darkThemeIndigoButtonBorder
-                    : Palette.deepIndigo,
+                color: Theme.of(context).accentTextTheme.button.backgroundColor,
+                borderColor: Theme.of(context).accentTextTheme.button.decorationColor,
               ),
             ),
             SizedBox(width: 20),
@@ -233,12 +210,8 @@ class ContactFormState extends State<ContactForm> {
                 }
               },
               text: 'Save',
-              color: _isDarkTheme
-                  ? PaletteDark.darkThemePurpleButton
-                  : Palette.purple,
-              borderColor: _isDarkTheme
-                  ? PaletteDark.darkThemePurpleButtonBorder
-                  : Palette.deepPink,
+              color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+              borderColor: Theme.of(context).primaryTextTheme.button.decorationColor,
             ))
           ],
         ));

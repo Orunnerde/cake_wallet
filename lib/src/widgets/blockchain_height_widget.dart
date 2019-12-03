@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/domain/monero/get_height_by_date.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 
 class BlockchainHeightWidget extends StatefulWidget {
   BlockchainHeightWidget({GlobalKey key}) : super(key: key);
@@ -28,11 +24,6 @@ class BlockchainHeightState extends State<BlockchainHeightWidget> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,18 +40,15 @@ class BlockchainHeightState extends State<BlockchainHeightWidget> {
                     signed: false, decimal: false),
                 decoration: InputDecoration(
                     hintStyle: TextStyle(
-                        color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                            : Palette.lightBlue),
+                        color: Theme.of(context).hintColor),
                     hintText: 'Restore from blockheight',
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
-                            color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                : Palette.lightGrey,
+                            color: Theme.of(context).focusColor,
                             width: 1.0)),
                     enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
-                            color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                : Palette.lightGrey,
+                            color: Theme.of(context).focusColor,
                             width: 1.0))),
               ),
             ))
@@ -71,7 +59,7 @@ class BlockchainHeightState extends State<BlockchainHeightWidget> {
           child: Text(
             'or',
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold,
-                color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
+                color: Theme.of(context).primaryTextTheme.title.color
             ),
           ),
         ),
@@ -86,18 +74,15 @@ class BlockchainHeightState extends State<BlockchainHeightWidget> {
                     style: TextStyle(fontSize: 14.0),
                     decoration: InputDecoration(
                         hintStyle: TextStyle(
-                            color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                                : Palette.lightBlue),
+                            color: Theme.of(context).hintColor),
                         hintText: 'Restore from date',
                         focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
-                                color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                    : Palette.lightGrey,
+                                color: Theme.of(context).focusColor,
                                 width: 1.0)),
                         enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
-                                color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                    : Palette.lightGrey,
+                                color: Theme.of(context).focusColor,
                                 width: 1.0))),
                     controller: dateController,
                     validator: (value) {
