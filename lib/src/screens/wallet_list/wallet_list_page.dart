@@ -9,8 +9,6 @@ import 'package:cake_wallet/src/domain/common/wallet_description.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
 import 'package:cake_wallet/src/stores/wallet_list/wallet_list_store.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/src/screens/wallet_list/wallet_menu.dart';
 import 'package:cake_wallet/src/widgets/picker.dart';
 
@@ -49,8 +47,6 @@ class WalletListBodyState extends State<WalletListBody> {
   @override
   Widget build(BuildContext context) {
     _walletListStore = Provider.of<WalletListStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return ScrollableWithBottomSection(
         content: Container(
@@ -60,9 +56,7 @@ class WalletListBodyState extends State<WalletListBody> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 separatorBuilder: (_, index) => Divider(
-                    color: _isDarkTheme
-                        ? PaletteDark.darkThemeGreyWithOpacity
-                        : Palette.lightGrey,
+                    color: Theme.of(context).dividerTheme.color,
                     height: 1.0),
                 itemCount: _walletListStore.wallets.length,
                 itemBuilder: (__, index) {
@@ -81,9 +75,7 @@ class WalletListBodyState extends State<WalletListBody> {
                                 style: TextStyle(
                                     color: isCurrentWallet
                                         ? Palette.cakeGreen
-                                        : _isDarkTheme
-                                            ? PaletteDark.darkThemeGrey
-                                            : Colors.black,
+                                        : Theme.of(context).primaryTextTheme.headline.color,
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.w600),
                               ),
@@ -102,15 +94,10 @@ class WalletListBodyState extends State<WalletListBody> {
               onPressed: () =>
                   Navigator.of(context).pushNamed(Routes.newWallet),
               iconData: Icons.add,
-              color: _isDarkTheme
-                  ? PaletteDark.darkThemePurpleButton
-                  : Palette.purple,
-              borderColor: _isDarkTheme
-                  ? PaletteDark.darkThemePurpleButtonBorder
-                  : Palette.deepPink,
+              color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+              borderColor: Theme.of(context).primaryTextTheme.button.decorationColor,
               iconColor: Palette.violet,
-              iconBackgroundColor:
-                  _isDarkTheme ? PaletteDark.darkThemeViolet : Colors.white,
+              iconBackgroundColor: Theme.of(context).primaryIconTheme.color,
               text: 'Create New Wallet'),
           SizedBox(height: 10.0),
           PrimaryIconButton(
@@ -118,16 +105,10 @@ class WalletListBodyState extends State<WalletListBody> {
                 Navigator.of(context).pushNamed(Routes.restoreWalletOptions),
             iconData: Icons.refresh,
             text: 'Restore Wallet',
-            color: _isDarkTheme
-                ? PaletteDark.darkThemeIndigoButton
-                : Palette.indigo,
-            borderColor: _isDarkTheme
-                ? PaletteDark.darkThemeIndigoButtonBorder
-                : Palette.deepIndigo,
-            iconColor: _isDarkTheme ? Colors.white : Colors.black,
-            iconBackgroundColor: _isDarkTheme
-                ? PaletteDark.darkThemeIndigoButtonBorder
-                : Colors.white,
+            color: Theme.of(context).accentTextTheme.button.backgroundColor,
+            borderColor: Theme.of(context).accentTextTheme.button.decorationColor,
+            iconColor: Theme.of(context).primaryTextTheme.caption.color,
+            iconBackgroundColor: Theme.of(context).accentIconTheme.color,
           )
         ]));
   }

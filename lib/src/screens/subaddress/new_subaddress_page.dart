@@ -3,13 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
-import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/stores/subaddress_creation/subaddress_creation_state.dart';
 import 'package:cake_wallet/src/stores/subaddress_creation/subaddress_creation_store.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 
 class NewSubaddressPage extends BasePage {
   String get title => 'New subaddress';
@@ -47,9 +44,6 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
     final subaddressCreationStore =
         Provider.of<SubadrressCreationStore>(context);
 
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
-
     return Form(
       key: _formKey,
       child: Stack(children: <Widget>[
@@ -59,14 +53,14 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
             child: TextFormField(
                 controller: _labelController,
                 decoration: InputDecoration(
-                    hintStyle: TextStyle(color: Palette.lightBlue),
+                    hintStyle: TextStyle(color: Theme.of(context).hintColor),
                     hintText: 'Label name',
                     focusedBorder: UnderlineInputBorder(
                         borderSide:
-                        BorderSide(color: Palette.lightGrey, width: 1.0)),
+                        BorderSide(color: Theme.of(context).focusColor, width: 1.0)),
                     enabledBorder: UnderlineInputBorder(
                         borderSide:
-                        BorderSide(color: Palette.lightGrey, width: 1.0))),
+                        BorderSide(color: Theme.of(context).focusColor, width: 1.0))),
                 validator: (value) {
                   subaddressCreationStore.validateSubaddressName(value);
                   return subaddressCreationStore.errorMessage;
@@ -87,12 +81,8 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
                     }
                   },
                   text: 'Create',
-                  color: _isDarkTheme
-                      ? PaletteDark.darkThemeIndigoButton
-                      : Palette.indigo,
-                  borderColor: _isDarkTheme
-                      ? PaletteDark.darkThemeIndigoButtonBorder
-                      : Palette.deepIndigo,
+                  color: Theme.of(context).accentTextTheme.button.backgroundColor,
+                  borderColor: Theme.of(context).accentTextTheme.button.decorationColor,
                   isLoading:
                   subaddressCreationStore.state is SubaddressIsCreating),
             ))

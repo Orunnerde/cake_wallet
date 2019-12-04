@@ -6,9 +6,6 @@ import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/domain/exchange/trade.dart';
-import 'package:provider/provider.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 
 class ExchangeConfirmPage extends BasePage {
   String get title => 'Copy ID';
@@ -19,12 +16,6 @@ class ExchangeConfirmPage extends BasePage {
 
   @override
   Widget body(BuildContext context) {
-
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
 
     return Column(
       children: <Widget>[
@@ -39,7 +30,7 @@ class ExchangeConfirmPage extends BasePage {
                         'Please copy or write down the trade ID to continue.',
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 18.0,
-                          color: _isDarkTheme ? Palette.wildDarkBlue : Colors.black
+                          color: Theme.of(context).primaryTextTheme.button.color
                         ),
                       ),
                       SizedBox(
@@ -49,7 +40,7 @@ class ExchangeConfirmPage extends BasePage {
                         'Trade ID:\n${trade.id}',
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 18.0,
-                            color: _isDarkTheme ? Palette.wildDarkBlue : Colors.black
+                            color: Theme.of(context).primaryTextTheme.button.color
                         ),
                       ),
                       SizedBox(
@@ -71,10 +62,8 @@ class ExchangeConfirmPage extends BasePage {
                           ));
                         },
                         text: 'Copy ID',
-                        color: _isDarkTheme ? PaletteDark.darkThemeBlueButton
-                            : Palette.brightBlue,
-                        borderColor: _isDarkTheme ? PaletteDark.darkThemeBlueButtonBorder
-                            : Palette.cloudySky,
+                        color: Theme.of(context).accentTextTheme.caption.backgroundColor,
+                        borderColor: Theme.of(context).accentTextTheme.caption.decorationColor,
                       )
                     ],
                   ),
@@ -85,8 +74,8 @@ class ExchangeConfirmPage extends BasePage {
               onPressed: () => Navigator.of(context)
                   .pushReplacementNamed(Routes.exchangeTrade, arguments: trade),
               text: "I've saved the trade ID",
-              color: _isDarkTheme ? PaletteDark.darkThemePurpleButton : Palette.purple,
-              borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder : Palette.deepPink,
+              color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+              borderColor: Theme.of(context).primaryTextTheme.button.decorationColor,
           ),
         )
       ],

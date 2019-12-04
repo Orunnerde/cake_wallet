@@ -15,8 +15,6 @@ import 'package:cake_wallet/src/stores/exchange_trade/exchange_trade_store.dart'
 import 'package:cake_wallet/src/stores/send/send_store.dart';
 import 'package:cake_wallet/src/stores/send/sending_state.dart';
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 
 class ExchangeTradePage extends BasePage {
   String get title => 'Exchange';
@@ -41,8 +39,6 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
     final tradeStore = Provider.of<ExchangeTradeStore>(context);
     final sendStore = Provider.of<SendStore>(context);
     final walletStore = Provider.of<WalletStore>(context);
-    final _themeChanger = Provider.of<ThemeChanger>(context);
-    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     _setEffects(context);
 
@@ -73,18 +69,14 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                                 height: 2,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14.0,
-                                color: _isDarkTheme
-                                    ? Palette.wildDarkBlue
-                                    : Colors.black),
+                                color: Theme.of(context).primaryTextTheme.button.color),
                           ),
                           Text(
                             '${trade.id ?? fetchingLabel}',
                             style: TextStyle(
                                 fontSize: 14.0,
                                 height: 2,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeGrey
-                                    : Palette.wildDarkBlue),
+                                color: Theme.of(context).primaryTextTheme.subtitle.color),
                           )
                         ],
                       ),
@@ -97,18 +89,14 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                                 height: 2,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14.0,
-                                color: _isDarkTheme
-                                    ? Palette.wildDarkBlue
-                                    : Colors.black),
+                                color: Theme.of(context).primaryTextTheme.button.color),
                           ),
                           Text(
                             '${trade.amount ?? fetchingLabel}',
                             style: TextStyle(
                                 fontSize: 14.0,
                                 height: 2,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeGrey
-                                    : Palette.wildDarkBlue),
+                                color: Theme.of(context).primaryTextTheme.subtitle.color),
                           )
                         ],
                       ),
@@ -122,18 +110,14 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                                       height: 2,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14.0,
-                                      color: _isDarkTheme
-                                          ? Palette.wildDarkBlue
-                                          : Colors.black),
+                                      color: Theme.of(context).primaryTextTheme.button.color),
                                 ),
                                 Text(
                                   '${trade.extraId ?? fetchingLabel}',
                                   style: TextStyle(
                                       fontSize: 14.0,
                                       height: 2,
-                                      color: _isDarkTheme
-                                          ? PaletteDark.darkThemeGrey
-                                          : Palette.wildDarkBlue),
+                                      color: Theme.of(context).primaryTextTheme.subtitle.color),
                                 )
                               ],
                             )
@@ -146,9 +130,7 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                             style: TextStyle(
                                 fontSize: 14.0,
                                 fontWeight: FontWeight.bold,
-                                color: _isDarkTheme
-                                    ? Palette.wildDarkBlue
-                                    : Colors.black,
+                                color: Theme.of(context).primaryTextTheme.button.color,
                                 height: 2),
                           ),
                           Text(
@@ -156,9 +138,7 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                             style: TextStyle(
                                 fontSize: 14.0,
                                 height: 2,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeGrey
-                                    : Palette.wildDarkBlue),
+                                color: Theme.of(context).primaryTextTheme.subtitle.color),
                           )
                         ],
                       ),
@@ -170,14 +150,10 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                                   'Offer expires in: ',
                                   style: TextStyle(
                                       fontSize: 14.0,
-                                      color: _isDarkTheme
-                                          ? Palette.wildDarkBlue
-                                          : Colors.black),
+                                      color: Theme.of(context).primaryTextTheme.button.color),
                                 ),
                                 TimerWidget(trade.expiredAt,
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeGrey
-                                        : Palette.wildDarkBlue)
+                                    color: Theme.of(context).primaryTextTheme.subtitle.color)
                               ],
                             )
                           : Container(),
@@ -202,9 +178,7 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                 style: TextStyle(
                     fontSize: 14.0,
                     fontWeight: FontWeight.bold,
-                    color: _isDarkTheme
-                        ? PaletteDark.darkThemeGrey
-                        : Colors.black),
+                    color: Theme.of(context).primaryTextTheme.headline.color),
               ),
             ),
             Container(
@@ -228,12 +202,8 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                       onPressed: () => Clipboard.setData(
                           ClipboardData(text: trade.inputAddress)),
                       text: 'Copy Address',
-                      color: _isDarkTheme
-                          ? PaletteDark.darkThemeIndigoButton
-                          : Palette.indigo,
-                      borderColor: _isDarkTheme
-                          ? PaletteDark.darkThemeIndigoButtonBorder
-                          : Palette.deepIndigo,
+                      color: Theme.of(context).accentTextTheme.button.backgroundColor,
+                      borderColor: Theme.of(context).accentTextTheme.button.decorationColor,
                     ),
                   )),
                   Flexible(
@@ -243,12 +213,8 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                       onPressed: () =>
                           Clipboard.setData(ClipboardData(text: trade.id)),
                       text: 'Copy ID',
-                      color: _isDarkTheme
-                          ? PaletteDark.darkThemeIndigoButton
-                          : Palette.indigo,
-                      borderColor: _isDarkTheme
-                          ? PaletteDark.darkThemeIndigoButtonBorder
-                          : Palette.deepIndigo,
+                      color: Theme.of(context).accentTextTheme.button.backgroundColor,
+                      borderColor: Theme.of(context).accentTextTheme.button.decorationColor,
                     ),
                   ))
                 ],
@@ -268,9 +234,7 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                 textAlign: TextAlign.left,
                 style: TextStyle(
                     fontSize: 13.0,
-                    color: _isDarkTheme
-                        ? PaletteDark.darkThemeTitle
-                        : Colors.black),
+                    color: Theme.of(context).primaryTextTheme.title.color),
               ),
             ),
             Text(
@@ -278,8 +242,7 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
               textAlign: TextAlign.left,
               style: TextStyle(
                   fontSize: 13.0,
-                  color:
-                      _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.grey),
+                  color: Theme.of(context).accentTextTheme.title.color),
             )
           ],
         );
@@ -291,11 +254,8 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
               address: tradeStore.trade.inputAddress,
               amount: tradeStore.trade.amount),
           text: 'Confirm',
-          color:
-              _isDarkTheme ? PaletteDark.darkThemePurpleButton : Palette.purple,
-          borderColor: _isDarkTheme
-              ? PaletteDark.darkThemePurpleButtonBorder
-              : Palette.deepPink,
+          color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+          borderColor: Theme.of(context).primaryTextTheme.button.decorationColor,
         ),
       ),
     );

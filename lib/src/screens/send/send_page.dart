@@ -15,8 +15,6 @@ import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/src/stores/send/send_store.dart';
 import 'package:cake_wallet/src/stores/send/sending_state.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 
 class SendPage extends BasePage {
@@ -51,9 +49,6 @@ class SendFormState extends State<SendForm> {
     final balanceStore = Provider.of<BalanceStore>(context);
     final walletStore = Provider.of<WalletStore>(context);
 
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
-
     _setEffects(context);
 
     return Form(
@@ -62,12 +57,8 @@ class SendFormState extends State<SendForm> {
         Container(
           padding: EdgeInsets.only(left: 38, right: 30),
           decoration: BoxDecoration(
-              color: _isDarkTheme
-                  ? PaletteDark.darkThemeBackgroundDark
-                  : Colors.white,
-              boxShadow: _isDarkTheme
-                  ? null
-                  : [
+              color: Theme.of(context).backgroundColor,
+              boxShadow: [
                 BoxShadow(
                   color: Palette.shadowGrey,
                   blurRadius: 10,
@@ -80,9 +71,7 @@ class SendFormState extends State<SendForm> {
               border: Border(
                   top: BorderSide(
                       width: 1,
-                      color: _isDarkTheme
-                          ? PaletteDark.darkThemeDarkGrey
-                          : Palette.lightLavender))),
+                      color: Theme.of(context).accentTextTheme.subtitle.backgroundColor))),
           child: SizedBox(
             height: 76,
             width: double.infinity,
@@ -100,9 +89,7 @@ class SendFormState extends State<SendForm> {
                         Text(walletStore.name,
                             style: TextStyle(
                                 fontSize: 18,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeTitle
-                                    : Palette.nightBlue,
+                                color: Theme.of(context).accentTextTheme.overline.color,
                                 height: 1.25)),
                       ]);
                 }),
@@ -119,16 +106,12 @@ class SendFormState extends State<SendForm> {
                         Text('XMR Available Balance',
                             style: TextStyle(
                               fontSize: 12,
-                              color: _isDarkTheme
-                                  ? PaletteDark.darkThemeGrey
-                                  : Palette.nightBlue,
+                              color: Theme.of(context).accentTextTheme.overline.backgroundColor,
                             )),
                         Text(availableBalance,
                             style: TextStyle(
                                 fontSize: 22,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeTitle
-                                    : Palette.nightBlue,
+                                color: Theme.of(context).accentTextTheme.overline.color,
                                 height: 1.1)),
                       ]);
                 })
@@ -177,28 +160,20 @@ class SendFormState extends State<SendForm> {
                         child: TextFormField(
                             style: TextStyle(
                                 fontSize: 14.0,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeGrey
-                                    : Palette.nightBlue),
+                                color: Theme.of(context).accentTextTheme.overline.backgroundColor),
                             controller: _paymentIdController,
                             decoration: InputDecoration(
                                 hintStyle: TextStyle(
                                     fontSize: 14.0,
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeGrey
-                                        : Palette.lightBlue),
+                                    color: Theme.of(context).hintColor),
                                 hintText: 'Payment ID (optional)',
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: _isDarkTheme
-                                            ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
+                                        color: Theme.of(context).focusColor,
                                         width: 1.0)),
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: _isDarkTheme
-                                            ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
+                                        color: Theme.of(context).focusColor,
                                         width: 1.0))),
                             validator: (value) {
                               sendStore.validatePaymentID(value);
@@ -211,9 +186,7 @@ class SendFormState extends State<SendForm> {
                             showCursor: false,
                             style: TextStyle(
                                 fontSize: 18.0,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeTitle
-                                    : Palette.nightBlue),
+                                color: Theme.of(context).accentTextTheme.overline.color),
                             controller: _cryptoAmountController,
                             keyboardType: TextInputType.numberWithOptions(
                                 signed: false, decimal: false),
@@ -224,9 +197,7 @@ class SendFormState extends State<SendForm> {
                                   child: Text('XMR:',
                                       style: TextStyle(
                                         fontSize: 18,
-                                        color: _isDarkTheme
-                                            ? PaletteDark.darkThemeTitle
-                                            : Palette.nightBlue,
+                                        color: Theme.of(context).accentTextTheme.overline.color,
                                       )),
                                 ),
                                 suffixIcon: Container(
@@ -238,28 +209,20 @@ class SendFormState extends State<SendForm> {
                                         child: Text('ALL',
                                             style: TextStyle(
                                                 fontSize: 10,
-                                                color: _isDarkTheme
-                                                    ? PaletteDark.darkThemeTitle
-                                                    : Palette.manatee))),
+                                                color: Theme.of(context).accentTextTheme.overline.decorationColor))),
                                   ),
                                 ),
                                 hintStyle: TextStyle(
                                     fontSize: 18.0,
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeTitle
-                                        : Palette.lightBlue),
+                                    color: Theme.of(context).hintColor),
                                 hintText: '0.0000',
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: _isDarkTheme
-                                            ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
+                                        color: Theme.of(context).focusColor,
                                         width: 1.0)),
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: _isDarkTheme
-                                            ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
+                                        color: Theme.of(context).focusColor,
                                         width: 1.0))),
                             validator: (value) {
                               sendStore.validateXMR(value, balanceStore.unlockedBalance);
@@ -273,9 +236,7 @@ class SendFormState extends State<SendForm> {
                             showCursor: false,
                             style: TextStyle(
                                 fontSize: 18.0,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeTitle
-                                    : Palette.nightBlue),
+                                color: Theme.of(context).accentTextTheme.overline.color),
                             controller: _fiatAmountController,
                             keyboardType: TextInputType.numberWithOptions(
                                 signed: false, decimal: false),
@@ -287,28 +248,20 @@ class SendFormState extends State<SendForm> {
                                       '${settingsStore.fiatCurrency.toString()}:',
                                       style: TextStyle(
                                         fontSize: 18,
-                                        color: _isDarkTheme
-                                            ? PaletteDark.darkThemeTitle
-                                            : Palette.nightBlue,
+                                        color: Theme.of(context).accentTextTheme.overline.color,
                                       )),
                                 ),
                                 hintStyle: TextStyle(
                                     fontSize: 18.0,
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeTitle
-                                        : Palette.lightBlue),
+                                    color: Theme.of(context).hintColor),
                                 hintText: '0.00',
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: _isDarkTheme
-                                            ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
+                                        color: Theme.of(context).focusColor,
                                         width: 1.0)),
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: _isDarkTheme
-                                            ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
+                                        color: Theme.of(context).focusColor,
                                         width: 1.0))),
                             validator: (value) {
                               try {
@@ -335,17 +288,13 @@ class SendFormState extends State<SendForm> {
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
-                                  color: _isDarkTheme
-                                      ? PaletteDark.darkThemeGrey
-                                      : Palette.nightBlue,
+                                  color: Theme.of(context).accentTextTheme.overline.backgroundColor,
                                 )),
                             Text('XMR 0.00003121',
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
-                                  color: _isDarkTheme
-                                      ? PaletteDark.darkThemeGrey
-                                      : Palette.nightBlue,
+                                  color: Theme.of(context).accentTextTheme.overline.backgroundColor,
                                 ))
                           ],
                         ),
@@ -357,9 +306,7 @@ class SendFormState extends State<SendForm> {
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeGrey
-                                    : Palette.wildDarkBlue,
+                                color: Theme.of(context).primaryTextTheme.subtitle.color,
                                 height: 1.3)),
                       ),
                     ]),
@@ -405,12 +352,8 @@ class SendFormState extends State<SendForm> {
                             }
                           },
                           text: 'Send',
-                          color: _isDarkTheme
-                              ? PaletteDark.darkThemeIndigoButton
-                              : Palette.indigo,
-                          borderColor: _isDarkTheme
-                              ? PaletteDark.darkThemeIndigoButtonBorder
-                              : Palette.deepIndigo,
+                          color: Theme.of(context).accentTextTheme.button.backgroundColor,
+                          borderColor: Theme.of(context).accentTextTheme.button.decorationColor,
                           isLoading: sendStore.state is CreatingTransaction ||
                               sendStore.state is TransactionCommitted);
                     })

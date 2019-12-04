@@ -3,16 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/services.dart';
-import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/stores/wallet_restoration/wallet_restoration_store.dart';
 import 'package:cake_wallet/src/stores/wallet_restoration/wallet_restoration_state.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/widgets/blockchain_height_widget.dart';
 import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 
 class RestoreWalletFromSeedDetailsPage extends BasePage {
   String get title => 'Wallet restore description';
@@ -35,9 +31,6 @@ class _RestoreFromSeedDetailsFormState
   @override
   Widget build(BuildContext context) {
     final walletRestorationStore = Provider.of<WalletRestorationStore>(context);
-
-    final _themeChanger = Provider.of<ThemeChanger>(context);
-    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     reaction((_) => walletRestorationStore.state, (state) {
       if (state is WalletRestoredSuccessfully) {
@@ -85,23 +78,15 @@ class _RestoreFromSeedDetailsFormState
                               controller: _nameController,
                               decoration: InputDecoration(
                                   hintStyle: TextStyle(
-                                      color: _isDarkTheme
-                                          ? PaletteDark.darkThemeGrey
-                                          : Palette.lightBlue),
+                                      color: Theme.of(context).hintColor),
                                   hintText: 'Wallet name',
                                   focusedBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: _isDarkTheme
-                                              ? PaletteDark
-                                                  .darkThemeGreyWithOpacity
-                                              : Palette.lightGrey,
+                                          color: Theme.of(context).focusColor,
                                           width: 1.0)),
                                   enabledBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: _isDarkTheme
-                                              ? PaletteDark
-                                                  .darkThemeGreyWithOpacity
-                                              : Palette.lightGrey,
+                                          color: Theme.of(context).focusColor,
                                           width: 1.0))),
                               validator: (value) {
                                 walletRestorationStore.validateWalletName(value);
@@ -127,11 +112,8 @@ class _RestoreFromSeedDetailsFormState
           },
           isLoading: walletRestorationStore.state is WalletIsRestoring,
           text: 'Recover',
-          color:
-              _isDarkTheme ? PaletteDark.darkThemePurpleButton : Palette.purple,
-          borderColor: _isDarkTheme
-              ? PaletteDark.darkThemePurpleButtonBorder
-              : Palette.deepPink,
+          color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+          borderColor: Theme.of(context).primaryTextTheme.button.decorationColor,
         );
       }),
     );

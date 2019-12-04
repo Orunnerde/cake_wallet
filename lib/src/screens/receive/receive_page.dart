@@ -10,8 +10,6 @@ import 'package:cake_wallet/src/stores/subaddress_list/subaddress_list_store.dar
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/src/screens/receive/qr_image.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 
 class ReceivePage extends BasePage {
   bool get isModalBackButton => true;
@@ -41,19 +39,8 @@ class ReceiveBody extends StatelessWidget {
     final walletStore = Provider.of<WalletStore>(context);
     final subaddressListStore = Provider.of<SubaddressListStore>(context);
 
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    Color _currentColor, _notCurrentColor;
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) {
-      _currentColor = PaletteDark.darkThemeViolet;
-      _notCurrentColor = PaletteDark.darkThemeBlack;
-      _isDarkTheme = true;
-    } else {
-      _currentColor = Palette.purple;
-      _notCurrentColor = Colors.white;
-      _isDarkTheme = false;
-    }
+    final currentColor = Theme.of(context).selectedRowColor;
+    final notCurrentColor = Theme.of(context).scaffoldBackgroundColor;
 
     return SafeArea(
         child: SingleChildScrollView(
@@ -61,8 +48,7 @@ class ReceiveBody extends StatelessWidget {
       children: <Widget>[
         Container(
           padding: EdgeInsets.all(35.0),
-          color:
-              _isDarkTheme ? Theme.of(context).backgroundColor : Colors.white,
+          color: Theme.of(context).backgroundColor,
           child: Column(
             children: <Widget>[
               Observer(builder: (_) {
@@ -116,9 +102,7 @@ class ReceiveBody extends StatelessWidget {
                             style: TextStyle(
                                 fontSize: 14.0,
                                 fontWeight: FontWeight.w600,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeTitle
-                                    : Colors.black),
+                                color: Theme.of(context).primaryTextTheme.title.color),
                           ),
                         ),
                       ),
@@ -137,21 +121,15 @@ class ReceiveBody extends StatelessWidget {
                     ),
                     decoration: InputDecoration(
                         hintStyle: TextStyle(
-                            color: _isDarkTheme
-                                ? PaletteDark.darkThemeGrey
-                                : Palette.lightBlue),
+                            color: Theme.of(context).hintColor),
                         hintText: 'Amount',
                         focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeGreyWithOpacity
-                                    : Palette.lightGrey,
+                                color: Theme.of(context).focusColor,
                                 width: 1.0)),
                         enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeGreyWithOpacity
-                                    : Palette.lightGrey,
+                                color: Theme.of(context).focusColor,
                                 width: 1.0))),
                     onSubmitted: (value) {
                       walletStore.validateAmount(value);
@@ -167,9 +145,7 @@ class ReceiveBody extends StatelessWidget {
           children: <Widget>[
             Expanded(
                 child: Container(
-              color: _isDarkTheme
-                  ? PaletteDark.darkThemeBlack
-                  : Palette.lightGrey2,
+              color: Theme.of(context).accentTextTheme.headline.color,
               child: Column(
                 children: <Widget>[
                   ListTile(
@@ -177,17 +153,13 @@ class ReceiveBody extends StatelessWidget {
                       'Subaddresses',
                       style: TextStyle(
                           fontSize: 16.0,
-                          color: _isDarkTheme
-                              ? PaletteDark.darkThemeGrey
-                              : Colors.black),
+                          color: Theme.of(context).primaryTextTheme.headline.color),
                     ),
                     trailing: Container(
                       width: 28.0,
                       height: 28.0,
                       decoration: BoxDecoration(
-                          color: _isDarkTheme
-                              ? PaletteDark.darkThemeViolet
-                              : Palette.purple,
+                          color: Theme.of(context).selectedRowColor,
                           shape: BoxShape.circle),
                       child: InkWell(
                         onTap: () => Navigator.of(context)
@@ -202,9 +174,7 @@ class ReceiveBody extends StatelessWidget {
                     ),
                   ),
                   Divider(
-                    color: _isDarkTheme
-                        ? PaletteDark.darkThemeGreyWithOpacity
-                        : Palette.lightGrey,
+                    color: Theme.of(context).dividerTheme.color,
                     height: 1.0,
                   )
                 ],
@@ -219,9 +189,7 @@ class ReceiveBody extends StatelessWidget {
               itemCount: subaddressListStore.subaddresses.length,
               separatorBuilder: (context, i) {
                 return Divider(
-                  color: _isDarkTheme
-                      ? PaletteDark.darkThemeGreyWithOpacity
-                      : Palette.lightGrey,
+                  color: Theme.of(context).dividerTheme.color,
                   height: 1.0,
                 );
               },
@@ -237,16 +205,14 @@ class ReceiveBody extends StatelessWidget {
                   return InkWell(
                     onTap: () => walletStore.setSubaddress(subaddress),
                     child: Container(
-                      color: isCurrent ? _currentColor : _notCurrentColor,
+                      color: isCurrent ? currentColor : notCurrentColor,
                       child: Column(children: <Widget>[
                         ListTile(
                           title: Text(
                             label,
                             style: TextStyle(
                                 fontSize: 16.0,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeGrey
-                                    : Colors.black),
+                                color: Theme.of(context).primaryTextTheme.headline.color),
                           ),
                         )
                       ]),

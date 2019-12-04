@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/palette.dart';
 import 'dart:convert';
 
 class FaqPage extends BasePage {
@@ -12,8 +8,6 @@ class FaqPage extends BasePage {
 
   @override
   Widget body(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = (_themeChanger.getTheme() == Themes.darkTheme);
 
     return FutureBuilder(
       builder: (context, snapshot) {
@@ -49,9 +43,7 @@ class FaqPage extends BasePage {
             );
           },
           separatorBuilder: (_, __) => Divider(
-            color: _isDarkTheme
-                ? PaletteDark.darkThemeGreyWithOpacity
-                : Palette.lightGrey,
+            color: Theme.of(context).dividerTheme.color,
             height: 1.0,
           ),
           itemCount: faqItems == null ? 0 : faqItems.length,

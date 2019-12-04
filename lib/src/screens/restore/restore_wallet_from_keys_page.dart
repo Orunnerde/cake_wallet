@@ -14,8 +14,6 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/widgets/blockchain_height_widget.dart';
 import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 
 class RestoreWalletFromKeysPage extends BasePage {
   final WalletListService walletsService;
@@ -49,8 +47,6 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
   @override
   Widget build(BuildContext context) {
     final walletRestorationStore = Provider.of<WalletRestorationStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     reaction((_) => walletRestorationStore.state, (state) {
       if (state is WalletRestoredSuccessfully) {
@@ -96,21 +92,15 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                         controller: _nameController,
                         decoration: InputDecoration(
                             hintStyle: TextStyle(
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeGrey
-                                    : Palette.lightBlue),
+                                color: Theme.of(context).hintColor),
                             hintText: 'Wallet name',
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeGreyWithOpacity
-                                        : Palette.lightGrey,
+                                    color: Theme.of(context).focusColor,
                                     width: 1.0)),
                             enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeGreyWithOpacity
-                                        : Palette.lightGrey,
+                                    color: Theme.of(context).focusColor,
                                     width: 1.0))),
                         validator: (value) {
                           walletRestorationStore.validateWalletName(value);
@@ -132,21 +122,15 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                         maxLines: null,
                         decoration: InputDecoration(
                             hintStyle: TextStyle(
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeGrey
-                                    : Palette.lightBlue),
+                                color: Theme.of(context).hintColor),
                             hintText: 'Address',
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeGreyWithOpacity
-                                        : Palette.lightGrey,
+                                    color: Theme.of(context).focusColor,
                                     width: 1.0)),
                             enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeGreyWithOpacity
-                                        : Palette.lightGrey,
+                                    color: Theme.of(context).focusColor,
                                     width: 1.0))),
                         validator: (value) {
                           walletRestorationStore.validateAddress(value);
@@ -166,21 +150,15 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                         controller: _viewKeyController,
                         decoration: InputDecoration(
                             hintStyle: TextStyle(
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeGrey
-                                    : Palette.lightBlue),
+                                color: Theme.of(context).hintColor),
                             hintText: 'View key (private)',
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeGreyWithOpacity
-                                        : Palette.lightGrey,
+                                    color: Theme.of(context).focusColor,
                                     width: 1.0)),
                             enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeGreyWithOpacity
-                                        : Palette.lightGrey,
+                                    color: Theme.of(context).focusColor,
                                     width: 1.0))),
                         validator: (value) {
                           walletRestorationStore.validateKeys(value);
@@ -200,21 +178,15 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                         controller: _spendKeyController,
                         decoration: InputDecoration(
                             hintStyle: TextStyle(
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeGrey
-                                    : Palette.lightBlue),
+                                color: Theme.of(context).hintColor),
                             hintText: 'Spend key (private)',
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeGreyWithOpacity
-                                        : Palette.lightGrey,
+                                    color: Theme.of(context).focusColor,
                                     width: 1.0)),
                             enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeGreyWithOpacity
-                                        : Palette.lightGrey,
+                                    color: Theme.of(context).focusColor,
                                     width: 1.0))),
                         validator: (value) {
                           walletRestorationStore.validateKeys(value);
@@ -243,11 +215,8 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
             }
           },
           text: 'Recover',
-          color:
-              _isDarkTheme ? PaletteDark.darkThemePurpleButton : Palette.purple,
-          borderColor: _isDarkTheme
-              ? PaletteDark.darkThemePurpleButtonBorder
-              : Palette.deepPink,
+          color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+          borderColor: Theme.of(context).primaryTextTheme.button.decorationColor,
         );
       }),
     );

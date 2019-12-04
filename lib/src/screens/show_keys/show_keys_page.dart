@@ -6,8 +6,6 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 
 class ShowKeysPage extends BasePage {
   bool get isModalBackButton => true;
@@ -16,13 +14,6 @@ class ShowKeysPage extends BasePage {
   @override
   Widget body(BuildContext context) {
     final walletKeysStore = Provider.of<WalletKeysStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
 
     return Container(
         padding: EdgeInsets.only(top: 20.0, bottom: 20.0, left: 20, right: 20),
@@ -39,9 +30,7 @@ class ShowKeysPage extends BasePage {
                 separatorBuilder: (_, __) => Container(
                     padding: EdgeInsets.only(left: 30.0, right: 20.0),
                     child: Divider(
-                        color: _isDarkTheme
-                            ? PaletteDark.darkThemeGreyWithOpacity
-                            : Palette.lightGrey,
+                        color: Theme.of(context).dividerTheme.color,
                         height: 1.0)),
                 itemCount: keysMap.length,
                 itemBuilder: (BuildContext context, int index) {

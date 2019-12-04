@@ -39,6 +39,8 @@ class Palette {
   static const Color purpleBlue = Color.fromRGBO(84, 92, 139, 1);
   static const Color floatingActionButton = Color.fromRGBO(213, 56, 99, 1);
   static const Color failure = Color.fromRGBO(226, 35, 35, 1);
+  static const Color powered = Color.fromRGBO(191, 201, 215, 1);
+  static const Color buttonShadow = Color.fromRGBO(23, 46, 77, 0.129207);
 }
 
 class PaletteDark {

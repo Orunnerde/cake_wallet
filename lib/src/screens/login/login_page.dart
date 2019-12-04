@@ -6,7 +6,6 @@ import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/src/screens/pin_code/pin_code.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
-import 'package:cake_wallet/src/stores/auth/auth_store.dart';
 
 class LoginPage extends BasePage {
   @override

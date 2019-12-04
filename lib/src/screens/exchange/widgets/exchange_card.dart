@@ -4,9 +4,6 @@ import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/widgets/picker.dart';
 import 'package:cake_wallet/src/widgets/address_text_field.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/theme_changer.dart';
 
 class ExchangeCard extends StatefulWidget {
   final List<CryptoCurrency> currencies;
@@ -104,14 +101,12 @@ class ExchangeCardState extends State<ExchangeCard> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Container(
       padding: EdgeInsets.fromLTRB(22, 15, 22, 30),
       width: double.infinity,
       decoration: BoxDecoration(
-          color: _isDarkTheme ? PaletteDark.darkThemeMidGrey : Palette.lavender,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.all(Radius.circular(12))),
       child: Column(children: <Widget>[
         _isAmountEstimated != null && _isAmountEstimated
@@ -154,9 +149,7 @@ class ExchangeCardState extends State<ExchangeCard> {
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 24,
-                                        color: _isDarkTheme
-                                            ? PaletteDark.darkThemeTitle
-                                            : Colors.black)),
+                                        color: Theme.of(context).primaryTextTheme.title.color)),
                                 widget.imageArrow
                               ]),
                           _walletName != null
@@ -182,26 +175,19 @@ class ExchangeCardState extends State<ExchangeCard> {
                           inputFormatters: [BlacklistingTextInputFormatter(new RegExp('[\\-|\\ |\\,]'))],
                           decoration: InputDecoration(
                               hintStyle: TextStyle(
-                                  color: _isDarkTheme
-                                      ? PaletteDark.darkThemeGrey
-                                      : Palette.cadetBlue,
+                                  color: Theme.of(context).cardTheme.color,
                                   fontSize: 23,
                                   height: 1.21),
                               hintText: '0.00000000',
                               focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: _isDarkTheme
-                                          ? PaletteDark.darkThemeGreyWithOpacity
-                                          : Palette.lightGrey,
+                                      color: Theme.of(context).focusColor,
                                       width: 1.0)),
                               enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
                                       color: _isAmountEditable
                                           ? Palette.deepPurple
-                                          : _isDarkTheme
-                                              ? PaletteDark
-                                                  .darkThemeGreyWithOpacity
-                                              : Palette.lightGrey,
+                                          : Theme.of(context).focusColor,
                                       width: 1.0))),
                         validator: widget.currencyValueValidator),
                       SizedBox(height: 5),
@@ -218,9 +204,7 @@ class ExchangeCardState extends State<ExchangeCard> {
                                         style: TextStyle(
                                             fontSize: 10,
                                             height: 1.2,
-                                            color: _isDarkTheme
-                                                ? PaletteDark.darkThemeGrey
-                                                : Palette.wildDarkBlue),
+                                            color: Theme.of(context).primaryTextTheme.subtitle.color),
                                       )
                                     : SizedBox(),
                                 _min != null ? SizedBox(width: 10) : SizedBox(),
@@ -230,9 +214,7 @@ class ExchangeCardState extends State<ExchangeCard> {
                                         style: TextStyle(
                                             fontSize: 10,
                                             height: 1.2,
-                                            color: _isDarkTheme
-                                                ? PaletteDark.darkThemeGrey
-                                                : Palette.wildDarkBlue))
+                                            color: Theme.of(context).primaryTextTheme.subtitle.color))
                                     : SizedBox(),
                               ]),
                         ),

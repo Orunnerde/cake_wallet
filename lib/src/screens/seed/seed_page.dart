@@ -8,8 +8,6 @@ import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/stores/wallet_seed/wallet_seed_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 
 class SeedPage extends BasePage {
   static final image = Image.asset('assets/images/seed_image.png');
@@ -32,9 +30,6 @@ class SeedPage extends BasePage {
   Widget body(BuildContext context) {
     final walletSeedStore = Provider.of<WalletSeedStore>(context);
     String _seed;
-
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Container(
       padding: EdgeInsets.all(30.0),
@@ -61,9 +56,7 @@ class SeedPage extends BasePage {
                                         border: Border(
                                             bottom: BorderSide(
                                                 width: 1.0,
-                                                color: _isDarkTheme
-                                                    ? PaletteDark.darkThemeDarkGrey
-                                                    : Palette.lightGrey))),
+                                                color: Theme.of(context).dividerColor))),
                                     padding: EdgeInsets.only(bottom: 20.0),
                                     margin: EdgeInsets.only(bottom: 10.0),
                                     child: Text(
@@ -71,9 +64,7 @@ class SeedPage extends BasePage {
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           fontSize: 18.0,
-                                          color: _isDarkTheme
-                                              ? Palette.wildDarkBlue
-                                              : Colors.black),
+                                          color: Theme.of(context).primaryTextTheme.button.color),
                                     ),
                                   ))
                             ],
@@ -86,9 +77,7 @@ class SeedPage extends BasePage {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: 14.0,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeTitle
-                                    : Colors.black),
+                                color: Theme.of(context).primaryTextTheme.title.color),
                           )
                         ],
                       );
@@ -104,12 +93,8 @@ class SeedPage extends BasePage {
                               child: PrimaryButton(
                                   onPressed: () => Share.text(
                                       'Share seed', _seed, 'text/plain'),
-                                  color: _isDarkTheme
-                                      ? PaletteDark.darkThemePurpleButton
-                                      : Palette.purple,
-                                  borderColor: _isDarkTheme
-                                      ? PaletteDark.darkThemePurpleButtonBorder
-                                      : Palette.deepPink,
+                                  color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+                                  borderColor: Theme.of(context).primaryTextTheme.button.decorationColor,
                                   text: 'Save'),
                             )),
                         Flexible(
@@ -131,13 +116,8 @@ class SeedPage extends BasePage {
                                       );
                                     },
                                     text: 'Copy',
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeBlueButton
-                                        : Palette.brightBlue,
-                                    borderColor: _isDarkTheme
-                                        ? PaletteDark
-                                        .darkThemeBlueButtonBorder
-                                        : Palette.cloudySky,
+                                    color: Theme.of(context).accentTextTheme.caption.backgroundColor,
+                                    borderColor: Theme.of(context).accentTextTheme.caption.decorationColor,
                                   ),
                                 )))
                       ],

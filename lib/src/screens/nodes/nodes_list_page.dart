@@ -7,9 +7,6 @@ import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/stores/node_list/node_list_store.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/src/widgets/standart_switch.dart';
 
 class NodeListPage extends BasePage {
   NodeListPage();
@@ -19,12 +16,6 @@ class NodeListPage extends BasePage {
   @override
   Widget trailing(context) {
     final nodeList = Provider.of<NodeListStore>(context);
-
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -64,7 +55,7 @@ class NodeListPage extends BasePage {
               child: Text(
                 'Reset',
                 style: TextStyle(fontSize: 16.0,
-                    color: _isDarkTheme ? PaletteDark.darkThemeGrey : Palette.wildDarkBlue
+                    color: Theme.of(context).primaryTextTheme.subtitle.color
                 ),
               )),
         ),
@@ -74,7 +65,7 @@ class NodeListPage extends BasePage {
             decoration:
                 BoxDecoration(
                     shape: BoxShape.circle,
-                    color: _isDarkTheme ? PaletteDark.darkThemeViolet : Palette.purple
+                    color: Theme.of(context).selectedRowColor
                 ),
             child: Stack(
               alignment: Alignment.center,
@@ -102,20 +93,8 @@ class NodeListPage extends BasePage {
     final nodeList = Provider.of<NodeListStore>(context);
     final settings = Provider.of<SettingsStore>(context);
 
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    Color _currentColor, _notCurrentColor;
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) {
-      _currentColor = PaletteDark.darkThemeViolet;
-      _notCurrentColor = Theme.of(context).backgroundColor;
-      _isDarkTheme = true;
-    }
-    else {
-      _currentColor = Palette.purple;
-      _notCurrentColor = Colors.white;
-      _isDarkTheme = false;
-    }
+    final currentColor = Theme.of(context).selectedRowColor;
+    final notCurrentColor = Theme.of(context).backgroundColor;
 
     return Container(
       padding: EdgeInsets.only(bottom: 20.0),
@@ -125,7 +104,7 @@ class NodeListPage extends BasePage {
             return ListView.separated(
                 separatorBuilder: (_, __) =>
                     Divider(
-                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey : Palette.lightGrey,
+                        color: Theme.of(context).dividerTheme.color,
                         height: 1),
                 itemCount: nodeList.nodes.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -137,13 +116,13 @@ class NodeListPage extends BasePage {
                         : node.id == settings.node.id;
 
                     final content = Container(
-                        color: isCurrent ? _currentColor : _notCurrentColor,
+                        color: isCurrent ? currentColor : notCurrentColor,
                         child: ListTile(
                           title: Text(
                             node.uri,
                             style: TextStyle(
                                 fontSize: 16.0,
-                                color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
+                                color: Theme.of(context).primaryTextTheme.title.color
                             ),
                           ),
                           trailing: Container(

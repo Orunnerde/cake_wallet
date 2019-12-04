@@ -31,9 +31,6 @@ class WelcomePage extends BasePage {
     final _screenWidth = MediaQuery.of(context).size.width;
     final textScaleFactor = _screenWidth < _baseWidth ? 0.76 : 1.0;
 
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = (_themeChanger.getTheme() == Themes.darkTheme);
-
     return Column(children: <Widget>[
       Stack(
         alignment: Alignment.center,
@@ -86,20 +83,16 @@ class WelcomePage extends BasePage {
                     Navigator.pushNamed(context, Routes.newWalletFromWelcome);
                   },
                   text: 'Create New',
-                  color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
-                      : Palette.purple,
-                  borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
-                      : Palette.deepPink,
+                  color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+                  borderColor: Theme.of(context).primaryTextTheme.button.decorationColor,
                 ),
                 SizedBox(height: 10),
                 PrimaryButton(
                   onPressed: () {
                     Navigator.pushNamed(context, Routes.restoreOptions);
                   },
-                  color: _isDarkTheme ? PaletteDark.darkThemeBlueButton
-                      : Palette.brightBlue,
-                  borderColor: _isDarkTheme ? PaletteDark.darkThemeBlueButtonBorder
-                      : Palette.cloudySky,
+                  color: Theme.of(context).accentTextTheme.caption.backgroundColor,
+                  borderColor: Theme.of(context).accentTextTheme.caption.decorationColor,
                   text: 'Restore wallet',
                 )
               ]))

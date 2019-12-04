@@ -17,8 +17,6 @@ import 'package:cake_wallet/src/stores/exchange/exchange_trade_state.dart';
 import 'package:cake_wallet/src/stores/exchange/limits_state.dart';
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/routes.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 
 class ExchangePage extends BasePage {
   String get title => 'Exchange';
@@ -34,8 +32,6 @@ class ExchangePage extends BasePage {
   @override
   Widget middle(BuildContext context) {
     final exchangeStore = Provider.of<ExchangeStore>(context);
-    final _themeChanger = Provider.of<ThemeChanger>(context);
-    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return FlatButton(
       onPressed: () => _presentProviderPicker(context),
@@ -53,9 +49,7 @@ class ExchangePage extends BasePage {
                     style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w400,
-                        color: _isDarkTheme
-                            ? PaletteDark.darkThemeTitle
-                            : Colors.black)),
+                        color: Theme.of(context).primaryTextTheme.title.color)),
                 SizedBox(width: 5),
                 arrowBottomPurple
               ]),
@@ -64,9 +58,7 @@ class ExchangePage extends BasePage {
                   style: TextStyle(
                       fontSize: 10.0,
                       fontWeight: FontWeight.w400,
-                      color: _isDarkTheme
-                          ? PaletteDark.darkThemeGrey
-                          : Colors.black)))
+                      color: Theme.of(context).primaryTextTheme.headline.color)))
         ],
       ),
     );
@@ -76,14 +68,6 @@ class ExchangePage extends BasePage {
   Widget trailing(BuildContext context) {
     final exchangeStore = Provider.of<ExchangeStore>(context);
 
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
-
     return SizedBox(
         width: 50,
         child: FlatButton(
@@ -91,9 +75,7 @@ class ExchangePage extends BasePage {
             child: Text(
               'Clear',
               style: TextStyle(
-                  color: _isDarkTheme
-                      ? PaletteDark.darkThemeTitleViolet
-                      : Palette.wildDarkBlue,
+                  color: Theme.of(context).accentTextTheme.caption.color,
                   fontWeight: FontWeight.w500,
                   fontSize: 16),
             ),
@@ -155,8 +137,6 @@ class ExchangeFormState extends State<ExchangeForm> {
 
     WidgetsBinding.instance.addPostFrameCallback(
         (_) => _setReactions(context, exchangeStore, walletStore));
-    final _themeChanger = Provider.of<ThemeChanger>(context);
-    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Form(
       key: _formKey,
@@ -174,9 +154,7 @@ class ExchangeFormState extends State<ExchangeForm> {
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                       height: 1.1,
-                      color: _isDarkTheme
-                          ? PaletteDark.darkThemeTitle
-                          : Colors.black),
+                      color: Theme.of(context).primaryTextTheme.title.color),
                 ),
               ),
               ExchangeCard(
@@ -214,9 +192,7 @@ class ExchangeFormState extends State<ExchangeForm> {
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                         height: 1.1,
-                        color: _isDarkTheme
-                            ? PaletteDark.darkThemeTitle
-                            : Colors.black),
+                        color: Theme.of(context).primaryTextTheme.title.color),
                   )),
               Observer(
                   builder: (_) => ExchangeCard(
@@ -271,12 +247,8 @@ class ExchangeFormState extends State<ExchangeForm> {
                 onPressed: () {
                   if (_formKey.currentState.validate()) exchangeStore.createTrade();
                 },
-                color: _isDarkTheme
-                    ? PaletteDark.darkThemePurpleButton
-                    : Palette.purple,
-                borderColor: _isDarkTheme
-                    ? PaletteDark.darkThemePurpleButtonBorder
-                    : Palette.deepPink,
+                color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+                borderColor: Theme.of(context).primaryTextTheme.button.decorationColor,
                 isLoading: exchangeStore.tradeState is TradeIsCreating,
               )),
           Observer(builder: (_) {
@@ -302,7 +274,7 @@ class ExchangeFormState extends State<ExchangeForm> {
                   Text(
                     'Powered by $title',
                     style: TextStyle(
-                        fontSize: 14, color: Color.fromRGBO(191, 201, 215, 1)),
+                        fontSize: 14, color: Palette.powered),
                   )
                 ],
               ),
