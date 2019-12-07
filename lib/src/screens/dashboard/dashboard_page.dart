@@ -94,6 +94,7 @@ class DashboardPage extends BasePage {
             items: walletMenu.items,
             selectedAtIndex: -1,
             title: 'Wallet Menu',
+            pickerHeight: 510,
             onItemSelected: (item) =>
                 walletMenu.action(item)),
         context: bodyContext);

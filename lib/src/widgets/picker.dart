@@ -8,12 +8,14 @@ class Picker<Item extends Object> extends StatelessWidget {
   final int selectedAtIndex;
   final List<Item> items;
   final String title;
+  final double pickerHeight;
   final Function(Item) onItemSelected;
 
   Picker(
       {@required this.selectedAtIndex,
       @required this.items,
       @required this.title,
+      this.pickerHeight = 300,
       this.onItemSelected});
 
   @override
@@ -36,7 +38,7 @@ class Picker<Item extends Object> extends StatelessWidget {
                   onTap: () => null,
                   child: Container(
                       width: double.infinity,
-                      height: 300,
+                      height: pickerHeight,
                       color: Theme.of(context).backgroundColor,
                       child: ListView.separated(
                         itemCount: items.length + 1,
