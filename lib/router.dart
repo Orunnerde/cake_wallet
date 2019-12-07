@@ -89,13 +89,16 @@ import 'package:cake_wallet/src/screens/faq/faq_page.dart';
 
 class Router {
   static Route<dynamic> generateRoute(
-      SharedPreferences sharedPreferences,
+      {SharedPreferences sharedPreferences,
       WalletListService walletListService,
       WalletService walletService,
       UserService userService,
       Database db,
       RouteSettings settings,
-      PriceStore priceStore) {
+      PriceStore priceStore,
+      WalletStore walletStore,
+      SyncStore syncStore,
+      BalanceStore balanceStore}) {
     switch (settings.name) {
       case Routes.welcome:
         return MaterialPageRoute(builder: (_) => WelcomePage());
@@ -196,20 +199,6 @@ class Router {
       case Routes.dashboard:
         return CupertinoPageRoute(
             builder: (_) => MultiProvider(providers: [
-                  ProxyProvider<SettingsStore, BalanceStore>(
-                    builder: (_, settingsStore, __) => BalanceStore(
-                        walletService: walletService,
-                        settingsStore: settingsStore,
-                        priceStore: priceStore),
-                  ),
-                  ProxyProvider<SettingsStore, WalletStore>(
-                      builder: (_, settingsStore, __) => WalletStore(
-                          walletService: walletService,
-                          settingsStore: settingsStore)),
-                  Provider(
-                    builder: (context) =>
-                        SyncStore(walletService: walletService),
-                  ),
                   ProxyProvider<SettingsStore, ActionListStore>(
                       builder: (_, settingsStore, __) => ActionListStore(
                           walletService: walletService,
@@ -230,10 +219,6 @@ class Router {
                         settingsStore: settingsStore,
                         priceStore: priceStore),
                   ),
-                  ProxyProvider<SettingsStore, WalletStore>(
-                      builder: (_, settingsStore, __) => WalletStore(
-                          walletService: walletService,
-                          settingsStore: settingsStore)),
                   Provider(
                       builder: (context) => SendStore(
                           walletService: walletService,
@@ -244,10 +229,6 @@ class Router {
         return CupertinoPageRoute(
             fullscreenDialog: true,
             builder: (_) => MultiProvider(providers: [
-                  ProxyProvider<SettingsStore, WalletStore>(
-                      builder: (_, settingsStore, __) => WalletStore(
-                          walletService: walletService,
-                          settingsStore: settingsStore)),
                   Provider(
                       builder: (_) =>
                           SubaddressListStore(walletService: walletService))
@@ -324,16 +305,32 @@ class Router {
                 child: NewNodePage()));
 
       case Routes.login:
+        return MaterialPageRoute(
+            fullscreenDialog: true,
+            builder: (context) {
+              final authenticationStore =
+                  Provider.of<AuthenticationStore>(context);
+
+              return Provider(
+                  builder: (_) => AuthStore(
+                      sharedPreferences: sharedPreferences,
+                      userService: userService,
+                      walletService: walletService),
+                  child: AuthPage(
+                      onAuthenticationFinished: (isAuthenticated, state) {
+                        if (isAuthenticated) {
+                          authenticationStore.loggedIn();
+                        }
+                      },
+                      closable: false));
+            });
+
         return CupertinoPageRoute(
-            builder: (_) => ProxyProvider<AuthenticationStore, LoginStore>(
-                builder: (context, authStore, _) => LoginStore(
-                    authenticationStore: authStore,
-                    authStore: AuthStore(
-                        sharedPreferences: sharedPreferences,
-                        userService: userService,
-                        walletService: walletService),
+            builder: (_) => Provider(
+                builder: (_) => AuthStore(
                     sharedPreferences: sharedPreferences,
-                    walletsService: walletListService),
+                    userService: userService,
+                    walletService: walletService),
                 child: LoginPage()));
 
       case Routes.accountList:
@@ -343,10 +340,6 @@ class Router {
                 Provider(
                     builder: (_) =>
                         AccountListStore(walletService: walletService)),
-                ProxyProvider<SettingsStore, WalletStore>(
-                    builder: (_, settingsStore, __) => WalletStore(
-                        walletService: walletService,
-                        settingsStore: settingsStore))
               ], child: AccountListPage());
             },
             fullscreenDialog: true);
@@ -419,15 +412,7 @@ class Router {
                   providers: [
                     ProxyProvider<SettingsStore, ExchangeTradeStore>(
                       builder: (_, settingsStore, __) => ExchangeTradeStore(
-                          trade: settings.arguments,
-                          walletStore: WalletStore(
-                              walletService: WalletService(),
-                              settingsStore: settingsStore)),
-                    ),
-                    ProxyProvider<SettingsStore, WalletStore>(
-                      builder: (_, settingsStore, __) => WalletStore(
-                          walletService: WalletService(),
-                          settingsStore: settingsStore),
+                          trade: settings.arguments, walletStore: walletStore),
                     ),
                     ProxyProvider<SettingsStore, SendStore>(
                         builder: (_, settingsStore, __) => SendStore(
@@ -455,10 +440,7 @@ class Router {
           return MultiProvider(providers: [
             ProxyProvider<SettingsStore, ExchangeTradeStore>(
               builder: (_, settingsStore, __) => ExchangeTradeStore(
-                  trade: settings.arguments,
-                  walletStore: WalletStore(
-                      walletService: WalletService(),
-                      settingsStore: settingsStore)),
+                  trade: settings.arguments, walletStore: walletStore),
             )
           ], child: TradeDetailsPage());
         });
@@ -466,10 +448,6 @@ class Router {
       case Routes.subaddressList:
         return MaterialPageRoute(
             builder: (_) => MultiProvider(providers: [
-                  ProxyProvider<SettingsStore, WalletStore>(
-                      builder: (_, settingsStore, __) => WalletStore(
-                          walletService: walletService,
-                          settingsStore: settingsStore)),
                   Provider(
                       builder: (_) =>
                           SubaddressListStore(walletService: walletService))
@@ -501,10 +479,6 @@ class Router {
                           ChangeNowExchangeProvider()
                         ]);
                   }),
-                  ProxyProvider<SettingsStore, WalletStore>(
-                      builder: (_, settingsStore, __) => WalletStore(
-                          walletService: walletService,
-                          settingsStore: settingsStore)),
                 ], child: ExchangePage()));
 
       case Routes.settings:
@@ -521,8 +495,7 @@ class Router {
                 child: RescanPage()));
 
       case Routes.faq:
-        return MaterialPageRoute(
-            builder: (_) => FaqPage());
+        return MaterialPageRoute(builder: (_) => FaqPage());
 
       default:
         return MaterialPageRoute(

@@ -6,6 +6,7 @@ import 'package:cake_wallet/src/domain/common/balance.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/domain/monero/monero_balance.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/src/domain/common/calculate_fiat_amount.dart';
 import 'package:cake_wallet/src/stores/price/price_store.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 

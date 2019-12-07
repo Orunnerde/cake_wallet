@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.4.1)
 
 add_library( cw_monero
              SHARED
-             ../ios/Classes/monero_api.cpp )
+             ./jni/monero_jni.cpp
+             ../ios/Classes/monero_api.cpp)
 
              find_library( log-lib log )
 
@@ -172,9 +173,9 @@ set_target_properties(rpc_base PROPERTIES IMPORTED_LOCATION
 
 include_directories( ${EXTERNAL_LIBS_DIR}/monero/include )
 
-target_link_libraries( cw_monero
+target_link_libraries(  cw_monero
                        
-                       wallet_api
+                        wallet_api
                         wallet
                         cryptonote_core
                         cryptonote_basic

@@ -55,7 +55,8 @@ class DashboardPage extends BasePage {
             Text(walletStore.name),
             SizedBox(height: 5),
             Text(
-              walletStore.account != null ? walletStore.account.label : '',
+              // walletStore.account != null ? walletStore.account.label : '',
+              '',
               style: TextStyle(fontWeight: FontWeight.w400, fontSize: 10),
             ),
           ]);

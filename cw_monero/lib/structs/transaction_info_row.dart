@@ -11,25 +11,26 @@ class TransactionInfoRow extends Struct {
   @Uint64()
   int blockHeight;
 
-  @Uint32()
-  int subaddrAccount;
-
   @Uint64()
   int confirmations;
 
-  @Uint64()
-  int datetime;
+  @Uint32()
+  int subaddrAccount;
 
-  @Uint8()
+  @Int8()
   int direction;
 
-  @Uint8()
+  @Int8()
   int isPending;
 
   Pointer<Utf8> hash;
 
   Pointer<Utf8> paymentId;
 
+  @Int64()
+  int datetime;
+
+  int getDatetime() => datetime;
   int getAmount() => amount >= 0 ? amount : amount * -1;
   bool getIsPending() => isPending != 0;
   String getHash() => Utf8.fromUtf8(hash);

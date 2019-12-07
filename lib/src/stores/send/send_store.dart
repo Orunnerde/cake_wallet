@@ -49,6 +49,12 @@ abstract class SendStoreBase with Store {
     _pendingTransaction = null;
     _cryptoNumberFormat = NumberFormat()..maximumFractionDigits = 12;
     _fiatNumberFormat = NumberFormat()..maximumFractionDigits = 2;
+
+    reaction((_) => this.state, (state) async {
+      if (state is TransactionCreatedSuccessfully) {
+        pendingTransaction.commit();
+      }
+    });
   }
 
   @action

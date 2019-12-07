@@ -24,92 +24,93 @@ class _LoginPinCode extends PinCode {
 }
 
 class _LoginPinCodeState extends PinCodeState<_LoginPinCode> {
-  LoginStore _loginStore;
+  AuthStore _authStore;
   String title = 'Enter your PIN';
 
   @override
   Future onPinCodeEntered(PinCodeState state) async {
     final password = pin.fold("", (ac, val) => ac + '$val');
 
-    await _loginStore.authStore.auth(password: password);
+    await _authStore.auth(password: password);
     super.onPinCodeEntered(state);
   }
 
   @override
   Widget build(BuildContext context) {
-    _setLoginStore(store: Provider.of<LoginStore>(context));
+    _setAuthStore(store: Provider.of<AuthStore>(context));
     return body(context);
   }
 
-  void _setLoginStore({LoginStore store}) {
-    if (_loginStore != null) {
+  void _setAuthStore({AuthStore store}) {
+    if (_authStore != null) {
       return;
     }
 
-    _loginStore = store;
+    _authStore = store;
 
-    reaction((_) => _loginStore.authStore.state, (state) {
-      if (state is AuthenticationFailure) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          clear();
-          Scaffold.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.error),
-              backgroundColor: Colors.red,
-            ),
-          );
-        });
-      }
+    reaction((_) => _authStore.state, (state) {
+      print('CHANGED STATE $state');
+      // if (state is AuthenticationFailure) {
+      //   WidgetsBinding.instance.addPostFrameCallback((_) {
+      //     clear();
+      //     Scaffold.of(context).showSnackBar(
+      //       SnackBar(
+      //         content: Text(state.error),
+      //         backgroundColor: Colors.red,
+      //       ),
+      //     );
+      //   });
+      // }
 
-      if (state is AuthenticationBanned) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          clear();
-          Scaffold.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.error),
-              backgroundColor: Colors.red,
-            ),
-          );
-        });
-      }
+      // if (state is AuthenticationBanned) {
+      //   WidgetsBinding.instance.addPostFrameCallback((_) {
+      //     clear();
+      //     Scaffold.of(context).showSnackBar(
+      //       SnackBar(
+      //         content: Text(state.error),
+      //         backgroundColor: Colors.red,
+      //       ),
+      //     );
+      //   });
+      // }
 
-      if (state is AuthenticationInProgress) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Scaffold.of(context).hideCurrentSnackBar();
-          Scaffold.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Authentication'),
-              backgroundColor: Colors.green,
-            ),
-          );
-        });
-      }
+      // if (state is AuthenticationInProgress) {
+      //   WidgetsBinding.instance.addPostFrameCallback((_) {
+      //     Scaffold.of(context).hideCurrentSnackBar();
+      //     Scaffold.of(context).showSnackBar(
+      //       SnackBar(
+      //         content: Text('Authentication'),
+      //         backgroundColor: Colors.green,
+      //       ),
+      //     );
+      //   });
+      // }
     });
 
-    reaction((_) => _loginStore.state, (state) {
-      if (state is LoadedCurrentWalletFailure) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          clear();
-          Scaffold.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.errorMessage),
-              backgroundColor: Colors.red,
-            ),
-          );
-        });
-      }
+    // reaction((_) => _loginStore.state, (state) {
+    //   if (state is LoadedCurrentWalletFailure) {
+    //     WidgetsBinding.instance.addPostFrameCallback((_) {
+    //       clear();
+    //       Scaffold.of(context).showSnackBar(
+    //         SnackBar(
+    //           content: Text(state.errorMessage),
+    //           backgroundColor: Colors.red,
+    //         ),
+    //       );
+    //     });
+    //   }
 
-      if (state is LoadingCurrentWallet) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Scaffold.of(context).hideCurrentSnackBar();
-          Scaffold.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Loading your wallet'),
-              backgroundColor: Colors.green,
-            ),
-          );
-        });
-      }
-    });
+    //   if (state is LoadingCurrentWallet) {
+    //     WidgetsBinding.instance.addPostFrameCallback((_) {
+    //       Scaffold.of(context).hideCurrentSnackBar();
+    //       Scaffold.of(context).showSnackBar(
+    //         SnackBar(
+    //           content: Text('Loading your wallet'),
+    //           backgroundColor: Colors.green,
+    //         ),
+    //       );
+    //     });
+    //   }
+    // });
   }
 }

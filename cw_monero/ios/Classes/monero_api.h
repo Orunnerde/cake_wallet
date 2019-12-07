@@ -1,8 +1,11 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include "CwWalletListener.h"
 
-// #include "/Users/m/development/flutter/bin/cache/dart-sdk/include/dart_native_api.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 bool create_wallet(char *path, char *password, char *language, int32_t networkType, char *error);
 bool restore_wallet_from_seed(char *path, char *password, char *seed, int32_t networkType, uint64_t restoreHeight, char *error);
@@ -26,3 +29,7 @@ void start_refresh();
 void set_refresh_from_block_height(uint64_t height);
 void set_recovering_from_seed(bool is_recovery);
 void store(char *path);
+
+#ifdef __cplusplus
+}
+#endif

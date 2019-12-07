@@ -1,4 +1,4 @@
-group 'com.example.cw_monero'
+group 'com.cakewallet.monero'
 version '1.0-SNAPSHOT'
 
 buildscript {

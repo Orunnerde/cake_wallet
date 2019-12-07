@@ -7,16 +7,18 @@ import 'package:cw_monero/types.dart';
 import 'package:cw_monero/monero_api.dart';
 import 'package:cw_monero/exceptions/connection_to_node_exception.dart';
 import 'package:cw_monero/exceptions/setup_wallet_exception.dart';
+import 'package:flutter/services.dart';
 
 int _boolToInt(bool value) => value ? 1 : 0;
+
+final moneroAPIChannel = const MethodChannel('cw_monero');
 
 final getFileNameNative = moneroApi
     .lookup<NativeFunction<get_filename>>('get_filename')
     .asFunction<GetFilename>();
 
-final getSeedNative = moneroApi
-    .lookup<NativeFunction<get_seed>>('seed')
-    .asFunction<GetSeed>();
+final getSeedNative =
+    moneroApi.lookup<NativeFunction<get_seed>>('seed').asFunction<GetSeed>();
 
 final getAddressNative = moneroApi
     .lookup<NativeFunction<get_address>>('get_address')
@@ -104,6 +106,10 @@ final closeCurrentWalletNative = moneroApi
     .lookup<NativeFunction<close_current_wallet>>('close_current_wallet')
     .asFunction<CloseCurrentWallet>();
 
+final onStartupNative = moneroApi
+    .lookup<NativeFunction<on_startup>>('on_startup')
+    .asFunction<OnStartup>();
+
 int getSyncingHeight() => getSyncingHeightNative();
 
 bool isNeededToRefresh() => isNeededToRefreshNative() != 0;
@@ -129,59 +135,24 @@ int getNodeHeight() => getNodeHeightNative();
 
 bool isConnected() => isConnectedNative() != 0;
 
-bool setupNode(
-    {String address,
-    String login,
-    String password,
-    bool useSSL = false,
-    bool isLightWallet = false}) {
-  final addressPointer = Utf8.toUtf8(address);
-  Pointer<Utf8> loginPointer;
-  Pointer<Utf8> passwordPointer;
-
-  if (login != null) {
-    loginPointer = Utf8.toUtf8(login);
-  }
-
-  if (password != null) {
-    passwordPointer = Utf8.toUtf8(password);
-  }
-
-  final errorMessagePointer = allocate<Utf8>();
-  final isSetupNode = setupNodeNative(
-          addressPointer,
-          loginPointer,
-          passwordPointer,
-          _boolToInt(useSSL),
-          _boolToInt(isLightWallet),
-          errorMessagePointer) !=
-      0;
-
-  free(addressPointer);
-  free(loginPointer);
-  free(passwordPointer);
-
-  if (!isSetupNode) {
-    throw SetupWalletException(
-        message: convertUTF8ToString(pointer: errorMessagePointer));
-  }
-
-  return isSetupNode;
-}
+Future<bool> setupNode(
+        {String address,
+        String login,
+        String password,
+        bool useSSL = false,
+        bool isLightWallet = false}) async =>
+    await moneroAPIChannel.invokeMethod('setupNode', {
+      'address': address,
+      'login': login,
+      'password': password,
+      'useSSL': useSSL,
+      'isLightWallet': isLightWallet
+    });
 
 startRefresh() => startRefreshNative();
 
-bool connectToNode() {
-  final errorMessagePointer = allocate<Utf8>();
-  final isConnectedToNode = connecToNodeNative() != 0;
-
-  if (!isConnectedToNode) {
-    throw ConnectionToNodeException(
-        message: convertUTF8ToString(pointer: errorMessagePointer));
-  }
-
-  return isConnectedToNode;
-}
+Future<bool> connectToNode() async =>
+    await moneroAPIChannel.invokeMethod('connectToNode');
 
 setRefreshFromBlockHeight({int height}) =>
     setRefreshFromBlockHeightNative(height);
@@ -245,3 +216,5 @@ closeListeners() {
     _updateSyncInfoTimer.cancel();
   }
 }
+
+onStartup() => onStartupNative();

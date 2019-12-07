@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cake_wallet/src/domain/common/node.dart';
 import 'package:mobx/mobx.dart';
 import 'package:cake_wallet/src/domain/common/wallet.dart';
 import 'package:cake_wallet/src/domain/monero/account.dart';
@@ -82,14 +83,18 @@ abstract class WalletStoreBase with Store {
   }
 
   @action
-  Future reconnect() async {
-    await _walletService.connectToNode(node: _settingsStore.node);
-  }
+  Future reconnect() async =>
+      await _walletService.connectToNode(node: _settingsStore.node);
 
-   @action
-  Future rescan({int restoreHeight}) async {
-    await _walletService.rescan(restoreHeight: restoreHeight);
-  }
+  @action
+  Future rescan({int restoreHeight}) async =>
+      await _walletService.rescan(restoreHeight: restoreHeight);
+
+  @action
+  Future startSync() async => await _walletService.startSync();
+
+  @action
+  Future connectToNode({Node node}) async => await _walletService.connectToNode(node: node);
 
   Future _onWalletChanged(Wallet wallet) async {
     if (this == null) {

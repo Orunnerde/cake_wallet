@@ -188,6 +188,8 @@ class MoneroWallet extends Wallet {
       {Node node, bool useSSL = false, bool isLightWallet = false}) async {
     try {
       _syncStatus.value = ConnectingSyncStatus();
+      final start = DateTime.now();
+      print('connectToNode start');
 
       moneroWallet.setupNode(
           address: node.uri,
@@ -195,6 +197,17 @@ class MoneroWallet extends Wallet {
           password: node.password ?? '',
           useSSL: useSSL,
           isLightWallet: isLightWallet);
+
+      moneroWallet.connectToNode();
+
+      final setupNodeEnd = DateTime.now();
+      final setupNodeEndDiff =
+          setupNodeEnd.millisecondsSinceEpoch - start.millisecondsSinceEpoch;
+      print('setupNodeEndDiff $setupNodeEndDiff');      
+      final end = DateTime.now();
+      final diff = end.millisecondsSinceEpoch - start.millisecondsSinceEpoch;
+
+      print('Connection time: $diff');
 
       _syncStatus.value = ConnectedSyncStatus();
     } on PlatformException catch (e) {
@@ -366,7 +379,8 @@ class MoneroWallet extends Wallet {
       final currentHeight = await getCurrentHeight();
       final nodeHeight = await getNodeHeightOrUpdate(currentHeight);
 
-      if (currentHeight == 0) {
+      // no blocks - maybe we're not connected to the node ?
+      if (currentHeight <= 1 || nodeHeight == 0) {
         return;
       }
 

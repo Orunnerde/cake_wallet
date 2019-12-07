@@ -31,7 +31,7 @@ final loadWalletNative = moneroApi
     .asFunction<LoadWallet>();
 
 createWallet(
-    {String path, String password, String language = 'en', int nettype = 0}) {
+    {String path, String password, String language = 'English', int nettype = 0}) {
   final pathPointer = Utf8.toUtf8(path);
   final passwordPointer = Utf8.toUtf8(password);
   final languagePointer = Utf8.toUtf8(language);
@@ -91,7 +91,7 @@ restoreWalletFromSeed(
 restoreWalletFromKeys(
     {String path,
     String password,
-    String language = 'en',
+    String language = 'English',
     String address,
     String viewKey,
     String spendKey,

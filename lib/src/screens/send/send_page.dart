@@ -480,34 +480,8 @@ class SendFormState extends State<SendForm> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text('Confirm sending'),
-                  content: Text(
-                      'Commit transaction\nAmount: ${sendStore.pendingTransaction.amount}\nFee: ${sendStore.pendingTransaction.fee}'),
-                  actions: <Widget>[
-                    FlatButton(
-                        child: Text("OK"),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          sendStore.commitTransaction();
-                        }),
-                    FlatButton(
-                      child: Text("Cancel"),
-                      onPressed: () => Navigator.of(context).pop(),
-                    )
-                  ],
-                );
-              });
-        });
-      }
-
-      if (state is TransactionCommitted) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
                   title: Text('Sending'),
-                  content: Text('Transaction sent!'),
+                  content: Text('Transaction created successfully!'),
                   actions: <Widget>[
                     FlatButton(
                         child: Text("OK"),

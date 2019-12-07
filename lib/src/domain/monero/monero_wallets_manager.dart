@@ -126,13 +126,16 @@ class MoneroWalletsManager extends WalletsManager {
 
   Future<Wallet> openWallet(String name, String password) async {
     try {
+      final start = DateTime.now().millisecondsSinceEpoch;
       final path = await pathForWallet(name: name);
 
       await compute(_openWallet, {'path': path, 'password': password});
-
+      final loadWallet = DateTime.now().millisecondsSinceEpoch;
+      print('Loaded wallet ${loadWallet - start}');
       final wallet = await MoneroWallet.load(db, name, type)
         ..updateInfo();
-
+      final preReturn = DateTime.now().millisecondsSinceEpoch;
+      print('Pre return ${preReturn - start}');
       return wallet;
     } catch (e) {
       print('MoneroWalletsManager Error: $e');

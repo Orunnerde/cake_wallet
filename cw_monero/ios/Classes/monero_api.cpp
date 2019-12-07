@@ -3,6 +3,7 @@
 #include <chrono>
 #include <functional>
 #include <iostream>
+#include <unistd.h>
 #include "thread"
 #include "../External/android/monero/include/wallet2_api.h"
 #include "CwWalletListener.h"
@@ -113,13 +114,15 @@ extern "C"
         uint64_t amount;
         uint64_t fee;
         uint64_t blockHeight;
-        uint32_t subaddrAccount;
         uint64_t confirmations;
-        uint64_t datetime;
-        int direction;
-        bool isPending;
+        uint32_t subaddrAccount;
+        int8_t direction;
+        int8_t isPending;
+        
         char *hash;
         char *paymentId;
+
+        int64_t datetime;
 
         TransactionInfoRow(Monero::TransactionInfo *transaction)
         {
@@ -128,9 +131,9 @@ extern "C"
             blockHeight = transaction->blockHeight();
             subaddrAccount = transaction->subaddrAccount();
             confirmations = transaction->confirmations();
-            datetime = transaction->timestamp();
+            datetime = static_cast<int64_t>(transaction->timestamp());            
             direction = transaction->direction();
-            isPending = transaction->isPending();
+            isPending = static_cast<int8_t>(transaction->isPending());
             std::string *hash_str = new std::string(transaction->hash());
             hash = strdup(hash_str->c_str());
             paymentId = strdup(transaction->paymentId().c_str());
@@ -274,6 +277,7 @@ extern "C"
 
     void load_wallet(char *path, char *password, int32_t nettype)
     {
+        nice(19);
         Monero::NetworkType networkType = static_cast<Monero::NetworkType>(nettype);
         Monero::Wallet *wallet = Monero::WalletManagerFactory::getWalletManager()->openWallet(std::string(path), std::string(password), networkType);
         change_current_wallet(wallet);
@@ -348,6 +352,8 @@ extern "C"
 
     bool setup_node(char *address, char *login, char *password, bool use_ssl, bool is_light_wallet, char *error)
     {
+        nice(19);
+        
         Monero::Wallet *wallet = get_current_wallet();
         std::string _login = "";
         std::string _password = "";
@@ -369,16 +375,15 @@ extern "C"
             error = strdup(wallet->errorString().c_str());
             return false;
         }
-        else
-        {
-            wallet->setTrustedDaemon(true);
-        }
+
+        wallet->connectToDaemon();
 
         return inited;
     }
 
     bool connect_to_node(char *error)
     {
+        nice(19);
         bool is_connected = get_current_wallet()->connectToDaemon();
 
         if (!is_connected)
@@ -620,6 +625,11 @@ extern "C"
     int LedgerFind(char *buffer, size_t len)
     {
         return -1;
+    }
+
+    void on_startup()
+    {
+        Monero::Utils::onStartup();
     }
 
 #ifdef __cplusplus

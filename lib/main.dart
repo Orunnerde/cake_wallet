@@ -1,3 +1,12 @@
+import 'dart:async';
+import 'package:cake_wallet/src/reactions/set_reactions.dart';
+import 'package:cake_wallet/src/stores/auth/auth_store.dart';
+import 'package:cake_wallet/src/stores/login/login_store.dart';
+import 'package:cw_monero/wallet.dart' as moneroWallet;
+import 'package:cake_wallet/src/domain/common/sync_status.dart';
+import 'package:cake_wallet/src/stores/balance/balance_store.dart';
+import 'package:cake_wallet/src/stores/sync/sync_store.dart';
+import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,27 +37,25 @@ import 'themes.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final sharedPreferences = await SharedPreferences.getInstance();
-
   final dbHelper = await CoreDB.getInstance();
   final db = await dbHelper.getDb();
-
   final walletService = WalletService();
   final walletListService = WalletListService(
       secureStorage: FlutterSecureStorage(),
       db: db,
       walletService: walletService,
       sharedPreferences: sharedPreferences);
-
   final userService = UserService(
       sharedPreferences: sharedPreferences,
       secureStorage: FlutterSecureStorage());
-
-  await walletListService.changeWalletManger(walletType: WalletType.monero);
-
   final nodeList = NodeList(db: db);
-
-  await defaultSettingsMigration(
-      version: 1, sharedPreferences: sharedPreferences, nodeList: nodeList);
+  final authenticationStore = AuthenticationStore(userService: userService);
+  
+  await initialSetup(
+      sharedPreferences: sharedPreferences,
+      walletListService: walletListService,
+      nodeList: nodeList,
+      authStore: authenticationStore);
 
   final settingsStore = await SettingsStoreBase.load(
       nodeList: nodeList,
@@ -56,123 +63,108 @@ void main() async {
       initialFiatCurrency: FiatCurrency.usd,
       initialTransactionPriority: TransactionPriority.slow,
       initialBalanceDisplayMode: BalanceDisplayMode.availableBalance);
-
   final priceStore = PriceStore();
+  final walletStore =
+      WalletStore(walletService: walletService, settingsStore: settingsStore);
+  final syncStore = SyncStore(walletService: walletService);
+  final balanceStore = BalanceStore(
+      walletService: walletService,
+      settingsStore: settingsStore,
+      priceStore: priceStore);
+  final loginStore = LoginStore(
+      sharedPreferences: sharedPreferences, walletsService: walletListService);
 
-  reaction((_) => settingsStore.node, (node) async {
-    final startDate = DateTime.now();
-    await walletService.connectToNode(node: node);
-    print(
-        'Connection time took ${DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch}');
-  });
+  setReactions(
+      settingsStore: settingsStore,
+      priceStore: priceStore,
+      syncStore: syncStore,
+      walletStore: walletStore,
+      walletService: walletService,
+      authenticationStore: authenticationStore,
+      loginStore: loginStore);
 
-  walletService.onWalletChange.listen((wallet) async {
-    startUpdatingPrice(settingsStore: settingsStore, priceStore: priceStore);
+  runApp(MultiProvider(providers: [
+    Provider(builder: (_) => sharedPreferences),
+    Provider(builder: (_) => walletService),
+    Provider(builder: (_) => walletListService),
+    Provider(builder: (_) => userService),
+    Provider(builder: (_) => db),
+    Provider(builder: (_) => settingsStore),
+    Provider(builder: (_) => priceStore),
+    Provider(builder: (_) => walletStore),
+    Provider(builder: (_) => syncStore),
+    Provider(builder: (_) => balanceStore),
+    Provider(builder: (_) => authenticationStore)
+  ], child: CakeWalletApp()));
+}
 
-    await wallet.connectToNode(node: settingsStore.node);
-    await wallet.startSync();
-  });
-
-  final authStore = AuthenticationStore(userService: userService);
+initialSetup(
+    {WalletListService walletListService,
+    SharedPreferences sharedPreferences,
+    NodeList nodeList,
+    AuthenticationStore authStore,
+    int initialMigrationVersion = 1,
+    WalletType initialWalletType = WalletType.monero}) async {
+  await walletListService.changeWalletManger(walletType: initialWalletType);
+  await defaultSettingsMigration(
+      version: initialMigrationVersion,
+      sharedPreferences: sharedPreferences,
+      nodeList: nodeList);
   await authStore.started();
-
-  runApp(Provider(
-      builder: (_) => authStore,
-      child: CakeWalletApp(
-          sharedPreferences: sharedPreferences,
-          walletService: walletService,
-          walletListService: walletListService,
-          userService: userService,
-          db: db,
-          settingsStore: settingsStore,
-          priceStore: priceStore)));
+  moneroWallet.onStartup();
 }
 
 class CakeWalletApp extends StatelessWidget {
-  final SharedPreferences sharedPreferences;
-  final WalletService walletService;
-  final WalletListService walletListService;
-  final UserService userService;
-  final Database db;
-  final SettingsStore settingsStore;
-  final PriceStore priceStore;
-
-  CakeWalletApp(
-      {@required this.sharedPreferences,
-      @required this.walletService,
-      @required this.walletListService,
-      @required this.userService,
-      @required this.db,
-      @required this.settingsStore,
-      @required this.priceStore});
+  CakeWalletApp() {
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final settingsStore = Provider.of<SettingsStore>(context);
+
     return ChangeNotifierProvider<ThemeChanger>(
         builder: (_) => ThemeChanger(
             settingsStore.isDarkTheme ? Themes.darkTheme : Themes.lightTheme),
-        child: MaterialAppWithTheme(
-            sharedPreferences: sharedPreferences,
-            walletService: walletService,
-            walletListService: walletListService,
-            userService: userService,
-            db: db,
-            settingsStore: settingsStore,
-            priceStore: priceStore));
+        child: MaterialAppWithTheme());
   }
 }
 
 class MaterialAppWithTheme extends StatelessWidget {
-  final SharedPreferences sharedPreferences;
-  final WalletService walletService;
-  final WalletListService walletListService;
-  final UserService userService;
-  final Database db;
-  final SettingsStore settingsStore;
-  final PriceStore priceStore;
-
-  MaterialAppWithTheme(
-      {@required this.sharedPreferences,
-      @required this.walletService,
-      @required this.walletListService,
-      @required this.userService,
-      @required this.db,
-      @required this.settingsStore,
-      @required this.priceStore});
-
   @override
   Widget build(BuildContext context) {
+    final sharedPreferences = Provider.of<SharedPreferences>(context);
+    final walletService = Provider.of<WalletService>(context);
+    final walletListService = Provider.of<WalletListService>(context);
+    final userService = Provider.of<UserService>(context);
+    final db = Provider.of<Database>(context);
+    final settingsStore = Provider.of<SettingsStore>(context);
+    final priceStore = Provider.of<PriceStore>(context);
+    final walletStore = Provider.of<WalletStore>(context);
+    final syncStore = Provider.of<SyncStore>(context);
+    final balanceStore = Provider.of<BalanceStore>(context);
     final theme = Provider.of<ThemeChanger>(context);
-    Color _statusBarColor =
+    final statusBarColor =
         settingsStore.isDarkTheme ? Colors.black : Colors.white;
 
     SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: _statusBarColor));
+        SystemUiOverlayStyle(statusBarColor: statusBarColor));
 
-    return MultiProvider(
-      providers: [
-        Provider<SettingsStore>(builder: (_) => settingsStore),
-        Provider<PriceStore>(builder: (_) => priceStore)
-      ],
-      child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: theme.getTheme(),
-          onGenerateRoute: (settings) => Router.generateRoute(
-              sharedPreferences,
-              walletListService,
-              walletService,
-              userService,
-              db,
-              settings,
-              priceStore),
-          home: MultiProvider(providers: [
-            Provider(builder: (_) => sharedPreferences),
-            Provider(builder: (_) => walletService),
-            Provider(builder: (_) => walletListService),
-            Provider(builder: (_) => userService),
-            Provider(builder: (_) => settingsStore),
-            Provider(builder: (_) => db),
-          ], child: Root())),
-    );
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: theme.getTheme(),
+        onGenerateRoute: (settings) => Router.generateRoute(
+            sharedPreferences: sharedPreferences,
+            walletListService: walletListService,
+            walletService: walletService,
+            userService: userService,
+            db: db,
+            settings: settings,
+            priceStore: priceStore,
+            walletStore: walletStore,
+            syncStore: syncStore,
+            balanceStore: balanceStore),
+        home: Root());
   }
 }
