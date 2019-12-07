@@ -212,7 +212,7 @@ abstract class SettingsStoreBase with Store {
   void _showTrades() => actionlistDisplayMode.add(ActionListDisplayMode.trades);
 
   @action
-  void setDefaultPinLength({@required int pinLength}) async {
+  Future setDefaultPinLength({@required int pinLength}) async {
     this.defaultPinLength = pinLength;
     await _sharedPreferences.setInt(currentPinLength, pinLength);
   }
