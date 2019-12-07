@@ -36,6 +36,16 @@ abstract class AddressBookStoreBase with Store {
     contactList = contacts;
   }
 
+  @action
+  Future change({Contact contact}) async {
+    await _addressBookService.change(contact: contact);
+  }
+
+  @action
+  Future delete({Contact contact}) async {
+    await _addressBookService.delete(contact: contact);
+  }
+
   void validateContactName(String value) {
     String p = '''^[^`,'"]{1,32}\$''';
     RegExp regExp = new RegExp(p);

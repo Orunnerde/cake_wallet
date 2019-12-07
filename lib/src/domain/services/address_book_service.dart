@@ -16,4 +16,12 @@ class AddressBookService {
     final result = await _db.query(Contact.tableName);
     return result.map((map) => Contact.fromMap(map)).toList();
   }
+
+  Future change({Contact contact}) async {
+    await _db.update(Contact.tableName, contact.toMap(), where: '${Contact.primaryKey} = ?', whereArgs: [contact.id]);
+  }
+
+  Future delete({Contact contact}) async {
+    await _db.delete(Contact.tableName, where: '${Contact.primaryKey} = ?', whereArgs: [contact.id]);
+  }
 }

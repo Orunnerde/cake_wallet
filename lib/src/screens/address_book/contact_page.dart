@@ -14,12 +14,19 @@ import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
 
 class ContactPage extends BasePage {
   String get title => 'Contact';
+  final Contact contact;
+
+  ContactPage({this.contact});
 
   @override
-  Widget body(BuildContext context) => ContactForm();
+  Widget body(BuildContext context) => ContactForm(contact);
 }
 
 class ContactForm extends StatefulWidget {
+  final Contact contact;
+
+  ContactForm(this.contact);
+
   @override
   createState() => ContactFormState();
 }
@@ -37,7 +44,14 @@ class ContactFormState extends State<ContactForm> {
   @override
   void initState() {
     super.initState();
-    _currencyTypeController.text = _selectectCrypto.toString();
+    if (widget.contact == null) {
+      _currencyTypeController.text = _selectectCrypto.toString();
+    } else {
+      _selectectCrypto = widget.contact.type;
+      _contactNameController.text = widget.contact.name;
+      _currencyTypeController.text = _selectectCrypto.toString();
+      _addressController.text = widget.contact.address;
+    }
   }
 
   @override
@@ -207,12 +221,22 @@ class ContactFormState extends State<ContactForm> {
                 }
 
                 try {
-                  final contact = Contact(
-                      name: _contactNameController.text,
-                      address: _addressController.text,
-                      type: _selectectCrypto);
+                  if (widget.contact == null) {
+                    final newContact = Contact(
+                        name: _contactNameController.text,
+                        address: _addressController.text,
+                        type: _selectectCrypto);
 
-                  await addressBookStore.add(contact: contact);
+                    await addressBookStore.add(contact: newContact);
+                  } else {
+                    final newContact = Contact(
+                        id: widget.contact.id,
+                        name: _contactNameController.text,
+                        address: _addressController.text,
+                        type: _selectectCrypto);
+
+                    await addressBookStore.change(contact: newContact);
+                  }
                   Navigator.pop(context);
                 } catch (e) {
                   await showDialog(
