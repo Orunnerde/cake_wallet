@@ -84,7 +84,7 @@ class SendFormState extends State<SendForm> {
                           ? PaletteDark.darkThemeDarkGrey
                           : Palette.lightLavender))),
           child: SizedBox(
-            height: 76,
+            height: 56,
             width: double.infinity,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -138,7 +138,7 @@ class SendFormState extends State<SendForm> {
         ),
         Expanded(
           child: Container(
-              padding: EdgeInsets.only(left: 38, right: 33, top: 30, bottom: 30),
+              padding: EdgeInsets.only(left: 38, right: 33, top: 10, bottom: 30),
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
