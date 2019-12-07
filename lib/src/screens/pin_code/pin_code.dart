@@ -4,6 +4,7 @@ import 'package:cake_wallet/palette.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 
 abstract class PinCodeWidget extends StatefulWidget {
   Function(List<int> pin, PinCodeState state) onPinCodeEntered;
@@ -57,7 +58,14 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
     });
   }
 
-  _getCurrentAspectRatio() {
+  setDefaultPinLength() {
+    final settingsStore = Provider.of<SettingsStore>(context);
+
+    pinLength = settingsStore.defaultPinLength;
+    changePinLength(pinLength);
+  }
+
+  getCurrentAspectRatio() {
     final RenderBox renderBox = _gridViewKey.currentContext.findRenderObject();
 
     double cellWidth = renderBox.size.width / 3;
@@ -69,11 +77,12 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
+    WidgetsBinding.instance.addPostFrameCallback(afterLayout);
   }
 
-  _afterLayout(_) {
-    _getCurrentAspectRatio();
+  afterLayout(_) {
+    setDefaultPinLength();
+    getCurrentAspectRatio();
   }
 
   @override
