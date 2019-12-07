@@ -348,7 +348,7 @@ class Router {
         return CupertinoPageRoute(builder: (context) {
           return Provider(
               builder: (_) => AccountListStore(walletService: walletService),
-              child: AccountPage());
+              child: AccountPage(account: settings.arguments));
         });
 
       case Routes.addressBook:

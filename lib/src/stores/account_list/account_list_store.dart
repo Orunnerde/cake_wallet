@@ -51,6 +51,11 @@ abstract class AcountListStoreBase with Store {
     await updateAccountList();
   }
 
+  Future renameAccount({int index, String label}) async {
+    await _accountList.setLabelSubaddress(accountIndex: index, label: label);
+    await updateAccountList();
+  }
+
   Future _onWalletChanged(Wallet wallet) async {
     // if (_onSubaddressesChangeSubscription != null) {
     //   _onSubaddressesChangeSubscription.cancel();
