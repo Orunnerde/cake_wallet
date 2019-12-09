@@ -13,10 +13,11 @@ import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/src/screens/wallet_list/wallet_menu.dart';
 import 'package:cake_wallet/src/widgets/picker.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class WalletListPage extends BasePage {
   bool get isModalBackButton => true;
-  String get title => 'Monero Wallet';
+  String get title => S.current.wallet_list_title;
   AppBarStyle get appBarStyle => AppBarStyle.withShadow;
 
   @override
@@ -40,9 +41,9 @@ class WalletListBodyState extends State<WalletListBody> {
         builder: (_) => Picker(
             items: items,
             selectedAtIndex: -1,
-            title: 'Wallet Menu',
+            title: S.of(context).wallet_menu,
             onItemSelected: (item) =>
-                walletMenu.action(item, wallet, isCurrentWallet)),
+                walletMenu.action(walletMenu.listItems.indexOf(item), wallet, isCurrentWallet)),
         );
   }
 
@@ -111,13 +112,13 @@ class WalletListBodyState extends State<WalletListBody> {
               iconColor: Palette.violet,
               iconBackgroundColor:
                   _isDarkTheme ? PaletteDark.darkThemeViolet : Colors.white,
-              text: 'Create New Wallet'),
+              text: S.of(context).wallet_list_create_new_wallet),
           SizedBox(height: 10.0),
           PrimaryIconButton(
             onPressed: () =>
                 Navigator.of(context).pushNamed(Routes.restoreWalletOptions),
             iconData: Icons.refresh,
-            text: 'Restore Wallet',
+            text: S.of(context).wallet_list_restore_wallet,
             color: _isDarkTheme
                 ? PaletteDark.darkThemeIndigoButton
                 : Palette.indigo,

@@ -11,9 +11,10 @@ import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/src/widgets/address_text_field.dart';
 import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class ContactPage extends BasePage {
-  String get title => 'Contact';
+  String get title => S.current.contact;
   final Contact contact;
 
   ContactPage({this.contact});
@@ -69,7 +70,7 @@ class ContactFormState extends State<ContactForm> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Please select:'),
+            title: Text(S.of(context).please_select),
             backgroundColor:
                 _isDarkTheme ? Theme.of(context).backgroundColor : Colors.white,
             content: Container(
@@ -95,14 +96,14 @@ class ContactFormState extends State<ContactForm> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Cancel')),
+                  child: Text(S.of(context).cancel)),
               FlatButton(
                   onPressed: () {
                     _selectectCrypto = selectedCurrency;
                     _currencyTypeController.text = currencyType;
                     Navigator.of(context).pop();
                   },
-                  child: Text('OK'))
+                  child: Text(S.of(context).ok))
             ],
           );
         });
@@ -131,7 +132,7 @@ class ContactFormState extends State<ContactForm> {
                         color: _isDarkTheme
                             ? PaletteDark.darkThemeGrey
                             : Palette.wildDarkBlue),
-                    hintText: 'Contact Name',
+                    hintText: S.of(context).contact_name,
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
                             color: _isDarkTheme
@@ -203,7 +204,7 @@ class ContactFormState extends State<ContactForm> {
                     _addressController.text = '';
                   });
                 },
-                text: 'Reset',
+                text: S.of(context).reset,
                 color: _isDarkTheme
                     ? PaletteDark.darkThemeIndigoButton
                     : Palette.indigo,
@@ -250,13 +251,13 @@ class ContactFormState extends State<ContactForm> {
                           actions: <Widget>[
                             FlatButton(
                                 onPressed: () => Navigator.of(context).pop(),
-                                child: Text('OK'))
+                                child: Text(S.of(context).ok))
                           ],
                         );
                       });
                 }
               },
-              text: 'Save',
+              text: S.of(context).save,
               color: _isDarkTheme
                   ? PaletteDark.darkThemePurpleButton
                   : Palette.purple,

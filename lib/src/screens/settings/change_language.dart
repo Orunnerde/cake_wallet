@@ -2,92 +2,110 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:provider/provider.dart';
-import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/src/domain/common/language.dart';
+import 'package:cake_wallet/src/stores/settings/settings_store.dart';
+import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
-const List<String> languagesList = const <String>[
-  'English',
-  'Русский (Russian)',
-  'Español (Spanish)',
-  '日本 (Japanese)',
-  '한국어 (Korean)',
-  'हिंदी (Hindi)',
-  'Deutsch (German)',
-  '中文 (Chinese)',
-  'Português (Portuguese)',
-  'Polskie (Polish)',
-  'Nederlands (Dutch)'
-];
+const Map<String,String> _languages = {
+  'en' : 'English',
+  'ru' : 'Русский (Russian)',
+  'es' : 'Español (Spanish)',
+  'ja' : '日本 (Japanese)',
+  'ko' : '한국어 (Korean)',
+  'hi' : 'हिंदी (Hindi)',
+  'de' : 'Deutsch (German)',
+  'zh' : '中文 (Chinese)',
+  'pt' : 'Português (Portuguese)',
+  'pl' : 'Polskie (Polish)',
+  'nl' : 'Nederlands (Dutch)'
+};
 
-class ChangeLanguage extends StatefulWidget{
-
-  @override
-  createState() => ChangeLanguageState();
-
-}
-
-class ChangeLanguageState extends State<ChangeLanguage>{
-
-  final _backArrowImage = Image.asset('assets/images/back_arrow.png');
-  final _backArrowImageDarkTheme = Image.asset('assets/images/back_arrow_dark_theme.png');
+class ChangeLanguage extends BasePage{
+  get title => S.current.settings_change_language;
 
   @override
-  Widget build(BuildContext context) {
+  Widget body(BuildContext context) {
+    final settingsStore = Provider.of<SettingsStore>(context);
+    final currentLanguage = Provider.of<Language>(context);
 
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
+    bool isDarkTheme;
+    Color currentColor, notCurrentColor;
 
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    if (_themeChanger.getTheme() == Themes.darkTheme) {
+      currentColor = PaletteDark.darkThemeViolet;
+      notCurrentColor = PaletteDark.darkThemeMidGrey;
+      isDarkTheme = true;
+    }
+    else {
+      currentColor = Palette.purple;
+      notCurrentColor = Palette.lightGrey2;
+      isDarkTheme = false;
+    }
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      appBar: CupertinoNavigationBar(
-        leading: ButtonTheme(
-          minWidth: double.minPositive,
-          child: FlatButton(
-            onPressed: (){Navigator.pop(context);},
-            child: _isDarkTheme ? _backArrowImageDarkTheme : _backArrowImage
-          ),
-        ),
-        middle: Text('Change language',
-          style: TextStyle(
-            fontSize: 16.0,
-            color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
-          ),
-        ),
-        backgroundColor: Theme.of(context).backgroundColor,
-        border: null,
+    return Container(
+      padding: EdgeInsets.only(
+          top: 10.0,
+          bottom: 10.0
       ),
-      body: SafeArea(
-        child: Container(
-          padding: EdgeInsets.only(
-            top: 10.0,
-            bottom: 10.0
-          ),
-          child: ListView.builder(
-            itemCount: languagesList.length,
-            itemBuilder: (BuildContext context, int index){
-              return Container(
-                margin: EdgeInsets.only(
-                  top: 10.0,
-                  bottom: 10.0
+      child: ListView.builder(
+        itemCount: _languages.values.length,
+        itemBuilder: (BuildContext context, int index){
+          final isCurrent = settingsStore.languageCode == null ? false
+          : _languages.keys.elementAt(index) == settingsStore.languageCode;
+
+          return Container(
+            margin: EdgeInsets.only(
+                top: 10.0,
+                bottom: 10.0
+            ),
+            color: isCurrent ? currentColor : notCurrentColor,
+            child: ListTile(
+              title: Text(_languages.values.elementAt(index),
+                style: TextStyle(
+                    fontSize: 16.0,
+                    color: isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
                 ),
-                color: _isDarkTheme ? PaletteDark.darkThemeMidGrey : Palette.lightGrey2,
-                child: ListTile(
-                  title: Text(languagesList[index],
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
-                    ),
-                  ),
-                ),
-              );
-            }
-          ),
-        )
-      ),
+              ),
+              onTap: () async {
+                if (!isCurrent) {
+                  await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text(
+                          S.of(context).change_language,
+                          textAlign: TextAlign.center,
+                        ),
+                        content: Text(
+                          S.of(context).change_language_to(_languages.values.elementAt(index)),
+                          textAlign: TextAlign.center,
+                        ),
+                        actions: <Widget>[
+                          FlatButton(
+                              onPressed: () =>
+                                  Navigator.of(context).pop(),
+                              child: Text(S.of(context).cancel)),
+                          FlatButton(
+                              onPressed: () {
+                                settingsStore.saveLanguageCode(languageCode: _languages.keys.elementAt(index));
+                                currentLanguage.setCurrentLanguage(_languages.keys.elementAt(index));
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(S.of(context).change)),
+                        ],
+                      );
+                    }
+                  );
+                }
+              },
+            ),
+          );
+        },
+      )
     );
   }
-
 }

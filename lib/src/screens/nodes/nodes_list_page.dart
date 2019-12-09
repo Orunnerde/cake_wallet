@@ -9,22 +9,20 @@ import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/widgets/standart_switch.dart';
 
 class NodeListPage extends BasePage {
   NodeListPage();
 
-  String get title => 'Nodes';
+  String get title => S.current.nodes;
 
   @override
   Widget trailing(context) {
     final nodeList = Provider.of<NodeListStore>(context);
 
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -38,11 +36,11 @@ class NodeListPage extends BasePage {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text(
-                          'Reset settings',
+                          S.of(context).node_reset_settings_title,
                           textAlign: TextAlign.center,
                         ),
                         content: Text(
-                          'Are you sure that you want to reset settings to default?',
+                          S.of(context).nodes_list_reset_to_default_message,
                           textAlign: TextAlign.center,
                         ),
                         actions: <Widget>[
@@ -50,19 +48,19 @@ class NodeListPage extends BasePage {
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text('Cancel')),
+                              child: Text(S.of(context).cancel)),
                           FlatButton(
                               onPressed: () async {
                                 Navigator.pop(context);
                                 await nodeList.reset();
                               },
-                              child: Text('Reset'))
+                              child: Text(S.of(context).reset))
                         ],
                       );
                     });
               },
               child: Text(
-                'Reset',
+                S.of(context).reset,
                 style: TextStyle(fontSize: 16.0,
                     color: _isDarkTheme ? PaletteDark.darkThemeGrey : Palette.wildDarkBlue
                 ),
@@ -160,22 +158,21 @@ class NodeListPage extends BasePage {
                                   builder: (BuildContext context) {
                                     return AlertDialog(
                                       content: Text(
-                                        'Are you sure to change current node to '
-                                        '${node.uri}?',
+                                        S.of(context).change_current_node(node.uri),
                                         textAlign: TextAlign.center,
                                       ),
                                       actions: <Widget>[
                                         FlatButton(
                                             onPressed: () =>
                                                 Navigator.pop(context),
-                                            child: const Text('Cancel')),
+                                            child: Text(S.of(context).cancel)),
                                         FlatButton(
                                             onPressed: () async {
                                               Navigator.of(context).pop();
                                               await settings.setCurrentNode(
                                                   node: node);
                                             },
-                                            child: const Text('Change')),
+                                            child: Text(S.of(context).change)),
                                       ],
                                     );
                                   });
@@ -192,23 +189,23 @@ class NodeListPage extends BasePage {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: const Text(
-                                        'Remove node',
+                                      title: Text(
+                                        S.of(context).remove_node,
                                         textAlign: TextAlign.center,
                                       ),
-                                      content: const Text(
-                                        'Are you sure that you want to remove selected node?',
+                                      content: Text(
+                                        S.of(context).remove_node_message,
                                         textAlign: TextAlign.center,
                                       ),
                                       actions: <Widget>[
                                         FlatButton(
                                             onPressed: () =>
                                                 Navigator.pop(context, false),
-                                            child: const Text('Cancel')),
+                                            child: Text(S.of(context).cancel)),
                                         FlatButton(
                                             onPressed: () =>
                                                 Navigator.pop(context, true),
-                                            child: const Text('Remove')),
+                                            child: Text(S.of(context).remove)),
                                       ],
                                     );
                                   });
@@ -232,8 +229,8 @@ class NodeListPage extends BasePage {
                                       CupertinoIcons.delete,
                                       color: Colors.white,
                                     ),
-                                    const Text(
-                                      'Delete',
+                                    Text(
+                                      S.of(context).delete,
                                       style: TextStyle(color: Colors.white),
                                     )
                                   ],

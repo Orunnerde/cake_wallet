@@ -14,13 +14,14 @@ import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class NewWalletPage extends BasePage {
   final WalletListService walletsService;
   final WalletService walletService;
   final SharedPreferences sharedPreferences;
 
-  String get title => 'New Wallet';
+  String get title => S.current.new_wallet;
 
   NewWalletPage(
       {@required this.walletsService,
@@ -60,7 +61,7 @@ class _WalletNameFormState extends State<WalletNameForm> {
                   content: Text(state.error),
                   actions: <Widget>[
                     FlatButton(
-                      child: Text("OK"),
+                      child: Text(S.of(context).ok),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ],
@@ -94,7 +95,7 @@ class _WalletNameFormState extends State<WalletNameForm> {
                           color: _isDarkTheme
                               ? PaletteDark.wildDarkBlueWithOpacity
                               : Palette.lightBlue),
-                      hintText: 'Wallet name',
+                      hintText: S.of(context).wallet_name,
                       focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                               color: _isDarkTheme
@@ -122,7 +123,7 @@ class _WalletNameFormState extends State<WalletNameForm> {
                   walletCreationStore.create(name: nameController.text);
                 }
               },
-              text: 'Continue',
+              text: S.of(context).continue_text,
               color: _isDarkTheme
                   ? PaletteDark.darkThemePurpleButton
                   : Palette.purple,

@@ -7,6 +7,7 @@ import 'package:cake_wallet/src/domain/monero/subaddress_list.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/stores/subaddress_creation/subaddress_creation_state.dart';
 import 'package:cake_wallet/src/domain/monero/account.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 part 'subaddress_creation_store.g.dart';
 
@@ -80,7 +81,6 @@ abstract class SubadrressCreationStoreBase with Store {
     String p = '''^[^`,'"]{1,20}\$''';
     RegExp regExp = new RegExp(p);
     isValid = regExp.hasMatch(value);
-    errorMessage = isValid ? null : '''Subaddress name can't contain ` , ' " '''
-        'symbols\nand must be between 1 and 20 characters long';
+    errorMessage = isValid ? null : S.current.error_text_subaddress_name;
   }
 }

@@ -8,6 +8,7 @@ import 'package:cake_wallet/src/domain/monero/subaddress.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 part 'wallet_store.g.dart';
 
@@ -46,7 +47,7 @@ abstract class WalletStoreBase with Store {
   WalletStoreBase({WalletService walletService, SettingsStore settingsStore}) {
     _walletService = walletService;
     _settingsStore = settingsStore;
-    name = "Monero Wallet";
+    name = '';
     type = CryptoCurrency.xmr;
     amountValue = '';
 
@@ -139,8 +140,6 @@ abstract class WalletStoreBase with Store {
       } else isValid = false;
     }
 
-    errorMessage = isValid ? null : "Amount can only contain numbers.\n"
-        "Amount can't exceed available maximum.\n"
-        "The number of fraction digits must be less or equal to 12";
+    errorMessage = isValid ? null : S.current.error_text_amount;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:cake_wallet/src/domain/exchange/exchange_provider_description.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class TradeNotFoundException implements Exception {
   String tradeId;
@@ -10,8 +11,8 @@ class TradeNotFoundException implements Exception {
   @override
   String toString() {
     var text = tradeId != null && provider != null
-        ? 'Trade $tradeId of ${provider.title} not found.'
-        : 'Trade not found.';
+        ? S.current.trade_id_not_found(tradeId, provider.title)
+        : S.current.trade_not_found;
     text += ' $description';
 
     return text;

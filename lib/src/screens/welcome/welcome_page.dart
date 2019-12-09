@@ -6,6 +6,7 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class WelcomePage extends BasePage {
   static const _aspectRatioImage = 1.26;
@@ -49,7 +50,7 @@ class WelcomePage extends BasePage {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Text(
-                'WELCOME\nTO CAKE WALLET',
+                S.of(context).welcome,
                 style: TextStyle(
                   fontSize: 30.0,
                   fontWeight: FontWeight.bold,
@@ -58,7 +59,7 @@ class WelcomePage extends BasePage {
                 textAlign: TextAlign.center,
               ),
               Text(
-                'Awesome wallet\nfor Monero',
+                S.of(context).first_wallet_text,
                 style: TextStyle(
                   fontSize: 22.0,
                   color: Palette.lightBlue,
@@ -67,7 +68,7 @@ class WelcomePage extends BasePage {
                 textAlign: TextAlign.center,
               ),
               Text(
-                'Please make selection below to\ncreate or recover your wallet.',
+                S.of(context).please_make_selection,
                 style: TextStyle(
                   fontSize: 16.0,
                   color: Palette.lightBlue,
@@ -85,7 +86,7 @@ class WelcomePage extends BasePage {
                   onPressed: () {
                     Navigator.pushNamed(context, Routes.newWalletFromWelcome);
                   },
-                  text: 'Create New',
+                  text: S.of(context).create_new,
                   color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
                       : Palette.purple,
                   borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
@@ -100,7 +101,7 @@ class WelcomePage extends BasePage {
                       : Palette.brightBlue,
                   borderColor: _isDarkTheme ? PaletteDark.darkThemeBlueButtonBorder
                       : Palette.cloudySky,
-                  text: 'Restore wallet',
+                  text: S.of(context).restore_wallet,
                 )
               ]))
     ]);

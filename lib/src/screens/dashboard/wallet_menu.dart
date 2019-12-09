@@ -2,38 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:cake_wallet/routes.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class WalletMenu {
   final List<String> items = [
-    'Rescan',
-    'Reconnect',
-    'Accounts',
-    'Wallets',
-    'Show seed',
-    'Show keys',
-    'Address book'
+    S.current.rescan,
+    S.current.reconnect,
+    S.current.accounts,
+    S.current.wallets,
+    S.current.show_seed,
+    S.current.show_keys,
+    S.current.address_book_menu
   ];
   final BuildContext context;
 
   WalletMenu(this.context);
 
-  void action(String item) {
-    switch (item) {
-      case 'Rescan':
+  void action(int index) {
+    switch (index) {
+      case 0:
         Navigator.of(context).pushNamed(Routes.rescan);
         break;
-      case 'Reconnect':
+      case 1:
         _presentReconnectAlert(context);
         break;
-      case 'Accounts':
+      case 2:
         Navigator.of(context)
             .pushNamed(Routes.accountList);
         break;
-      case 'Wallets':
+      case 3:
         Navigator.of(context)
             .pushNamed(Routes.walletList);
         break;
-      case 'Show seed':
+      case 4:
         Navigator.of(context).pushNamed(Routes.auth,
             arguments: (isAuthenticatedSuccessfully, auth) =>
             isAuthenticatedSuccessfully
@@ -41,7 +42,7 @@ class WalletMenu {
                 .popAndPushNamed(Routes.seed)
                 : null);
         break;
-      case 'Show keys':
+      case 5:
         Navigator.of(context).pushNamed(Routes.auth,
             arguments: (isAuthenticatedSuccessfully, auth) =>
             isAuthenticatedSuccessfully
@@ -49,7 +50,7 @@ class WalletMenu {
                 .popAndPushNamed(Routes.showKeys)
                 : null);
         break;
-      case 'Address book':
+      case 6:
         Navigator.of(context)
             .pushNamed(Routes.addressBook);
         break;
@@ -66,20 +67,20 @@ class WalletMenu {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text(
-              'Reconnection',
+              S.of(context).reconnection,
               textAlign: TextAlign.center,
             ),
-            content: Text('Are you sure to reconnect ?'),
+            content: Text(S.of(context).reconnect_alert_text),
             actions: <Widget>[
               FlatButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: Text('Cancel')),
+                  child: Text(S.of(context).cancel)),
               FlatButton(
                   onPressed: () {
                     walletStore.reconnect();
                     Navigator.of(context).pop();
                   },
-                  child: Text('OK'))
+                  child: Text(S.of(context).ok))
             ],
           );
         });

@@ -33,6 +33,9 @@ import 'package:cake_wallet/src/domain/common/wallet_type.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'theme_changer.dart';
 import 'themes.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:cake_wallet/generated/i18n.dart';
+import 'package:cake_wallet/src/domain/common/language.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,7 +53,7 @@ void main() async {
       secureStorage: FlutterSecureStorage());
   final nodeList = NodeList(db: db);
   final authenticationStore = AuthenticationStore(userService: userService);
-  
+
   await initialSetup(
       sharedPreferences: sharedPreferences,
       walletListService: walletListService,
@@ -127,7 +130,9 @@ class CakeWalletApp extends StatelessWidget {
     return ChangeNotifierProvider<ThemeChanger>(
         builder: (_) => ThemeChanger(
             settingsStore.isDarkTheme ? Themes.darkTheme : Themes.lightTheme),
-        child: MaterialAppWithTheme());
+        child: ChangeNotifierProvider<Language>(
+            builder: (_) => Language(settingsStore.languageCode),
+            child: MaterialAppWithTheme()));
   }
 }
 
@@ -147,6 +152,7 @@ class MaterialAppWithTheme extends StatelessWidget {
     final theme = Provider.of<ThemeChanger>(context);
     final statusBarColor =
         settingsStore.isDarkTheme ? Colors.black : Colors.white;
+    final currentLanguage = Provider.of<Language>(context);
 
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: statusBarColor));
@@ -154,6 +160,14 @@ class MaterialAppWithTheme extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: theme.getTheme(),
+        localizationsDelegates: [
+          S.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
+        locale: Locale(currentLanguage.getCurrentLanguage()),
         onGenerateRoute: (settings) => Router.generateRoute(
             sharedPreferences: sharedPreferences,
             walletListService: walletListService,

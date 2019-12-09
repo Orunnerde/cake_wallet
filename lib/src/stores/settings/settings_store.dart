@@ -9,6 +9,8 @@ import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
 import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
 import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
 import 'package:cake_wallet/src/stores/action_list/action_list_display_mode.dart';
+import 'package:cake_wallet/src/screens/settings/items/item_headers.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 part 'settings_store.g.dart';
 
@@ -25,6 +27,7 @@ abstract class SettingsStoreBase with Store {
   static const currentDarkTheme = 'dark_theme';
   static const displayActionListModeKey = 'display_list_mode';
   static const currentPinLength = 'current_pin_length';
+  static const currentLanguageCode = 'language_code';
 
   static Future<SettingsStore> load(
       {@required SharedPreferences sharedPreferences,
@@ -53,6 +56,9 @@ abstract class SettingsStoreBase with Store {
     final defaultPinLength = sharedPreferences.getInt(currentPinLength) == null
         ? 4
         : sharedPreferences.getInt(currentPinLength);
+    final savedLanguageCode =
+    sharedPreferences.getString(currentLanguageCode) == null ? 'en'
+        : sharedPreferences.getString(currentLanguageCode);
 
     final store = SettingsStore(
         sharedPreferences: sharedPreferences,
@@ -64,7 +70,9 @@ abstract class SettingsStoreBase with Store {
         initialAllowBiometricalAuthentication: allowBiometricalAuthentication,
         initialDarkTheme: savedDarkTheme,
         actionlistDisplayMode: actionlistDisplayMode,
-        initialPinLength: defaultPinLength);
+        initialPinLength: defaultPinLength,
+        initialLanguageCode: savedLanguageCode);
+
     await store.loadSettings();
 
     return store;
@@ -96,6 +104,10 @@ abstract class SettingsStoreBase with Store {
 
   @observable
   int defaultPinLength;
+  String languageCode;
+
+  @observable
+  Map<String,String> itemHeaders;
 
   SharedPreferences _sharedPreferences;
   NodeList _nodeList;
@@ -110,7 +122,8 @@ abstract class SettingsStoreBase with Store {
       @required bool initialAllowBiometricalAuthentication,
       @required bool initialDarkTheme,
       this.actionlistDisplayMode,
-      @required int initialPinLength}) {
+      @required int initialPinLength,
+      @required String initialLanguageCode}) {
     fiatCurrency = initialFiatCurrency;
     transactionPriority = initialTransactionPriority;
     balanceDisplayMode = initialBalanceDisplayMode;
@@ -120,6 +133,8 @@ abstract class SettingsStoreBase with Store {
     allowBiometricalAuthentication = initialAllowBiometricalAuthentication;
     isDarkTheme = initialDarkTheme;
     defaultPinLength = initialPinLength;
+    languageCode = initialLanguageCode;
+    itemHeaders = Map();
 
     actionlistDisplayMode.observe(
         (dynamic _) => _sharedPreferences.setInt(displayActionListModeKey,
@@ -141,6 +156,12 @@ abstract class SettingsStoreBase with Store {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: isDarkTheme ? Colors.black : Colors.white));
     await _sharedPreferences.setBool(currentDarkTheme, isDarkTheme);
+  }
+
+  @action
+  Future saveLanguageCode({@required String languageCode}) async {
+    this.languageCode = languageCode;
+    await _sharedPreferences.setString(currentLanguageCode, languageCode);
   }
 
   @action
@@ -220,5 +241,27 @@ abstract class SettingsStoreBase with Store {
   Future<Node> _fetchCurrentNode() async {
     final id = _sharedPreferences.getInt(currentNodeIdKey);
     return await _nodeList.findBy(id: id);
+  }
+
+  @action
+  void setItemHeaders() {
+    itemHeaders.clear();
+    itemHeaders.addAll({
+      ItemHeaders.nodes : S.current.settings_nodes,
+      ItemHeaders.currentNode : S.current.settings_current_node,
+      ItemHeaders.wallets : S.current.settings_wallets,
+      ItemHeaders.displayBalanceAs : S.current.settings_display_balance_as,
+      ItemHeaders.currency : S.current.settings_currency,
+      ItemHeaders.feePriority : S.current.settings_fee_priority,
+      ItemHeaders.saveRecipientAddress : S.current.settings_save_recipient_address,
+      ItemHeaders.personal : S.current.settings_personal,
+      ItemHeaders.changePIN : S.current.settings_change_pin,
+      ItemHeaders.changeLanguage : S.current.settings_change_language,
+      ItemHeaders.allowBiometricalAuthentication : S.current.settings_allow_biometrical_authentication,
+      ItemHeaders.darkMode : S.current.settings_dark_mode,
+      ItemHeaders.support : S.current.settings_support,
+      ItemHeaders.termsAndConditions : S.current.settings_terms_and_conditions,
+      ItemHeaders.faq : S.current.faq
+    });
   }
 }

@@ -3,6 +3,7 @@ import 'package:cake_wallet/src/domain/services/address_book_service.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 part 'address_book_store.g.dart';
 
@@ -50,8 +51,7 @@ abstract class AddressBookStoreBase with Store {
     String p = '''^[^`,'"]{1,32}\$''';
     RegExp regExp = new RegExp(p);
     isValid = regExp.hasMatch(value);
-    errorMessage = isValid ? null : '''Contact name can't contain ` , ' " '''
-                     'symbols\nand must be between 1 and 32 characters long';
+    errorMessage = isValid ? null : S.current.error_text_contact_name;
   }
 
   void validateAddress(String value, {CryptoCurrency cryptoCurrency}) {
@@ -80,6 +80,6 @@ abstract class AddressBookStoreBase with Store {
           isValid = (value.length == 34);
       }
     }
-    errorMessage = isValid ? null : 'Wallet address must correspond to the type\nof cryptocurrency';
+    errorMessage = isValid ? null : S.current.error_text_address;
   }
 }

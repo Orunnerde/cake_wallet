@@ -10,9 +10,10 @@ import 'package:cake_wallet/src/stores/trade_history/trade_history_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class TradeHistoryPage extends BasePage {
-  String get title => 'Trade history';
+  String get title => S.current.trade_history_title;
   bool get isModalBackButton => true;
 
   @override

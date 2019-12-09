@@ -6,9 +6,10 @@ import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/palette.dart';
 import 'dart:convert';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class FaqPage extends BasePage {
-  String get title => 'FAQ';
+  String get title => S.current.faq;
 
   @override
   Widget body(BuildContext context) {

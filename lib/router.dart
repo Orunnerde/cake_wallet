@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:cake_wallet/routes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 // MARK: Import domains
 
@@ -53,7 +54,6 @@ import 'package:cake_wallet/src/stores/price/price_store.dart';
 
 import 'package:cake_wallet/src/screens/auth/auth_page.dart';
 import 'package:cake_wallet/src/screens/dashboard/dashboard_page.dart';
-import 'package:cake_wallet/src/screens/login/login_page.dart';
 import 'package:cake_wallet/src/screens/nodes/new_node_page.dart';
 import 'package:cake_wallet/src/screens/nodes/nodes_list_page.dart';
 import 'package:cake_wallet/src/screens/receive/receive_page.dart';
@@ -80,6 +80,7 @@ import 'package:cake_wallet/src/screens/exchange_trade/exchange_confirm_page.dar
 import 'package:cake_wallet/src/screens/trade_history/trade_history_page.dart';
 import 'package:cake_wallet/src/screens/exchange_trade/exchange_trade_page.dart';
 import 'package:cake_wallet/src/screens/subaddress/subaddress_list_page.dart';
+import 'package:cake_wallet/src/screens/settings/change_language.dart';
 import 'package:cake_wallet/src/screens/restore/restore_wallet_from_seed_details.dart';
 import 'package:cake_wallet/src/screens/trade_history/trade_details_page.dart';
 import 'package:cake_wallet/src/screens/exchange/exchange_page.dart';
@@ -222,6 +223,7 @@ class Router {
                   Provider(
                       builder: (context) => SendStore(
                           walletService: walletService,
+                          priceStore: priceStore,
                           recipientAddressList: RecipientAddressList(db: db))),
                 ], child: SendPage()));
 
@@ -325,14 +327,6 @@ class Router {
                       closable: false));
             });
 
-        return CupertinoPageRoute(
-            builder: (_) => Provider(
-                builder: (_) => AuthStore(
-                    sharedPreferences: sharedPreferences,
-                    userService: userService,
-                    walletService: walletService),
-                child: LoginPage()));
-
       case Routes.accountList:
         return MaterialPageRoute(
             builder: (context) {
@@ -418,7 +412,8 @@ class Router {
                         builder: (_, settingsStore, __) => SendStore(
                             recipientAddressList: RecipientAddressList(db: db),
                             walletService: walletService,
-                            settingsStore: settingsStore)),
+                            settingsStore: settingsStore,
+                            priceStore: priceStore)),
                   ],
                   child: ExchangeTradePage(),
                 ));
@@ -497,11 +492,14 @@ class Router {
       case Routes.faq:
         return MaterialPageRoute(builder: (_) => FaqPage());
 
+      case Routes.changeLanguage:
+        return MaterialPageRoute(builder: (_) => ChangeLanguage());
+
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(
                   body: Center(
-                      child: Text('No route defined for ${settings.name}')),
+                      child: Text(S.current.router_no_route(settings.name))),
                 ));
     }
   }

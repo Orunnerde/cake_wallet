@@ -11,10 +11,11 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class AddressBookPage extends BasePage {
   bool get isModalBackButton => true;
-  String get title => 'Address Book';
+  String get title => S.current.address_book;
   AppBarStyle get appBarStyle => AppBarStyle.withShadow;
 
   final bool isEditable;

@@ -25,7 +25,7 @@ Future<double> fetchPriceFor({CryptoCurrency crypto, FiatCurrency fiat}) async {
 
     for (final item in data) {
       if (item['symbol'] == cryptoToString(crypto)) {
-        price = item['quotes'][fiatStringified]['price'];
+        price = item['quote'][fiatStringified]['price'];
         break;
       }
     }

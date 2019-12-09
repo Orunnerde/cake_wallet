@@ -1,3 +1,4 @@
+import 'package:cake_wallet/src/stores/price/price_store.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
@@ -10,6 +11,7 @@ import 'package:cake_wallet/src/domain/monero/monero_transaction_creation_creden
 import 'package:cake_wallet/src/domain/common/recipient_address_list.dart';
 import 'package:cake_wallet/src/stores/send/sending_state.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 part 'send_store.g.dart';
 
@@ -18,6 +20,7 @@ class SendStore = SendStoreBase with _$SendStore;
 abstract class SendStoreBase with Store {
   WalletService walletService;
   SettingsStore settingsStore;
+  PriceStore priceStore;
   RecipientAddressList recipientAddressList;
 
   @observable
@@ -44,7 +47,8 @@ abstract class SendStoreBase with Store {
   SendStoreBase(
       {@required this.walletService,
       this.settingsStore,
-      this.recipientAddressList}) {
+      this.recipientAddressList,
+      this.priceStore}) {
     state = SendingStateInitial();
     _pendingTransaction = null;
     _cryptoNumberFormat = NumberFormat()..maximumFractionDigits = 12;
@@ -65,7 +69,9 @@ abstract class SendStoreBase with Store {
     try {
       final _amount = amount != null
           ? amount
-          : cryptoAmount == 'ALL' ? null : cryptoAmount.replaceAll(',', '.');
+          : cryptoAmount == S.current.all
+              ? null
+              : cryptoAmount.replaceAll(',', '.');
       final credentials = MoneroTransactionCreationCredentials(
           address: address,
           paymentId: paymentId ?? '',
@@ -113,6 +119,8 @@ abstract class SendStoreBase with Store {
 
     if (cryptoAmount != null && cryptoAmount.isNotEmpty) {
       _calculateFiatAmount();
+    } else {
+      fiatAmount = '';
     }
   }
 
@@ -122,21 +130,25 @@ abstract class SendStoreBase with Store {
 
     if (fiatAmount != null && fiatAmount.isNotEmpty) {
       _calculateCryptoAmount();
+    } else {
+      cryptoAmount = '';
     }
   }
 
   @action
   Future _calculateFiatAmount() async {
-    final price =
-        await fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: settingsStore.fiatCurrency);
+    final symbol = PriceStoreBase.generateSymbolForPair(
+        fiat: settingsStore.fiatCurrency, crypto: CryptoCurrency.xmr);
+    final price = priceStore.prices[symbol];
     final amount = double.parse(cryptoAmount) * price;
     fiatAmount = _fiatNumberFormat.format(amount);
   }
 
   @action
   Future _calculateCryptoAmount() async {
-    final price =
-        await fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: settingsStore.fiatCurrency);
+    final symbol = PriceStoreBase.generateSymbolForPair(
+        fiat: settingsStore.fiatCurrency, crypto: CryptoCurrency.xmr);
+    final price = priceStore.prices[symbol];
     final amount = double.parse(fiatAmount) / price;
     cryptoAmount = _cryptoNumberFormat.format(amount);
   }
@@ -167,7 +179,7 @@ abstract class SendStoreBase with Store {
           isValid = (value.length == 34);
       }
     }
-    errorMessage = isValid ? null : 'Wallet address must correspond to the type\nof cryptocurrency';
+    errorMessage = isValid ? null : S.current.error_text_address;
   }
 
   void validatePaymentID(String value) {
@@ -178,7 +190,7 @@ abstract class SendStoreBase with Store {
       RegExp regExp = new RegExp(p);
       isValid = regExp.hasMatch(value);
     }
-    errorMessage = isValid ? null : 'Payment ID can only contain from 16 to 64 chars in hex';
+    errorMessage = isValid ? null : S.current.error_text_payment_id;
   }
 
   void validateXMR(String value, String availableBalance) {
@@ -193,9 +205,9 @@ abstract class SendStoreBase with Store {
       } catch (e) {
         isValid = false;
       }
-    } else isValid = false;
-    errorMessage = isValid ? null : "XMR value can't exceed available balance.\n"
-                                    "The number of fraction digits must be less or equal to 12";
+    } else
+      isValid = false;
+    errorMessage = isValid ? null : S.current.error_text_xmr;
   }
 
   void validateFiat(String value, double maxValue) {
@@ -209,8 +221,8 @@ abstract class SendStoreBase with Store {
       } catch (e) {
         isValid = false;
       }
-    } else isValid = false;
-    errorMessage = isValid ? null : "Value of amount can't exceed available balance.\n"
-                                    "The number of fraction digits must be less or equal to 2";
+    } else
+      isValid = false;
+    errorMessage = isValid ? null : S.current.error_text_fiat;
   }
 }

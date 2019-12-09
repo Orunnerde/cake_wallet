@@ -12,10 +12,11 @@ import 'package:cake_wallet/src/screens/receive/qr_image.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class ReceivePage extends BasePage {
   bool get isModalBackButton => true;
-  String get title => 'Receive';
+  String get title => S.current.receive;
 
   @override
   Widget trailing(BuildContext context) {
@@ -25,7 +26,7 @@ class ReceivePage extends BasePage {
       minWidth: double.minPositive,
       child: FlatButton(
           onPressed: () => Share.text(
-              'Share address', walletStore.subaddress.address, 'text/plain'),
+              S.of(context).share_address, walletStore.subaddress.address, 'text/plain'),
           child: Icon(Icons.share)),
     );
   }
@@ -125,7 +126,7 @@ class ReceiveBodyState extends State<ReceiveBody> {
                                             text: walletStore.subaddress.address));
                                         Scaffold.of(context).showSnackBar(SnackBar(
                                           content: Text(
-                                            'Copied to Clipboard',
+                                            S.of(context).copied_to_clipboard,
                                             style: TextStyle(color: Colors.white),
                                           ),
                                           backgroundColor: Colors.green,
@@ -164,7 +165,7 @@ class ReceiveBodyState extends State<ReceiveBody> {
                                           color: _isDarkTheme
                                               ? PaletteDark.darkThemeGrey
                                               : Palette.lightBlue),
-                                      hintText: 'Amount',
+                                      hintText: S.of(context).amount,
                                       focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
                                               color: _isDarkTheme
@@ -201,7 +202,7 @@ class ReceiveBodyState extends State<ReceiveBody> {
                             children: <Widget>[
                               ListTile(
                                 title: Text(
-                                  'Subaddresses',
+                                  S.of(context).subaddresses,
                                   style: TextStyle(
                                       fontSize: 16.0,
                                       color: _isDarkTheme

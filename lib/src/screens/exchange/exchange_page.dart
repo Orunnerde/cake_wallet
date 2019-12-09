@@ -19,9 +19,10 @@ import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class ExchangePage extends BasePage {
-  String get title => 'Exchange';
+  String get title => S.current.exchange;
 
   @override
   bool get isModalBackButton => true;
@@ -49,7 +50,7 @@ class ExchangePage extends BasePage {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('Exchange',
+                Text(S.of(context).exchange,
                     style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w400,
@@ -84,20 +85,21 @@ class ExchangePage extends BasePage {
     else
       _isDarkTheme = false;
 
-    return SizedBox(
-        width: 50,
-        child: FlatButton(
-            padding: EdgeInsets.all(0),
-            child: Text(
-              'Clear',
-              style: TextStyle(
-                  color: _isDarkTheme
-                      ? PaletteDark.darkThemeTitleViolet
-                      : Palette.wildDarkBlue,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16),
-            ),
-            onPressed: () => exchangeStore.reset()));
+    return ButtonTheme(
+      minWidth: double.minPositive,
+      child: FlatButton(
+          padding: EdgeInsets.all(0),
+          child: Text(
+            S.of(context).clear,
+            style: TextStyle(
+                color: _isDarkTheme
+                    ? PaletteDark.darkThemeTitleViolet
+                    : Palette.wildDarkBlue,
+                fontWeight: FontWeight.w500,
+                fontSize: 16),
+          ),
+          onPressed: () => exchangeStore.reset()),
+    );
   }
 
   @override
@@ -112,7 +114,7 @@ class ExchangePage extends BasePage {
         builder: (_) => Picker(
             items: items,
             selectedAtIndex: selectedItem,
-            title: 'Change Exchange Provider',
+            title: S.of(context).change_exchange_provider,
             onItemSelected: (provider) =>
                 exchangeStore.changeProvider(provider: provider)),
         context: context);
@@ -169,7 +171,7 @@ class ExchangeFormState extends State<ExchangeForm> {
               Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 20),
                 child: Text(
-                  'You will send',
+                  S.of(context).you_will_send,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
@@ -209,7 +211,7 @@ class ExchangeFormState extends State<ExchangeForm> {
               Padding(
                   padding: EdgeInsets.only(bottom: 20),
                   child: Text(
-                    'You will get',
+                    S.of(context).you_will_get,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
@@ -255,8 +257,8 @@ class ExchangeFormState extends State<ExchangeForm> {
             padding: EdgeInsets.only(bottom: 15),
             child: Observer(builder: (_) {
               final description = exchangeStore.provider is XMRTOExchangeProvider
-                  ? 'The receive amount is guaranteed'
-                  : 'The receive amount is an estimate';
+                  ? S.of(context).amount_is_guaranteed
+                  : S.of(context).amount_is_estimate;
               return Center(
                 child: Text(
                   description,
@@ -267,7 +269,7 @@ class ExchangeFormState extends State<ExchangeForm> {
           ),
           Observer(
               builder: (_) => LoadingPrimaryButton(
-                text: 'Exchange',
+                text: S.of(context).exchange,
                 onPressed: () {
                   if (_formKey.currentState.validate()) exchangeStore.createTrade();
                 },
@@ -300,7 +302,7 @@ class ExchangeFormState extends State<ExchangeForm> {
                   Image.asset(imageSrc),
                   SizedBox(width: 10),
                   Text(
-                    'Powered by $title',
+                    S.of(context).powered_by(title),
                     style: TextStyle(
                         fontSize: 14, color: Color.fromRGBO(191, 201, 215, 1)),
                   )
@@ -395,11 +397,11 @@ class ExchangeFormState extends State<ExchangeForm> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text('Error'),
+                  title: Text(S.of(context).error),
                   content: Text(state.error),
                   actions: <Widget>[
                     FlatButton(
-                        child: Text("OK"),
+                        child: Text(S.of(context).ok),
                         onPressed: () => Navigator.of(context).pop())
                   ],
                 );

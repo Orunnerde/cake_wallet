@@ -13,9 +13,10 @@ import 'package:cake_wallet/src/widgets/blockchain_height_widget.dart';
 import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class RestoreWalletFromSeedDetailsPage extends BasePage {
-  String get title => 'Wallet restore description';
+  String get title => S.current.restore_wallet_restore_description;
 
   @override
   Widget body(BuildContext context) => RestoreFromSeedDetailsForm();
@@ -53,7 +54,7 @@ class _RestoreFromSeedDetailsFormState
                   content: Text(state.error),
                   actions: <Widget>[
                     FlatButton(
-                      child: Text("OK"),
+                      child: Text(S.of(context).ok),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ],
@@ -88,7 +89,7 @@ class _RestoreFromSeedDetailsFormState
                                       color: _isDarkTheme
                                           ? PaletteDark.darkThemeGrey
                                           : Palette.lightBlue),
-                                  hintText: 'Wallet name',
+                                  hintText: S.of(context).restore_wallet_name,
                                   focusedBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
                                           color: _isDarkTheme
@@ -126,7 +127,7 @@ class _RestoreFromSeedDetailsFormState
             }
           },
           isLoading: walletRestorationStore.state is WalletIsRestoring,
-          text: 'Recover',
+          text: S.of(context).restore_recover,
           color:
               _isDarkTheme ? PaletteDark.darkThemePurpleButton : Palette.purple,
           borderColor: _isDarkTheme

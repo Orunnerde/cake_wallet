@@ -10,9 +10,10 @@ import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class AccountListPage extends BasePage {
-  String get title => 'Accounts';
+  String get title => S.current.accounts;
 
   @override
   Widget trailing(BuildContext context) {
@@ -115,7 +116,7 @@ class AccountListPage extends BasePage {
                   ),
                   secondaryActions: <Widget>[
                     IconSlideAction(
-                      caption: 'Edit',
+                      caption: S.of(context).edit,
                       color: Colors.blue,
                       icon: Icons.edit,
                       onTap: () async {

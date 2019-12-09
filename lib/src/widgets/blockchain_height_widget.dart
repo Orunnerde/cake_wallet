@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class BlockchainHeightWidget extends StatefulWidget {
   BlockchainHeightWidget({GlobalKey key}) : super(key: key);
@@ -51,7 +52,7 @@ class BlockchainHeightState extends State<BlockchainHeightWidget> {
                     hintStyle: TextStyle(
                         color: _isDarkTheme ? PaletteDark.darkThemeGrey
                             : Palette.lightBlue),
-                    hintText: 'Restore from blockheight',
+                    hintText: S.of(context).widgets_restore_from_blockheight,
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
                             color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
@@ -69,7 +70,7 @@ class BlockchainHeightState extends State<BlockchainHeightWidget> {
         Padding(
           padding: EdgeInsets.only(top: 15, bottom: 15),
           child: Text(
-            'or',
+            S.of(context).widgets_or,
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold,
                 color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
             ),
@@ -88,7 +89,7 @@ class BlockchainHeightState extends State<BlockchainHeightWidget> {
                         hintStyle: TextStyle(
                             color: _isDarkTheme ? PaletteDark.darkThemeGrey
                                 : Palette.lightBlue),
-                        hintText: 'Restore from date',
+                        hintText: S.of(context).widgets_restore_from_date,
                         focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
                                 color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity

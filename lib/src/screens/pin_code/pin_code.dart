@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 abstract class PinCodeWidget extends StatefulWidget {
   Function(List<int> pin, PinCodeState state) onPinCodeEntered;
@@ -34,7 +35,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
 
   int pinLength = defaultPinLength;
   List<int> pin = List<int>.filled(defaultPinLength, null);
-  String title = 'Enter your pin';
+  String title = S.current.enter_your_pin;
   double _aspectRatio = 0;
 
   void setTitle(String title) {
@@ -247,10 +248,10 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
   }
 
   String _changePinLengthText() {
-    return 'Use ' +
+    return S.current.use +
         (pinLength == PinCodeState.fourPinLength
             ? '${PinCodeState.sixPinLength}'
             : '${PinCodeState.fourPinLength}') +
-        '-digit Pin';
+        S.current.digit_pin;
   }
 }

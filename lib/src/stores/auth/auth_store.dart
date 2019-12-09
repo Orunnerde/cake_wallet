@@ -5,6 +5,7 @@ import 'package:mobx/mobx.dart';
 import 'package:cake_wallet/src/domain/services/user_service.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/stores/auth/auth_state.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 part 'auth_store.g.dart';
 
@@ -13,7 +14,7 @@ class AuthStore = AuthStoreBase with _$AuthStore;
 abstract class AuthStoreBase with Store {
   static const maxFailedLogins = 3;
   static const banTimeout = 180; // 3 mins
-  static const banTimeoutKey = 'ban_timeout';
+  final banTimeoutKey = S.current.auth_store_ban_timeout;
 
   final UserService userService;
   final WalletService walletService;
@@ -41,7 +42,7 @@ abstract class AuthStoreBase with Store {
 
     if (_banDuration != null) {
       state = AuthenticationBanned(
-          error: 'Banned for ${_banDuration.inMinutes} minuts');
+          error: S.current.auth_store_banned_for + '${_banDuration.inMinutes}' + S.current.auth_store_banned_minutes);
       return;
     }
 
@@ -57,11 +58,11 @@ abstract class AuthStoreBase with Store {
       if (_failureCounter >= maxFailedLogins) {
         final banDuration = await ban();
         state = AuthenticationBanned(
-            error: 'Banned for ${banDuration.inMinutes} minuts');
+            error: S.current.auth_store_banned_for + '${banDuration.inMinutes}' + S.current.auth_store_banned_minutes);
         return;
       }
 
-      state = AuthenticationFailure(error: 'Incorrect password');
+      state = AuthenticationFailure(error: S.current.auth_store_incorrect_password);
     }
   }
 

@@ -4,11 +4,12 @@ import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/screens/restore/widgets/restore_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class RestoreWalletOptionsPage extends BasePage {
   static const _aspectRatioImage = 2.086;
 
-  String get title => 'Seed/Keys Restore';
+  String get title => S.current.restore_seed_keys_restore;
   Color get backgroundColor => Palette.creamyGrey;
 
   final _imageSeed = Image.asset('assets/images/seedIco.png');
@@ -30,10 +31,9 @@ class RestoreWalletOptionsPage extends BasePage {
               aspectRatioImage: _aspectRatioImage,
                   titleColor: Palette.lightViolet,
                   color: Palette.lightViolet,
-              title: 'Restore from seed',
-              description:
-                  'Restore your wallet from either the 25 word\nor 13 word combination code',
-              textButton: 'Next',
+              title: S.of(context).restore_title_from_seed,
+              description: S.of(context).restore_description_from_seed,
+              textButton: S.of(context).restore_next,
             )),
             Flexible(
                 child: RestoreButton(
@@ -43,9 +43,9 @@ class RestoreWalletOptionsPage extends BasePage {
               aspectRatioImage: _aspectRatioImage,
                   titleColor: Palette.cakeGreen,
                   color: Palette.cakeGreen,
-              title: 'Restore from keys',
-              description: 'Restore your wallet from generated\nkeystrokes saved from your private keys',
-              textButton: 'Next',
+              title: S.of(context).restore_title_from_keys,
+              description: S.of(context).restore_description_from_keys,
+              textButton: S.of(context).restore_next,
             ))
           ],
         ),

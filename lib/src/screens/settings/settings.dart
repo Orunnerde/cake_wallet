@@ -6,7 +6,6 @@ import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
-import 'package:cake_wallet/src/screens/settings/change_language.dart';
 import 'package:cake_wallet/src/screens/disclaimer/disclaimer_page.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +16,8 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/screens/settings/attributes.dart';
 import 'package:cake_wallet/src/screens/settings/items/settings_item.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:cake_wallet/src/screens/settings/items/item_headers.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 // Settings widgets
 import 'package:cake_wallet/src/screens/settings/widgets/settings_arrow_list_row.dart';
 import 'package:cake_wallet/src/screens/settings/widgets/settings_header_list_row.dart';
@@ -26,7 +27,7 @@ import 'package:cake_wallet/src/screens/settings/widgets/settings_text_list_row.
 import 'package:cake_wallet/src/screens/settings/widgets/settings_raw_widget_list_row.dart';
 
 class SettingsPage extends BasePage {
-  String get title => 'Settings';
+  String get title => S.current.settings_title;
   bool get isModalBackButton => true;
   Color get backgroundColor => Palette.lightGrey2;
 
@@ -66,11 +67,13 @@ class SettingsFormState extends State<SettingsForm> {
     final _themeChanger = Provider.of<ThemeChanger>(context);
     final _isDarkTheme = (_themeChanger.getTheme() == Themes.darkTheme);
 
+    settingsStore.setItemHeaders();
+
     _items.addAll([
-      SettingsItem(title: 'Nodes', attribute: Attributes.header),
+      SettingsItem(title: ItemHeaders.nodes, attribute: Attributes.header),
       SettingsItem(
           onTaped: () => Navigator.of(context).pushNamed(Routes.nodeList),
-          title: 'Current node',
+          title: ItemHeaders.currentNode,
           widget: Observer(
               builder: (_) => Text(
                     settingsStore.node == null ? '' : settingsStore.node.uri,
@@ -81,13 +84,13 @@ class SettingsFormState extends State<SettingsForm> {
                             : Palette.wildDarkBlue),
                   )),
           attribute: Attributes.widget),
-      SettingsItem(title: 'Wallets', attribute: Attributes.header),
+      SettingsItem(title: ItemHeaders.wallets, attribute: Attributes.header),
       SettingsItem(
           onTaped: () => _setBalance(context),
-          title: 'Display balance as',
+          title: ItemHeaders.displayBalanceAs,
           widget: Observer(
               builder: (_) => Text(
-                    settingsStore.balanceDisplayMode.toString(),
+                    _getCurrentBalanceMode(settingsStore.balanceDisplayMode.toString()),
                     style: TextStyle(
                         fontSize: 16.0,
                         color: _isDarkTheme
@@ -97,7 +100,7 @@ class SettingsFormState extends State<SettingsForm> {
           attribute: Attributes.widget),
       SettingsItem(
           onTaped: () => _setCurrency(context),
-          title: 'Currency',
+          title: ItemHeaders.currency,
           widget: Observer(
               builder: (_) => Text(
                     settingsStore.fiatCurrency.toString(),
@@ -110,10 +113,10 @@ class SettingsFormState extends State<SettingsForm> {
           attribute: Attributes.widget),
       SettingsItem(
           onTaped: () => _setTransactionPriority(context),
-          title: 'Fee priority',
+          title: ItemHeaders.feePriority,
           widget: Observer(
               builder: (_) => Text(
-                    settingsStore.transactionPriority.toString(),
+                    _getCurrentTransactionPriority(settingsStore.transactionPriority.toString()),
                     style: TextStyle(
                         fontSize: 16.0,
                         color: _isDarkTheme
@@ -122,8 +125,8 @@ class SettingsFormState extends State<SettingsForm> {
                   )),
           attribute: Attributes.widget),
       SettingsItem(
-          title: 'Save recipient address', attribute: Attributes.switcher),
-      SettingsItem(title: 'Personal', attribute: Attributes.header),
+          title: ItemHeaders.saveRecipientAddress, attribute: Attributes.switcher),
+      SettingsItem(title: ItemHeaders.personal, attribute: Attributes.header),
       SettingsItem(
           onTaped: () {
             Navigator.of(context).pushNamed(Routes.auth,
@@ -134,21 +137,16 @@ class SettingsFormState extends State<SettingsForm> {
                                 Navigator.of(context).pop())
                         : null);
           },
-          title: 'Change PIN',
+          title: ItemHeaders.changePIN,
           attribute: Attributes.arrow),
       SettingsItem(
-          onTaped: () {
-            Navigator.push(
-                context,
-                CupertinoPageRoute(
-                    builder: (BuildContext context) => ChangeLanguage()));
-          },
-          title: 'Change language',
+          onTaped: () => Navigator.pushNamed(context, Routes.changeLanguage),
+          title: ItemHeaders.changeLanguage,
           attribute: Attributes.arrow),
       SettingsItem(
-          title: 'Allow biometrical authentication',
+          title: ItemHeaders.allowBiometricalAuthentication,
           attribute: Attributes.switcher),
-      SettingsItem(title: 'Dark mode', attribute: Attributes.switcher),
+      SettingsItem(title: ItemHeaders.darkMode, attribute: Attributes.switcher),
       SettingsItem(
           widgetBuilder: (context) {
             final _themeChanger = Provider.of<ThemeChanger>(context);
@@ -163,7 +161,7 @@ class SettingsFormState extends State<SettingsForm> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text('Transactions'),
+                                        Text(S.of(context).settings_transactions),
                                         Checkbox(
                                           value: settingsStore
                                               .actionlistDisplayMode
@@ -180,7 +178,7 @@ class SettingsFormState extends State<SettingsForm> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text('Trades'),
+                                        Text(S.of(context).settings_trades),
                                         Checkbox(
                                           value: settingsStore
                                               .actionlistDisplayMode
@@ -197,7 +195,7 @@ class SettingsFormState extends State<SettingsForm> {
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Display on dashboard list',
+                        Text(S.of(context).settings_display_on_dashboard_list,
                             style: TextStyle(
                                 fontSize: 16,
                                 color: _isDarkTheme
@@ -208,23 +206,23 @@ class SettingsFormState extends State<SettingsForm> {
 
                           if (settingsStore.actionlistDisplayMode.length ==
                               ActionListDisplayMode.values.length) {
-                            title = 'ALL';
+                            title = S.of(context).settings_all;
                           }
 
                           if (title.isEmpty &&
                               settingsStore.actionlistDisplayMode
                                   .contains(ActionListDisplayMode.trades)) {
-                            title = 'Only trades';
+                            title = S.of(context).settings_only_trades;
                           }
 
                           if (title.isEmpty &&
                               settingsStore.actionlistDisplayMode.contains(
                                   ActionListDisplayMode.transactions)) {
-                            title = 'Only transactions';
+                            title = S.of(context).settings_only_transactions;
                           }
 
                           if (title.isEmpty) {
-                            title = 'None';
+                            title = S.of(context).settings_none;
                           }
 
                           return Text(title,
@@ -238,7 +236,7 @@ class SettingsFormState extends State<SettingsForm> {
                 ));
           },
           attribute: Attributes.rawWidget),
-      SettingsItem(title: 'Support', attribute: Attributes.header),
+      SettingsItem(title: ItemHeaders.support, attribute: Attributes.header),
       SettingsItem(
           onTaped: () => _launchUrl(_emailUrl),
           title: 'Email',
@@ -282,11 +280,11 @@ class SettingsFormState extends State<SettingsForm> {
                 CupertinoPageRoute(
                     builder: (BuildContext context) => DisclaimerPage()));
           },
-          title: 'Terms and conditions',
+          title: ItemHeaders.termsAndConditions,
           attribute: Attributes.arrow),
       SettingsItem(
           onTaped: () => Navigator.pushNamed(context, Routes.faq),
-          title: 'FAQ',
+          title: ItemHeaders.faq,
           attribute: Attributes.arrow)
     ]);
     setState(() {});
@@ -342,6 +340,9 @@ class SettingsFormState extends State<SettingsForm> {
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme = (_themeChanger.getTheme() == Themes.darkTheme);
 
+    final settingsStore = Provider.of<SettingsStore>(context);
+    settingsStore.setItemHeaders();
+
     return SingleChildScrollView(
         child: Column(
       children: <Widget>[
@@ -394,12 +395,14 @@ class SettingsFormState extends State<SettingsForm> {
   Future<T> _presentPicker<T extends Object>(
       BuildContext context, List<T> list) async {
     T _value = list[0];
+    final _themeChanger = Provider.of<ThemeChanger>(context);
+    final _isDarkTheme = (_themeChanger.getTheme() == Themes.darkTheme);
 
     return await showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Please select:'),
+            title: Text(S.of(context).please_select),
             backgroundColor: Theme.of(context).backgroundColor,
             content: Container(
               height: 150.0,
@@ -410,16 +413,21 @@ class SettingsFormState extends State<SettingsForm> {
                   children: List.generate(
                       list.length,
                       (index) => Center(
-                            child: Text(list[index].toString()),
+                            child: Text(
+                              list[index].toString(),
+                              style: TextStyle(
+                                color: _isDarkTheme ? Colors.white : Colors.black
+                              ),
+                            ),
                           ))),
             ),
             actions: <Widget>[
               FlatButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: Text('Cancel')),
+                  child: Text(S.of(context).cancel)),
               FlatButton(
                   onPressed: () => Navigator.of(context).pop(_value),
-                  child: Text('OK'))
+                  child: Text(S.of(context).ok))
             ],
           );
         });
@@ -427,12 +435,13 @@ class SettingsFormState extends State<SettingsForm> {
 
   void _setBalance(BuildContext context) async {
     final settingsStore = Provider.of<SettingsStore>(context);
+    final balanceList = _getBalanceModeList(BalanceDisplayMode.all);
     final selectedDisplayMode =
-        await _presentPicker(context, BalanceDisplayMode.all);
+    await _presentPicker(context, balanceList);
 
     if (selectedDisplayMode != null) {
       settingsStore.setCurrentBalanceDisplayMode(
-          balanceDisplayMode: selectedDisplayMode);
+          balanceDisplayMode: _getSelectedItem(selectedDisplayMode, balanceList, BalanceDisplayMode.all));
     }
   }
 
@@ -447,11 +456,105 @@ class SettingsFormState extends State<SettingsForm> {
 
   void _setTransactionPriority(BuildContext context) async {
     final settingsStore = Provider.of<SettingsStore>(context);
+    final transactionPriorityList = _getTransactionPriorityList(TransactionPriority.all);
     final selectedPriority =
-        await _presentPicker(context, TransactionPriority.all);
+    await _presentPicker(context, transactionPriorityList);
 
     if (selectedPriority != null) {
-      settingsStore.setCurrentTransactionPriority(priority: selectedPriority);
+      settingsStore.setCurrentTransactionPriority(priority: _getSelectedItem(selectedPriority,
+          transactionPriorityList, TransactionPriority.all));
     }
+  }
+
+  List<String> _getBalanceModeList(List<BalanceDisplayMode> list) {
+    List<String> balanceModeList = new List();
+    for(int i = 0; i < list.length; i++) {
+      switch(list[ i ].title) {
+        case 'Full Balance':
+          balanceModeList.add(S.of(context).full_balance);
+          break;
+        case 'Available Balance':
+          balanceModeList.add(S.of(context).available_balance);
+          break;
+        case 'Hidden Balance':
+          balanceModeList.add(S.of(context).hidden_balance);
+          break;
+        default:
+          break;
+      }
+    }
+    return balanceModeList;
+  }
+
+  List<String> _getTransactionPriorityList(List<TransactionPriority> list) {
+    List<String> transactionPriorityList = new List();
+    for(int i = 0; i < list.length; i++) {
+      switch(list[ i ].title) {
+        case 'Slow':
+          transactionPriorityList.add(S.of(context).transaction_priority_slow);
+          break;
+        case 'Regular':
+          transactionPriorityList.add(S.of(context).transaction_priority_regular);
+          break;
+        case 'Medium':
+          transactionPriorityList.add(S.of(context).transaction_priority_medium);
+          break;
+        case 'Fast':
+          transactionPriorityList.add(S.of(context).transaction_priority_fast);
+          break;
+        case 'Fastest':
+          transactionPriorityList.add(S.of(context).transaction_priority_fastest);
+          break;
+        default:
+          break;
+      }
+    }
+    return transactionPriorityList;
+  }
+
+  _getSelectedItem<T extends Object> (String selectedItem, List<String> list, List<T> itemsList) {
+    return itemsList[list.indexOf(selectedItem)];
+  }
+
+  String _getCurrentBalanceMode(String balanceMode) {
+    String currentBalanceMode;
+    switch(balanceMode) {
+      case 'Full Balance':
+        currentBalanceMode = S.of(context).full_balance;
+        break;
+      case 'Available Balance':
+        currentBalanceMode = S.of(context).available_balance;
+        break;
+      case 'Hidden Balance':
+        currentBalanceMode = S.of(context).hidden_balance;
+        break;
+      default:
+        break;
+    }
+    return currentBalanceMode;
+  }
+
+  String _getCurrentTransactionPriority(String transactionPriority) {
+    String currentTransactionPriority;
+    switch(transactionPriority) {
+      case 'Slow':
+        currentTransactionPriority = S.of(context).transaction_priority_slow;
+        break;
+      case 'Regular':
+        currentTransactionPriority = S.of(context).transaction_priority_regular;
+        break;
+      case 'Medium':
+        currentTransactionPriority = S.of(context).transaction_priority_medium;
+        break;
+      case 'Fast':
+        currentTransactionPriority = S.of(context).transaction_priority_fast;
+        break;
+      case 'Fastest':
+        currentTransactionPriority = S.of(context).transaction_priority_fastest;
+        break;
+      default:
+        break;
+    }
+    return currentTransactionPriority;
   }
 }

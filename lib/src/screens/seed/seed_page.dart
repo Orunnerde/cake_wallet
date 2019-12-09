@@ -10,11 +10,12 @@ import 'package:cake_wallet/src/stores/wallet_seed/wallet_seed_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class SeedPage extends BasePage {
   static final image = Image.asset('assets/images/seed_image.png');
-  String get title => 'Seed';
   bool get isModalBackButton => true;
+  String get title => S.current.seed_title;
 
   final VoidCallback onCloseCallback;
 
@@ -103,14 +104,14 @@ class SeedPage extends BasePage {
                               padding: EdgeInsets.only(right: 8.0),
                               child: PrimaryButton(
                                   onPressed: () => Share.text(
-                                      'Share seed', _seed, 'text/plain'),
+                                      S.of(context).seed_share, _seed, 'text/plain'),
                                   color: _isDarkTheme
                                       ? PaletteDark.darkThemePurpleButton
                                       : Palette.purple,
                                   borderColor: _isDarkTheme
                                       ? PaletteDark.darkThemePurpleButtonBorder
                                       : Palette.deepPink,
-                                  text: 'Save'),
+                                  text: S.of(context).save),
                             )),
                         Flexible(
                             child: Container(
@@ -123,14 +124,14 @@ class SeedPage extends BasePage {
                                       Scaffold.of(context).showSnackBar(
                                         SnackBar(
                                           content:
-                                          Text('Copied to Clipboard'),
+                                          Text(S.of(context).copied_to_clipboard),
                                           backgroundColor: Colors.green,
                                           duration:
                                           Duration(milliseconds: 1500),
                                         ),
                                       );
                                     },
-                                    text: 'Copy',
+                                    text: S.of(context).copy,
                                     color: _isDarkTheme
                                         ? PaletteDark.darkThemeBlueButton
                                         : Palette.brightBlue,
@@ -150,7 +151,7 @@ class SeedPage extends BasePage {
           onCloseCallback != null ?
           PrimaryButton(
               onPressed: () => onClose(context),
-              text: 'Next',
+              text: S.of(context).restore_next,
               color: Palette.lightGrey,
               borderColor: Palette.darkGrey)
           : Offstage()

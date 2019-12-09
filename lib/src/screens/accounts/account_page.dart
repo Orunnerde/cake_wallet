@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/src/domain/monero/account.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class AccountPage extends BasePage {
   String get title => 'Account';
@@ -65,7 +66,7 @@ class AccountFormState extends State<AccountForm> {
                             color: _isDarkTheme ? PaletteDark.darkThemeGrey
                                 : Palette.lightBlue
                         ),
-                        hintText: 'Account',
+                        hintText: S.of(context).account,
                         focusedBorder: UnderlineInputBorder(
                             borderSide:
                             BorderSide(
@@ -102,7 +103,7 @@ class AccountFormState extends State<AccountForm> {
                 }
                 Navigator.pop(context, _textController.text);
               },
-              text: widget.account != null ? 'Rename' : 'Add',
+              text: widget.account != null ? 'Rename' : S.of(context).add,
               color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
                   : Palette.purple,
               borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder

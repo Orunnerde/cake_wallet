@@ -9,9 +9,10 @@ import 'package:cake_wallet/src/domain/exchange/trade.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class ExchangeConfirmPage extends BasePage {
-  String get title => 'Copy ID';
+  String get title => S.current.copy_id;
 
   final Trade trade;
 
@@ -21,10 +22,7 @@ class ExchangeConfirmPage extends BasePage {
   Widget body(BuildContext context) {
 
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
+    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Column(
       children: <Widget>[
@@ -36,7 +34,7 @@ class ExchangeConfirmPage extends BasePage {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Text(
-                        'Please copy or write down the trade ID to continue.',
+                        S.of(context).exchange_result_write_down_trade_id,
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 18.0,
                           color: _isDarkTheme ? Palette.wildDarkBlue : Colors.black
@@ -46,7 +44,7 @@ class ExchangeConfirmPage extends BasePage {
                         height: 70.0,
                       ),
                       Text(
-                        'Trade ID:\n${trade.id}',
+                        S.of(context).trade_id(trade.id),
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 18.0,
                             color: _isDarkTheme ? Palette.wildDarkBlue : Colors.black
@@ -61,7 +59,7 @@ class ExchangeConfirmPage extends BasePage {
                               ClipboardData(text: trade.id));
                           Scaffold.of(context).showSnackBar(SnackBar(
                             content: Text(
-                              'Copied to Clipboard',
+                              S.of(context).copied_to_clipboard,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.white
@@ -70,7 +68,7 @@ class ExchangeConfirmPage extends BasePage {
                             backgroundColor: Colors.green,
                           ));
                         },
-                        text: 'Copy ID',
+                        text: S.of(context).copy_id,
                         color: _isDarkTheme ? PaletteDark.darkThemeBlueButton
                             : Palette.brightBlue,
                         borderColor: _isDarkTheme ? PaletteDark.darkThemeBlueButtonBorder
@@ -84,7 +82,7 @@ class ExchangeConfirmPage extends BasePage {
           child: PrimaryButton(
               onPressed: () => Navigator.of(context)
                   .pushReplacementNamed(Routes.exchangeTrade, arguments: trade),
-              text: "I've saved the trade ID",
+              text: S.of(context).saved_the_trade_id,
               color: _isDarkTheme ? PaletteDark.darkThemePurpleButton : Palette.purple,
               borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder : Palette.deepPink,
           ),
