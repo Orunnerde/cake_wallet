@@ -162,7 +162,7 @@ class NodeListPageBodyState extends State<NodeListPageBody> {
                               builder: (context, snapshot) {
                                 switch (snapshot.connectionState) {
                                   case ConnectionState.done:
-                                    return NodeIndicator(color: (snapshot.data != null && snapshot.data) ? Palette.green : Palette.red);
+                                    return NodeIndicator(color: snapshot.data ? Palette.green : Palette.red);
                                   default:
                                     return NodeIndicator();
                                 }

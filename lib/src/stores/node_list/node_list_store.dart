@@ -58,8 +58,7 @@ abstract class NodeListBase with Store {
 
   Future<bool> isNodeOnline(Node node) async {
     try {
-      final res = await node.requestNode(node.uri, login: node.login, password: node.password);
-      return res != null ? res : false;
+      return await node.requestNode(node.uri, login: node.login, password: node.password);
     } catch (e) {
       return false;
     }
