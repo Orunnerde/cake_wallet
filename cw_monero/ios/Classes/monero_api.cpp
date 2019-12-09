@@ -416,35 +416,37 @@ extern "C"
     }
 
     PendingTransactionRaw *transaction_create(char *address, char *payment_id, char *amount,
-                                              uint8_t priority_raw, uint32_t subaddr_account, char *error)
-    {
-        auto priority = static_cast<Monero::PendingTransaction::Priority>(priority_raw);
-        std::string _payment_id;
-
-        if (payment_id != nullptr)
+                                                  uint8_t priority_raw, uint32_t subaddr_account, char *error)
         {
-            _payment_id = std::string(payment_id);
+            auto priority = static_cast<Monero::PendingTransaction::Priority>(priority_raw);
+            std::string _payment_id;
+            Monero::PendingTransaction *transaction;
+
+            if (payment_id != nullptr)
+            {
+                _payment_id = std::string(payment_id);
+            }
+
+            if (amount != nullptr)
+            {
+                uint64_t _amount = Monero::Wallet::amountFromString(std::string(amount));
+                transaction = m_wallet->createTransaction(std::string(address), _payment_id, _amount, m_wallet->defaultMixin(), priority, subaddr_account);
+            }
+            else
+            {
+                transaction = m_wallet->createTransaction(std::string(address), _payment_id, Monero::optional<uint64_t>(), m_wallet->defaultMixin(), priority, subaddr_account);
+            }
+
+            int status = transaction->status();
+
+            if (status == Monero::PendingTransaction::Status::Status_Error || status == Monero::PendingTransaction::Status::Status_Critical)
+            {
+                error = strdup(transaction->errorString().c_str());
+                return nullptr;
+            }
+
+            return new PendingTransactionRaw(transaction);
         }
-
-        uint64_t _amount;
-
-        if (amount != nullptr)
-        {
-            _amount = Monero::Wallet::amountFromString(std::string(amount));
-        }
-
-        Monero::PendingTransaction *transaction = m_wallet->createTransaction(std::string(address), _payment_id, _amount, m_wallet->defaultMixin(), priority, subaddr_account);
-
-        int status = transaction->status();
-
-        if (status == Monero::PendingTransaction::Status::Status_Error || status == Monero::PendingTransaction::Status::Status_Critical)
-        {
-            error = strdup(transaction->errorString().c_str());
-            return nullptr;
-        }
-
-        return new PendingTransactionRaw(transaction);
-    }
 
     bool transaction_commit(PendingTransactionRaw *transaction, char *error)
     {
