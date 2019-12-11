@@ -235,6 +235,10 @@ class Router {
                           walletService: walletService,
                           settingsStore: settingsStore)),
                   Provider(
+                      builder: (context) =>
+                          SyncStore(walletService: walletService),
+                  ),
+                  Provider(
                       builder: (context) => SendStore(
                           walletService: walletService,
                           recipientAddressList: RecipientAddressList(db: db))),

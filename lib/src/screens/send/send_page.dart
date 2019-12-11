@@ -18,6 +18,8 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/src/domain/common/sync_status.dart';
+import 'package:cake_wallet/src/stores/sync/sync_store.dart';
 
 class SendPage extends BasePage {
   String get title => 'Send Monero';
@@ -50,6 +52,7 @@ class SendFormState extends State<SendForm> {
     sendStore.settingsStore = settingsStore;
     final balanceStore = Provider.of<BalanceStore>(context);
     final walletStore = Provider.of<WalletStore>(context);
+    final syncStore = Provider.of<SyncStore>(context);
 
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
@@ -369,12 +372,23 @@ class SendFormState extends State<SendForm> {
                       return LoadingPrimaryButton(
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {
+                              var titleText = '';
+                              var contentText = '';
+
+                              if (syncStore.status is SyncedSyncStatus) {
+                                titleText = 'Creating transaction';
+                                contentText = 'Confirm sending';
+                              } else {
+                                titleText = "Wallet doesn't sync";
+                                contentText = 'Do you want to send monero anyway?';
+                              }
+
                               showDialog(
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
-                                      title: Text('Creating transaction'),
-                                      content: Text('Confirm sending'),
+                                      title: Text(titleText),
+                                      content: Text(contentText),
                                       actions: <Widget>[
                                         FlatButton(
                                             child: Text("Send"),
