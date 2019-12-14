@@ -178,7 +178,8 @@ class MaterialAppWithTheme extends StatelessWidget {
             priceStore: priceStore,
             walletStore: walletStore,
             syncStore: syncStore,
-            balanceStore: balanceStore),
+            balanceStore: balanceStore,
+            settingsStore: settingsStore),
         home: Root());
   }
 }

@@ -60,5 +60,5 @@ onCurrentWalletChange(
         PriceStore priceStore}) =>
     reaction((_) => walletStore.name, (_) {
       walletStore.connectToNode(node: settingsStore.node);
-      //startUpdatingPrice(settingsStore: settingsStore, priceStore: priceStore);
+      startUpdatingPrice(settingsStore: settingsStore, priceStore: priceStore);
     });

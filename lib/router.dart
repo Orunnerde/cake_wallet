@@ -99,7 +99,8 @@ class Router {
       PriceStore priceStore,
       WalletStore walletStore,
       SyncStore syncStore,
-      BalanceStore balanceStore}) {
+      BalanceStore balanceStore,
+      SettingsStore settingsStore}) {
     switch (settings.name) {
       case Routes.welcome:
         return MaterialPageRoute(builder: (_) => WelcomePage());
@@ -198,17 +199,17 @@ class Router {
                         sharedPreferences: sharedPreferences)));
 
       case Routes.dashboard:
-        return CupertinoPageRoute(
-            builder: (_) => MultiProvider(providers: [
-                  ProxyProvider<SettingsStore, ActionListStore>(
-                      builder: (_, settingsStore, __) => ActionListStore(
-                          walletService: walletService,
-                          settingsStore: settingsStore,
-                          priceStore: priceStore,
-                          tradeHistory: TradeHistory(db: db),
-                          transactionFilterStore: TransactionFilterStore(),
-                          tradeFilterStore: TradeFilterStore())),
-                ], child: DashboardPage()));
+        return CupertinoPageRoute(builder: (context) {
+          return Provider(
+              builder: (_) => ActionListStore(
+                  walletService: walletService,
+                  settingsStore: settingsStore,
+                  priceStore: priceStore,
+                  tradeHistory: TradeHistory(db: db),
+                  transactionFilterStore: TransactionFilterStore(),
+                  tradeFilterStore: TradeFilterStore()),
+              child: DashboardPage());
+        });
 
       case Routes.send:
         return CupertinoPageRoute(

@@ -56,6 +56,12 @@ abstract class SendStoreBase with Store {
 
     reaction((_) => this.state, (state) async {
       if (state is TransactionCreatedSuccessfully) {
+        if (settingsStore.shouldSaveRecipientAddress) {
+          await recipientAddressList.add(
+              recipientAddress: _lastRecipientAddress,
+              transactionId: pendingTransaction.hash);
+        }
+
         pendingTransaction.commit();
       }
     });
@@ -139,7 +145,7 @@ abstract class SendStoreBase with Store {
   Future _calculateFiatAmount() async {
     final symbol = PriceStoreBase.generateSymbolForPair(
         fiat: settingsStore.fiatCurrency, crypto: CryptoCurrency.xmr);
-    final price = priceStore.prices[symbol];
+    final price = priceStore.prices[symbol] ?? 0;
     final amount = double.parse(cryptoAmount) * price;
     fiatAmount = _fiatNumberFormat.format(amount);
   }
@@ -148,7 +154,7 @@ abstract class SendStoreBase with Store {
   Future _calculateCryptoAmount() async {
     final symbol = PriceStoreBase.generateSymbolForPair(
         fiat: settingsStore.fiatCurrency, crypto: CryptoCurrency.xmr);
-    final price = priceStore.prices[symbol];
+    final price = priceStore.prices[symbol] ?? 0;
     final amount = double.parse(fiatAmount) / price;
     cryptoAmount = _cryptoNumberFormat.format(amount);
   }
