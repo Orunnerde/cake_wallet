@@ -13,12 +13,12 @@ import 'package:cake_wallet/src/stores/login/login_store.dart';
 
 setReactions(
     {@required SettingsStore settingsStore,
-     @required PriceStore priceStore,
-     @required SyncStore syncStore,
-     @required WalletStore walletStore,
-     @required WalletService walletService,
-     @required AuthenticationStore authenticationStore,
-     @required LoginStore loginStore}) {
+    @required PriceStore priceStore,
+    @required SyncStore syncStore,
+    @required WalletStore walletStore,
+    @required WalletService walletService,
+    @required AuthenticationStore authenticationStore,
+    @required LoginStore loginStore}) {
   connectToNode(settingsStore: settingsStore, walletStore: walletStore);
   onSyncStatusChange(syncStore: syncStore, walletStore: walletStore);
   onCurrentWalletChange(
@@ -45,7 +45,9 @@ onSyncStatusChange({SyncStore syncStore, WalletStore walletStore}) =>
       // Reconnect to the node if the app is not started sync after 30 seconds
       if (status is StartingSyncStatus) {
         Timer(Duration(seconds: 30), () async {
-          if (syncStore.status is StartingSyncStatus) {
+          final isConnected = await walletStore.isConnected();
+
+          if (syncStore.status is StartingSyncStatus && !isConnected) {
             walletStore.reconnect();
           }
         });
@@ -58,5 +60,5 @@ onCurrentWalletChange(
         PriceStore priceStore}) =>
     reaction((_) => walletStore.name, (_) {
       walletStore.connectToNode(node: settingsStore.node);
-      startUpdatingPrice(settingsStore: settingsStore, priceStore: priceStore);
+      //startUpdatingPrice(settingsStore: settingsStore, priceStore: priceStore);
     });

@@ -277,7 +277,6 @@ extern "C"
 
     void load_wallet(char *path, char *password, int32_t nettype)
     {
-        nice(19);
         Monero::NetworkType networkType = static_cast<Monero::NetworkType>(nettype);
         Monero::Wallet *wallet = Monero::WalletManagerFactory::getWalletManager()->openWallet(std::string(path), std::string(password), networkType);
         change_current_wallet(wallet);
@@ -350,11 +349,24 @@ extern "C"
         return get_current_wallet()->daemonBlockChainHeight();
     }
 
+    bool connect_to_node(char *error)
+    {
+        bool is_connected = get_current_wallet()->connectToDaemon();
+
+        if (!is_connected)
+        {
+            error = strdup(get_current_wallet()->errorString().c_str());
+        }
+
+        return is_connected;
+    }
+
     bool setup_node(char *address, char *login, char *password, bool use_ssl, bool is_light_wallet, char *error)
     {
-        nice(19);
-        
+        //nice(19);
+
         Monero::Wallet *wallet = get_current_wallet();
+        
         std::string _login = "";
         std::string _password = "";
 
@@ -373,25 +385,9 @@ extern "C"
         if (!inited)
         {
             error = strdup(wallet->errorString().c_str());
-            return false;
         }
-
-        wallet->connectToDaemon();
 
         return inited;
-    }
-
-    bool connect_to_node(char *error)
-    {
-        nice(19);
-        bool is_connected = get_current_wallet()->connectToDaemon();
-
-        if (!is_connected)
-        {
-            error = strdup(get_current_wallet()->errorString().c_str());
-        }
-
-        return is_connected;
     }
 
     bool is_connected()
@@ -423,23 +419,27 @@ extern "C"
     PendingTransactionRaw *transaction_create(char *address, char *payment_id, char *amount,
                                               uint8_t priority_raw, uint32_t subaddr_account, char *error)
     {
+        nice(19);
+        
         auto priority = static_cast<Monero::PendingTransaction::Priority>(priority_raw);
         std::string _payment_id;
+        Monero::PendingTransaction *transaction;
 
         if (payment_id != nullptr)
         {
             _payment_id = std::string(payment_id);
         }
 
-        uint64_t _amount;
-
         if (amount != nullptr)
         {
-            _amount = Monero::Wallet::amountFromString(std::string(amount));
+            uint64_t _amount = Monero::Wallet::amountFromString(std::string(amount));
+            transaction = m_wallet->createTransaction(std::string(address), _payment_id, _amount, m_wallet->defaultMixin(), priority, subaddr_account);
         }
-
-        Monero::PendingTransaction *transaction = m_wallet->createTransaction(std::string(address), _payment_id, _amount, m_wallet->defaultMixin(), priority, subaddr_account);
-
+        else
+        {
+            transaction = m_wallet->createTransaction(std::string(address), _payment_id, Monero::optional<uint64_t>(), m_wallet->defaultMixin(), priority, subaddr_account);
+        }
+        
         int status = transaction->status();
 
         if (status == Monero::PendingTransaction::Status::Status_Error || status == Monero::PendingTransaction::Status::Status_Critical)
@@ -457,7 +457,7 @@ extern "C"
 
         if (!committed)
         {
-            error - strdup(transaction->transaction->errorString().c_str());
+            error = strdup(transaction->transaction->errorString().c_str());
         }
 
         return committed;

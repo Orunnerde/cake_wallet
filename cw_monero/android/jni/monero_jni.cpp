@@ -1,18 +1,11 @@
 #include <string.h>
 #include <jni.h>
 #include "../../ios/Classes/monero_api.h"
-// #include "cstdlib"
 #include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-JNIEXPORT jstring JNICALL
-Java_com_cakewallet_monero_MoneroApi_stringFromJNI(JNIEnv* env,
-                                                  jobject thiz) {
-    return env->NewStringUTF("Hello from JNI ! Compiled with ABI.");
-}
 
 JNIEXPORT void JNICALL
 Java_com_cakewallet_monero_MoneroApi_setNodeAddressJNI(
@@ -40,10 +33,9 @@ Java_com_cakewallet_monero_MoneroApi_setNodeAddressJNI(
     char *__password = (char*) _password;
     bool inited = setup_node(__uri, __login, __password, false, false, error);
 
-    //if (!inited) {
-    //    env->ThrowNew(env->FindClass("java/lang/Exception"), error);
-    //}
-
+    if (!inited) {
+        env->ThrowNew(env->FindClass("java/lang/Exception"), error);
+    }
 }
 
 JNIEXPORT void JNICALL
@@ -51,12 +43,30 @@ Java_com_cakewallet_monero_MoneroApi_connectToNodeJNI(
         JNIEnv *env,
         jobject inst) {
     char *error;
-
     bool is_connected = connect_to_node(error);
 
-    //if (!is_connected) {
-    //    env->ThrowNew(env->FindClass("java/lang/Exception"), error);
-    //}
+    if (!is_connected) {
+        env->ThrowNew(env->FindClass("java/lang/Exception"), error);
+    }
+}
+
+JNIEXPORT void JNICALL
+Java_com_cakewallet_monero_MoneroApi_startSyncJNI(
+        JNIEnv *env,
+        jobject inst) {
+    start_refresh();
+}
+
+JNIEXPORT void JNICALL
+Java_com_cakewallet_monero_MoneroApi_loadWalletJNI(
+        JNIEnv *env,
+        jobject inst,
+        jstring path,
+        jstring password) {
+    char *_path = (char *) env->GetStringUTFChars(path, 0);
+    char *_password = (char *) env->GetStringUTFChars(password, 0);
+
+    load_wallet(_path, _password, 0);
 }
 
 #ifdef __cplusplus

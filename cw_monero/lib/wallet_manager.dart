@@ -7,6 +7,7 @@ import 'package:cw_monero/monero_api.dart';
 import 'package:cw_monero/exceptions/wallet_creation_exception.dart';
 import 'package:cw_monero/exceptions/wallet_restore_from_keys_exception.dart';
 import 'package:cw_monero/exceptions/wallet_restore_from_seed_exception.dart';
+import 'package:flutter/services.dart';
 
 final createWalletNative = moneroApi
     .lookup<NativeFunction<create_wallet>>('create_wallet')
@@ -129,7 +130,9 @@ restoreWalletFromKeys(
   }
 }
 
-loadWallet({String path, String password, int nettype = 0}) async {
+final moneroAPIChannel = const MethodChannel('cw_monero');
+
+Future loadWallet({String path, String password, int nettype = 0}) async {
   final pathPointer = Utf8.toUtf8(path);
   final passwordPointer = Utf8.toUtf8(password);
 

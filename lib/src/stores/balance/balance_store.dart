@@ -24,7 +24,7 @@ abstract class BalanceStoreBase with Store {
   @computed
   String get fiatFullBalance {
     if (fullBalance == null) {
-      return '0.0';
+      return '0.00';
     }
 
     final symbol = PriceStoreBase.generateSymbolForPair(
@@ -36,7 +36,7 @@ abstract class BalanceStoreBase with Store {
   @computed
   String get fiatUnlockedBalance {
     if (unlockedBalance == null) {
-      return '0.0';
+      return '0.00';
     }
 
     final symbol = PriceStoreBase.generateSymbolForPair(

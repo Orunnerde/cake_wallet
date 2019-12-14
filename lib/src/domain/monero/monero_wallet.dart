@@ -27,6 +27,13 @@ import 'package:cake_wallet/src/domain/monero/monero_balance.dart';
 const monero_block_size = 1000;
 
 _store(_) => moneroWallet.store();
+_setupNode(Map args) => moneroWallet.setupNode(
+    address: args['address'],
+    login: args['login'] ?? '',
+    password: args['password'] ?? '',
+    useSSL: args['useSSL'],
+    isLightWallet: args['isLightWallet']);
+_startRefresh(_) => moneroWallet.startRefresh();
 
 PendingTransactionDescription _createTransaction(List<Object> args) {
   final credentials = args.first as MoneroTransactionCreationCredentials;
@@ -191,26 +198,25 @@ class MoneroWallet extends Wallet {
       final start = DateTime.now();
       print('connectToNode start');
 
-      moneroWallet.setupNode(
-          address: node.uri,
-          login: node.login ?? '',
-          password: node.password ?? '',
-          useSSL: useSSL,
-          isLightWallet: isLightWallet);
-
-      moneroWallet.connectToNode();
+      await compute(_setupNode, {
+        'address': node.uri,
+        'login': node.login,
+        'password': node.password,
+        'useSSL': useSSL,
+        'isLightWallet': isLightWallet
+      });
 
       final setupNodeEnd = DateTime.now();
       final setupNodeEndDiff =
           setupNodeEnd.millisecondsSinceEpoch - start.millisecondsSinceEpoch;
-      print('setupNodeEndDiff $setupNodeEndDiff');      
+      print('setupNodeEndDiff $setupNodeEndDiff');
       final end = DateTime.now();
       final diff = end.millisecondsSinceEpoch - start.millisecondsSinceEpoch;
 
       print('Connection time: $diff');
 
       _syncStatus.value = ConnectedSyncStatus();
-    } on PlatformException catch (e) {
+    } catch (e) {
       _syncStatus.value = FailedSyncStatus();
       print(e);
     }
@@ -219,7 +225,7 @@ class MoneroWallet extends Wallet {
   Future startSync() async {
     try {
       _syncStatus.value = StartingSyncStatus();
-      moneroWallet.startRefresh();
+      compute(_startRefresh, null);
     } on PlatformException catch (e) {
       _syncStatus.value = FailedSyncStatus();
       print(e);

@@ -129,7 +129,8 @@ class MoneroWalletsManager extends WalletsManager {
       final start = DateTime.now().millisecondsSinceEpoch;
       final path = await pathForWallet(name: name);
 
-      await compute(_openWallet, {'path': path, 'password': password});
+      // await compute(_openWallet, {'path': path, 'password': password});
+      _openWallet({'path': path, 'password': password});
       final loadWallet = DateTime.now().millisecondsSinceEpoch;
       print('Loaded wallet ${loadWallet - start}');
       final wallet = await MoneroWallet.load(db, name, type)

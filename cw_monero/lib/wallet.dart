@@ -136,23 +136,48 @@ int getNodeHeight() => getNodeHeightNative();
 bool isConnected() => isConnectedNative() != 0;
 
 Future<bool> setupNode(
-        {String address,
-        String login,
-        String password,
-        bool useSSL = false,
-        bool isLightWallet = false}) async =>
-    await moneroAPIChannel.invokeMethod('setupNode', {
-      'address': address,
-      'login': login,
-      'password': password,
-      'useSSL': useSSL,
-      'isLightWallet': isLightWallet
-    });
+    {String address,
+    String login,
+    String password,
+    bool useSSL = false,
+    bool isLightWallet = false}) async {
+  final addressPointer = Utf8.toUtf8(address);
+  Pointer<Utf8> loginPointer;
+  Pointer<Utf8> passwordPointer;
 
-startRefresh() => startRefreshNative();
+  if (login != null) {
+    loginPointer = Utf8.toUtf8(login);
+  }
 
-Future<bool> connectToNode() async =>
-    await moneroAPIChannel.invokeMethod('connectToNode');
+  if (password != null) {
+    passwordPointer = Utf8.toUtf8(password);
+  }
+
+  final errorMessagePointer = allocate<Utf8>();
+  final isSetupNode = setupNodeNative(
+          addressPointer,
+          loginPointer,
+          passwordPointer,
+          _boolToInt(useSSL),
+          _boolToInt(isLightWallet),
+          errorMessagePointer) !=
+      0;
+
+  free(addressPointer);
+  free(loginPointer);
+  free(passwordPointer);
+
+  if (!isSetupNode) {
+    throw SetupWalletException(
+        message: convertUTF8ToString(pointer: errorMessagePointer));
+  }
+
+  return isSetupNode;
+}
+
+startRefresh() async => startRefreshNative();
+
+Future<bool> connectToNode() async => connecToNodeNative() != 0;
 
 setRefreshFromBlockHeight({int height}) =>
     setRefreshFromBlockHeightNative(height);
@@ -190,7 +215,7 @@ setListeners(Future Function(int) onNewBlock, Future Function() onNeedToRefresh,
     _updateSyncInfoTimer.cancel();
   }
 
-  _updateSyncInfoTimer = Timer.periodic(Duration(seconds: 1), (_) async {
+  _updateSyncInfoTimer = Timer.periodic(Duration(milliseconds: 200), (_) async {
     final syncHeight = getSyncingHeight();
     final needToRefresh = isNeededToRefresh();
     final newTransactionExist = isNewTransactionExist();

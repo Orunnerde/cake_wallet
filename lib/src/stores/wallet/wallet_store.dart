@@ -142,4 +142,6 @@ abstract class WalletStoreBase with Store {
 
     errorMessage = isValid ? null : S.current.error_text_amount;
   }
+
+  Future<bool> isConnected() async => await _walletService.isConnected();
 }
