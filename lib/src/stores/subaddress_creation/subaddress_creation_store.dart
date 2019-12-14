@@ -17,17 +17,16 @@ class SubadrressCreationStore = SubadrressCreationStoreBase
 abstract class SubadrressCreationStoreBase with Store {
   SubaddressCreationState state;
 
-  SubaddressList _subaddressList;
-
-  StreamSubscription<Wallet> _onWalletChangeSubscription;
-  StreamSubscription<Account> _onAccountChangeSubscription;
-  Account _account;
-
   @observable
   bool isValid;
 
   @observable
   String errorMessage;
+
+  SubaddressList _subaddressList;
+  StreamSubscription<Wallet> _onWalletChangeSubscription;
+  StreamSubscription<Account> _onAccountChangeSubscription;
+  Account _account;
 
   SubadrressCreationStoreBase({@required WalletService walletService}) {
     state = SubaddressCreationStateInitial();

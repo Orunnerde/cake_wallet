@@ -48,8 +48,8 @@ class DashboardPage extends BasePage {
   @override
   Widget middle(BuildContext context) {
     final walletStore = Provider.of<WalletStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
+    final _themeChanger = Provider.of<ThemeChanger>(context);
+    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Observer(builder: (_) {
       return Column(
@@ -63,8 +63,7 @@ class DashboardPage extends BasePage {
             ),
             SizedBox(height: 5),
             Text(
-              '',
-              // walletStore.account != null ? walletStore.account.label : '',
+              walletStore.account != null ? '${walletStore.account.label}' : '',
               style: TextStyle(fontWeight: FontWeight.w400, fontSize: 10,
                   color:
                   _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black),

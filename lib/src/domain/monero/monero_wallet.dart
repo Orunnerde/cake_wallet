@@ -140,7 +140,7 @@ class MoneroWallet extends Wallet {
     _address = BehaviorSubject<String>();
     _syncStatus = BehaviorSubject<SyncStatus>();
     _onBalanceChange = BehaviorSubject<MoneroBalance>();
-    _account = BehaviorSubject<Account>()..add(Account(id: 0));
+    _account = BehaviorSubject<Account>()..add(Account(id: 0, label: 'Stupid ???'));
     _subaddress = BehaviorSubject<Subaddress>();
     setListeners();
   }

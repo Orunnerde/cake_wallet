@@ -228,12 +228,8 @@ class NodeListPageBodyState extends State<NodeListPageBody> {
                                 );
                               });
                         },
-                        onDismissed: (direction) async {
-                          await nodeList.remove(node: node);
-                          // setState(() {
-                          //   _nodes.remove(_nodes.keys.elementAt(index));
-                          // });
-                        },
+                        onDismissed: (direction) async =>
+                          await nodeList.remove(node: node),
                         direction: DismissDirection.endToStart,
                         background: Container(
                             padding: EdgeInsets.only(right: 10.0),
@@ -247,8 +243,8 @@ class NodeListPageBodyState extends State<NodeListPageBody> {
                                   CupertinoIcons.delete,
                                   color: Colors.white,
                                 ),
-                                const Text(
-                                  'Delete',
+                                Text(
+                                  S.of(context).delete,
                                   style: TextStyle(color: Colors.white),
                                 )
                               ],

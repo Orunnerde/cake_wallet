@@ -42,6 +42,8 @@ abstract class WalletStoreBase with Store {
   WalletService _walletService;
   SettingsStore _settingsStore;
   StreamSubscription<Wallet> _onWalletChangeSubscription;
+  StreamSubscription<Account> _onAccountChangeSubscription;
+  StreamSubscription<Subaddress> _onSubaddressChangeSubscription;
 
 
   WalletStoreBase({WalletService walletService, SettingsStore settingsStore}) {
@@ -65,6 +67,15 @@ abstract class WalletStoreBase with Store {
     if (_onWalletChangeSubscription != null) {
       _onWalletChangeSubscription.cancel();
     }
+
+    if (_onAccountChangeSubscription != null) {
+      _onAccountChangeSubscription.cancel();
+    }
+
+    if (_onSubaddressChangeSubscription != null) {
+      _onSubaddressChangeSubscription.cancel();
+    }
+
     super.dispose();
   }
 
@@ -111,8 +122,8 @@ abstract class WalletStoreBase with Store {
     wallet.onAddressChange.listen((address) => this.address = address);
 
     if (wallet is MoneroWallet) {
-      account = wallet.account;
-      wallet.subaddress.listen((subaddress) => this.subaddress = subaddress);
+      _onAccountChangeSubscription = wallet.onAccountChange.listen((account) => this.account = account);
+      _onSubaddressChangeSubscription = wallet.subaddress.listen((subaddress) => this.subaddress = subaddress);
     }
   }
 
