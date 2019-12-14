@@ -25,7 +25,7 @@
   },
   {
     "question" : "What can I do if I lose my seed?",
-    "answer" : "If you forgot your seed, you likely wrote it down somewhere. Please check your iCloud notes and look around on your computer. If you can’t find it anywhere, you may have backed up Cake Wallet to iCloud (in which case you would be able to restore from that backup.) If none of these work, there is unfortunately nothing that we can do.\n"
+    "answer" : "If you forgot your seed, you likely wrote it down somewhere. Please check your  notes and look around on your computer. If you can’t find it anywhere, you may have backed up Cake Wallet (in which case you would be able to restore from that backup.) If none of these work, there is unfortunately nothing that we can do.\n"
   },
   {
     "question" : "Do you collect any information about my wallet?",
