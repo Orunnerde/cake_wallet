@@ -57,6 +57,14 @@ abstract class NodeListBase with Store {
     await update();
   }
 
+  Future<bool> isNodeOnline(Node node) async {
+    try {
+      return await node.requestNode(node.uri, login: node.login, password: node.password);
+    } catch (e) {
+      return false;
+    }
+  }
+
   void validateNodeAddress(String value) {
     String p = '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\$';
     RegExp regExp = new RegExp(p);
