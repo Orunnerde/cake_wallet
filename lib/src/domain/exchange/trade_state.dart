@@ -21,58 +21,45 @@ class TradeState extends EnumerableItem<String> with Serializable<String> {
   static const finished = TradeState(raw: 'finished', title: 'Finished');
 
   static TradeState deserialize({String raw}) {
-    var title = '';
-
     switch (raw) {
       case 'pending':
-        title = 'Pending';
-        break;
+        return pending;
       case 'confirming':
-        title = 'Confirming';
-        break;
+        return confirming;
       case 'trading':
-        title = 'Trading';
-        break;
+        return trading;
       case 'traded':
-        title = 'Traded';
-        break;
+        return traded;
       case 'complete':
-        title = 'Complete';
-        break;
+        return complete;
       case 'TO_BE_CREATED':
-        title = 'To be created';
-        break;
+        return toBeCreated;
       case 'UNPAID':
-        title = 'Unpaid';
-        break;
+        return unpaid;
       case 'UNDERPAID':
-        title = 'Underpaid';
-        break;
+        return underpaid;
       case 'PAID_UNCONFIRMED':
-        title = 'Paid unconfirmed';
-        break;
+        return paidUnconfirmed;
       case 'PAID':
-        title = 'Paid';
-        break;
+        return paid;
       case 'BTC_SENT':
-        title = 'Btc sent';
-        break;
+        return btcSent;
       case 'TIMED_OUT':
-        title = 'Timeout';
-        break;
+        return timeout;
       case 'created':
-        title = 'Created';
-        break;
+        return created;
       case 'finished':
-        title = 'Finished';
-        break;
+        return finished;
       default:
         return null;
     }
-
-    return TradeState(raw: raw, title: title);
   }
 
   const TradeState({@required String raw, @required String title})
       : super(raw: raw, title: title);
+
+  operator ==(o) => o is TradeState && o.raw == raw;
+
+  @override
+  int get hashCode => raw.hashCode ^ title.hashCode;
 }

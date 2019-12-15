@@ -1,45 +1,56 @@
+import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/domain/common/enumerable_item.dart';
 
 class TransactionPriority extends EnumerableItem<int> with Serializable<int> {
-  static final all = [
+  static const all = [
     TransactionPriority.slow,
     TransactionPriority.regular,
     TransactionPriority.medium,
     TransactionPriority.fast,
     TransactionPriority.fastest
   ];
-  static final slow = TransactionPriority(title: 'Slow', raw: 0);
-  static final regular = TransactionPriority(title: 'Regular', raw: 1);
-  static final medium = TransactionPriority(title: 'Medium', raw: 2);
-  static final fast = TransactionPriority(title: 'Fast', raw: 3);
-  static final fastest = TransactionPriority(title: 'Fastest', raw: 4);
-  static final standart = slow;
+  static const slow = TransactionPriority(title: 'Slow', raw: 0);
+  static const regular = TransactionPriority(title: 'Regular', raw: 1);
+  static const medium = TransactionPriority(title: 'Medium', raw: 2);
+  static const fast = TransactionPriority(title: 'Fast', raw: 3);
+  static const fastest = TransactionPriority(title: 'Fastest', raw: 4);
+  static const standart = slow;
 
   static TransactionPriority deserialize({int raw}) {
-    var title = '';
-
     switch (raw) {
       case 0:
-        title = 'Slow';
-        break;
+        return slow;
       case 1:
-        title = 'Regular';
-        break;
+        return regular;
       case 2:
-        title = 'Medium';
-        break;
+        return medium;
       case 3:
-        title = 'Fast';
-        break;
+        return fast;
       case 4:
-        title = 'Fastest';
-        break;
+        return fastest;
       default:
         return null;
     }
-
-    return TransactionPriority(title: title, raw: raw);
   }
 
-  TransactionPriority({String title, int raw}) : super(title: title, raw: raw);
+  const TransactionPriority({String title, int raw})
+      : super(title: title, raw: raw);
+
+  @override
+  String toString() {
+    switch (this) {
+      case TransactionPriority.slow:
+        return S.current.transaction_priority_slow;
+      case TransactionPriority.regular:
+        return S.current.transaction_priority_regular;
+      case TransactionPriority.medium:
+        return S.current.transaction_priority_medium;
+      case TransactionPriority.fast:
+        return S.current.transaction_priority_fast;
+      case TransactionPriority.fastest:
+        return S.current.transaction_priority_fastest;
+      default:
+        return '';
+    }
+  }
 }

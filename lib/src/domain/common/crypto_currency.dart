@@ -19,17 +19,17 @@ class CryptoCurrency extends EnumerableItem<int> with Serializable<int> {
   static CryptoCurrency deserialize({int raw}) {
     switch (raw) {
       case 0:
-        return CryptoCurrency.xmr;
+        return xmr;
       case 1:
-        return CryptoCurrency.btc;
+        return btc;
       case 2:
-        return CryptoCurrency.eth;
+        return eth;
       case 3:
-        return CryptoCurrency.ltc;
+        return ltc;
       case 4:
-        return CryptoCurrency.bch;
+        return bch;
       case 5:
-        return CryptoCurrency.dash;
+        return dash;
       default:
         return null;
     }
@@ -38,17 +38,17 @@ class CryptoCurrency extends EnumerableItem<int> with Serializable<int> {
   static CryptoCurrency fromString(String raw) {
     switch (raw.toLowerCase()) {
       case 'xmr':
-        return CryptoCurrency.xmr;
+        return xmr;
       case 'btc':
-        return CryptoCurrency.btc;
+        return btc;
       case 'eth':
-        return CryptoCurrency.eth;
+        return eth;
       case 'ltc':
-        return CryptoCurrency.ltc;
+        return ltc;
       case 'bch':
-        return CryptoCurrency.bch;
+        return bch;
       case 'dash':
-        return CryptoCurrency.dash;
+        return dash;
       default:
         return null;
     }

@@ -17,6 +17,7 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
 import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
+import 'package:cake_wallet/src/domain/common/calculate_estimated_fee.dart';
 import 'package:cake_wallet/generated/i18n.dart';
 
 class SendPage extends BasePage {
@@ -103,10 +104,10 @@ class SendFormState extends State<SendForm> {
                   }),
                   Observer(builder: (context) {
                     final savedDisplayMode = settingsStore.balanceDisplayMode;
-                    final availableBalance = savedDisplayMode.serialize() ==
-                            BalanceDisplayMode.hiddenBalance.serialize()
-                        ? '---'
-                        : balanceStore.unlockedBalance;
+                    final availableBalance =
+                        savedDisplayMode == BalanceDisplayMode.hiddenBalance
+                            ? '---'
+                            : balanceStore.unlockedBalance;
 
                     return Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -319,7 +320,8 @@ class SendFormState extends State<SendForm> {
                                         .overline
                                         .backgroundColor,
                                   )),
-                              Text('XMR 0.00003121',
+                              Text(
+                                  '${calculateEstimatedFee(priority: settingsStore.transactionPriority)} XMR',
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
@@ -334,9 +336,9 @@ class SendFormState extends State<SendForm> {
                         SizedBox(
                           width: double.infinity,
                           child: Text(
-                              S.of(context).send_priority(
-                                  _getTransactionPriority(
-                                      settingsStore.transactionPriority)),
+                              S.of(context).send_priority(settingsStore
+                                  .transactionPriority
+                                  .toString()),
                               style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
@@ -348,8 +350,6 @@ class SendFormState extends State<SendForm> {
                         ),
                       ]),
                       Observer(builder: (_) {
-                        print(sendStore.state);
-
                         return LoadingPrimaryButton(
                             onPressed: () async {
                               if (_formKey.currentState.validate()) {
@@ -410,30 +410,6 @@ class SendFormState extends State<SendForm> {
                     ])),
           )
         ]));
-  }
-
-  String _getTransactionPriority(TransactionPriority transactionPriority) {
-    String currentTransactionPriority;
-    switch (transactionPriority.title) {
-      case 'Slow':
-        currentTransactionPriority = S.of(context).transaction_priority_slow;
-        break;
-      case 'Regular':
-        currentTransactionPriority = S.of(context).transaction_priority_regular;
-        break;
-      case 'Medium':
-        currentTransactionPriority = S.of(context).transaction_priority_medium;
-        break;
-      case 'Fast':
-        currentTransactionPriority = S.of(context).transaction_priority_fast;
-        break;
-      case 'Fastest':
-        currentTransactionPriority = S.of(context).transaction_priority_fastest;
-        break;
-      default:
-        break;
-    }
-    return currentTransactionPriority;
   }
 
   void _setEffects(BuildContext context) {

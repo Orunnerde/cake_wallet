@@ -46,7 +46,7 @@ class SettingsFormState extends State<SettingsForm> {
   final _changeNowImage = Image.asset('assets/images/change_now.png');
   final _morphImage = Image.asset('assets/images/morph_icon.png');
   final _xmrBtcImage = Image.asset('assets/images/xmr_btc.png');
-  
+
   final _emailUrl = 'mailto:support@cakewallet.io';
   final _telegramUrl = 'https:t.me/cake_wallet';
   final _twitterUrl = 'https:twitter.com/CakewalletXMR';
@@ -55,7 +55,7 @@ class SettingsFormState extends State<SettingsForm> {
   final _xmrToUrl = 'mailto:support@xmr.to';
 
   List<SettingsItem> _items = List<SettingsItem>();
-  
+
   _launchUrl(String url) async {
     if (await canLaunch(url)) await launch(url);
   }
@@ -75,7 +75,8 @@ class SettingsFormState extends State<SettingsForm> {
                     settingsStore.node == null ? '' : settingsStore.node.uri,
                     style: TextStyle(
                         fontSize: 16.0,
-                        color: Theme.of(context).primaryTextTheme.subtitle.color),
+                        color:
+                            Theme.of(context).primaryTextTheme.subtitle.color),
                   )),
           attribute: Attributes.widget),
       SettingsItem(title: ItemHeaders.wallets, attribute: Attributes.header),
@@ -84,10 +85,11 @@ class SettingsFormState extends State<SettingsForm> {
           title: ItemHeaders.displayBalanceAs,
           widget: Observer(
               builder: (_) => Text(
-                    _getCurrentBalanceMode(settingsStore.balanceDisplayMode.toString()),
+                    settingsStore.balanceDisplayMode.toString(),
                     style: TextStyle(
                         fontSize: 16.0,
-                        color: Theme.of(context).primaryTextTheme.subtitle.color),
+                        color:
+                            Theme.of(context).primaryTextTheme.subtitle.color),
                   )),
           attribute: Attributes.widget),
       SettingsItem(
@@ -98,7 +100,8 @@ class SettingsFormState extends State<SettingsForm> {
                     settingsStore.fiatCurrency.toString(),
                     style: TextStyle(
                         fontSize: 16.0,
-                        color: Theme.of(context).primaryTextTheme.subtitle.color),
+                        color:
+                            Theme.of(context).primaryTextTheme.subtitle.color),
                   )),
           attribute: Attributes.widget),
       SettingsItem(
@@ -106,14 +109,16 @@ class SettingsFormState extends State<SettingsForm> {
           title: ItemHeaders.feePriority,
           widget: Observer(
               builder: (_) => Text(
-                    _getCurrentTransactionPriority(settingsStore.transactionPriority.toString()),
+                    settingsStore.transactionPriority.toString(),
                     style: TextStyle(
                         fontSize: 16.0,
-                        color: Theme.of(context).primaryTextTheme.subtitle.color),
+                        color:
+                            Theme.of(context).primaryTextTheme.subtitle.color),
                   )),
           attribute: Attributes.widget),
       SettingsItem(
-          title: ItemHeaders.saveRecipientAddress, attribute: Attributes.switcher),
+          title: ItemHeaders.saveRecipientAddress,
+          attribute: Attributes.switcher),
       SettingsItem(title: ItemHeaders.personal, attribute: Attributes.header),
       SettingsItem(
           onTaped: () {
@@ -137,7 +142,6 @@ class SettingsFormState extends State<SettingsForm> {
       SettingsItem(title: ItemHeaders.darkMode, attribute: Attributes.switcher),
       SettingsItem(
           widgetBuilder: (context) {
-
             return PopupMenuButton<ActionListDisplayMode>(
                 itemBuilder: (context) => [
                       PopupMenuItem(
@@ -147,7 +151,9 @@ class SettingsFormState extends State<SettingsForm> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(S.of(context).settings_transactions),
+                                        Text(S
+                                            .of(context)
+                                            .settings_transactions),
                                         Checkbox(
                                           value: settingsStore
                                               .actionlistDisplayMode
@@ -184,7 +190,10 @@ class SettingsFormState extends State<SettingsForm> {
                         Text(S.of(context).settings_display_on_dashboard_list,
                             style: TextStyle(
                                 fontSize: 16,
-                                color: Theme.of(context).primaryTextTheme.title.color)),
+                                color: Theme.of(context)
+                                    .primaryTextTheme
+                                    .title
+                                    .color)),
                         Observer(builder: (_) {
                           var title = '';
 
@@ -212,7 +221,10 @@ class SettingsFormState extends State<SettingsForm> {
                           return Text(title,
                               style: TextStyle(
                                   fontSize: 16.0,
-                                  color: Theme.of(context).primaryTextTheme.subtitle.color));
+                                  color: Theme.of(context)
+                                      .primaryTextTheme
+                                      .subtitle
+                                      .color));
                         })
                       ]),
                 ));
@@ -272,9 +284,7 @@ class SettingsFormState extends State<SettingsForm> {
     setState(() {});
   }
 
-  _afterLayout(_) {
-    _setSettingsList();
-  }
+  _afterLayout(_) => _setSettingsList();
 
   @override
   void initState() {
@@ -319,7 +329,6 @@ class SettingsFormState extends State<SettingsForm> {
 
   @override
   Widget build(BuildContext context) {
-
     final settingsStore = Provider.of<SettingsStore>(context);
     settingsStore.setItemHeaders();
 
@@ -346,7 +355,10 @@ class SettingsFormState extends State<SettingsForm> {
                   _getWidget(item),
                   _isDrawDivider
                       ? Container(
-                          color: Theme.of(context).accentTextTheme.headline.backgroundColor,
+                          color: Theme.of(context)
+                              .accentTextTheme
+                              .headline
+                              .backgroundColor,
                           padding: EdgeInsets.only(
                             left: 20.0,
                             right: 20.0,
@@ -387,10 +399,13 @@ class SettingsFormState extends State<SettingsForm> {
                   children: List.generate(
                       list.length,
                       (index) => Center(
-                            child: Text(list[index].toString(),
+                            child: Text(
+                              list[index].toString(),
                               style: TextStyle(
-                                color: Theme.of(context).primaryTextTheme.caption.color
-                              ),
+                                  color: Theme.of(context)
+                                      .primaryTextTheme
+                                      .caption
+                                      .color),
                             ),
                           ))),
             ),
@@ -408,13 +423,12 @@ class SettingsFormState extends State<SettingsForm> {
 
   void _setBalance(BuildContext context) async {
     final settingsStore = Provider.of<SettingsStore>(context);
-    final balanceList = _getBalanceModeList(BalanceDisplayMode.all);
     final selectedDisplayMode =
-    await _presentPicker(context, balanceList);
+        await _presentPicker(context, BalanceDisplayMode.all);
 
     if (selectedDisplayMode != null) {
       settingsStore.setCurrentBalanceDisplayMode(
-          balanceDisplayMode: _getSelectedItem(selectedDisplayMode, balanceList, BalanceDisplayMode.all));
+          balanceDisplayMode: selectedDisplayMode);
     }
   }
 
@@ -429,105 +443,11 @@ class SettingsFormState extends State<SettingsForm> {
 
   void _setTransactionPriority(BuildContext context) async {
     final settingsStore = Provider.of<SettingsStore>(context);
-    final transactionPriorityList = _getTransactionPriorityList(TransactionPriority.all);
     final selectedPriority =
-    await _presentPicker(context, transactionPriorityList);
+        await _presentPicker(context, TransactionPriority.all);
 
     if (selectedPriority != null) {
-      settingsStore.setCurrentTransactionPriority(priority: _getSelectedItem(selectedPriority,
-          transactionPriorityList, TransactionPriority.all));
+      settingsStore.setCurrentTransactionPriority(priority: selectedPriority);
     }
-  }
-
-  List<String> _getBalanceModeList(List<BalanceDisplayMode> list) {
-    List<String> balanceModeList = new List();
-    for(int i = 0; i < list.length; i++) {
-      switch(list[ i ].title) {
-        case 'Full Balance':
-          balanceModeList.add(S.of(context).full_balance);
-          break;
-        case 'Available Balance':
-          balanceModeList.add(S.of(context).available_balance);
-          break;
-        case 'Hidden Balance':
-          balanceModeList.add(S.of(context).hidden_balance);
-          break;
-        default:
-          break;
-      }
-    }
-    return balanceModeList;
-  }
-
-  List<String> _getTransactionPriorityList(List<TransactionPriority> list) {
-    List<String> transactionPriorityList = new List();
-    for(int i = 0; i < list.length; i++) {
-      switch(list[ i ].title) {
-        case 'Slow':
-          transactionPriorityList.add(S.of(context).transaction_priority_slow);
-          break;
-        case 'Regular':
-          transactionPriorityList.add(S.of(context).transaction_priority_regular);
-          break;
-        case 'Medium':
-          transactionPriorityList.add(S.of(context).transaction_priority_medium);
-          break;
-        case 'Fast':
-          transactionPriorityList.add(S.of(context).transaction_priority_fast);
-          break;
-        case 'Fastest':
-          transactionPriorityList.add(S.of(context).transaction_priority_fastest);
-          break;
-        default:
-          break;
-      }
-    }
-    return transactionPriorityList;
-  }
-
-  _getSelectedItem<T extends Object> (String selectedItem, List<String> list, List<T> itemsList) {
-    return itemsList[list.indexOf(selectedItem)];
-  }
-
-  String _getCurrentBalanceMode(String balanceMode) {
-    String currentBalanceMode;
-    switch(balanceMode) {
-      case 'Full Balance':
-        currentBalanceMode = S.of(context).full_balance;
-        break;
-      case 'Available Balance':
-        currentBalanceMode = S.of(context).available_balance;
-        break;
-      case 'Hidden Balance':
-        currentBalanceMode = S.of(context).hidden_balance;
-        break;
-      default:
-        break;
-    }
-    return currentBalanceMode;
-  }
-
-  String _getCurrentTransactionPriority(String transactionPriority) {
-    String currentTransactionPriority;
-    switch(transactionPriority) {
-      case 'Slow':
-        currentTransactionPriority = S.of(context).transaction_priority_slow;
-        break;
-      case 'Regular':
-        currentTransactionPriority = S.of(context).transaction_priority_regular;
-        break;
-      case 'Medium':
-        currentTransactionPriority = S.of(context).transaction_priority_medium;
-        break;
-      case 'Fast':
-        currentTransactionPriority = S.of(context).transaction_priority_fast;
-        break;
-      case 'Fastest':
-        currentTransactionPriority = S.of(context).transaction_priority_fastest;
-        break;
-      default:
-        break;
-    }
-    return currentTransactionPriority;
   }
 }

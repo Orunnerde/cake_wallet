@@ -220,31 +220,17 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                     builder: (_) {
                                       final savedDisplayMode =
                                           settingsStore.balanceDisplayMode;
-                                      var title = S.of(context).xmr_hidden;
                                       BalanceDisplayMode displayMode =
                                           balanceStore.isReversing
-                                              ? (savedDisplayMode.serialize() ==
+                                              ? (savedDisplayMode ==
                                                       BalanceDisplayMode
                                                           .availableBalance
-                                                          .serialize()
                                                   ? BalanceDisplayMode
                                                       .fullBalance
                                                   : BalanceDisplayMode
                                                       .availableBalance)
                                               : savedDisplayMode;
-
-                                      if (displayMode.serialize() ==
-                                          BalanceDisplayMode.availableBalance
-                                              .serialize()) {
-                                        title =
-                                            S.of(context).xmr_available_balance;
-                                      }
-
-                                      if (displayMode.serialize() ==
-                                          BalanceDisplayMode.fullBalance
-                                              .serialize()) {
-                                        title = S.of(context).xmr_full_balance;
-                                      }
+                                      var title = displayMode.toString();
 
                                       return Text(title,
                                           style: TextStyle(
@@ -259,27 +245,24 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                       var balance = '---';
                                       BalanceDisplayMode displayMode =
                                           balanceStore.isReversing
-                                              ? (savedDisplayMode.serialize() ==
+                                              ? (savedDisplayMode ==
                                                       BalanceDisplayMode
                                                           .availableBalance
-                                                          .serialize()
                                                   ? BalanceDisplayMode
                                                       .fullBalance
                                                   : BalanceDisplayMode
                                                       .availableBalance)
                                               : savedDisplayMode;
 
-                                      if (displayMode.serialize() ==
-                                          BalanceDisplayMode.availableBalance
-                                              .serialize()) {
+                                      if (displayMode ==
+                                          BalanceDisplayMode.availableBalance) {
                                         balance =
                                             balanceStore.unlockedBalance ??
                                                 '0.0';
                                       }
 
-                                      if (displayMode.serialize() ==
-                                          BalanceDisplayMode.fullBalance
-                                              .serialize()) {
+                                      if (displayMode ==
+                                          BalanceDisplayMode.fullBalance) {
                                         balance =
                                             balanceStore.fullBalance ?? '0.0';
                                       }
@@ -306,17 +289,15 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                               .toString();
                                           var balance = '---';
 
-                                          if (displayMode.serialize() ==
+                                          if (displayMode ==
                                               BalanceDisplayMode
-                                                  .availableBalance
-                                                  .serialize()) {
+                                                  .availableBalance) {
                                             balance =
                                                 '${balanceStore.fiatUnlockedBalance} $symbol';
                                           }
 
-                                          if (displayMode.serialize() ==
-                                              BalanceDisplayMode.fullBalance
-                                                  .serialize()) {
+                                          if (displayMode ==
+                                              BalanceDisplayMode.fullBalance) {
                                             balance =
                                                 '${balanceStore.fiatFullBalance} $symbol';
                                           }
@@ -540,14 +521,14 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                 if (item is TransactionListItem) {
                   final transaction = item.transaction;
                   final savedDisplayMode = settingsStore.balanceDisplayMode;
-                  final formattedAmount = savedDisplayMode.serialize() ==
-                          BalanceDisplayMode.hiddenBalance.serialize()
-                      ? '---'
-                      : transaction.amountFormatted();
-                  final formattedFiatAmount = savedDisplayMode.serialize() ==
-                          BalanceDisplayMode.hiddenBalance.serialize()
-                      ? '---'
-                      : transaction.fiatAmount();
+                  final formattedAmount =
+                      savedDisplayMode == BalanceDisplayMode.hiddenBalance
+                          ? '---'
+                          : transaction.amountFormatted();
+                  final formattedFiatAmount =
+                      savedDisplayMode == BalanceDisplayMode.hiddenBalance
+                          ? '---'
+                          : transaction.fiatAmount();
 
                   return TransactionRow(
                       onTap: () => Navigator.of(context).pushNamed(
@@ -565,8 +546,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                   final trade = item.trade;
                   final savedDisplayMode = settingsStore.balanceDisplayMode;
                   final formattedAmount = trade.amount != null
-                      ? savedDisplayMode.serialize() ==
-                              BalanceDisplayMode.hiddenBalance.serialize()
+                      ? savedDisplayMode == BalanceDisplayMode.hiddenBalance
                           ? '---'
                           : trade.amount
                       : trade.amount;

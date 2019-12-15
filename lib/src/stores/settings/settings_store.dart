@@ -50,7 +50,7 @@ abstract class SettingsStoreBase with Store {
     final savedDarkTheme = sharedPreferences.getBool(currentDarkTheme) == null
         ? false
         : sharedPreferences.getBool(currentDarkTheme);
-    final actionlistDisplayMode = ObservableList();
+    final actionlistDisplayMode = ObservableList<ActionListDisplayMode>();
     actionlistDisplayMode.addAll(deserializeActionlistDisplayModes(
         sharedPreferences.getInt(displayActionListModeKey) ?? 11));
     final defaultPinLength = sharedPreferences.getInt(currentPinLength) == null
