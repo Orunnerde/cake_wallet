@@ -82,6 +82,11 @@ class AddressBookPage extends BasePage {
 
                 final content = ListTile(
                   onTap: () async {
+                    if (!isEditable) {
+                      Navigator.of(context).pop(contact);
+                      return;
+                    }
+
                     bool isCopied = await showNameAndAddressDialog(context, contact.name, contact.address);
                     if (isCopied) {
                       Clipboard.setData(ClipboardData(text: contact.address));

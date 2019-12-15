@@ -96,6 +96,9 @@ abstract class ActionListBase with Store {
     return formattedItemsList(_items);
   }
 
+  @computed
+  int get totalCount => transactions.length + trades.length;
+
   TransactionFilterStore transactionFilterStore;
   TradeFilterStore tradeFilterStore;
 

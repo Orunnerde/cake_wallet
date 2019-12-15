@@ -387,7 +387,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                   );
                 }
 
-                if (index == 1 && actionListStore.items.length > 0) {
+                if (index == 1 && actionListStore.totalCount > 0) {
                   return Padding(
                     padding: EdgeInsets.only(right: 20, top: 10, bottom: 20),
                     child: Row(
