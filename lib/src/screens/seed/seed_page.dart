@@ -1,16 +1,14 @@
+import 'package:provider/provider.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:provider/provider.dart';
-import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/stores/wallet_seed/wallet_seed_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/generated/i18n.dart';
 
 class SeedPage extends BasePage {
   static final image = Image.asset('assets/images/seed_image.png');
@@ -34,9 +32,6 @@ class SeedPage extends BasePage {
     final walletSeedStore = Provider.of<WalletSeedStore>(context);
     String _seed;
 
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
-
     return Container(
       padding: EdgeInsets.all(30.0),
       child: Column(
@@ -48,8 +43,7 @@ class SeedPage extends BasePage {
                 children: <Widget>[
                   image,
                   Container(
-                    margin: EdgeInsets.only(
-                        left: 30.0, top: 10.0, right: 30.0),
+                    margin: EdgeInsets.only(left: 30.0, top: 10.0, right: 30.0),
                     child: Observer(builder: (_) {
                       _seed = walletSeedStore.seed;
                       return Column(
@@ -58,25 +52,25 @@ class SeedPage extends BasePage {
                             children: <Widget>[
                               Expanded(
                                   child: Container(
-                                    decoration: BoxDecoration(
-                                        border: Border(
-                                            bottom: BorderSide(
-                                                width: 1.0,
-                                                color: _isDarkTheme
-                                                    ? PaletteDark.darkThemeDarkGrey
-                                                    : Palette.lightGrey))),
-                                    padding: EdgeInsets.only(bottom: 20.0),
-                                    margin: EdgeInsets.only(bottom: 10.0),
-                                    child: Text(
-                                      walletSeedStore.name,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 18.0,
-                                          color: _isDarkTheme
-                                              ? Palette.wildDarkBlue
-                                              : Colors.black),
-                                    ),
-                                  ))
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            width: 1.0,
+                                            color: Theme.of(context)
+                                                .dividerColor))),
+                                padding: EdgeInsets.only(bottom: 20.0),
+                                margin: EdgeInsets.only(bottom: 10.0),
+                                child: Text(
+                                  walletSeedStore.name,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 18.0,
+                                      color: Theme.of(context)
+                                          .primaryTextTheme
+                                          .button
+                                          .color),
+                                ),
+                              ))
                             ],
                           ),
                           SizedBox(
@@ -87,9 +81,10 @@ class SeedPage extends BasePage {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: 14.0,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeTitle
-                                    : Colors.black),
+                                color: Theme.of(context)
+                                    .primaryTextTheme
+                                    .title
+                                    .color),
                           )
                         ],
                       );
@@ -101,45 +96,50 @@ class SeedPage extends BasePage {
                       children: <Widget>[
                         Flexible(
                             child: Container(
-                              padding: EdgeInsets.only(right: 8.0),
-                              child: PrimaryButton(
-                                  onPressed: () => Share.text(
-                                      S.of(context).seed_share, _seed, 'text/plain'),
-                                  color: _isDarkTheme
-                                      ? PaletteDark.darkThemePurpleButton
-                                      : Palette.purple,
-                                  borderColor: _isDarkTheme
-                                      ? PaletteDark.darkThemePurpleButtonBorder
-                                      : Palette.deepPink,
-                                  text: S.of(context).save),
-                            )),
+                          padding: EdgeInsets.only(right: 8.0),
+                          child: PrimaryButton(
+                              onPressed: () => Share.text(
+                                  S.of(context).seed_share,
+                                  _seed,
+                                  'text/plain'),
+                              color: Theme.of(context)
+                                  .primaryTextTheme
+                                  .button
+                                  .backgroundColor,
+                              borderColor: Theme.of(context)
+                                  .primaryTextTheme
+                                  .button
+                                  .decorationColor,
+                              text: S.of(context).save),
+                        )),
                         Flexible(
                             child: Container(
                                 padding: EdgeInsets.only(left: 8.0),
                                 child: Builder(
                                   builder: (context) => PrimaryButton(
-                                    onPressed: () {
-                                      Clipboard.setData(
-                                          ClipboardData(text: _seed));
-                                      Scaffold.of(context).showSnackBar(
-                                        SnackBar(
-                                          content:
-                                          Text(S.of(context).copied_to_clipboard),
-                                          backgroundColor: Colors.green,
-                                          duration:
-                                          Duration(milliseconds: 1500),
-                                        ),
-                                      );
-                                    },
-                                    text: S.of(context).copy,
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeBlueButton
-                                        : Palette.brightBlue,
-                                    borderColor: _isDarkTheme
-                                        ? PaletteDark
-                                        .darkThemeBlueButtonBorder
-                                        : Palette.cloudySky,
-                                  ),
+                                      onPressed: () {
+                                        Clipboard.setData(
+                                            ClipboardData(text: _seed));
+                                        Scaffold.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text(S
+                                                .of(context)
+                                                .copied_to_clipboard),
+                                            backgroundColor: Colors.green,
+                                            duration:
+                                                Duration(milliseconds: 1500),
+                                          ),
+                                        );
+                                      },
+                                      text: S.of(context).copy,
+                                      color: Theme.of(context)
+                                          .accentTextTheme
+                                          .caption
+                                          .backgroundColor,
+                                      borderColor: Theme.of(context)
+                                          .accentTextTheme
+                                          .caption
+                                          .decorationColor),
                                 )))
                       ],
                     ),
@@ -148,13 +148,13 @@ class SeedPage extends BasePage {
               ),
             ),
           ),
-          onCloseCallback != null ?
-          PrimaryButton(
-              onPressed: () => onClose(context),
-              text: S.of(context).restore_next,
-              color: Palette.lightGrey,
-              borderColor: Palette.darkGrey)
-          : Offstage()
+          onCloseCallback != null
+              ? PrimaryButton(
+                  onPressed: () => onClose(context),
+                  text: S.of(context).restore_next,
+                  color: Palette.lightGrey,
+                  borderColor: Palette.darkGrey)
+              : Offstage()
         ],
       ),
     );

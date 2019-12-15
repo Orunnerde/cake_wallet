@@ -1,20 +1,17 @@
-import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cake_wallet/palette.dart';
-import 'package:cake_wallet/src/widgets/primary_button.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/stores/wallet_creation/wallet_creation_store.dart';
 import 'package:cake_wallet/src/stores/wallet_creation/wallet_creation_state.dart';
 import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
-import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/generated/i18n.dart';
+import 'package:cake_wallet/src/widgets/primary_button.dart';
+import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
 
 class NewWalletPage extends BasePage {
   final WalletListService walletsService;
@@ -44,8 +41,6 @@ class _WalletNameFormState extends State<WalletNameForm> {
   @override
   Widget build(BuildContext context) {
     final walletCreationStore = Provider.of<WalletCreationStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     reaction((_) => walletCreationStore.state, (state) {
       if (state is WalletCreatedSuccessfully) {
@@ -85,28 +80,18 @@ class _WalletNameFormState extends State<WalletNameForm> {
                 child: TextFormField(
                   style: TextStyle(
                       fontSize: 24.0,
-                      color: _isDarkTheme
-                          ? PaletteDark.wildDarkBlueWithOpacity
-                          : Colors.black),
+                      color: Theme.of(context).accentTextTheme.subtitle.color),
                   controller: nameController,
                   decoration: InputDecoration(
                       hintStyle: TextStyle(
-                          fontSize: 24.0,
-                          color: _isDarkTheme
-                              ? PaletteDark.wildDarkBlueWithOpacity
-                              : Palette.lightBlue),
+                          fontSize: 24.0, color: Theme.of(context).hintColor),
                       hintText: S.of(context).wallet_name,
                       focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
-                              color: _isDarkTheme
-                                  ? PaletteDark.darkThemeGrey
-                                  : Palette.lightGrey,
-                              width: 1.0)),
+                              color: Theme.of(context).focusColor, width: 1.0)),
                       enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
-                              color: _isDarkTheme
-                                  ? PaletteDark.darkThemeGrey
-                                  : Palette.lightGrey,
+                              color: Theme.of(context).focusColor,
                               width: 1.0))),
                   validator: (value) {
                     walletCreationStore.validateWalletName(value);
@@ -124,12 +109,9 @@ class _WalletNameFormState extends State<WalletNameForm> {
                 }
               },
               text: S.of(context).continue_text,
-              color: _isDarkTheme
-                  ? PaletteDark.darkThemePurpleButton
-                  : Palette.purple,
-              borderColor: _isDarkTheme
-                  ? PaletteDark.darkThemePurpleButtonBorder
-                  : Palette.deepPink,
+              color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+              borderColor:
+                  Theme.of(context).primaryTextTheme.button.decorationColor,
               isLoading: walletCreationStore.state is WalletIsCreating,
             );
           },

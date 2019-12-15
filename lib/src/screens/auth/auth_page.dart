@@ -1,13 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/stores/auth/auth_state.dart';
 import 'package:cake_wallet/src/stores/auth/auth_store.dart';
 import 'package:cake_wallet/src/screens/pin_code/pin_code.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/generated/i18n.dart';
+
 
 class AuthPage extends StatefulWidget {
   final Function(bool, AuthPageState) onAuthenticationFinished;
@@ -33,8 +32,6 @@ class AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     final authStore = Provider.of<AuthStore>(context);
-    final _themeChanger = Provider.of<ThemeChanger>(context);
-    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     reaction((_) => authStore.state, (state) {
       if (state is AuthenticatedSuccessfully) {
@@ -84,8 +81,7 @@ class AuthPageState extends State<AuthPage> {
         key: _key,
         appBar: CupertinoNavigationBar(
           leading: widget.closable ? CloseButton() : Container(),
-          backgroundColor:
-              _isDarkTheme ? Theme.of(context).backgroundColor : Colors.white,
+          backgroundColor: Theme.of(context).backgroundColor,
           border: null,
         ),
         body: PinCode(

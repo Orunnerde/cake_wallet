@@ -4,14 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/generated/i18n.dart';
+import 'package:cake_wallet/src/screens/nodes/node_indicator.dart';
 import 'package:cake_wallet/src/stores/node_list/node_list_store.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/generated/i18n.dart';
-import 'package:cake_wallet/src/widgets/standart_switch.dart';
-import 'package:cake_wallet/src/screens/nodes/node_indicator.dart';
 
 class NodeListPage extends BasePage {
   NodeListPage();
@@ -21,9 +18,6 @@ class NodeListPage extends BasePage {
   @override
   Widget trailing(context) {
     final nodeList = Provider.of<NodeListStore>(context);
-
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -62,19 +56,17 @@ class NodeListPage extends BasePage {
               },
               child: Text(
                 S.of(context).reset,
-                style: TextStyle(fontSize: 16.0,
-                    color: _isDarkTheme ? PaletteDark.darkThemeGrey : Palette.wildDarkBlue
-                ),
+                style: TextStyle(
+                    fontSize: 16.0,
+                    color: Theme.of(context).primaryTextTheme.subtitle.color),
               )),
         ),
         Container(
             width: 28.0,
             height: 28.0,
-            decoration:
-                BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _isDarkTheme ? PaletteDark.darkThemeViolet : Palette.purple
-                ),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Theme.of(context).selectedRowColor),
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[
@@ -98,37 +90,21 @@ class NodeListPage extends BasePage {
 
   @override
   Widget body(context) => NodeListPageBody();
-
 }
 
 class NodeListPageBody extends StatefulWidget {
-
   @override
   createState() => NodeListPageBodyState();
-
 }
 
 class NodeListPageBodyState extends State<NodeListPageBody> {
-
   @override
   Widget build(BuildContext context) {
     final nodeList = Provider.of<NodeListStore>(context);
     final settings = Provider.of<SettingsStore>(context);
 
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    Color _currentColor, _notCurrentColor;
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) {
-      _currentColor = PaletteDark.darkThemeViolet;
-      _notCurrentColor = Theme.of(context).backgroundColor;
-      _isDarkTheme = true;
-    }
-    else {
-      _currentColor = Palette.purple;
-      _notCurrentColor = Colors.white;
-      _isDarkTheme = false;
-    }
+    final currentColor = Theme.of(context).selectedRowColor;
+    final notCurrentColor = Theme.of(context).backgroundColor;
 
     return Container(
       padding: EdgeInsets.only(bottom: 20.0),
@@ -136,10 +112,8 @@ class NodeListPageBodyState extends State<NodeListPageBody> {
         children: <Widget>[
           Expanded(child: Observer(builder: (context) {
             return ListView.separated(
-                separatorBuilder: (_, __) =>
-                    Divider(
-                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey : Palette.lightGrey,
-                        height: 1),
+                separatorBuilder: (_, __) => Divider(
+                    color: Theme.of(context).dividerTheme.color, height: 1),
                 itemCount: nodeList.nodes.length,
                 itemBuilder: (BuildContext context, int index) {
                   final node = nodeList.nodes[index];
@@ -150,21 +124,26 @@ class NodeListPageBodyState extends State<NodeListPageBody> {
                         : node.id == settings.node.id;
 
                     final content = Container(
-                        color: isCurrent ? _currentColor : _notCurrentColor,
+                        color: isCurrent ? currentColor : notCurrentColor,
                         child: ListTile(
                           title: Text(
                             node.uri,
                             style: TextStyle(
                                 fontSize: 16.0,
-                                color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
-                            ),
+                                color: Theme.of(context)
+                                    .primaryTextTheme
+                                    .title
+                                    .color),
                           ),
                           trailing: FutureBuilder(
                               future: nodeList.isNodeOnline(node),
                               builder: (context, snapshot) {
                                 switch (snapshot.connectionState) {
                                   case ConnectionState.done:
-                                    return NodeIndicator(color: snapshot.data ? Palette.green : Palette.red);
+                                    return NodeIndicator(
+                                        color: snapshot.data
+                                            ? Palette.green
+                                            : Palette.red);
                                   default:
                                     return NodeIndicator();
                                 }
@@ -176,7 +155,9 @@ class NodeListPageBodyState extends State<NodeListPageBody> {
                                   builder: (BuildContext context) {
                                     return AlertDialog(
                                       content: Text(
-                                        S.of(context).change_current_node(node.uri),
+                                        S
+                                            .of(context)
+                                            .change_current_node(node.uri),
                                         textAlign: TextAlign.center,
                                       ),
                                       actions: <Widget>[
@@ -201,55 +182,55 @@ class NodeListPageBodyState extends State<NodeListPageBody> {
                     return isCurrent
                         ? content
                         : Dismissible(
-                        key: Key(node.id.toString()),
-                        confirmDismiss: (direction) async {
-                          return await showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text(
-                                    S.of(context).remove_node,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  content: Text(
-                                    S.of(context).remove_node_message,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, false),
-                                        child: Text(S.of(context).cancel)),
-                                    FlatButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, true),
-                                        child: Text(S.of(context).remove)),
+                            key: Key(node.id.toString()),
+                            confirmDismiss: (direction) async {
+                              return await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text(
+                                        S.of(context).remove_node,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      content: Text(
+                                        S.of(context).remove_node_message,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context, false),
+                                            child: Text(S.of(context).cancel)),
+                                        FlatButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context, true),
+                                            child: Text(S.of(context).remove)),
+                                      ],
+                                    );
+                                  });
+                            },
+                            onDismissed: (direction) async =>
+                                await nodeList.remove(node: node),
+                            direction: DismissDirection.endToStart,
+                            background: Container(
+                                padding: EdgeInsets.only(right: 10.0),
+                                alignment: AlignmentDirectional.centerEnd,
+                                color: Palette.red,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    const Icon(
+                                      CupertinoIcons.delete,
+                                      color: Colors.white,
+                                    ),
+                                    Text(
+                                      S.of(context).delete,
+                                      style: TextStyle(color: Colors.white),
+                                    )
                                   ],
-                                );
-                              });
-                        },
-                        onDismissed: (direction) async =>
-                          await nodeList.remove(node: node),
-                        direction: DismissDirection.endToStart,
-                        background: Container(
-                            padding: EdgeInsets.only(right: 10.0),
-                            alignment: AlignmentDirectional.centerEnd,
-                            color: Palette.red,
-                            child: Column(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                const Icon(
-                                  CupertinoIcons.delete,
-                                  color: Colors.white,
-                                ),
-                                Text(
-                                  S.of(context).delete,
-                                  style: TextStyle(color: Colors.white),
-                                )
-                              ],
-                            )),
-                        child: content);
+                                )),
+                            child: content);
                   });
                 });
           }))

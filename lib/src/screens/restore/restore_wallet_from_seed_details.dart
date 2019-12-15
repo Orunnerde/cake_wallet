@@ -1,19 +1,15 @@
+import 'package:mobx/mobx.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:mobx/mobx.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/services.dart';
-import 'package:cake_wallet/palette.dart';
-import 'package:cake_wallet/src/widgets/primary_button.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/stores/wallet_restoration/wallet_restoration_store.dart';
 import 'package:cake_wallet/src/stores/wallet_restoration/wallet_restoration_state.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/widgets/blockchain_height_widget.dart';
 import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/generated/i18n.dart';
+import 'package:cake_wallet/src/widgets/primary_button.dart';
 
 class RestoreWalletFromSeedDetailsPage extends BasePage {
   String get title => S.current.restore_wallet_restore_description;
@@ -36,9 +32,6 @@ class _RestoreFromSeedDetailsFormState
   @override
   Widget build(BuildContext context) {
     final walletRestorationStore = Provider.of<WalletRestorationStore>(context);
-
-    final _themeChanger = Provider.of<ThemeChanger>(context);
-    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     reaction((_) => walletRestorationStore.state, (state) {
       if (state is WalletRestoredSuccessfully) {
@@ -86,26 +79,19 @@ class _RestoreFromSeedDetailsFormState
                               controller: _nameController,
                               decoration: InputDecoration(
                                   hintStyle: TextStyle(
-                                      color: _isDarkTheme
-                                          ? PaletteDark.darkThemeGrey
-                                          : Palette.lightBlue),
+                                      color: Theme.of(context).hintColor),
                                   hintText: S.of(context).restore_wallet_name,
                                   focusedBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: _isDarkTheme
-                                              ? PaletteDark
-                                                  .darkThemeGreyWithOpacity
-                                              : Palette.lightGrey,
+                                          color: Theme.of(context).focusColor,
                                           width: 1.0)),
                                   enabledBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: _isDarkTheme
-                                              ? PaletteDark
-                                                  .darkThemeGreyWithOpacity
-                                              : Palette.lightGrey,
+                                          color: Theme.of(context).focusColor,
                                           width: 1.0))),
                               validator: (value) {
-                                walletRestorationStore.validateWalletName(value);
+                                walletRestorationStore
+                                    .validateWalletName(value);
                                 return walletRestorationStore.errorMessage;
                               },
                             ),
@@ -119,21 +105,18 @@ class _RestoreFromSeedDetailsFormState
       ),
       bottomSection: Observer(builder: (_) {
         return LoadingPrimaryButton(
-          onPressed: () {
-            if (_formKey.currentState.validate()) {
-              walletRestorationStore.restoreFromSeed(
-                  name: _nameController.text,
-                  restoreHeight: _blockchainHeightKey.currentState.height);
-            }
-          },
-          isLoading: walletRestorationStore.state is WalletIsRestoring,
-          text: S.of(context).restore_recover,
-          color:
-              _isDarkTheme ? PaletteDark.darkThemePurpleButton : Palette.purple,
-          borderColor: _isDarkTheme
-              ? PaletteDark.darkThemePurpleButtonBorder
-              : Palette.deepPink,
-        );
+            onPressed: () {
+              if (_formKey.currentState.validate()) {
+                walletRestorationStore.restoreFromSeed(
+                    name: _nameController.text,
+                    restoreHeight: _blockchainHeightKey.currentState.height);
+              }
+            },
+            isLoading: walletRestorationStore.state is WalletIsRestoring,
+            text: S.of(context).restore_recover,
+            color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+            borderColor:
+                Theme.of(context).primaryTextTheme.button.decorationColor);
       }),
     );
   }

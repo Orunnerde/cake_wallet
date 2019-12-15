@@ -1,14 +1,11 @@
-import 'package:cake_wallet/src/stores/account_list/account_list_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:cake_wallet/palette.dart';
+import 'package:provider/provider.dart';
+import 'package:cake_wallet/generated/i18n.dart';
+import 'package:cake_wallet/src/stores/account_list/account_list_store.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
-import 'package:provider/provider.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/src/domain/monero/account.dart';
-import 'package:cake_wallet/generated/i18n.dart';
 
 class AccountPage extends BasePage {
   String get title => 'Account';
@@ -49,9 +46,6 @@ class AccountFormState extends State<AccountForm> {
   Widget build(BuildContext context) {
     final accountListStore = Provider.of<AccountListStore>(context);
 
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
-
     return Form(
       key: _formKey,
       child: Container(
@@ -63,22 +57,19 @@ class AccountFormState extends State<AccountForm> {
                   child: TextFormField(
                     decoration: InputDecoration(
                         hintStyle: TextStyle(
-                            color: _isDarkTheme ? PaletteDark.darkThemeGrey
-                                : Palette.lightBlue
+                            color: Theme.of(context).hintColor
                         ),
                         hintText: S.of(context).account,
                         focusedBorder: UnderlineInputBorder(
                             borderSide:
                             BorderSide(
-                                color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                    : Palette.lightGrey,
+                                color: Theme.of(context).focusColor,
                                 width: 1.0
                             )),
                         enabledBorder: UnderlineInputBorder(
                             borderSide:
                             BorderSide(
-                                color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                    : Palette.lightGrey,
+                                color: Theme.of(context).focusColor,
                                 width: 1.0
                             ))),
                 controller: _textController,
@@ -104,10 +95,8 @@ class AccountFormState extends State<AccountForm> {
                 Navigator.pop(context, _textController.text);
               },
               text: widget.account != null ? 'Rename' : S.of(context).add,
-              color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
-                  : Palette.purple,
-              borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
-                  : Palette.deepPink,
+              color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+              borderColor: Theme.of(context).primaryTextTheme.button.decorationColor,
             )
           ],
         ),

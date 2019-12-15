@@ -90,13 +90,6 @@ class DisclaimerBodyState extends State<DisclaimerPageBody> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
 
     return Column(
       children: <Widget>[
@@ -227,14 +220,8 @@ class DisclaimerBodyState extends State<DisclaimerPageBody> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            _isDarkTheme
-                                ? Theme.of(context)
-                                    .backgroundColor
-                                    .withOpacity(0.0)
-                                : Colors.white.withOpacity(0.0),
-                            _isDarkTheme
-                                ? Theme.of(context).backgroundColor
-                                : Colors.white,
+                            Theme.of(context).backgroundColor.withOpacity(0.0),
+                            Theme.of(context).backgroundColor,
                           ],
                           begin: FractionalOffset.topCenter,
                           end: FractionalOffset.bottomCenter,
@@ -304,12 +291,8 @@ class DisclaimerBodyState extends State<DisclaimerPageBody> {
                   child: PrimaryButton(
                     onPressed: _checked ? () {} : null,
                     text: 'Accept',
-                    color: _isDarkTheme
-                        ? PaletteDark.darkThemePurpleButton
-                        : Palette.purple,
-                    borderColor: _isDarkTheme
-                        ? PaletteDark.darkThemePurpleButtonBorder
-                        : Palette.deepPink,
+                    color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+                    borderColor: Theme.of(context).primaryTextTheme.button.decorationColor,
                   ),
                 )
               : Offstage(),

@@ -1,16 +1,14 @@
-import 'package:cake_wallet/routes.dart';
-import 'package:cake_wallet/src/domain/exchange/exchange_provider_description.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/generated/i18n.dart';
+import 'package:cake_wallet/src/domain/exchange/exchange_provider_description.dart';
 import 'package:cake_wallet/src/stores/trade_history/trade_history_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/generated/i18n.dart';
 
 class TradeHistoryPage extends BasePage {
   String get title => S.current.trade_history_title;
@@ -19,20 +17,11 @@ class TradeHistoryPage extends BasePage {
   @override
   Widget body(BuildContext context) {
     final tradeHistoryStore = Provider.of<TradeHistoryStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
 
     return Observer(
       builder: (_) => ListView.separated(
         separatorBuilder: (_, __) => Divider(
-          color: _isDarkTheme
-              ? PaletteDark.darkThemeGreyWithOpacity
-              : Palette.lightGrey,
+          color: Theme.of(context).dividerTheme.color,
           height: 1.0,
         ),
         itemCount: tradeHistoryStore.tradeList == null
@@ -53,9 +42,7 @@ class TradeHistoryPage extends BasePage {
                 children: <Widget>[
                   index == 0
                       ? Divider(
-                          color: _isDarkTheme
-                              ? PaletteDark.darkThemeGreyWithOpacity
-                              : Palette.lightGrey,
+                          color: Theme.of(context).dividerTheme.color,
                           height: 1.0,
                         )
                       : Offstage(),
@@ -65,9 +52,10 @@ class TradeHistoryPage extends BasePage {
                         '$poweredTitle',
                         style: TextStyle(
                             fontSize: 16.0,
-                            color: _isDarkTheme
-                                ? Palette.wildDarkBlue
-                                : Colors.black),
+                            color: Theme.of(context)
+                                .primaryTextTheme
+                                .button
+                                .color),
                       ),
                       trailing: Text(
                         date,
@@ -76,9 +64,7 @@ class TradeHistoryPage extends BasePage {
                       )),
                   index == tradeHistoryStore.tradeList.length - 1
                       ? Divider(
-                          color: _isDarkTheme
-                              ? PaletteDark.darkThemeGreyWithOpacity
-                              : Palette.lightGrey,
+                          color: Theme.of(context).dividerTheme.color,
                           height: 1.0,
                         )
                       : Offstage(),

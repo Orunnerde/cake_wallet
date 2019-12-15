@@ -2,14 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:cake_wallet/routes.dart';
-import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/domain/exchange/trade.dart';
-import 'package:provider/provider.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/generated/i18n.dart';
 
 class ExchangeConfirmPage extends BasePage {
   String get title => S.current.copy_id;
@@ -20,10 +16,6 @@ class ExchangeConfirmPage extends BasePage {
 
   @override
   Widget body(BuildContext context) {
-
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
-
     return Column(
       children: <Widget>[
         Expanded(
@@ -36,9 +28,12 @@ class ExchangeConfirmPage extends BasePage {
                       Text(
                         S.of(context).exchange_result_write_down_trade_id,
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 18.0,
-                          color: _isDarkTheme ? Palette.wildDarkBlue : Colors.black
-                        ),
+                        style: TextStyle(
+                            fontSize: 18.0,
+                            color: Theme.of(context)
+                                .primaryTextTheme
+                                .button
+                                .color),
                       ),
                       SizedBox(
                         height: 70.0,
@@ -46,34 +41,37 @@ class ExchangeConfirmPage extends BasePage {
                       Text(
                         S.of(context).trade_id(trade.id),
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 18.0,
-                            color: _isDarkTheme ? Palette.wildDarkBlue : Colors.black
-                        ),
+                        style: TextStyle(
+                            fontSize: 18.0,
+                            color: Theme.of(context)
+                                .primaryTextTheme
+                                .button
+                                .color),
                       ),
                       SizedBox(
                         height: 70.0,
                       ),
                       PrimaryButton(
-                        onPressed: () {
-                          Clipboard.setData(
-                              ClipboardData(text: trade.id));
-                          Scaffold.of(context).showSnackBar(SnackBar(
-                            content: Text(
-                              S.of(context).copied_to_clipboard,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.white
+                          onPressed: () {
+                            Clipboard.setData(ClipboardData(text: trade.id));
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                S.of(context).copied_to_clipboard,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.white),
                               ),
-                            ),
-                            backgroundColor: Colors.green,
-                          ));
-                        },
-                        text: S.of(context).copy_id,
-                        color: _isDarkTheme ? PaletteDark.darkThemeBlueButton
-                            : Palette.brightBlue,
-                        borderColor: _isDarkTheme ? PaletteDark.darkThemeBlueButtonBorder
-                            : Palette.cloudySky,
-                      )
+                              backgroundColor: Colors.green,
+                            ));
+                          },
+                          text: S.of(context).copy_id,
+                          color: Theme.of(context)
+                              .accentTextTheme
+                              .caption
+                              .backgroundColor,
+                          borderColor: Theme.of(context)
+                              .accentTextTheme
+                              .caption
+                              .decorationColor)
                     ],
                   ),
                 ))),
@@ -83,9 +81,9 @@ class ExchangeConfirmPage extends BasePage {
               onPressed: () => Navigator.of(context)
                   .pushReplacementNamed(Routes.exchangeTrade, arguments: trade),
               text: S.of(context).saved_the_trade_id,
-              color: _isDarkTheme ? PaletteDark.darkThemePurpleButton : Palette.purple,
-              borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder : Palette.deepPink,
-          ),
+              color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+              borderColor:
+                  Theme.of(context).primaryTextTheme.button.decorationColor),
         )
       ],
     );

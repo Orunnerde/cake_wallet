@@ -1,20 +1,17 @@
-import 'package:cake_wallet/routes.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/routes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/stores/wallet_restoration/wallet_restoration_store.dart';
 import 'package:cake_wallet/src/widgets/seed_widget.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/generated/i18n.dart';
 
 class RestoreWalletFromSeedPage extends BasePage {
   final WalletListService walletsService;
@@ -44,8 +41,6 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
   @override
   Widget build(BuildContext context) {
     final walletRestorationStore = Provider.of<WalletRestorationStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     WidgetsBinding.instance.addPostFrameCallback(
         (_) => _setReactions(context, walletRestorationStore));
@@ -66,23 +61,24 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
             Container(
                 alignment: Alignment.bottomCenter,
                 child: PrimaryButton(
-                  onPressed: () {
-                    if (!walletRestorationStore.isValid) {
-                      return;
-                    }
+                    onPressed: () {
+                      if (!walletRestorationStore.isValid) {
+                        return;
+                      }
 
-                    Navigator.of(context).pushNamed(
-                        Routes.restoreWalletFromSeedDetails,
-                        arguments: _seedKey.currentState.items);
-                  },
-                  text: S.of(context).restore_next,
-                  color: _isDarkTheme
-                      ? PaletteDark.darkThemePurpleButton
-                      : Palette.purple,
-                  borderColor: _isDarkTheme
-                      ? PaletteDark.darkThemePurpleButtonBorder
-                      : Palette.deepPink,
-                ))
+                      Navigator.of(context).pushNamed(
+                          Routes.restoreWalletFromSeedDetails,
+                          arguments: _seedKey.currentState.items);
+                    },
+                    text: S.of(context).restore_next,
+                    color: Theme.of(context)
+                        .primaryTextTheme
+                        .button
+                        .backgroundColor,
+                    borderColor: Theme.of(context)
+                        .primaryTextTheme
+                        .button
+                        .decorationColor))
           ],
         ),
       ),

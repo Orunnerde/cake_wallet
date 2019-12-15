@@ -1,17 +1,15 @@
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/stores/address_book/address_book_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:cake_wallet/generated/i18n.dart';
 
 class AddressBookPage extends BasePage {
   bool get isModalBackButton => true;
@@ -29,15 +27,13 @@ class AddressBookPage extends BasePage {
     }
 
     final addressBookStore = Provider.of<AddressBookStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Container(
         width: 28.0,
         height: 28.0,
         decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: _isDarkTheme ? PaletteDark.darkThemeViolet : Palette.purple),
+            color: Theme.of(context).selectedRowColor),
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
@@ -61,17 +57,13 @@ class AddressBookPage extends BasePage {
   @override
   Widget body(BuildContext context) {
     final addressBookStore = Provider.of<AddressBookStore>(context);
-    final _themeChanger = Provider.of<ThemeChanger>(context);
-    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Container(
         padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
         child: Observer(
           builder: (_) => ListView.separated(
               separatorBuilder: (_, __) => Divider(
-                    color: _isDarkTheme
-                        ? PaletteDark.darkThemeGreyWithOpacity
-                        : Palette.lightGrey,
+                    color: Theme.of(context).dividerTheme.color,
                     height: 1.0,
                   ),
               itemCount: addressBookStore.contactList == null
@@ -121,9 +113,7 @@ class AddressBookPage extends BasePage {
                     contact.name,
                     style: TextStyle(
                         fontSize: 16.0,
-                        color: _isDarkTheme
-                            ? PaletteDark.darkThemeTitle
-                            : Colors.black),
+                        color: Theme.of(context).primaryTextTheme.title.color),
                   ),
                 );
 

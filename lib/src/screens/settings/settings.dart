@@ -1,23 +1,21 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:cake_wallet/palette.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
 import 'package:cake_wallet/routes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
 import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
 import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:cake_wallet/palette.dart';
-import 'package:cake_wallet/src/screens/disclaimer/disclaimer_page.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:provider/provider.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/src/stores/action_list/action_list_display_mode.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/screens/settings/attributes.dart';
+import 'package:cake_wallet/src/screens/disclaimer/disclaimer_page.dart';
 import 'package:cake_wallet/src/screens/settings/items/settings_item.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:cake_wallet/src/screens/settings/items/item_headers.dart';
-import 'package:cake_wallet/generated/i18n.dart';
 // Settings widgets
 import 'package:cake_wallet/src/screens/settings/widgets/settings_arrow_list_row.dart';
 import 'package:cake_wallet/src/screens/settings/widgets/settings_header_list_row.dart';
@@ -64,8 +62,6 @@ class SettingsFormState extends State<SettingsForm> {
 
   _setSettingsList() {
     final settingsStore = Provider.of<SettingsStore>(context);
-    final _themeChanger = Provider.of<ThemeChanger>(context);
-    final _isDarkTheme = (_themeChanger.getTheme() == Themes.darkTheme);
 
     settingsStore.setItemHeaders();
 
@@ -79,9 +75,7 @@ class SettingsFormState extends State<SettingsForm> {
                     settingsStore.node == null ? '' : settingsStore.node.uri,
                     style: TextStyle(
                         fontSize: 16.0,
-                        color: _isDarkTheme
-                            ? PaletteDark.darkThemeGrey
-                            : Palette.wildDarkBlue),
+                        color: Theme.of(context).primaryTextTheme.subtitle.color),
                   )),
           attribute: Attributes.widget),
       SettingsItem(title: ItemHeaders.wallets, attribute: Attributes.header),
@@ -93,9 +87,7 @@ class SettingsFormState extends State<SettingsForm> {
                     _getCurrentBalanceMode(settingsStore.balanceDisplayMode.toString()),
                     style: TextStyle(
                         fontSize: 16.0,
-                        color: _isDarkTheme
-                            ? PaletteDark.darkThemeGrey
-                            : Palette.wildDarkBlue),
+                        color: Theme.of(context).primaryTextTheme.subtitle.color),
                   )),
           attribute: Attributes.widget),
       SettingsItem(
@@ -106,9 +98,7 @@ class SettingsFormState extends State<SettingsForm> {
                     settingsStore.fiatCurrency.toString(),
                     style: TextStyle(
                         fontSize: 16.0,
-                        color: _isDarkTheme
-                            ? PaletteDark.darkThemeGrey
-                            : Palette.wildDarkBlue),
+                        color: Theme.of(context).primaryTextTheme.subtitle.color),
                   )),
           attribute: Attributes.widget),
       SettingsItem(
@@ -119,9 +109,7 @@ class SettingsFormState extends State<SettingsForm> {
                     _getCurrentTransactionPriority(settingsStore.transactionPriority.toString()),
                     style: TextStyle(
                         fontSize: 16.0,
-                        color: _isDarkTheme
-                            ? PaletteDark.darkThemeGrey
-                            : Palette.wildDarkBlue),
+                        color: Theme.of(context).primaryTextTheme.subtitle.color),
                   )),
           attribute: Attributes.widget),
       SettingsItem(
@@ -149,8 +137,6 @@ class SettingsFormState extends State<SettingsForm> {
       SettingsItem(title: ItemHeaders.darkMode, attribute: Attributes.switcher),
       SettingsItem(
           widgetBuilder: (context) {
-            final _themeChanger = Provider.of<ThemeChanger>(context);
-            final _isDarkTheme = (_themeChanger.getTheme() == Themes.darkTheme);
 
             return PopupMenuButton<ActionListDisplayMode>(
                 itemBuilder: (context) => [
@@ -198,9 +184,7 @@ class SettingsFormState extends State<SettingsForm> {
                         Text(S.of(context).settings_display_on_dashboard_list,
                             style: TextStyle(
                                 fontSize: 16,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeTitle
-                                    : Colors.black)),
+                                color: Theme.of(context).primaryTextTheme.title.color)),
                         Observer(builder: (_) {
                           var title = '';
 
@@ -228,9 +212,7 @@ class SettingsFormState extends State<SettingsForm> {
                           return Text(title,
                               style: TextStyle(
                                   fontSize: 16.0,
-                                  color: _isDarkTheme
-                                      ? PaletteDark.darkThemeGrey
-                                      : Palette.wildDarkBlue));
+                                  color: Theme.of(context).primaryTextTheme.subtitle.color));
                         })
                       ]),
                 ));
@@ -337,8 +319,6 @@ class SettingsFormState extends State<SettingsForm> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = (_themeChanger.getTheme() == Themes.darkTheme);
 
     final settingsStore = Provider.of<SettingsStore>(context);
     settingsStore.setItemHeaders();
@@ -366,17 +346,13 @@ class SettingsFormState extends State<SettingsForm> {
                   _getWidget(item),
                   _isDrawDivider
                       ? Container(
-                          color: _isDarkTheme
-                              ? PaletteDark.darkThemeMidGrey
-                              : Colors.white,
+                          color: Theme.of(context).accentTextTheme.headline.backgroundColor,
                           padding: EdgeInsets.only(
                             left: 20.0,
                             right: 20.0,
                           ),
                           child: Divider(
-                            color: _isDarkTheme
-                                ? PaletteDark.darkThemeDarkGrey
-                                : Palette.lightGrey,
+                            color: Theme.of(context).dividerColor,
                             height: 1.0,
                           ),
                         )
@@ -386,7 +362,7 @@ class SettingsFormState extends State<SettingsForm> {
             }),
         Container(
           height: 20.0,
-          color: _isDarkTheme ? PaletteDark.darkThemeMidGrey : Colors.white,
+          color: Theme.of(context).accentTextTheme.headline.backgroundColor,
         )
       ],
     ));
@@ -395,8 +371,6 @@ class SettingsFormState extends State<SettingsForm> {
   Future<T> _presentPicker<T extends Object>(
       BuildContext context, List<T> list) async {
     T _value = list[0];
-    final _themeChanger = Provider.of<ThemeChanger>(context);
-    final _isDarkTheme = (_themeChanger.getTheme() == Themes.darkTheme);
 
     return await showDialog(
         context: context,
@@ -413,10 +387,9 @@ class SettingsFormState extends State<SettingsForm> {
                   children: List.generate(
                       list.length,
                       (index) => Center(
-                            child: Text(
-                              list[index].toString(),
+                            child: Text(list[index].toString(),
                               style: TextStyle(
-                                color: _isDarkTheme ? Colors.white : Colors.black
+                                color: Theme.of(context).primaryTextTheme.caption.color
                               ),
                             ),
                           ))),

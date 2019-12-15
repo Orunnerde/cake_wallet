@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
-import 'package:provider/provider.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/generated/i18n.dart';
@@ -20,10 +20,10 @@ class WelcomePage extends BasePage {
     bool _isDarkTheme = (_themeChanger.getTheme() == Themes.darkTheme);
 
     return Scaffold(
-        backgroundColor: _isDarkTheme ? Theme.of(context).backgroundColor
-            : backgroundColor,
-        resizeToAvoidBottomPadding: false,
-        body: SafeArea(child: body(context)),
+      backgroundColor:
+          _isDarkTheme ? Theme.of(context).backgroundColor : backgroundColor,
+      resizeToAvoidBottomPadding: false,
+      body: SafeArea(child: body(context)),
     );
   }
 
@@ -31,9 +31,6 @@ class WelcomePage extends BasePage {
   Widget body(BuildContext context) {
     final _screenWidth = MediaQuery.of(context).size.width;
     final textScaleFactor = _screenWidth < _baseWidth ? 0.76 : 1.0;
-
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = (_themeChanger.getTheme() == Themes.darkTheme);
 
     return Column(children: <Widget>[
       Stack(
@@ -80,30 +77,27 @@ class WelcomePage extends BasePage {
       ),
       Container(
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 20.0),
-          child: Column(
-              children: <Widget>[
-                PrimaryButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, Routes.newWalletFromWelcome);
-                  },
-                  text: S.of(context).create_new,
-                  color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
-                      : Palette.purple,
-                  borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
-                      : Palette.deepPink,
-                ),
-                SizedBox(height: 10),
-                PrimaryButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, Routes.restoreOptions);
-                  },
-                  color: _isDarkTheme ? PaletteDark.darkThemeBlueButton
-                      : Palette.brightBlue,
-                  borderColor: _isDarkTheme ? PaletteDark.darkThemeBlueButtonBorder
-                      : Palette.cloudySky,
-                  text: S.of(context).restore_wallet,
-                )
-              ]))
+          child: Column(children: <Widget>[
+            PrimaryButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, Routes.newWalletFromWelcome);
+                },
+                text: S.of(context).create_new,
+                color:
+                    Theme.of(context).primaryTextTheme.button.backgroundColor,
+                borderColor:
+                    Theme.of(context).primaryTextTheme.button.decorationColor),
+            SizedBox(height: 10),
+            PrimaryButton(
+              onPressed: () {
+                Navigator.pushNamed(context, Routes.restoreOptions);
+              },
+              color: Theme.of(context).accentTextTheme.caption.backgroundColor,
+              borderColor:
+                  Theme.of(context).accentTextTheme.caption.decorationColor,
+              text: S.of(context).restore_wallet,
+            )
+          ]))
     ]);
   }
 }
