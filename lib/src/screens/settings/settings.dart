@@ -45,14 +45,12 @@ class SettingsFormState extends State<SettingsForm> {
   final _telegramImage = Image.asset('assets/images/Telegram.png');
   final _twitterImage = Image.asset('assets/images/Twitter.png');
   final _changeNowImage = Image.asset('assets/images/change_now.png');
-  final _morphImage = Image.asset('assets/images/morph_icon.png');
   final _xmrBtcImage = Image.asset('assets/images/xmr_btc.png');
   
   final _emailUrl = 'mailto:support@cakewallet.io';
   final _telegramUrl = 'https:t.me/cake_wallet';
   final _twitterUrl = 'https:twitter.com/CakewalletXMR';
   final _changeNowUrl = 'mailto:support@changenow.io';
-  final _morphUrl = 'mailto:contact@morphtoken.com';
   final _xmrToUrl = 'mailto:support@xmr.to';
 
   List<SettingsItem> _items = List<SettingsItem>();
@@ -262,12 +260,6 @@ class SettingsFormState extends State<SettingsForm> {
           title: 'ChangeNow',
           link: 'support@changenow.io',
           image: _changeNowImage,
-          attribute: Attributes.link),
-      SettingsItem(
-          onTaped: () => _launchUrl(_morphUrl),
-          title: 'Morph',
-          link: 'contact@morphtoken.com',
-          image: _morphImage,
           attribute: Attributes.link),
       SettingsItem(
           onTaped: () => _launchUrl(_xmrToUrl),
