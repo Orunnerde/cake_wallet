@@ -26,27 +26,6 @@ import 'package:cake_wallet/src/domain/monero/monero_balance.dart';
 
 const monero_block_size = 1000;
 
-_store(_) => moneroWallet.store();
-_setupNode(Map args) => moneroWallet.setupNode(
-    address: args['address'],
-    login: args['login'] ?? '',
-    password: args['password'] ?? '',
-    useSSL: args['useSSL'],
-    isLightWallet: args['isLightWallet']);
-_startRefresh(_) => moneroWallet.startRefresh();
-
-PendingTransactionDescription _createTransaction(List<Object> args) {
-  final credentials = args.first as MoneroTransactionCreationCredentials;
-  final accountIndex = args.last as int;
-
-  return transactionHistory.createTransaction(
-      address: credentials.address,
-      paymentId: credentials.paymentId,
-      amount: credentials.amount,
-      priorityRaw: credentials.priority.serialize(),
-      accountIndex: accountIndex);
-}
-
 class MoneroWallet extends Wallet {
   static Future<MoneroWallet> createdWallet(
       {Database db,
@@ -140,7 +119,8 @@ class MoneroWallet extends Wallet {
     _address = BehaviorSubject<String>();
     _syncStatus = BehaviorSubject<SyncStatus>();
     _onBalanceChange = BehaviorSubject<MoneroBalance>();
-    _account = BehaviorSubject<Account>()..add(Account(id: 0, label: 'Stupid ???'));
+    _account = BehaviorSubject<Account>()
+      ..add(Account(id: 0, label: 'Stupid ???'));
     _subaddress = BehaviorSubject<Subaddress>();
     setListeners();
   }
@@ -198,13 +178,12 @@ class MoneroWallet extends Wallet {
       final start = DateTime.now();
       print('connectToNode start');
 
-      await compute(_setupNode, {
-        'address': node.uri,
-        'login': node.login,
-        'password': node.password,
-        'useSSL': useSSL,
-        'isLightWallet': isLightWallet
-      });
+      await moneroWallet.setupNode(
+          address: node.uri,
+          login: node.login,
+          password: node.password,
+          useSSL: useSSL,
+          isLightWallet: isLightWallet);
 
       final setupNodeEnd = DateTime.now();
       final setupNodeEndDiff =
@@ -212,7 +191,6 @@ class MoneroWallet extends Wallet {
       print('setupNodeEndDiff $setupNodeEndDiff');
       final end = DateTime.now();
       final diff = end.millisecondsSinceEpoch - start.millisecondsSinceEpoch;
-
       print('Connection time: $diff');
 
       _syncStatus.value = ConnectedSyncStatus();
@@ -225,7 +203,7 @@ class MoneroWallet extends Wallet {
   Future startSync() async {
     try {
       _syncStatus.value = StartingSyncStatus();
-      compute(_startRefresh, null);
+      moneroWallet.startRefresh();
     } on PlatformException catch (e) {
       _syncStatus.value = FailedSyncStatus();
       print(e);
@@ -279,8 +257,13 @@ class MoneroWallet extends Wallet {
       TransactionCreationCredentials credentials) async {
     MoneroTransactionCreationCredentials _credentials =
         credentials as MoneroTransactionCreationCredentials;
-    final transactionDescription =
-        await compute(_createTransaction, [_credentials, _account.value.id]);
+
+    final transactionDescription = await transactionHistory.createTransaction(
+        address: _credentials.address,
+        paymentId: _credentials.paymentId,
+        amount: _credentials.amount,
+        priorityRaw: _credentials.priority.serialize(),
+        accountIndex: _account.value.id);
 
     return PendingTransaction.fromTransactionDescription(
         transactionDescription);
@@ -291,6 +274,8 @@ class MoneroWallet extends Wallet {
 
   setRefreshFromBlockHeight({int height}) =>
       moneroWallet.setRefreshFromBlockHeight(height: height);
+
+  Future<bool> isConnected() async => moneroWallet.isConnected();
 
   Future setAsRecovered() async {
     final helper = await CoreDB.getInstance();
@@ -340,7 +325,7 @@ class MoneroWallet extends Wallet {
 
     try {
       _isSaving = true;
-      await compute(_store, 0);
+      moneroWallet.store();
       _isSaving = false;
     } on PlatformException catch (e) {
       print(e);
@@ -349,12 +334,11 @@ class MoneroWallet extends Wallet {
     }
   }
 
-  Future<bool> isConnected() async => moneroWallet.isConnected();
-
   setListeners() => moneroWallet.setListeners(
       _onNewBlock, _onNeedToRefresh, _onNewTransaction);
 
   Future _onNewBlock(int height) async {
+    print('_onNewBlock');
     try {
       final nodeHeight = await getNodeHeightOrUpdate(height);
 
@@ -381,6 +365,7 @@ class MoneroWallet extends Wallet {
   }
 
   Future _onNeedToRefresh() async {
+    print('_onNeedToRefresh');
     try {
       final currentHeight = await getCurrentHeight();
       final nodeHeight = await getNodeHeightOrUpdate(currentHeight);

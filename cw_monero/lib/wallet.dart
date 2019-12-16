@@ -5,8 +5,8 @@ import 'package:cw_monero/convert_utf8_to_string.dart';
 import 'package:cw_monero/signatures.dart';
 import 'package:cw_monero/types.dart';
 import 'package:cw_monero/monero_api.dart';
-import 'package:cw_monero/exceptions/connection_to_node_exception.dart';
 import 'package:cw_monero/exceptions/setup_wallet_exception.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 int _boolToInt(bool value) => value ? 1 : 0;
@@ -131,16 +131,16 @@ int getUnlockedBalance({int accountIndex = 0}) =>
 
 int getCurrentHeight() => getCurrentHeightNative();
 
-int getNodeHeight() => getNodeHeightNative();
+int getNodeHeightSync() => getNodeHeightNative();
 
-bool isConnected() => isConnectedNative() != 0;
+bool isConnectedSync() => isConnectedNative() != 0;
 
-Future<bool> setupNode(
+bool setupNodeSync(
     {String address,
     String login,
     String password,
     bool useSSL = false,
-    bool isLightWallet = false}) async {
+    bool isLightWallet = false}) {
   final addressPointer = Utf8.toUtf8(address);
   Pointer<Utf8> loginPointer;
   Pointer<Utf8> passwordPointer;
@@ -175,7 +175,7 @@ Future<bool> setupNode(
   return isSetupNode;
 }
 
-startRefresh() async => startRefreshNative();
+startRefreshSync() => startRefreshNative();
 
 Future<bool> connectToNode() async => connecToNodeNative() != 0;
 
@@ -185,7 +185,7 @@ setRefreshFromBlockHeight({int height}) =>
 setRecoveringFromSeed({bool isRecovery}) =>
     setRecoveringFromSeedNative(_boolToInt(isRecovery));
 
-Future store() async {
+storeSync() {
   final pathPointer = Utf8.toUtf8('');
   storeNative(pathPointer);
   free(pathPointer);
@@ -243,3 +243,35 @@ closeListeners() {
 }
 
 onStartup() => onStartupNative();
+
+_storeSync(_) => storeSync();
+bool _setupNodeSync(Map args) => setupNodeSync(
+    address: args['address'],
+    login: args['login'] ?? '',
+    password: args['password'] ?? '',
+    useSSL: args['useSSL'],
+    isLightWallet: args['isLightWallet']);
+bool _isConnected(_) => isConnectedSync();
+int _getNodeHeight(_) => getNodeHeightSync();
+
+startRefresh() => startRefreshSync();
+
+Future setupNode(
+        {String address,
+        String login,
+        String password,
+        bool useSSL = false,
+        bool isLightWallet = false}) =>
+    compute(_setupNodeSync, {
+      'address': address,
+      'login': login,
+      'password': password,
+      'useSSL': useSSL,
+      'isLightWallet': isLightWallet
+    });
+
+Future store() => compute(_storeSync, 0);
+
+Future<bool> isConnected() => compute(_isConnected, 0);
+
+Future<int> getNodeHeight() => compute(_getNodeHeight, 0);

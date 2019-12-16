@@ -363,8 +363,6 @@ extern "C"
 
     bool setup_node(char *address, char *login, char *password, bool use_ssl, bool is_light_wallet, char *error)
     {
-        //nice(19);
-
         Monero::Wallet *wallet = get_current_wallet();
         
         std::string _login = "";
@@ -384,6 +382,8 @@ extern "C"
 
         if (!inited)
         {
+            error = strdup(wallet->errorString().c_str());
+        } else if (!wallet->connectToDaemon()) {
             error = strdup(wallet->errorString().c_str());
         }
 

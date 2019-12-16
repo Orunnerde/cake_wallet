@@ -1,5 +1,6 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
+import 'package:flutter/foundation.dart';
 import 'package:cw_monero/convert_utf8_to_string.dart';
 import 'package:cw_monero/signatures.dart';
 import 'package:cw_monero/types.dart';
@@ -7,7 +8,6 @@ import 'package:cw_monero/monero_api.dart';
 import 'package:cw_monero/exceptions/wallet_creation_exception.dart';
 import 'package:cw_monero/exceptions/wallet_restore_from_keys_exception.dart';
 import 'package:cw_monero/exceptions/wallet_restore_from_seed_exception.dart';
-import 'package:flutter/services.dart';
 
 final createWalletNative = moneroApi
     .lookup<NativeFunction<create_wallet>>('create_wallet')
@@ -31,8 +31,11 @@ final loadWalletNative = moneroApi
     .lookup<NativeFunction<load_wallet>>('load_wallet')
     .asFunction<LoadWallet>();
 
-createWallet(
-    {String path, String password, String language = 'English', int nettype = 0}) {
+createWalletSync(
+    {String path,
+    String password,
+    String language = 'English',
+    int nettype = 0}) {
   final pathPointer = Utf8.toUtf8(path);
   final passwordPointer = Utf8.toUtf8(password);
   final languagePointer = Utf8.toUtf8(language);
@@ -51,7 +54,7 @@ createWallet(
   }
 }
 
-bool isWalletExist({String path}) {
+bool isWalletExistSync({String path}) {
   final pathPointer = Utf8.toUtf8(path);
   final isExist = isWalletExistNative(pathPointer) != 0;
 
@@ -60,7 +63,7 @@ bool isWalletExist({String path}) {
   return isExist;
 }
 
-restoreWalletFromSeed(
+restoreWalletFromSeedSync(
     {String path,
     String password,
     String seed,
@@ -89,7 +92,7 @@ restoreWalletFromSeed(
   }
 }
 
-restoreWalletFromKeys(
+restoreWalletFromKeysSync(
     {String path,
     String password,
     String language = 'English',
@@ -130,9 +133,7 @@ restoreWalletFromKeys(
   }
 }
 
-final moneroAPIChannel = const MethodChannel('cw_monero');
-
-Future loadWallet({String path, String password, int nettype = 0}) async {
+loadWallet({String path, String password, int nettype = 0}) {
   final pathPointer = Utf8.toUtf8(path);
   final passwordPointer = Utf8.toUtf8(password);
 
@@ -140,3 +141,78 @@ Future loadWallet({String path, String password, int nettype = 0}) async {
   free(pathPointer);
   free(passwordPointer);
 }
+
+_createWallet(args) =>
+    createWalletSync(path: args['path'], password: args['password']);
+
+_restoreFromSeed(args) => restoreWalletFromSeedSync(
+    path: args['path'],
+    password: args['password'],
+    seed: args['seed'],
+    restoreHeight: args['restoreHeight']);
+
+_restoreFromKeys(args) => restoreWalletFromKeysSync(
+    path: args['path'],
+    password: args['password'],
+    restoreHeight: args['restoreHeight'],
+    address: args['address'],
+    viewKey: args['viewKey'],
+    spendKey: args['spendKey']);
+
+_openWallet(Map args) async =>
+    loadWallet(path: args['path'], password: args['password']);
+
+bool _isWalletExist(String path) => isWalletExistSync(path: path);
+
+openWallet({String path, String password, int nettype = 0}) async =>
+    loadWallet(path: path, password: password);
+
+Future openWalletAsync(Map args) async => compute(_openWallet, args);
+
+Future createWallet(
+        {String path,
+        String password,
+        String language = 'English',
+        int nettype = 0}) async =>
+    compute(_createWallet, {
+      'path': path,
+      'password': password,
+      'language': language,
+      'nettype': nettype
+    });
+
+Future restoreFromSeed(
+        {String path,
+        String password,
+        String seed,
+        int nettype = 0,
+        int restoreHeight = 0}) async =>
+    compute(_restoreFromSeed, {
+      'path': path,
+      'password': password,
+      'seed': seed,
+      'nettype': nettype,
+      'restoreHeight': restoreHeight
+    });
+
+Future restoreFromKeys(
+        {String path,
+        String password,
+        String language = 'English',
+        String address,
+        String viewKey,
+        String spendKey,
+        int nettype = 0,
+        int restoreHeight = 0}) async =>
+    compute(_restoreFromKeys, {
+      'path': path,
+      'password': password,
+      'language': language,
+      'address': address,
+      'viewKey': viewKey,
+      'spendKey': spendKey,
+      'nettype': nettype,
+      'restoreHeight': restoreHeight
+    });
+
+Future<bool> isWalletExist({String path}) => compute(_isWalletExist, path);
