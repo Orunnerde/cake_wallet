@@ -23,7 +23,7 @@ class ReceivePage extends BasePage {
 
     return SizedBox(
       height: 37.0,
-      width: 22.0,
+      width: 37.0,
       child: ButtonTheme(
         minWidth: double.minPositive,
         child: FlatButton(
@@ -32,7 +32,7 @@ class ReceivePage extends BasePage {
             padding: EdgeInsets.all(0),
             onPressed: () => Share.text(
                 'Share address', walletStore.subaddress.address, 'text/plain'),
-            child: Icon(Icons.share, size: 22.0,)),
+            child: Icon(Icons.share, size: 30.0,)),
       ),
     );
   }
