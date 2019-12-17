@@ -56,13 +56,7 @@ abstract class SendStoreBase with Store {
 
     reaction((_) => this.state, (state) async {
       if (state is TransactionCreatedSuccessfully) {
-        if (settingsStore.shouldSaveRecipientAddress) {
-          await recipientAddressList.add(
-              recipientAddress: _lastRecipientAddress,
-              transactionId: pendingTransaction.hash);
-        }
-
-        pendingTransaction.commit();
+        commitTransaction();
       }
     });
   }
@@ -96,9 +90,9 @@ abstract class SendStoreBase with Store {
   Future commitTransaction() async {
     try {
       final transactionId = _pendingTransaction.hash;
-      state = TransactionCommiting();
+      // state = TransactionCommiting();
       await _pendingTransaction.commit();
-      state = TransactionCommitted();
+      // state = TransactionCommitted();
 
       if (settingsStore.shouldSaveRecipientAddress) {
         await recipientAddressList.add(

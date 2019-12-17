@@ -54,12 +54,15 @@ class AccountListPage extends BasePage {
     return Container(
       padding: EdgeInsets.only(top: 10, bottom: 20),
       child: Observer(
-        builder: (_) => ListView.builder(
-            itemCount: accountListStore.accounts == null
+        builder: (_) {
+          final accounts = accountListStore.accounts;
+          print('accounts ${accounts.length}');
+          return ListView.builder(
+            itemCount: accounts == null
                 ? 0
-                : accountListStore.accounts.length,
+                : accounts.length,
             itemBuilder: (BuildContext context, int index) {
-              final account = accountListStore.accounts[index];
+              final account = accounts[index];
 
               return Observer(builder: (_) {
                 final isCurrent = walletStore.account.id == account.id;
@@ -102,15 +105,16 @@ class AccountListPage extends BasePage {
                       onTap: () async {
                         await Navigator.of(context)
                             .pushNamed(Routes.accountCreation, arguments: account);
-                        await accountListStore.updateAccountList().then((_) {
-                          if (isCurrent) walletStore.setAccount(accountListStore.accounts[index]);
-                        });
+                        // await accountListStore.updateAccountList().then((_) {
+                        //   if (isCurrent) walletStore.setAccount(accountListStore.accounts[index]);
+                        // });
                       },
                     )
                   ],
                 );
               });
-            }),
+            });
+        }
       ),
     );
   }

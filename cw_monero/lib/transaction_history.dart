@@ -91,7 +91,7 @@ PendingTransactionDescription _createTransactionSync(Map args) =>
         address: args['address'],
         paymentId: args['paymentId'],
         amount: args['amount'],
-        priorityRaw: args['priority'],
+        priorityRaw: args['priorityRaw'],
         accountIndex: args['accountIndex']);
 
 Future<PendingTransactionDescription> createTransaction(

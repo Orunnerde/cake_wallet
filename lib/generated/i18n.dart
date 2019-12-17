@@ -244,7 +244,7 @@ class S implements WidgetsLocalizations {
   String get wallet_list_load_wallet => "Load wallet";
   String get wallet_list_restore_wallet => "Restore Wallet";
   String get wallet_list_title => "Monero Wallet";
-  String get wallet_menu => "Wallet Menu";
+  String get wallet_menu => "Menu";
   String get wallet_name => "Wallet name";
   String get wallet_restoration_store_incorrect_seed_length => "Incorrect seed length";
   String get wallet_store_monero_wallet => "Monero Wallet";

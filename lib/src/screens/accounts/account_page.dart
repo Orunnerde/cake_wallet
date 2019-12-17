@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/stores/account_list/account_list_store.dart';
@@ -54,24 +55,16 @@ class AccountFormState extends State<AccountForm> {
           children: <Widget>[
             Expanded(
                 child: Center(
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                        hintStyle: TextStyle(
-                            color: Theme.of(context).hintColor
-                        ),
-                        hintText: S.of(context).account,
-                        focusedBorder: UnderlineInputBorder(
-                            borderSide:
-                            BorderSide(
-                                color: Theme.of(context).focusColor,
-                                width: 1.0
-                            )),
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide:
-                            BorderSide(
-                                color: Theme.of(context).focusColor,
-                                width: 1.0
-                            ))),
+              child: TextFormField(
+                decoration: InputDecoration(
+                    hintStyle: TextStyle(color: Theme.of(context).hintColor),
+                    hintText: S.of(context).account,
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Theme.of(context).focusColor, width: 1.0)),
+                    enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Theme.of(context).focusColor, width: 1.0))),
                 controller: _textController,
                 validator: (value) {
                   accountListStore.validateAccountName(value);
@@ -79,25 +72,35 @@ class AccountFormState extends State<AccountForm> {
                 },
               ),
             )),
-            PrimaryButton(
-              onPressed: () async {
-                if (!_formKey.currentState.validate()) {
-                  return;
-                }
+            Observer(
+                builder: (_) => LoadingPrimaryButton(
+                      onPressed: () async {
+                        if (!_formKey.currentState.validate()) {
+                          return;
+                        }
 
-                if (widget.account != null) {
-                  await accountListStore.renameAccount(index: widget.account.id,
-                      label: _textController.text);
-                } else {
-                  await accountListStore.addAccount(
-                      label: _textController.text);
-                }
-                Navigator.pop(context, _textController.text);
-              },
-              text: widget.account != null ? 'Rename' : S.of(context).add,
-              color: Theme.of(context).primaryTextTheme.button.backgroundColor,
-              borderColor: Theme.of(context).primaryTextTheme.button.decorationColor,
-            )
+                        if (widget.account != null) {
+                          await accountListStore.renameAccount(
+                              index: widget.account.id,
+                              label: _textController.text);
+                        } else {
+                          await accountListStore.addAccount(
+                              label: _textController.text);
+                        }
+                        Navigator.pop(context, _textController.text);
+                      },
+                      text:
+                          widget.account != null ? 'Rename' : S.of(context).add,
+                      color: Theme.of(context)
+                          .primaryTextTheme
+                          .button
+                          .backgroundColor,
+                      borderColor: Theme.of(context)
+                          .primaryTextTheme
+                          .button
+                          .decorationColor,
+                      isLoading: accountListStore.isAccountCreating,
+                    ))
           ],
         ),
       ),

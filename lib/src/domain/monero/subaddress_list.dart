@@ -40,16 +40,16 @@ class SubaddressList {
         .toList();
   }
 
-  addSubaddress({int accountIndex, String label}) {
-    subaddressListAPI.addSubaddress(accountIndex: accountIndex, label: label);
-    update(accountIndex: accountIndex);
+  Future addSubaddress({int accountIndex, String label}) async {
+    await subaddressListAPI.addSubaddress(accountIndex: accountIndex, label: label);
+    await update(accountIndex: accountIndex);
   }
 
   Future setLabelSubaddress(
       {int accountIndex, int addressIndex, String label}) async {
-    subaddressListAPI.setLabelForSubaddress(
+    await subaddressListAPI.setLabelForSubaddress(
         accountIndex: accountIndex, addressIndex: addressIndex, label: label);
-    update();
+    await update();
   }
 
   Future refresh({int accountIndex}) async {

@@ -27,7 +27,7 @@
   "failed_authentication" : "Failed authentication. ${state_error}",
 
 
-  "wallet_menu" : "Wallet Menu",
+  "wallet_menu" : "Menu",
   "Blocks_remaining" : "${status} Blocks Remaining",
   "please_try_to_connect_to_another_node" : "Please try to connect to another node",
   "xmr_hidden" : "XMR Hidden",

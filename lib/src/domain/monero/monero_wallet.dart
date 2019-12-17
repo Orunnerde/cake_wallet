@@ -265,6 +265,8 @@ class MoneroWallet extends Wallet {
         priorityRaw: _credentials.priority.serialize(),
         accountIndex: _account.value.id);
 
+    // await askForUpdateTransactionHistory();
+
     return PendingTransaction.fromTransactionDescription(
         transactionDescription);
   }

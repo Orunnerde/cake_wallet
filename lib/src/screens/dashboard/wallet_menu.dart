@@ -6,12 +6,12 @@ import 'package:cake_wallet/generated/i18n.dart';
 
 class WalletMenu {
   final List<String> items = [
-    S.current.rescan,
     S.current.reconnect,
-    S.current.accounts,
+    S.current.rescan,
     S.current.wallets,
     S.current.show_seed,
     S.current.show_keys,
+    S.current.accounts,
     S.current.address_book_menu
   ];
   final BuildContext context;
@@ -21,38 +21,36 @@ class WalletMenu {
   void action(int index) {
     switch (index) {
       case 0:
-        Navigator.of(context).pushNamed(Routes.rescan);
-        break;
-      case 1:
         _presentReconnectAlert(context);
         break;
+      case 1:
+        Navigator.of(context).pushNamed(Routes.rescan);
+        break;
       case 2:
-        Navigator.of(context)
-            .pushNamed(Routes.accountList);
+        Navigator.of(context).pushNamed(Routes.walletList);
+
         break;
       case 3:
-        Navigator.of(context)
-            .pushNamed(Routes.walletList);
+        Navigator.of(context).pushNamed(Routes.auth,
+            arguments: (isAuthenticatedSuccessfully, auth) =>
+                isAuthenticatedSuccessfully
+                    ? Navigator.of(auth.context).popAndPushNamed(Routes.seed)
+                    : null);
+
         break;
       case 4:
         Navigator.of(context).pushNamed(Routes.auth,
             arguments: (isAuthenticatedSuccessfully, auth) =>
-            isAuthenticatedSuccessfully
-                ? Navigator.of(auth.context)
-                .popAndPushNamed(Routes.seed)
-                : null);
+                isAuthenticatedSuccessfully
+                    ? Navigator.of(auth.context)
+                        .popAndPushNamed(Routes.showKeys)
+                    : null);
         break;
       case 5:
-        Navigator.of(context).pushNamed(Routes.auth,
-            arguments: (isAuthenticatedSuccessfully, auth) =>
-            isAuthenticatedSuccessfully
-                ? Navigator.of(auth.context)
-                .popAndPushNamed(Routes.showKeys)
-                : null);
+        Navigator.of(context).pushNamed(Routes.accountList);
         break;
       case 6:
-        Navigator.of(context)
-            .pushNamed(Routes.addressBook);
+        Navigator.of(context).pushNamed(Routes.addressBook);
         break;
       default:
         break;

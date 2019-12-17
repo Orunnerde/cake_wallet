@@ -448,6 +448,8 @@ extern "C"
             return nullptr;
         }
 
+        m_listener->m_new_transaction = true;
+
         return new PendingTransactionRaw(transaction);
     }
 
@@ -459,6 +461,9 @@ extern "C"
         {
             error = strdup(transaction->transaction->errorString().c_str());
         }
+
+        
+        m_listener->m_new_transaction = true;
 
         return committed;
     }
