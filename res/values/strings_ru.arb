@@ -293,13 +293,13 @@
   "hidden_balance" : "Скрытый баланс",
 
 
-  "sync_status_syncronizing" : "Синхронизация",
-  "sync_status_syncronized" : "Синхронизировано",
-  "sync_status_not_connected" : "Нет подключения",
-  "sync_status_starting_sync" : "Начало синхр",
-  "sync_status_failed_connect" : "Ошибка подключения к ноде",
-  "sync_status_connecting" : "Подключение",
-  "sync_status_connected" : "Подключено",
+  "sync_status_syncronizing" : "СИНХРОНИЗАЦИЯ",
+  "sync_status_syncronized" : "СИНХРОНИЗИРОВАНО",
+  "sync_status_not_connected" : "НЕТ ПОДКЛЮЧЕНИЯ",
+  "sync_status_starting_sync" : "НАЧАЛО СИНХРОНИЗАЦИИ",
+  "sync_status_failed_connect" : "ОШИБКА ПОДКЛЮЧЕНИЯ К НОДЕ",
+  "sync_status_connecting" : "ПОДКЛЮЧЕНИЕ",
+  "sync_status_connected" : "ПОДКЛЮЧЕНО",
 
 
   "transaction_priority_slow" : "Медленный",

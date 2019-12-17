@@ -294,7 +294,7 @@ class $de extends S {
   TextDirection get textDirection => TextDirection.ltr;
 
   @override
-  String get cancel => "Stornieren";
+  String get cancel => "Abbrechen";
   @override
   String get trade_state_unpaid => "Unbezahlt";
   @override
@@ -302,7 +302,7 @@ class $de extends S {
   @override
   String get new_subaddress_create => "Erstellen";
   @override
-  String get restore_view_key_private => "Schlüssel anzeigen(Privatgelände)";
+  String get restore_view_key_private => "Schlüssel anzeigen(geheim)";
   @override
   String get transaction_priority_fast => "Schnell";
   @override
@@ -316,7 +316,7 @@ class $de extends S {
   @override
   String get you_will_get => "Sie erhalten";
   @override
-  String get restore_description_from_seed => "Stellen Sie Ihre Brieftasche aus den 25 Wörtern wieder her\noder 13-Wort-Kombinationscode";
+  String get restore_description_from_seed => "Stellen Sie Ihr Wallet aus den 25 Wörtern wieder her\noder 13-Wort-Kombinationscode";
   @override
   String get trade_state_underpaid => "Unterbezahlt";
   @override
@@ -338,13 +338,13 @@ class $de extends S {
   @override
   String get auth_store_banned_minutes => " Protokoll";
   @override
-  String get restore_title_from_seed_keys => "Vom Samen / Schlüssel wiederherstellen";
+  String get restore_title_from_seed_keys => "Vom Seed / Schlüssel wiederherstellen";
   @override
   String get settings_none => "Keiner";
   @override
-  String get wallet_list_create_new_wallet => "Neue Brieftasche erstellen";
+  String get wallet_list_create_new_wallet => "Neue Wallet erstellen";
   @override
-  String get seed_alert_third_text => "Sie können den Samen auch wieder sehen\nin dem ";
+  String get seed_alert_third_text => "Sie können den Seed auch wieder sehen\nin dem ";
   @override
   String get setup_pin => "PIN einrichten";
   @override
@@ -354,19 +354,19 @@ class $de extends S {
   @override
   String get settings_allow_biometrical_authentication => "Biometrische Authentifizierung zulassen";
   @override
-  String get view_key_private => "Schlüssel anzeigen (Privatgelände)";
+  String get view_key_private => "Schlüssel anzeigen (eheim)";
   @override
   String get restore_next => "Nächster";
   @override
   String get trade_state_trading => "Handel";
   @override
-  String get error_text_address => "Die Brieftaschenadresse muss dem Typ entsprechen\nder Kryptowährung";
+  String get error_text_address => "Die Walletadresse muss dem Typ entsprechen\nder Kryptowährung";
   @override
   String get send_your_wallet => "Deine Geldbörse";
   @override
   String get remove_node_message => "Möchten Sie den ausgewählten Knoten wirklich entfernen?";
   @override
-  String get error_text_account_name => "Der Kontoname darf nur Buchstaben und Zahlen enthalten\nund muss zwischen 1 und 15 Zeichen lang sein";
+  String get error_text_account_name => "Der Kontoname darf nur Wallet und Zahlen enthalten\nund muss zwischen 1 und 15 Zeichen lang sein";
   @override
   String get reconnection => "Wiederverbindung";
   @override
@@ -374,7 +374,7 @@ class $de extends S {
   @override
   String get restore_title_from_keys => "Wiederherstellen von Schlüsseln";
   @override
-  String get wallet_keys => "Brieftaschenschlüssel";
+  String get wallet_keys => "Wallet schlüssel";
   @override
   String get reconnect => "Erneut verbinden";
   @override
@@ -444,7 +444,7 @@ class $de extends S {
   @override
   String get error_text_contact_name => "Kontaktname darf nicht enthalten sein ` , ' \" Symbole\nund muss zwischen 1 und 32 Zeichen lang sein";
   @override
-  String get restore_seed_keys_restore => "Samen / Schlüssel wiederherstellen";
+  String get restore_seed_keys_restore => "Seed / Schlüssel wiederherstellen";
   @override
   String get xmr_hidden => "XMR versteckt";
   @override
@@ -502,7 +502,7 @@ class $de extends S {
   @override
   String get nodes => "Knoten";
   @override
-  String get seed_share => "Teilen Sie Samen";
+  String get seed_share => "Teilen Sie Seed";
   @override
   String get widgets_restore_from_blockheight => "Aus Blockhöhe wiederherstellen";
   @override
@@ -512,13 +512,13 @@ class $de extends S {
   @override
   String get transaction_details_date => "Datum";
   @override
-  String get show_seed => "Samen zeigen";
+  String get show_seed => "Seed zeigen";
   @override
   String get send_error_currency => "Die Währung kann nur Zahlen enthalten";
   @override
   String get subaddress_title => "Unteradressenliste";
   @override
-  String get wallet_store_monero_wallet => "Monero Brieftasche";
+  String get wallet_store_monero_wallet => "Monero Wallet";
   @override
   String get send_creating_transaction => "Transaktion erstellen";
   @override
@@ -544,7 +544,7 @@ class $de extends S {
   @override
   String get change_language => "Sprache ändern";
   @override
-  String get wallet_name => "Brieftaschenname";
+  String get wallet_name => "Walletname";
   @override
   String get error_text_payment_id => "Die Zahlungs-ID kann nur 16 bis 64 hexadezimale Zeichen enthalten";
   @override
@@ -552,7 +552,7 @@ class $de extends S {
   @override
   String get node_reset_settings_title => "Einstellungen zurücksetzen";
   @override
-  String get wallets => "Brieftaschen";
+  String get wallets => "Wallets";
   @override
   String get enter_your_pin_again => "Geben Sie Ihre PIN erneut ein";
   @override
@@ -568,7 +568,7 @@ class $de extends S {
   @override
   String get reset => "Zurücksetzen";
   @override
-  String get new_wallet => "Neue Brieftasche";
+  String get new_wallet => "Neues Wallet";
   @override
   String get settings_display_on_dashboard_list => "Anzeige in der Dashboard-Liste";
   @override
@@ -576,7 +576,7 @@ class $de extends S {
   @override
   String get status => "Status: ";
   @override
-  String get restore_spend_key_private => "Schlüssel ausgeben (Privatgelände)";
+  String get restore_spend_key_private => "Schlüssel ausgeben (geheim)";
   @override
   String get sync_status_syncronized => "SYNCHRONISIERT";
   @override
@@ -588,13 +588,13 @@ class $de extends S {
   @override
   String get login => "Einloggen";
   @override
-  String get wallet_list_load_wallet => "Brieftasche einlegen";
+  String get wallet_list_load_wallet => "Wallet einlegen";
   @override
   String get sending => "Senden";
   @override
-  String get restore_restore_wallet => "Brieftasche wiederherstellen";
+  String get restore_restore_wallet => "Wallet wiederherstellen";
   @override
-  String get restore_description_from_seed_keys => "Holen Sie sich Ihre Brieftasche von Samen / Schlüsseln zurück, die Sie an einem sicheren Ort aufbewahrt haben";
+  String get restore_description_from_seed_keys => "Holen Sie sich Ihr Wallet von Seed / Schlüsseln zurück, die Sie an einem sicheren Ort aufbewahrt haben";
   @override
   String get copy => "Kopieren";
   @override
@@ -616,7 +616,7 @@ class $de extends S {
   @override
   String get change => "Veränderung";
   @override
-  String get seed_alert_first_text => "Die nächste Seite wird angezeigt\nDu bist ein Same.";
+  String get seed_alert_first_text => "Die nächste Seite wird angezeigt\nDu bist ein Seed.";
   @override
   String get trade_state_finished => "Fertig";
   @override
@@ -624,15 +624,15 @@ class $de extends S {
   @override
   String get trade_not_created => "Handel nicht angelegt.";
   @override
-  String get restore_wallet_name => "Brieftaschenname";
+  String get restore_wallet_name => "Walletname";
   @override
-  String get widgets_seed => "Samen";
+  String get widgets_seed => "Seed";
   @override
   String get settings_fee_priority => "Gebührenpriorität";
   @override
   String get settings_personal => "persönlich";
   @override
-  String get seed_title => "Samen";
+  String get seed_title => "Seed";
   @override
   String get accounts => "Konten";
   @override
@@ -650,7 +650,7 @@ class $de extends S {
   @override
   String get trade_details_state => "Zustand";
   @override
-  String get spend_key_private => "Schlüssel ausgeben (Privatgelände)";
+  String get spend_key_private => "Schlüssel ausgeben (geheim)";
   @override
   String get settings_only_trades => "Nur Trades";
   @override
@@ -664,9 +664,9 @@ class $de extends S {
   @override
   String get trade_history_title => "Handelsgeschichte";
   @override
-  String get error_text_wallet_name => "Der Brieftaschenname darf nur Buchstaben und Zahlen enthalten\nund muss zwischen 1 und 15 Zeichen lang sein";
+  String get error_text_wallet_name => "Der Wallet darf nur Buchstaben und Zahlen enthalten\nund muss zwischen 1 und 15 Zeichen lang sein";
   @override
-  String get restore_description_from_keys => "Stellen Sie Ihre Brieftasche von generiert wieder her\nTastenanschläge, die von Ihren privaten Schlüsseln gespeichert wurden";
+  String get restore_description_from_keys => "Stellen Sie Ihr Wallet von generiert wieder her\nTastenanschläge, die von Ihren privaten Schlüsseln gespeichert wurden";
   @override
   String get sent => "Geschickt";
   @override
@@ -680,7 +680,7 @@ class $de extends S {
   @override
   String get send_title => "Senden Sie Monero";
   @override
-  String get error_text_keys => "Brieftaschenschlüssel können nur 64 hexadezimale Zeichen enthalten";
+  String get error_text_keys => "Walletschlüssel können nur 64 hexadezimale Zeichen enthalten";
   @override
   String get settings_save_recipient_address => "Empfängeradresse speichern";
   @override
@@ -706,7 +706,7 @@ class $de extends S {
   @override
   String get delete => "Löschen";
   @override
-  String get sync_status_starting_sync => "SYNC STARTEN";
+  String get sync_status_starting_sync => "STARTEN DER SYNCHRONISIERUNG";
   @override
   String get copied_to_clipboard => "In die Zwischenablage kopiert";
   @override
@@ -730,11 +730,11 @@ class $de extends S {
   @override
   String get settings_support => "Unterstützung";
   @override
-  String get restore_wallet => "Brieftasche wiederherstellen";
+  String get restore_wallet => "Wallet wiederherstellen";
   @override
   String get ok => "OK";
   @override
-  String get wallet_list_title => "Monero Brieftasche";
+  String get wallet_list_title => "Monero Wallet";
   @override
   String get authentication => "Authentifizierung";
   @override
@@ -756,11 +756,11 @@ class $de extends S {
   @override
   String get enter_your_pin => "PIN eingeben";
   @override
-  String get wallet_list_restore_wallet => "Brieftasche wiederherstellen";
+  String get wallet_list_restore_wallet => "Wallet wiederherstellen";
   @override
-  String get restore_title_from_seed => "Aus Samen wiederherstellen";
+  String get restore_title_from_seed => "Aus Seed wiederherstellen";
   @override
-  String get restore_description_from_backup => "Sie können die gesamte Cake Wallet-App von wiederherstellen\nIhre Sicherungsdatei";
+  String get restore_description_from_backup => "Sie können die gesamte Cake Wallet-App von wiederherstellen \nIhre Sicherungsdatei";
   @override
   String get send_monero_address => "Monero-Adresse";
   @override
@@ -780,7 +780,7 @@ class $de extends S {
   @override
   String trade_id(String id) => "Handel-ID:\n${id}";
   @override
-  String wallet_list_loading_wallet(String wallet_name) => "Wird geladen ${wallet_name} Brieftasche";
+  String wallet_list_loading_wallet(String wallet_name) => "Wird geladen ${wallet_name} Wallet";
   @override
   String router_no_route(String name) => "Keine Route definiert für ${name}";
   @override
@@ -814,13 +814,13 @@ class $de extends S {
   @override
   String commit_transaction_amount_fee(String amount, String fee) => "Transaktion festschreiben\nMenge: ${amount}\nGebühr: ${fee}";
   @override
-  String wallet_list_failed_to_remove(String wallet_name, String error) => "Fehler beim Entfernen ${wallet_name} Brieftasche. ${error}";
+  String wallet_list_failed_to_remove(String wallet_name, String error) => "Fehler beim Entfernen ${wallet_name} Wallet. ${error}";
   @override
   String copied_key_to_clipboard(String key) => "Kopiert ${key} Zur Zwischenablage";
   @override
-  String wallet_list_failed_to_load(String wallet_name, String error) => "Laden fehlgeschlagen ${wallet_name} Brieftasche. ${error}";
+  String wallet_list_failed_to_load(String wallet_name, String error) => "Laden fehlgeschlagen ${wallet_name} Wallet. ${error}";
   @override
-  String wallet_list_removing_wallet(String wallet_name) => "Entfernen ${wallet_name} Brieftasche";
+  String wallet_list_removing_wallet(String wallet_name) => "Entfernen ${wallet_name} Wallet";
 }
 
 class $hi extends S {
@@ -1242,7 +1242,7 @@ class $hi extends S {
   @override
   String get delete => "हटाएं";
   @override
-  String get sync_status_starting_sync => "सिंक्रनाइज़ कर रहा है";
+  String get sync_status_starting_sync => "सिताज़ा करना";
   @override
   String get copied_to_clipboard => "क्लिपबोर्ड पर नकल";
   @override
@@ -1404,7 +1404,7 @@ class $ru extends S {
   @override
   String get spend_key_public => "Spend key (публичный)";
   @override
-  String get sync_status_syncronizing => "Синхронизация";
+  String get sync_status_syncronizing => "СИНХРОНИЗАЦИЯ";
   @override
   String get received => "Полученные";
   @override
@@ -1510,7 +1510,7 @@ class $ru extends S {
   @override
   String get full_balance => "Полный баланс";
   @override
-  String get sync_status_not_connected => "Нет подключения";
+  String get sync_status_not_connected => "НЕТ ПОДКЛЮЧЕНИЯ";
   @override
   String get error_text_crypto_currency => "Количество цифр после запятой\nдолжно быть меньше или равно 12";
   @override
@@ -1522,13 +1522,13 @@ class $ru extends S {
   @override
   String get exchange => "Обмен";
   @override
-  String get sync_status_failed_connect => "Ошибка подключения к ноде";
+  String get sync_status_failed_connect => "ОШИБКА ПОДКЛЮЧЕНИЯ К НОДЕ";
   @override
   String get send_estimated_fee => "Предполагаемый сбор:";
   @override
   String get outgoing => "Исходящие";
   @override
-  String get sync_status_connected => "Подключено";
+  String get sync_status_connected => "ПОДКЛЮЧЕНО";
   @override
   String get trade_state_pending => "Ожидание";
   @override
@@ -1650,7 +1650,7 @@ class $ru extends S {
   @override
   String get restore_spend_key_private => "Spend ключ (приватный)";
   @override
-  String get sync_status_syncronized => "Синхронизировано";
+  String get sync_status_syncronized => "СИНХРОНИЗИРОВАНО";
   @override
   String get transaction_priority_medium => "Средний";
   @override
@@ -1768,7 +1768,7 @@ class $ru extends S {
   @override
   String get auth_store_ban_timeout => "ban_timeout";
   @override
-  String get sync_status_connecting => "Подключение";
+  String get sync_status_connecting => "ПОДКЛЮЧЕНИЕ";
   @override
   String get settings_transactions => "Транзакции";
   @override
@@ -1778,7 +1778,7 @@ class $ru extends S {
   @override
   String get delete => "Удалить";
   @override
-  String get sync_status_starting_sync => "Начало синхр";
+  String get sync_status_starting_sync => "НАЧАЛО СИНХРОНИЗАЦИИ";
   @override
   String get copied_to_clipboard => "Скопировано в буфер обмена";
   @override
@@ -2850,7 +2850,7 @@ class $pt extends S {
   @override
   String get delete => "Excluir";
   @override
-  String get sync_status_starting_sync => "SINCRONIZAÇÃO";
+  String get sync_status_starting_sync => "INÍCIO DE SINCRONIZAÇÃO";
   @override
   String get copied_to_clipboard => "Copiado para a área de transferência";
   @override
@@ -3926,7 +3926,7 @@ class $pl extends S {
   @override
   String get delete => "Kasować";
   @override
-  String get sync_status_starting_sync => "URUCHAMIANIE SYNCH";
+  String get sync_status_starting_sync => "ROZPOCZĘCIE SYNCHRONIZACJI";
   @override
   String get copied_to_clipboard => "Skopiowane do schowka";
   @override
@@ -4462,7 +4462,7 @@ class $es extends S {
   @override
   String get delete => "Borrar";
   @override
-  String get sync_status_starting_sync => "INICIAL SINC";
+  String get sync_status_starting_sync => "EMPEZANDO A SINCRONIZAR";
   @override
   String get copied_to_clipboard => "Copiado al portapapeles";
   @override
@@ -4682,7 +4682,7 @@ class $nl extends S {
   @override
   String get nodes_list_reset_to_default_message => "Weet u zeker dat u de standaardinstellingen wilt herstellen?";
   @override
-  String get receive => "Te ontvangen";
+  String get receive => "Krijgen";
   @override
   String get amount_is_guaranteed => "Het ontvangen bedrag is gegarandeerd";
   @override
@@ -4998,7 +4998,7 @@ class $nl extends S {
   @override
   String get delete => "Delete";
   @override
-  String get sync_status_starting_sync => "START SYNC";
+  String get sync_status_starting_sync => "BEGINNEN MET SYNCHRONISEREN";
   @override
   String get copied_to_clipboard => "Gekopieerd naar het klembord";
   @override
