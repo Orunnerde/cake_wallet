@@ -4,6 +4,7 @@ import 'package:cw_monero/signatures.dart';
 import 'package:cw_monero/types.dart';
 import 'package:cw_monero/monero_api.dart';
 import 'package:cw_monero/structs/account_row.dart';
+import 'package:flutter/foundation.dart';
 
 final accountSizeNative = moneroApi
     .lookup<NativeFunction<account_size>>('account_size')
@@ -37,14 +38,24 @@ List<AccountRow> getAllAccount() {
       .toList();
 }
 
-addAccount({String label}) {
+addAccountSync({String label}) {
   final labelPointer = Utf8.toUtf8(label);
   accountAddNewNative(labelPointer);
   free(labelPointer);
 }
 
-setLabelForAccount({int accountIndex, String label}) {
+setLabelForAccountSync({int accountIndex, String label}) {
   final labelPointer = Utf8.toUtf8(label);
   accountSetLabelNative(accountIndex, labelPointer);
   free(labelPointer);
 }
+
+_addAccount(String label) => addAccountSync(label: label);
+
+_setLabelForAccount(Map args) => setLabelForAccountSync(
+    label: args['label'], accountIndex: args['accountIndex']);
+
+Future addAccount({String label}) async => compute(_addAccount, label);
+
+Future setLabelForAccount({int accountIndex, String label}) async => compute(
+    _setLabelForAccount, {'accountIndex': accountIndex, 'label': label});

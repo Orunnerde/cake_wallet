@@ -1,7 +1,7 @@
 import 'package:cake_wallet/src/domain/common/enumerable_item.dart';
 
 class FiatCurrency extends EnumerableItem<String> with Serializable<String> {
-  static final all = [
+  static const all = [
     FiatCurrency.aud,
     FiatCurrency.bgn,
     FiatCurrency.brl,
@@ -37,39 +37,44 @@ class FiatCurrency extends EnumerableItem<String> with Serializable<String> {
     FiatCurrency.vef
   ];
 
-  static final aud = FiatCurrency(symbol: 'AUD');
-  static final bgn = FiatCurrency(symbol: 'BGN');
-  static final brl = FiatCurrency(symbol: 'BRL');
-  static final cad = FiatCurrency(symbol: 'CAD');
-  static final chf = FiatCurrency(symbol: 'CHF');
-  static final cny = FiatCurrency(symbol: 'CNY');
-  static final czk = FiatCurrency(symbol: 'CZK');
-  static final eur = FiatCurrency(symbol: 'EUR');
-  static final dkk = FiatCurrency(symbol: 'DKK');
-  static final gbp = FiatCurrency(symbol: 'GBP');
-  static final hkd = FiatCurrency(symbol: 'HKD');
-  static final hrk = FiatCurrency(symbol: 'HRK');
-  static final huf = FiatCurrency(symbol: 'HUF');
-  static final idr = FiatCurrency(symbol: 'IDR');
-  static final ils = FiatCurrency(symbol: 'ILS');
-  static final inr = FiatCurrency(symbol: 'INR');
-  static final isk = FiatCurrency(symbol: 'ISK');
-  static final jpy = FiatCurrency(symbol: 'JPY');
-  static final krw = FiatCurrency(symbol: 'KRW');
-  static final mxn = FiatCurrency(symbol: 'MXN');
-  static final myr = FiatCurrency(symbol: 'MYR');
-  static final nok = FiatCurrency(symbol: 'NOK');
-  static final nzd = FiatCurrency(symbol: 'NZD');
-  static final php = FiatCurrency(symbol: 'PHP');
-  static final pln = FiatCurrency(symbol: 'PLN');
-  static final ron = FiatCurrency(symbol: 'RON');
-  static final rub = FiatCurrency(symbol: 'RUB');
-  static final sek = FiatCurrency(symbol: 'SEK');
-  static final sgd = FiatCurrency(symbol: 'SGD');
-  static final thb = FiatCurrency(symbol: 'THB');
-  static final usd = FiatCurrency(symbol: 'USD');
-  static final zar = FiatCurrency(symbol: 'ZAR');
-  static final vef = FiatCurrency(symbol: 'VEF');
+  static const aud = FiatCurrency(symbol: 'AUD');
+  static const bgn = FiatCurrency(symbol: 'BGN');
+  static const brl = FiatCurrency(symbol: 'BRL');
+  static const cad = FiatCurrency(symbol: 'CAD');
+  static const chf = FiatCurrency(symbol: 'CHF');
+  static const cny = FiatCurrency(symbol: 'CNY');
+  static const czk = FiatCurrency(symbol: 'CZK');
+  static const eur = FiatCurrency(symbol: 'EUR');
+  static const dkk = FiatCurrency(symbol: 'DKK');
+  static const gbp = FiatCurrency(symbol: 'GBP');
+  static const hkd = FiatCurrency(symbol: 'HKD');
+  static const hrk = FiatCurrency(symbol: 'HRK');
+  static const huf = FiatCurrency(symbol: 'HUF');
+  static const idr = FiatCurrency(symbol: 'IDR');
+  static const ils = FiatCurrency(symbol: 'ILS');
+  static const inr = FiatCurrency(symbol: 'INR');
+  static const isk = FiatCurrency(symbol: 'ISK');
+  static const jpy = FiatCurrency(symbol: 'JPY');
+  static const krw = FiatCurrency(symbol: 'KRW');
+  static const mxn = FiatCurrency(symbol: 'MXN');
+  static const myr = FiatCurrency(symbol: 'MYR');
+  static const nok = FiatCurrency(symbol: 'NOK');
+  static const nzd = FiatCurrency(symbol: 'NZD');
+  static const php = FiatCurrency(symbol: 'PHP');
+  static const pln = FiatCurrency(symbol: 'PLN');
+  static const ron = FiatCurrency(symbol: 'RON');
+  static const rub = FiatCurrency(symbol: 'RUB');
+  static const sek = FiatCurrency(symbol: 'SEK');
+  static const sgd = FiatCurrency(symbol: 'SGD');
+  static const thb = FiatCurrency(symbol: 'THB');
+  static const usd = FiatCurrency(symbol: 'USD');
+  static const zar = FiatCurrency(symbol: 'ZAR');
+  static const vef = FiatCurrency(symbol: 'VEF');
 
-  FiatCurrency({String symbol}) : super(title: symbol, raw: symbol);
+  const FiatCurrency({String symbol}) : super(title: symbol, raw: symbol);
+
+  operator ==(o) => o is FiatCurrency && o.raw == raw;
+
+  @override
+  int get hashCode => raw.hashCode ^ title.hashCode;
 }

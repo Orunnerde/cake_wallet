@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/stores/node_list/node_list_store.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 
 class NewNodePage extends BasePage {
   @override
-  String get title => 'New Node';
+  String get title => S.current.node_new;
 
   @override
   Widget body(BuildContext context) => NewNodePageForm();
@@ -40,11 +39,6 @@ class NewNodeFormState extends State<NewNodePageForm> {
   @override
   Widget build(BuildContext context) {
     final nodeList = Provider.of<NodeListStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
 
     return Form(
         key: _formKey,
@@ -65,16 +59,14 @@ class NewNodeFormState extends State<NewNodePageForm> {
                             decoration: InputDecoration(
                                 hintStyle:
                                     TextStyle(color: Palette.wildDarkBlue),
-                                hintText: 'Node Address',
+                                hintText: S.of(context).node_address,
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
+                                        color: Theme.of(context).focusColor,
                                         width: 1.0)),
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
+                                        color: Theme.of(context).focusColor,
                                         width: 1.0))),
                             controller: _nodeAddressController,
                             validator: (value) {
@@ -98,16 +90,14 @@ class NewNodeFormState extends State<NewNodePageForm> {
                             decoration: InputDecoration(
                                 hintStyle:
                                     TextStyle(color: Palette.wildDarkBlue),
-                                hintText: 'Node port',
+                                hintText: S.of(context).node_port,
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
+                                        color: Theme.of(context).focusColor,
                                         width: 1.0)),
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
+                                        color: Theme.of(context).focusColor,
                                         width: 1.0))),
                             controller: _nodePortController,
                             validator: (value) {
@@ -129,16 +119,14 @@ class NewNodeFormState extends State<NewNodePageForm> {
                             decoration: InputDecoration(
                                 hintStyle:
                                     TextStyle(color: Palette.wildDarkBlue),
-                                hintText: 'Login',
+                                hintText: S.of(context).login,
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
+                                        color: Theme.of(context).focusColor,
                                         width: 1.0)),
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
+                                        color: Theme.of(context).focusColor,
                                         width: 1.0))),
                             controller: _loginController,
                             validator: (value) => null,
@@ -157,16 +145,14 @@ class NewNodeFormState extends State<NewNodePageForm> {
                             decoration: InputDecoration(
                                 hintStyle:
                                     TextStyle(color: Palette.wildDarkBlue),
-                                hintText: 'Password',
+                                hintText: S.of(context).password,
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
+                                        color: Theme.of(context).focusColor,
                                         width: 1.0)),
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: _isDarkTheme ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
+                                        color: Theme.of(context).focusColor,
                                         width: 1.0))),
                             controller: _passwordController,
                             validator: (value) => null,
@@ -186,80 +172,48 @@ class NewNodeFormState extends State<NewNodePageForm> {
                       child: Container(
                     padding: EdgeInsets.only(right: 8.0),
                     child: PrimaryButton(
-                      onPressed: () {
-                        _nodeAddressController.text = '';
-                        _nodePortController.text = '';
-                        _loginController.text = '';
-                        _passwordController.text = '';
-                      },
-                      text: 'Reset',
-                      color: _isDarkTheme ? PaletteDark.darkThemeIndigoButton
-                          : Palette.indigo,
-                      borderColor: _isDarkTheme ? PaletteDark.darkThemeIndigoButtonBorder
-                          : Palette.deepIndigo,
-                    ),
+                        onPressed: () {
+                          _nodeAddressController.text = '';
+                          _nodePortController.text = '';
+                          _loginController.text = '';
+                          _passwordController.text = '';
+                        },
+                        text: S.of(context).reset,
+                        color: Theme.of(context)
+                            .accentTextTheme
+                            .button
+                            .backgroundColor,
+                        borderColor: Theme.of(context)
+                            .accentTextTheme
+                            .button
+                            .decorationColor),
                   )),
                   Flexible(
                       child: Container(
                     padding: EdgeInsets.only(left: 8.0),
                     child: PrimaryButton(
-                        onPressed: () async {
-                          if (!_formKey.currentState.validate()) {
-                            return;
-                          }
+                      onPressed: () async {
+                        if (!_formKey.currentState.validate()) {
+                          return;
+                        }
 
-                          await nodeList.addNode(
-                              address: _nodeAddressController.text,
-                              port: _nodePortController.text,
-                              login: _loginController.text,
-                              password: _passwordController.text);
+                        await nodeList.addNode(
+                            address: _nodeAddressController.text,
+                            port: _nodePortController.text,
+                            login: _loginController.text,
+                            password: _passwordController.text);
 
-                          Navigator.of(context).pop();
-
-                          // _isSaved = await showDialog(
-                          //     context: context,
-                          //     builder: (BuildContext context) {
-                          //       Future.delayed(
-                          //           const Duration(milliseconds: 500),
-                          //           () {
-                          //         Navigator.pop(context, true);
-                          //       });
-                          //       return AlertDialog(
-                          //           title: Text(
-                          //             'Saving',
-                          //             textAlign: TextAlign.center,
-                          //           ),
-                          //           content: CupertinoActivityIndicator(
-                          //               animating: true));
-                          //     });
-
-                          // if (_isSaved) {
-                          //   _nodeAddress = _nodeAddressController.text;
-                          //   await showDialog(
-                          //       context: context,
-                          //       builder: (BuildContext context) {
-                          //         return AlertDialog(
-                          //           title: Text(
-                          //             'Saved',
-                          //             textAlign: TextAlign.center,
-                          //           ),
-                          //           actions: <Widget>[
-                          //             FlatButton(
-                          //                 onPressed: () {
-                          //                   Navigator.pop(context);
-                          //                 },
-                          //                 child: Text('OK'))
-                          //           ],
-                          //         );
-                          //       });
-                          // }
-                          // }
-                        },
-                        text: 'Save',
-                        color: _isDarkTheme ? PaletteDark.darkThemePurpleButton
-                            : Palette.purple,
-                        borderColor: _isDarkTheme ? PaletteDark.darkThemePurpleButtonBorder
-                            : Palette.deepPink,
+                        Navigator.of(context).pop();
+                      },
+                      text: S.of(context).save,
+                      color: Theme.of(context)
+                          .primaryTextTheme
+                          .button
+                          .backgroundColor,
+                      borderColor: Theme.of(context)
+                          .primaryTextTheme
+                          .button
+                          .decorationColor,
                     ),
                   )),
                 ],

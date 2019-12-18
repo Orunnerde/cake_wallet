@@ -10,6 +10,7 @@ import 'package:cake_wallet/src/domain/exchange/xmrto/xmrto_trade_request.dart';
 import 'package:cake_wallet/src/domain/exchange/trade_history.dart';
 import 'package:cake_wallet/src/stores/exchange/exchange_trade_state.dart';
 import 'package:cake_wallet/src/stores/exchange/limits_state.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 part 'exchange_store.g.dart';
 
@@ -242,13 +243,13 @@ abstract class ExchangeStoreBase with Store {
           isValid = (value.length == 34);
       }
     }
-    errorMessage = isValid ? null : 'Wallet address must correspond to the type\nof cryptocurrency';
+    errorMessage = isValid ? null : S.current.error_text_address;
   }
 
   void validateCryptoCurrency(String value) {
     String p = '^([0-9]+([.][0-9]{0,12})?|[.][0-9]{1,12})\$';
     RegExp regExp = new RegExp(p);
     isValid = regExp.hasMatch(value);
-    errorMessage = isValid ? null : "The number of fraction digits\nmust be less or equal to 12";
+    errorMessage = isValid ? null : S.current.error_text_crypto_currency;
   }
 }

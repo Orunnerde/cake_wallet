@@ -1,25 +1,24 @@
-import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
+import 'package:mobx/mobx.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:mobx/mobx.dart';
-import 'package:provider/provider.dart';
 import 'package:cake_wallet/palette.dart';
-import 'package:cake_wallet/src/widgets/primary_button.dart';
-import 'package:cake_wallet/src/screens/exchange_trade/widgets/copy_button.dart';
-import 'package:cake_wallet/src/screens/receive/qr_image.dart';
-import 'package:cake_wallet/src/screens/base_page.dart';
-import 'package:cake_wallet/src/screens/exchange_trade/widgets/timer_widget.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/stores/exchange_trade/exchange_trade_store.dart';
 import 'package:cake_wallet/src/stores/send/send_store.dart';
 import 'package:cake_wallet/src/stores/send/sending_state.dart';
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/src/screens/exchange_trade/widgets/copy_button.dart';
+import 'package:cake_wallet/src/screens/receive/qr_image.dart';
+import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/src/screens/exchange_trade/widgets/timer_widget.dart';
+import 'package:cake_wallet/src/widgets/primary_button.dart';
+import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
 
 class ExchangeTradePage extends BasePage {
-  String get title => 'Exchange';
+  String get title => S.current.exchange;
 
   @override
   Widget body(BuildContext context) => ExchangeTradeForm();
@@ -31,8 +30,8 @@ class ExchangeTradeForm extends StatefulWidget {
 }
 
 class ExchangeTradeState extends State<ExchangeTradeForm> {
-  static const fetchingLabel = 'Fetching';
-  String get title => 'Exchange';
+  final fetchingLabel = S.current.fetching;
+  String get title => S.current.exchange;
 
   bool _effectsInstalled = false;
 
@@ -41,8 +40,6 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
     final tradeStore = Provider.of<ExchangeTradeStore>(context);
     final sendStore = Provider.of<SendStore>(context);
     final walletStore = Provider.of<WalletStore>(context);
-    final _themeChanger = Provider.of<ThemeChanger>(context);
-    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     _setEffects(context);
 
@@ -68,23 +65,25 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            'ID: ',
+                            S.of(context).id,
                             style: TextStyle(
                                 height: 2,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14.0,
-                                color: _isDarkTheme
-                                    ? Palette.wildDarkBlue
-                                    : Colors.black),
+                                color: Theme.of(context)
+                                    .primaryTextTheme
+                                    .button
+                                    .color),
                           ),
                           Text(
                             '${trade.id ?? fetchingLabel}',
                             style: TextStyle(
                                 fontSize: 14.0,
                                 height: 2,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeGrey
-                                    : Palette.wildDarkBlue),
+                                color: Theme.of(context)
+                                    .primaryTextTheme
+                                    .subtitle
+                                    .color),
                           )
                         ],
                       ),
@@ -92,23 +91,25 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            'Amount: ',
+                            S.of(context).amount,
                             style: TextStyle(
                                 height: 2,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14.0,
-                                color: _isDarkTheme
-                                    ? Palette.wildDarkBlue
-                                    : Colors.black),
+                                color: Theme.of(context)
+                                    .primaryTextTheme
+                                    .button
+                                    .color),
                           ),
                           Text(
                             '${trade.amount ?? fetchingLabel}',
                             style: TextStyle(
                                 fontSize: 14.0,
                                 height: 2,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeGrey
-                                    : Palette.wildDarkBlue),
+                                color: Theme.of(context)
+                                    .primaryTextTheme
+                                    .subtitle
+                                    .color),
                           )
                         ],
                       ),
@@ -117,23 +118,25 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  'Payment ID: ',
+                                  S.of(context).payment_id,
                                   style: TextStyle(
                                       height: 2,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14.0,
-                                      color: _isDarkTheme
-                                          ? Palette.wildDarkBlue
-                                          : Colors.black),
+                                      color: Theme.of(context)
+                                          .primaryTextTheme
+                                          .button
+                                          .color),
                                 ),
                                 Text(
                                   '${trade.extraId ?? fetchingLabel}',
                                   style: TextStyle(
                                       fontSize: 14.0,
                                       height: 2,
-                                      color: _isDarkTheme
-                                          ? PaletteDark.darkThemeGrey
-                                          : Palette.wildDarkBlue),
+                                      color: Theme.of(context)
+                                          .primaryTextTheme
+                                          .subtitle
+                                          .color),
                                 )
                               ],
                             )
@@ -142,13 +145,14 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            'Status: ',
+                            S.of(context).status,
                             style: TextStyle(
                                 fontSize: 14.0,
                                 fontWeight: FontWeight.bold,
-                                color: _isDarkTheme
-                                    ? Palette.wildDarkBlue
-                                    : Colors.black,
+                                color: Theme.of(context)
+                                    .primaryTextTheme
+                                    .button
+                                    .color,
                                 height: 2),
                           ),
                           Text(
@@ -156,9 +160,10 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                             style: TextStyle(
                                 fontSize: 14.0,
                                 height: 2,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeGrey
-                                    : Palette.wildDarkBlue),
+                                color: Theme.of(context)
+                                    .primaryTextTheme
+                                    .subtitle
+                                    .color),
                           )
                         ],
                       ),
@@ -167,17 +172,19 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  'Offer expires in: ',
+                                  S.of(context).offer_expires_in,
                                   style: TextStyle(
                                       fontSize: 14.0,
-                                      color: _isDarkTheme
-                                          ? Palette.wildDarkBlue
-                                          : Colors.black),
+                                      color: Theme.of(context)
+                                          .primaryTextTheme
+                                          .button
+                                          .color),
                                 ),
                                 TimerWidget(trade.expiredAt,
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeGrey
-                                        : Palette.wildDarkBlue)
+                                    color: Theme.of(context)
+                                        .primaryTextTheme
+                                        .subtitle
+                                        .color)
                               ],
                             )
                           : Container(),
@@ -197,14 +204,14 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
             ),
             Center(
               child: Text(
-                'This trade is powered by ${trade.provider != null ? trade.provider.title : fetchingLabel}',
+                S.of(context).trade_is_powered_by(trade.provider != null
+                    ? trade.provider.title
+                    : fetchingLabel),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 14.0,
                     fontWeight: FontWeight.bold,
-                    color: _isDarkTheme
-                        ? PaletteDark.darkThemeGrey
-                        : Colors.black),
+                    color: Theme.of(context).primaryTextTheme.headline.color),
               ),
             ),
             Container(
@@ -225,31 +232,33 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                       child: Container(
                     padding: EdgeInsets.only(right: 5.0),
                     child: CopyButton(
-                      onPressed: () => Clipboard.setData(
-                          ClipboardData(text: trade.inputAddress)),
-                      text: 'Copy Address',
-                      color: _isDarkTheme
-                          ? PaletteDark.darkThemeIndigoButton
-                          : Palette.indigo,
-                      borderColor: _isDarkTheme
-                          ? PaletteDark.darkThemeIndigoButtonBorder
-                          : Palette.deepIndigo,
-                    ),
+                        onPressed: () => Clipboard.setData(
+                            ClipboardData(text: trade.inputAddress)),
+                        text: S.of(context).copy_address,
+                        color: Theme.of(context)
+                            .accentTextTheme
+                            .button
+                            .backgroundColor,
+                        borderColor: Theme.of(context)
+                            .accentTextTheme
+                            .button
+                            .decorationColor),
                   )),
                   Flexible(
                       child: Container(
                     padding: EdgeInsets.only(left: 5.0),
                     child: CopyButton(
-                      onPressed: () =>
-                          Clipboard.setData(ClipboardData(text: trade.id)),
-                      text: 'Copy ID',
-                      color: _isDarkTheme
-                          ? PaletteDark.darkThemeIndigoButton
-                          : Palette.indigo,
-                      borderColor: _isDarkTheme
-                          ? PaletteDark.darkThemeIndigoButtonBorder
-                          : Palette.deepIndigo,
-                    ),
+                        onPressed: () =>
+                            Clipboard.setData(ClipboardData(text: trade.id)),
+                        text: S.of(context).copy_id,
+                        color: Theme.of(context)
+                            .accentTextTheme
+                            .button
+                            .backgroundColor,
+                        borderColor: Theme.of(context)
+                            .accentTextTheme
+                            .button
+                            .decorationColor),
                   ))
                 ],
               ),
@@ -258,28 +267,24 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
               padding: EdgeInsets.only(top: 20),
               child: Text(
                 tradeStore.isSendable
-                    ? 'By pressing confirm, you will be sending ${trade.amount ?? fetchingLabel} ${trade.from} from '
-                        'your wallet called $walletName to the address shown above.'
-                        'Or you can send from your external wallet to the above address/QR code.'
-                        '\n\n'
-                        'Please press confirm to continue or go back to change the amounts.'
-                        '\n\n'
-                    : 'Please send ${trade.amount ?? fetchingLabel} ${trade.from} to the address shown above.\n\n',
+                    ? S.of(context).exchange_result_confirm(
+                        trade.amount ?? fetchingLabel,
+                        trade.from.toString(),
+                        walletName)
+                    : S.of(context).exchange_result_description(
+                        trade.amount ?? fetchingLabel, trade.from.toString()),
                 textAlign: TextAlign.left,
                 style: TextStyle(
                     fontSize: 13.0,
-                    color: _isDarkTheme
-                        ? PaletteDark.darkThemeTitle
-                        : Colors.black),
+                    color: Theme.of(context).primaryTextTheme.title.color),
               ),
             ),
             Text(
-              '*Please copy or write down your ID shown above.',
+              S.of(context).exchange_result_write_down_ID,
               textAlign: TextAlign.left,
               style: TextStyle(
                   fontSize: 13.0,
-                  color:
-                      _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.grey),
+                  color: Theme.of(context).accentTextTheme.title.color),
             )
           ],
         );
@@ -287,16 +292,13 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
       bottomSection: Container(
         padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
         child: PrimaryButton(
-          onPressed: () => sendStore.createTransaction(
-              address: tradeStore.trade.inputAddress,
-              amount: tradeStore.trade.amount),
-          text: 'Confirm',
-          color:
-              _isDarkTheme ? PaletteDark.darkThemePurpleButton : Palette.purple,
-          borderColor: _isDarkTheme
-              ? PaletteDark.darkThemePurpleButtonBorder
-              : Palette.deepPink,
-        ),
+            onPressed: () => sendStore.createTransaction(
+                address: tradeStore.trade.inputAddress,
+                amount: tradeStore.trade.amount),
+            text: S.of(context).confirm,
+            color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+            borderColor:
+                Theme.of(context).primaryTextTheme.button.decorationColor),
       ),
     );
   }
@@ -315,11 +317,11 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text('Error'),
+                  title: Text(S.of(context).error),
                   content: Text(state.error),
                   actions: <Widget>[
                     FlatButton(
-                        child: Text("OK"),
+                        child: Text(S.of(context).ok),
                         onPressed: () => Navigator.of(context).pop())
                   ],
                 );
@@ -333,18 +335,19 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text('Confirm sending'),
-                  content: Text(
-                      'Commit transaction\nAmount: ${sendStore.pendingTransaction.amount}\nFee: ${sendStore.pendingTransaction.fee}'),
+                  title: Text(S.of(context).confirm_sending),
+                  content: Text(S.of(context).commit_transaction_amount_fee(
+                      sendStore.pendingTransaction.amount,
+                      sendStore.pendingTransaction.fee)),
                   actions: <Widget>[
                     FlatButton(
-                        child: Text("OK"),
+                        child: Text(S.of(context).ok),
                         onPressed: () {
                           Navigator.of(context).pop();
                           sendStore.commitTransaction();
                         }),
                     FlatButton(
-                      child: Text("Cancel"),
+                      child: Text(S.of(context).cancel),
                       onPressed: () => Navigator.of(context).pop(),
                     )
                   ],
@@ -359,11 +362,11 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text('Sending'),
-                  content: Text('Transaction sent!'),
+                  title: Text(S.of(context).sending),
+                  content: Text(S.of(context).transaction_sent),
                   actions: <Widget>[
                     FlatButton(
-                        child: Text("OK"),
+                        child: Text(S.of(context).ok),
                         onPressed: () => Navigator.of(context).pop())
                   ],
                 );

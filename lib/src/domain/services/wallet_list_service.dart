@@ -152,7 +152,6 @@ class WalletListService {
     await sharedPreferences.setString('current_wallet_name', walletName);
   }
 
-  Future remove(WalletDescription wallet) async {
-    await walletsManager.remove(wallet);
-  }
+  Future remove(WalletDescription wallet) async =>
+      await walletsManager.remove(wallet);
 }

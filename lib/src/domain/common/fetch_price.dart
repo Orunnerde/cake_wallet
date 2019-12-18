@@ -4,16 +4,16 @@ import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
 import 'package:cake_wallet/src/domain/common/currency_formatter.dart';
 
-const coinMarketCapAuthority = 'api.coinmarketcap.com';
-const coinMarketCapPath = '/v2/ticker/';
+const fiatApiAuthority = 'fiat-api.cakewallet.com';
+const fiatApiPath = '/v1/rates';
 
 Future<double> fetchPriceFor({CryptoCurrency crypto, FiatCurrency fiat}) async {
   double price = 0.0;
 
   try {
     final fiatStringified = fiat.toString();
-    final uri = Uri.https(coinMarketCapAuthority, coinMarketCapPath,
-        {'structure': 'array', 'convert': fiatStringified});
+    final uri =
+        Uri.https(fiatApiAuthority, fiatApiPath, {'convert': fiatStringified});
     final response = await get(uri.toString());
 
     if (response.statusCode != 200) {
@@ -25,7 +25,7 @@ Future<double> fetchPriceFor({CryptoCurrency crypto, FiatCurrency fiat}) async {
 
     for (final item in data) {
       if (item['symbol'] == cryptoToString(crypto)) {
-        price = item['quotes'][fiatStringified]['price'];
+        price = item['quote'][fiatStringified]['price'];
         break;
       }
     }

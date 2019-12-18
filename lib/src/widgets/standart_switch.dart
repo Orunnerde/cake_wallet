@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cake_wallet/palette.dart';
-import 'package:provider/provider.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 
 class StandartSwitch extends StatefulWidget {
 
@@ -22,11 +18,6 @@ class StandartSwitchState extends State<StandartSwitch> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
 
     return GestureDetector(
       onTap: widget.onTaped,
@@ -39,11 +30,9 @@ class StandartSwitchState extends State<StandartSwitch> {
         width: 55.0,
         height: 33.0,
         decoration: BoxDecoration(
-            color: _isDarkTheme ? PaletteDark.switchBackground
-                : Palette.switchBackground,
+            color: Theme.of(context).toggleButtonsTheme.color,
             border: Border.all(
-                color: _isDarkTheme ? PaletteDark.darkThemeMidGrey
-                    : Palette.switchBorder
+                color: Theme.of(context).toggleButtonsTheme.borderColor
             ),
             borderRadius:
             BorderRadius.all(Radius.circular(10.0))),
@@ -52,8 +41,8 @@ class StandartSwitchState extends State<StandartSwitch> {
           height: 25.0,
           decoration: BoxDecoration(
               color: widget.value
-                  ? Palette.cakeGreen
-                  : Palette.wildDarkBlue,
+                  ? Theme.of(context).toggleButtonsTheme.selectedColor
+                  : Theme.of(context).toggleButtonsTheme.disabledColor,
               borderRadius:
               BorderRadius.all(Radius.circular(8.0))),
           child: Icon(widget.value

@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
 import 'package:cake_wallet/src/stores/wallet_creation/wallet_creation_state.dart';
 import 'package:cake_wallet/src/stores/authentication/authentication_store.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 part 'wallet_creation_store.g.dart';
 
@@ -48,7 +49,6 @@ abstract class WalletCreationStoreBase with Store {
     String p = '^[a-zA-Z0-9_]{1,15}\$';
     RegExp regExp = new RegExp(p);
     isValid = regExp.hasMatch(value);
-    errorMessage = isValid ? null : 'Wallet name can only contain letters, '
-        'numbers\nand must be between 1 and 15 characters long';
+    errorMessage = isValid ? null : S.current.error_text_wallet_name;
   }
 }

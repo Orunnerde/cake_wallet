@@ -1,5 +1,3 @@
-import 'package:cake_wallet/routes.dart';
-import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +5,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/src/widgets/address_text_field.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
@@ -15,12 +14,14 @@ import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/src/stores/send/send_store.dart';
 import 'package:cake_wallet/src/stores/send/sending_state.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
+import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
+import 'package:cake_wallet/src/domain/common/calculate_estimated_fee.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class SendPage extends BasePage {
-  String get title => 'Send Monero';
+  String get title => S.current.send_title;
   bool get isModalBackButton => true;
   bool get resizeToAvoidBottomPadding => false;
 
@@ -51,101 +52,99 @@ class SendFormState extends State<SendForm> {
     final balanceStore = Provider.of<BalanceStore>(context);
     final walletStore = Provider.of<WalletStore>(context);
 
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
-
     _setEffects(context);
 
     return Form(
-      key: _formKey,
-      child: Column(children: <Widget>[
-        Container(
-          padding: EdgeInsets.only(left: 38, right: 30),
-          decoration: BoxDecoration(
-              color: _isDarkTheme
-                  ? PaletteDark.darkThemeBackgroundDark
-                  : Colors.white,
-              boxShadow: _isDarkTheme
-                  ? null
-                  : [
-                BoxShadow(
-                  color: Palette.shadowGrey,
-                  blurRadius: 10,
-                  offset: Offset(
-                    0,
-                    12,
-                  ),
-                )
-              ],
-              border: Border(
-                  top: BorderSide(
-                      width: 1,
-                      color: _isDarkTheme
-                          ? PaletteDark.darkThemeDarkGrey
-                          : Palette.lightLavender))),
-          child: SizedBox(
-            height: 76,
-            width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Observer(builder: (_) {
-                  return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text('Your wallet',
-                            style: TextStyle(
-                                fontSize: 12, color: Palette.lightViolet)),
-                        Text(walletStore.name,
-                            style: TextStyle(
-                                fontSize: 18,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeTitle
-                                    : Palette.nightBlue,
-                                height: 1.25)),
-                      ]);
-                }),
-                Observer(builder: (context) {
-                  final savedDisplayMode = settingsStore.balanceDisplayMode;
-                  final availableBalance = savedDisplayMode.serialize() ==
-                      BalanceDisplayMode.hiddenBalance.serialize()
-                      ? '---'
-                      : balanceStore.unlockedBalance;
+        key: _formKey,
+        child: Column(children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(left: 38, right: 30),
+            decoration: BoxDecoration(
+                color: Theme.of(context).backgroundColor,
+                boxShadow: [
+                  BoxShadow(
+                    color: Palette.shadowGrey,
+                    blurRadius: 10,
+                    offset: Offset(
+                      0,
+                      12,
+                    ),
+                  )
+                ],
+                border: Border(
+                    top: BorderSide(
+                        width: 1,
+                        color: Theme.of(context)
+                            .accentTextTheme
+                            .subtitle
+                            .backgroundColor))),
+            child: SizedBox(
+              height: 56,
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Observer(builder: (_) {
+                    return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(S.of(context).send_your_wallet,
+                              style: TextStyle(
+                                  fontSize: 12, color: Palette.lightViolet)),
+                          Text(walletStore.name,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Theme.of(context)
+                                      .accentTextTheme
+                                      .overline
+                                      .color,
+                                  height: 1.25)),
+                        ]);
+                  }),
+                  Observer(builder: (context) {
+                    final savedDisplayMode = settingsStore.balanceDisplayMode;
+                    final availableBalance =
+                        savedDisplayMode == BalanceDisplayMode.hiddenBalance
+                            ? '---'
+                            : balanceStore.unlockedBalance;
 
-                  return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text('XMR Available Balance',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: _isDarkTheme
-                                  ? PaletteDark.darkThemeGrey
-                                  : Palette.nightBlue,
-                            )),
-                        Text(availableBalance,
-                            style: TextStyle(
-                                fontSize: 22,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeTitle
-                                    : Palette.nightBlue,
-                                height: 1.1)),
-                      ]);
-                })
-              ],
+                    return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(S.of(context).xmr_available_balance,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Theme.of(context)
+                                    .accentTextTheme
+                                    .overline
+                                    .backgroundColor,
+                              )),
+                          Text(availableBalance,
+                              style: TextStyle(
+                                  fontSize: 22,
+                                  color: Theme.of(context)
+                                      .accentTextTheme
+                                      .overline
+                                      .color,
+                                  height: 1.1)),
+                        ]);
+                  })
+                ],
+              ),
             ),
           ),
-        ),
-        Expanded(
-          child: Container(
-              padding: EdgeInsets.only(left: 38, right: 33, top: 30, bottom: 30),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Column(children: <Widget>[
-                      AddressTextField(
+          Expanded(
+            child: Container(
+                padding:
+                    EdgeInsets.only(left: 38, right: 33, top: 10, bottom: 30),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Column(children: <Widget>[
+                        AddressTextField(
                           controller: _addressController,
-                          placeholder: 'Monero address',
+                          placeholder: S.of(context).send_monero_address,
                           onURIScanned: (uri) {
                             var address = '';
                             var amount = '';
@@ -168,256 +167,249 @@ class SendFormState extends State<SendForm> {
                             AddressTextFieldOption.addressBook
                           ],
                           validator: (value) {
-                            sendStore.validateAddress(value, cryptoCurrency: CryptoCurrency.xmr);
+                            sendStore.validateAddress(value,
+                                cryptoCurrency: CryptoCurrency.xmr);
                             return sendStore.errorMessage;
                           },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: TextFormField(
-                            style: TextStyle(
-                                fontSize: 14.0,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeGrey
-                                    : Palette.nightBlue),
-                            controller: _paymentIdController,
-                            decoration: InputDecoration(
-                                hintStyle: TextStyle(
-                                    fontSize: 14.0,
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeGrey
-                                        : Palette.lightBlue),
-                                hintText: 'Payment ID (optional)',
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: _isDarkTheme
-                                            ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
-                                        width: 1.0)),
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: _isDarkTheme
-                                            ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
-                                        width: 1.0))),
-                            validator: (value) {
-                              sendStore.validatePaymentID(value);
-                              return sendStore.errorMessage;
-                            }),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: TextFormField(
-                            showCursor: false,
-                            style: TextStyle(
-                                fontSize: 18.0,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeTitle
-                                    : Palette.nightBlue),
-                            controller: _cryptoAmountController,
-                            keyboardType: TextInputType.numberWithOptions(
-                                signed: false, decimal: false),
-                            inputFormatters: [BlacklistingTextInputFormatter(new RegExp('[\\-|\\ |\\,]'))],
-                            decoration: InputDecoration(
-                                prefixIcon: Padding(
-                                  padding: EdgeInsets.only(top: 12),
-                                  child: Text('XMR:',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: _isDarkTheme
-                                            ? PaletteDark.darkThemeTitle
-                                            : Palette.nightBlue,
-                                      )),
-                                ),
-                                suffixIcon: Container(
-                                  width: 1,
-                                  padding: EdgeInsets.only(top: 0),
-                                  child: Center(
-                                    child: InkWell(
-                                        onTap: () => sendStore.setSendAll(balanceStore.unlockedBalance),
-                                        child: Text('ALL',
-                                            style: TextStyle(
-                                                fontSize: 10,
-                                                color: _isDarkTheme
-                                                    ? PaletteDark.darkThemeTitle
-                                                    : Palette.manatee))),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: TextFormField(
+                              style: TextStyle(
+                                  fontSize: 14.0,
+                                  color: Theme.of(context)
+                                      .accentTextTheme
+                                      .overline
+                                      .backgroundColor),
+                              controller: _paymentIdController,
+                              decoration: InputDecoration(
+                                  hintStyle: TextStyle(
+                                      fontSize: 14.0,
+                                      color: Theme.of(context).hintColor),
+                                  hintText: S.of(context).send_payment_id,
+                                  focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Theme.of(context).focusColor,
+                                          width: 1.0)),
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Theme.of(context).focusColor,
+                                          width: 1.0))),
+                              validator: (value) {
+                                sendStore.validatePaymentID(value);
+                                return sendStore.errorMessage;
+                              }),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: TextFormField(
+                              showCursor: false,
+                              style: TextStyle(
+                                  fontSize: 18.0,
+                                  color: Theme.of(context)
+                                      .accentTextTheme
+                                      .overline
+                                      .color),
+                              controller: _cryptoAmountController,
+                              keyboardType: TextInputType.numberWithOptions(
+                                  signed: false, decimal: false),
+                              inputFormatters: [
+                                BlacklistingTextInputFormatter(
+                                    new RegExp('[\\-|\\ |\\,]'))
+                              ],
+                              decoration: InputDecoration(
+                                  prefixIcon: Padding(
+                                    padding: EdgeInsets.only(top: 12),
+                                    child: Text('XMR:',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Theme.of(context)
+                                              .accentTextTheme
+                                              .overline
+                                              .color,
+                                        )),
                                   ),
-                                ),
-                                hintStyle: TextStyle(
-                                    fontSize: 18.0,
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeTitle
-                                        : Palette.lightBlue),
-                                hintText: '0.0000',
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: _isDarkTheme
-                                            ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
-                                        width: 1.0)),
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: _isDarkTheme
-                                            ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
-                                        width: 1.0))),
-                            validator: (value) {
-                              sendStore.validateXMR(value, balanceStore.unlockedBalance);
-                              return sendStore.errorMessage;
-                            }
+                                  suffixIcon: Container(
+                                    width: 1,
+                                    padding: EdgeInsets.only(top: 0),
+                                    child: Center(
+                                      child: InkWell(
+                                          onTap: () => sendStore.setSendAll(
+                                              balanceStore.unlockedBalance),
+                                          child: Text(S.of(context).all,
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Theme.of(context)
+                                                      .accentTextTheme
+                                                      .overline
+                                                      .decorationColor))),
+                                    ),
+                                  ),
+                                  hintStyle: TextStyle(
+                                      fontSize: 18.0,
+                                      color: Theme.of(context).hintColor),
+                                  hintText: '0.0000',
+                                  focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Theme.of(context).focusColor,
+                                          width: 1.0)),
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Theme.of(context).focusColor,
+                                          width: 1.0))),
+                              validator: (value) {
+                                sendStore.validateXMR(
+                                    value, balanceStore.unlockedBalance);
+                                return sendStore.errorMessage;
+                              }),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: TextFormField(
-                            showCursor: false,
-                            style: TextStyle(
-                                fontSize: 18.0,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeTitle
-                                    : Palette.nightBlue),
-                            controller: _fiatAmountController,
-                            keyboardType: TextInputType.numberWithOptions(
-                                signed: false, decimal: false),
-                            inputFormatters: [BlacklistingTextInputFormatter(new RegExp('[\\-|\\ |\\,]'))],
-                            decoration: InputDecoration(
-                                prefixIcon: Padding(
-                                  padding: EdgeInsets.only(top: 12),
-                                  child: Text(
-                                      '${settingsStore.fiatCurrency.toString()}:',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: _isDarkTheme
-                                            ? PaletteDark.darkThemeTitle
-                                            : Palette.nightBlue,
-                                      )),
-                                ),
-                                hintStyle: TextStyle(
-                                    fontSize: 18.0,
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeTitle
-                                        : Palette.lightBlue),
-                                hintText: '0.00',
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: _isDarkTheme
-                                            ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
-                                        width: 1.0)),
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: _isDarkTheme
-                                            ? PaletteDark.darkThemeGreyWithOpacity
-                                            : Palette.lightGrey,
-                                        width: 1.0))),
-                            validator: (value) {
-                              try {
-                                double cryptoAmount = double.parse(_cryptoAmountController.text);
-                                double fiatAmount = double.parse(_fiatAmountController.text);
-                                double availableAmount = double.parse(balanceStore.unlockedBalance);
-                                if (cryptoAmount > 0) {
-                                  availableAmount *= fiatAmount/cryptoAmount;
-                                  sendStore.validateFiat(value, availableAmount);
-                                  return sendStore.errorMessage;
-                                } else return "Minimum value of amount is 0.01";
-                              } catch (e) {
-                                return "Currency can only contain numbers";
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: TextFormField(
+                              showCursor: false,
+                              style: TextStyle(
+                                  fontSize: 18.0,
+                                  color: Theme.of(context)
+                                      .accentTextTheme
+                                      .overline
+                                      .color),
+                              controller: _fiatAmountController,
+                              keyboardType: TextInputType.numberWithOptions(
+                                  signed: false, decimal: false),
+                              inputFormatters: [
+                                BlacklistingTextInputFormatter(
+                                    new RegExp('[\\-|\\ |\\,]'))
+                              ],
+                              decoration: InputDecoration(
+                                  prefixIcon: Padding(
+                                    padding: EdgeInsets.only(top: 12),
+                                    child: Text(
+                                        '${settingsStore.fiatCurrency.toString()}:',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Theme.of(context)
+                                              .accentTextTheme
+                                              .overline
+                                              .color,
+                                        )),
+                                  ),
+                                  hintStyle: TextStyle(
+                                      fontSize: 18.0,
+                                      color: Theme.of(context).hintColor),
+                                  hintText: '0.00',
+                                  focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Theme.of(context).focusColor,
+                                          width: 1.0)),
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Theme.of(context).focusColor,
+                                          width: 1.0)))),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12.0, bottom: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(S.of(context).send_estimated_fee,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Theme.of(context)
+                                        .accentTextTheme
+                                        .overline
+                                        .backgroundColor,
+                                  )),
+                              Text(
+                                  '${calculateEstimatedFee(priority: settingsStore.transactionPriority)} XMR',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Theme.of(context)
+                                        .primaryTextTheme
+                                        .overline
+                                        .backgroundColor,
+                                  ))
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: Text(
+                              S.of(context).send_priority(settingsStore
+                                  .transactionPriority
+                                  .toString()),
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: Theme.of(context)
+                                      .primaryTextTheme
+                                      .subtitle
+                                      .color,
+                                  height: 1.3)),
+                        ),
+                      ]),
+                      Observer(builder: (_) {
+                        return LoadingPrimaryButton(
+                            onPressed: () async {
+                              if (_formKey.currentState.validate()) {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text(S
+                                            .of(context)
+                                            .send_creating_transaction),
+                                        content:
+                                            Text(S.of(context).confirm_sending),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                              child: Text(S.of(context).send),
+                                              onPressed: () async {
+                                                Navigator.of(context)
+                                                    .popAndPushNamed(
+                                                        Routes.auth, arguments:
+                                                            (isAuthenticatedSuccessfully,
+                                                                auth) {
+                                                  if (!isAuthenticatedSuccessfully) {
+                                                    return;
+                                                  }
+
+                                                  Navigator.of(auth.context)
+                                                      .pop();
+                                                  sendStore.createTransaction(
+                                                      address:
+                                                          _addressController
+                                                              .text,
+                                                      paymentId:
+                                                          _paymentIdController
+                                                              .text);
+                                                });
+                                              }),
+                                          FlatButton(
+                                              child: Text(S.of(context).cancel),
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop())
+                                        ],
+                                      );
+                                    });
                               }
-                            }
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 12.0, bottom: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text('Estimated fee:',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: _isDarkTheme
-                                      ? PaletteDark.darkThemeGrey
-                                      : Palette.nightBlue,
-                                )),
-                            Text('XMR 0.00003121',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: _isDarkTheme
-                                      ? PaletteDark.darkThemeGrey
-                                      : Palette.nightBlue,
-                                ))
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: Text(
-                            'Currently the fee is set at ${settingsStore.transactionPriority.toString()} priority.\nTransaction priority can be adjusted in the settings',
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemeGrey
-                                    : Palette.wildDarkBlue,
-                                height: 1.3)),
-                      ),
-                    ]),
-                    Observer(builder: (_) {
-                      print(sendStore.state);
-
-                      return LoadingPrimaryButton(
-                          onPressed: () async {
-                            if (_formKey.currentState.validate()) {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      title: Text('Creating transaction'),
-                                      content: Text('Confirm sending'),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                            child: Text("Send"),
-                                            onPressed: () async {
-                                              Navigator.of(context).popAndPushNamed(
-                                                  Routes.auth, arguments:
-                                                  (isAuthenticatedSuccessfully,
-                                                  auth) {
-                                                if (!isAuthenticatedSuccessfully) {
-                                                  return;
-                                                }
-
-                                                Navigator.of(auth.context).pop();
-                                                sendStore.createTransaction(
-                                                    address:
-                                                    _addressController.text,
-                                                    paymentId:
-                                                    _paymentIdController.text);
-                                              });
-                                            }),
-                                        FlatButton(
-                                            child: Text("Cancel"),
-                                            onPressed: () =>
-                                                Navigator.of(context).pop())
-                                      ],
-                                    );
-                                  });
-                            }
-                          },
-                          text: 'Send',
-                          color: _isDarkTheme
-                              ? PaletteDark.darkThemeIndigoButton
-                              : Palette.indigo,
-                          borderColor: _isDarkTheme
-                              ? PaletteDark.darkThemeIndigoButtonBorder
-                              : Palette.deepIndigo,
-                          isLoading: sendStore.state is CreatingTransaction ||
-                              sendStore.state is TransactionCommitted);
-                    })
-                  ])),
-        )
-      ])
-    );
+                            },
+                            text: S.of(context).send,
+                            color: Theme.of(context)
+                                .accentTextTheme
+                                .button
+                                .backgroundColor,
+                            borderColor: Theme.of(context)
+                                .accentTextTheme
+                                .button
+                                .decorationColor,
+                            isLoading: sendStore.state is CreatingTransaction ||
+                                sendStore.state is TransactionCommitted);
+                      })
+                    ])),
+          )
+        ]));
   }
 
   void _setEffects(BuildContext context) {
@@ -462,11 +454,11 @@ class SendFormState extends State<SendForm> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text('Error'),
+                  title: Text(S.of(context).error),
                   content: Text(state.error),
                   actions: <Widget>[
                     FlatButton(
-                        child: Text("OK"),
+                        child: Text(S.of(context).ok),
                         onPressed: () => Navigator.of(context).pop())
                   ],
                 );
@@ -480,37 +472,11 @@ class SendFormState extends State<SendForm> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text('Confirm sending'),
-                  content: Text(
-                      'Commit transaction\nAmount: ${sendStore.pendingTransaction.amount}\nFee: ${sendStore.pendingTransaction.fee}'),
+                  title: Text(S.of(context).sending),
+                  content: Text(S.of(context).transaction_sent),
                   actions: <Widget>[
                     FlatButton(
-                        child: Text("OK"),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          sendStore.commitTransaction();
-                        }),
-                    FlatButton(
-                      child: Text("Cancel"),
-                      onPressed: () => Navigator.of(context).pop(),
-                    )
-                  ],
-                );
-              });
-        });
-      }
-
-      if (state is TransactionCommitted) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text('Sending'),
-                  content: Text('Transaction sent!'),
-                  actions: <Widget>[
-                    FlatButton(
-                        child: Text("OK"),
+                        child: Text(S.of(context).ok),
                         onPressed: () {
                           _addressController.text = '';
                           _cryptoAmountController.text = '';

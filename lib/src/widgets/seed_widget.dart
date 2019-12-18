@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/domain/monero/mnemonics/english.dart';
 import 'package:cake_wallet/src/domain/common/mnemotic_item.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class SeedWidget extends StatefulWidget {
   final Function(List<MnemoticItem>) onMnemoticChange;
@@ -135,9 +133,6 @@ class SeedWidgetState extends State<SeedWidget> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
-
     return Container(
       child: Column(children: [
         TextFormField(
@@ -154,7 +149,10 @@ class SeedWidgetState extends State<SeedWidget> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       InkWell(
-                        onTap: () { clear(); FocusScope.of(context).unfocus(); },
+                        onTap: () {
+                          clear();
+                          FocusScope.of(context).unfocus();
+                        },
                         child: Container(
                           height: 20,
                           width: 20,
@@ -187,24 +185,15 @@ class SeedWidgetState extends State<SeedWidget> {
                 ),
               ),
               errorText: errorMessage,
-              hintStyle: TextStyle(
-                  color: _isDarkTheme
-                      ? PaletteDark.darkThemeGrey
-                      : Palette.lightBlue),
-              hintText: 'Seed',
+              hintStyle: TextStyle(color: Theme.of(context).hintColor),
+              hintText: S.of(context).widgets_seed,
               focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
-                      color: _isDarkTheme
-                          ? PaletteDark.darkThemeGreyWithOpacity
-                          : Palette.lightGrey,
-                      width: 1.0)),
+                      color: Theme.of(context).focusColor, width: 1.0)),
               enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
-                      color: isValid
-                          ? (_isDarkTheme
-                              ? PaletteDark.darkThemeGreyWithOpacity
-                              : Palette.lightGrey)
-                          : Palette.red,
+                      color:
+                          isValid ? Theme.of(context).focusColor : Palette.red,
                       width: 1.0))),
         ),
         SizedBox(height: 20),

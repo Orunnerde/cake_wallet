@@ -10,14 +10,15 @@ class Contact {
 
   static Contact fromMap(Map map) {
     return Contact(
-        name: map['name'], address: map['address'], type: CryptoCurrency.deserialize(raw: map['type']));
+        id: map['id'], name: map['name'], address: map['address'], type: CryptoCurrency.deserialize(raw: map['type']));
   }
 
+  final int id;
   final String name;
   final String address;
   final CryptoCurrency type;
 
-  Contact({@required this.name, @required this.address, @required this.type});
+  Contact({@required this.id, @required this.name, @required this.address, @required this.type});
 
   Map<String, dynamic> toMap() {
     return {nameColumn: name, addressColumn: address, typeColumn: type.serialize()};

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cake_wallet/src/domain/common/node.dart';
 import 'package:mobx/mobx.dart';
 import 'package:cake_wallet/src/domain/common/wallet.dart';
 import 'package:cake_wallet/src/domain/monero/account.dart';
@@ -7,6 +8,7 @@ import 'package:cake_wallet/src/domain/monero/subaddress.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 part 'wallet_store.g.dart';
 
@@ -28,9 +30,8 @@ abstract class WalletStoreBase with Store {
   @observable
   CryptoCurrency type;
 
-  WalletService _walletService;
-  SettingsStore _settingsStore;
-  StreamSubscription<Wallet> _onWalletChangeSubscription;
+  @observable
+  String amountValue;
 
   @observable
   bool isValid;
@@ -38,11 +39,19 @@ abstract class WalletStoreBase with Store {
   @observable
   String errorMessage;
 
+  WalletService _walletService;
+  SettingsStore _settingsStore;
+  StreamSubscription<Wallet> _onWalletChangeSubscription;
+  StreamSubscription<Account> _onAccountChangeSubscription;
+  StreamSubscription<Subaddress> _onSubaddressChangeSubscription;
+
+
   WalletStoreBase({WalletService walletService, SettingsStore settingsStore}) {
     _walletService = walletService;
     _settingsStore = settingsStore;
-    name = "Monero Wallet";
+    name = '';
     type = CryptoCurrency.xmr;
+    amountValue = '';
 
     if (_walletService.currentWallet != null) {
       _onWalletChanged(_walletService.currentWallet)
@@ -58,6 +67,15 @@ abstract class WalletStoreBase with Store {
     if (_onWalletChangeSubscription != null) {
       _onWalletChangeSubscription.cancel();
     }
+
+    if (_onAccountChangeSubscription != null) {
+      _onAccountChangeSubscription.cancel();
+    }
+
+    if (_onSubaddressChangeSubscription != null) {
+      _onSubaddressChangeSubscription.cancel();
+    }
+
     super.dispose();
   }
 
@@ -82,14 +100,18 @@ abstract class WalletStoreBase with Store {
   }
 
   @action
-  Future reconnect() async {
-    await _walletService.connectToNode(node: _settingsStore.node);
-  }
+  Future reconnect() async =>
+      await _walletService.connectToNode(node: _settingsStore.node);
 
-   @action
-  Future rescan({int restoreHeight}) async {
-    await _walletService.rescan(restoreHeight: restoreHeight);
-  }
+  @action
+  Future rescan({int restoreHeight}) async =>
+      await _walletService.rescan(restoreHeight: restoreHeight);
+
+  @action
+  Future startSync() async => await _walletService.startSync();
+
+  @action
+  Future connectToNode({Node node}) async => await _walletService.connectToNode(node: node);
 
   Future _onWalletChanged(Wallet wallet) async {
     if (this == null) {
@@ -100,15 +122,37 @@ abstract class WalletStoreBase with Store {
     wallet.onAddressChange.listen((address) => this.address = address);
 
     if (wallet is MoneroWallet) {
-      account = wallet.account;
-      wallet.subaddress.listen((subaddress) => this.subaddress = subaddress);
+      _onAccountChangeSubscription = wallet.onAccountChange.listen((account) => this.account = account);
+      _onSubaddressChangeSubscription = wallet.subaddress.listen((subaddress) => this.subaddress = subaddress);
     }
   }
 
-  void validateAmount(String value) {
-    String p = '^[0-9]+\$';
-    RegExp regExp = new RegExp(p);
-    isValid = regExp.hasMatch(value);
-    errorMessage = isValid ? null : 'Amount can only contain numbers';
+  @action
+  onChangedAmountValue(String value) {
+    amountValue = value.isNotEmpty ? '?tx_amount=' + value : '';
   }
+
+  @action
+  void validateAmount(String value) {
+    const double maxValue = 18446744.073709551616;
+
+    if (value.isEmpty) {
+      isValid = true;
+    } else {
+      String p = '^([0-9]+([.][0-9]{0,12})?|[.][0-9]{1,12})\$';
+      RegExp regExp = new RegExp(p);
+      if (regExp.hasMatch(value)) {
+        try {
+          double dValue = double.parse(value);
+          isValid = dValue <= maxValue;
+        } catch (e) {
+          isValid = false;
+        }
+      } else isValid = false;
+    }
+
+    errorMessage = isValid ? null : S.current.error_text_amount;
+  }
+
+  Future<bool> isConnected() async => await _walletService.isConnected();
 }

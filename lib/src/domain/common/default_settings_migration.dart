@@ -30,7 +30,7 @@ Future defaultSettingsMigration(
             'current_default_settings_migration_version', 1);
         sharedPreferences.setBool('save_recipient_address', false);
         await nodeList.resetToDefault();
-        sharedPreferences.setInt('current_node_id', 3);
+        sharedPreferences.setInt('current_node_id', 1);
         break;
       default:
         break;

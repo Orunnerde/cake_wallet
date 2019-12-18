@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/palette.dart';
-import 'package:provider/provider.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 
 class RestoreButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -27,20 +24,14 @@ class RestoreButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
-
     return Container(
       margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
       decoration: BoxDecoration(
-          color: _isDarkTheme ? PaletteDark.darkThemeMidGrey : Colors.white,
+          color: Theme.of(context).accentTextTheme.headline.backgroundColor,
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
           boxShadow: [
             BoxShadow(
-              color: Color.fromRGBO(23, 46, 77, 0.129207),
+              color: Palette.buttonShadow,
               blurRadius: 10,
               offset: Offset(
                 0,
@@ -82,7 +73,7 @@ class RestoreButton extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style:
                           TextStyle(
-                              color: _isDarkTheme ? Palette.wildDarkBlue : Palette.lightBlue,
+                              color: Theme.of(context).accentTextTheme.subhead.color,
                               fontSize: 14.0,
                               height: 1.4),
                     ),
@@ -97,7 +88,7 @@ class RestoreButton extends StatelessWidget {
                   decoration: BoxDecoration(
                     border: Border(
                         top: BorderSide(
-                            color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey : Palette.darkGrey,
+                            color: Theme.of(context).accentTextTheme.headline.decorationColor,
                             width: 1.15)),
                     color: Colors.transparent,
                   ),

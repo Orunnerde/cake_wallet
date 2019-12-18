@@ -1,47 +1,37 @@
-import 'package:cake_wallet/src/stores/wallet/wallet_keys_store.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:cake_wallet/palette.dart';
-import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:provider/provider.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/generated/i18n.dart';
+import 'package:cake_wallet/src/stores/wallet/wallet_keys_store.dart';
+import 'package:cake_wallet/src/screens/base_page.dart';
 
 class ShowKeysPage extends BasePage {
   bool get isModalBackButton => true;
-  String get title => 'Wallet keys';
+  String get title => S.current.wallet_keys;
 
   @override
   Widget body(BuildContext context) {
     final walletKeysStore = Provider.of<WalletKeysStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
 
     return Container(
         padding: EdgeInsets.only(top: 20.0, bottom: 20.0, left: 20, right: 20),
         child: Observer(
           builder: (_) {
             Map<String, String> keysMap = {
-              'View key (public)': walletKeysStore.publicViewKey,
-              'View key (private)': walletKeysStore.privateViewKey,
-              'Spend key (public)': walletKeysStore.publicSpendKey,
-              'Spend key (private)': walletKeysStore.privateSpendKey
+              S.of(context).view_key_public: walletKeysStore.publicViewKey,
+              S.of(context).view_key_private: walletKeysStore.privateViewKey,
+              S.of(context).spend_key_public: walletKeysStore.publicSpendKey,
+              S.of(context).spend_key_private: walletKeysStore.privateSpendKey
             };
 
             return ListView.separated(
                 separatorBuilder: (_, __) => Container(
                     padding: EdgeInsets.only(left: 30.0, right: 20.0),
                     child: Divider(
-                        color: _isDarkTheme
-                            ? PaletteDark.darkThemeGreyWithOpacity
-                            : Palette.lightGrey,
+                        color: Theme.of(context).dividerTheme.color,
                         height: 1.0)),
                 itemCount: keysMap.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -56,7 +46,7 @@ class ShowKeysPage extends BasePage {
                             text: keysMap.values.elementAt(index)));
                         Scaffold.of(context).showSnackBar(SnackBar(
                           content: Text(
-                            'Copied $key to Clipboard',
+                            S.of(context).copied_key_to_clipboard(key),
                             textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.white),
                           ),

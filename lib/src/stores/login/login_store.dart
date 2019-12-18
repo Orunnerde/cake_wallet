@@ -25,8 +25,6 @@ class LoadedCurrentWalletFailure extends LoginState {
 class LoginStore = LoginStoreBase with _$LoginStore;
 
 abstract class LoginStoreBase with Store {
-  final AuthenticationStore authenticationStore;
-  final AuthStore authStore;
   final SharedPreferences sharedPreferences;
   final WalletListService walletsService;
 
@@ -34,16 +32,8 @@ abstract class LoginStoreBase with Store {
   LoginState state;
 
   LoginStoreBase(
-      {@required this.authenticationStore,
-      @required this.authStore,
-      @required this.sharedPreferences,
-      @required this.walletsService}) {
+      {@required this.sharedPreferences, @required this.walletsService}) {
     state = InitialLoginState();
-    reaction((_) => authStore.state, (state) async {
-      if (state is AuthenticatedSuccessfully) {
-        await loadCurrentWallet();
-      }
-    });
   }
 
   @action
@@ -54,7 +44,6 @@ abstract class LoginStoreBase with Store {
       state = LoadingCurrentWallet();
       final walletName = sharedPreferences.getString('current_wallet_name');
       await walletsService.openWallet(walletName);
-      authenticationStore.loggedIn();
       state = LoadedCurrentWalletSuccessfully();
     } catch (e) {
       state = LoadedCurrentWalletFailure(errorMessage: e.toString());

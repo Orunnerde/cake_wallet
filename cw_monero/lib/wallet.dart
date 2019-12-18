@@ -5,18 +5,20 @@ import 'package:cw_monero/convert_utf8_to_string.dart';
 import 'package:cw_monero/signatures.dart';
 import 'package:cw_monero/types.dart';
 import 'package:cw_monero/monero_api.dart';
-import 'package:cw_monero/exceptions/connection_to_node_exception.dart';
 import 'package:cw_monero/exceptions/setup_wallet_exception.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 int _boolToInt(bool value) => value ? 1 : 0;
+
+final moneroAPIChannel = const MethodChannel('cw_monero');
 
 final getFileNameNative = moneroApi
     .lookup<NativeFunction<get_filename>>('get_filename')
     .asFunction<GetFilename>();
 
-final getSeedNative = moneroApi
-    .lookup<NativeFunction<get_seed>>('seed')
-    .asFunction<GetSeed>();
+final getSeedNative =
+    moneroApi.lookup<NativeFunction<get_seed>>('seed').asFunction<GetSeed>();
 
 final getAddressNative = moneroApi
     .lookup<NativeFunction<get_address>>('get_address')
@@ -104,6 +106,10 @@ final closeCurrentWalletNative = moneroApi
     .lookup<NativeFunction<close_current_wallet>>('close_current_wallet')
     .asFunction<CloseCurrentWallet>();
 
+final onStartupNative = moneroApi
+    .lookup<NativeFunction<on_startup>>('on_startup')
+    .asFunction<OnStartup>();
+
 int getSyncingHeight() => getSyncingHeightNative();
 
 bool isNeededToRefresh() => isNeededToRefreshNative() != 0;
@@ -125,11 +131,11 @@ int getUnlockedBalance({int accountIndex = 0}) =>
 
 int getCurrentHeight() => getCurrentHeightNative();
 
-int getNodeHeight() => getNodeHeightNative();
+int getNodeHeightSync() => getNodeHeightNative();
 
-bool isConnected() => isConnectedNative() != 0;
+bool isConnectedSync() => isConnectedNative() != 0;
 
-bool setupNode(
+bool setupNodeSync(
     {String address,
     String login,
     String password,
@@ -169,19 +175,9 @@ bool setupNode(
   return isSetupNode;
 }
 
-startRefresh() => startRefreshNative();
+startRefreshSync() => startRefreshNative();
 
-bool connectToNode() {
-  final errorMessagePointer = allocate<Utf8>();
-  final isConnectedToNode = connecToNodeNative() != 0;
-
-  if (!isConnectedToNode) {
-    throw ConnectionToNodeException(
-        message: convertUTF8ToString(pointer: errorMessagePointer));
-  }
-
-  return isConnectedToNode;
-}
+Future<bool> connectToNode() async => connecToNodeNative() != 0;
 
 setRefreshFromBlockHeight({int height}) =>
     setRefreshFromBlockHeightNative(height);
@@ -189,7 +185,7 @@ setRefreshFromBlockHeight({int height}) =>
 setRecoveringFromSeed({bool isRecovery}) =>
     setRecoveringFromSeedNative(_boolToInt(isRecovery));
 
-Future store() async {
+storeSync() {
   final pathPointer = Utf8.toUtf8('');
   storeNative(pathPointer);
   free(pathPointer);
@@ -219,7 +215,7 @@ setListeners(Future Function(int) onNewBlock, Future Function() onNeedToRefresh,
     _updateSyncInfoTimer.cancel();
   }
 
-  _updateSyncInfoTimer = Timer.periodic(Duration(seconds: 1), (_) async {
+  _updateSyncInfoTimer = Timer.periodic(Duration(milliseconds: 200), (_) async {
     final syncHeight = getSyncingHeight();
     final needToRefresh = isNeededToRefresh();
     final newTransactionExist = isNewTransactionExist();
@@ -245,3 +241,37 @@ closeListeners() {
     _updateSyncInfoTimer.cancel();
   }
 }
+
+onStartup() => onStartupNative();
+
+_storeSync(_) => storeSync();
+bool _setupNodeSync(Map args) => setupNodeSync(
+    address: args['address'],
+    login: args['login'] ?? '',
+    password: args['password'] ?? '',
+    useSSL: args['useSSL'],
+    isLightWallet: args['isLightWallet']);
+bool _isConnected(_) => isConnectedSync();
+int _getNodeHeight(_) => getNodeHeightSync();
+
+startRefresh() => startRefreshSync();
+
+Future setupNode(
+        {String address,
+        String login,
+        String password,
+        bool useSSL = false,
+        bool isLightWallet = false}) =>
+    compute(_setupNodeSync, {
+      'address': address,
+      'login': login,
+      'password': password,
+      'useSSL': useSSL,
+      'isLightWallet': isLightWallet
+    });
+
+Future store() => compute(_storeSync, 0);
+
+Future<bool> isConnected() => compute(_isConnected, 0);
+
+Future<int> getNodeHeight() => compute(_getNodeHeight, 0);
