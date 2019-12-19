@@ -9,6 +9,7 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/widgets/address_text_field.dart';
 import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
+import 'package:cake_wallet/palette.dart';
 
 class ContactPage extends BasePage {
   String get title => S.current.contact;
@@ -127,7 +128,7 @@ class ContactFormState extends State<ContactForm> {
                     hintText: S.of(context).contact_name,
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
-                            color: Theme.of(context).focusColor, width: 1.0)),
+                            color: Palette.cakeGreen, width: 2.0)),
                     enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
                             color: Theme.of(context).focusColor, width: 1.0))),
@@ -152,8 +153,8 @@ class ContactFormState extends State<ContactForm> {
                       decoration: InputDecoration(
                           focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Theme.of(context).focusColor,
-                                  width: 1.0)),
+                                  color: Palette.cakeGreen,
+                                  width: 2.0)),
                           enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
                                   color: Theme.of(context).focusColor,

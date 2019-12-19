@@ -189,7 +189,7 @@ class SeedWidgetState extends State<SeedWidget> {
               hintText: S.of(context).widgets_seed,
               focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
-                      color: Theme.of(context).focusColor, width: 1.0)),
+                      color: Palette.cakeGreen, width: 2.0)),
               enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
                       color:

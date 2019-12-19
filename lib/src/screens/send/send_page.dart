@@ -189,8 +189,8 @@ class SendFormState extends State<SendForm> {
                                   hintText: S.of(context).send_payment_id,
                                   focusedBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: Theme.of(context).focusColor,
-                                          width: 1.0)),
+                                          color: Palette.cakeGreen,
+                                          width: 2.0)),
                                   enabledBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Theme.of(context).focusColor,
@@ -251,8 +251,8 @@ class SendFormState extends State<SendForm> {
                                   hintText: '0.0000',
                                   focusedBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: Theme.of(context).focusColor,
-                                          width: 1.0)),
+                                          color: Palette.cakeGreen,
+                                          width: 2.0)),
                                   enabledBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Theme.of(context).focusColor,
@@ -299,8 +299,8 @@ class SendFormState extends State<SendForm> {
                                   hintText: '0.00',
                                   focusedBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: Theme.of(context).focusColor,
-                                          width: 1.0)),
+                                          color: Palette.cakeGreen,
+                                          width: 2.0)),
                                   enabledBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Theme.of(context).focusColor,
