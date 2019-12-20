@@ -203,7 +203,6 @@ class SendFormState extends State<SendForm> {
                         Padding(
                           padding: const EdgeInsets.only(top: 20),
                           child: TextFormField(
-                              showCursor: false,
                               style: TextStyle(
                                   fontSize: 18.0,
                                   color: Theme.of(context)
@@ -266,7 +265,6 @@ class SendFormState extends State<SendForm> {
                         Padding(
                           padding: const EdgeInsets.only(top: 20),
                           child: TextFormField(
-                              showCursor: false,
                               style: TextStyle(
                                   fontSize: 18.0,
                                   color: Theme.of(context)
