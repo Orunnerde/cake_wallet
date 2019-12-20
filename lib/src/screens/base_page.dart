@@ -41,7 +41,7 @@ abstract class BasePage extends StatelessWidget {
 
     return SizedBox(
       height: 37,
-      width: isModalBackButton ? 37 : 10,
+      width: isModalBackButton ? 37 : 20,
       child: ButtonTheme(
         minWidth: double.minPositive,
         child: FlatButton(
