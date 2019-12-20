@@ -39,6 +39,8 @@ abstract class WalletStoreBase with Store {
   @observable
   String errorMessage;
 
+  String get id => name + type.toString().toLowerCase();
+
   WalletService _walletService;
   SettingsStore _settingsStore;
   StreamSubscription<Wallet> _onWalletChangeSubscription;

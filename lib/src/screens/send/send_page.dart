@@ -234,8 +234,7 @@ class SendFormState extends State<SendForm> {
                                     padding: EdgeInsets.only(top: 0),
                                     child: Center(
                                       child: InkWell(
-                                          onTap: () => sendStore.setSendAll(
-                                              balanceStore.unlockedBalance),
+                                          onTap: () => sendStore.setSendAll(),
                                           child: Text(S.of(context).all,
                                               style: TextStyle(
                                                   fontSize: 10,

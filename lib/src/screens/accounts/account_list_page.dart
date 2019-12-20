@@ -56,7 +56,6 @@ class AccountListPage extends BasePage {
       child: Observer(
         builder: (_) {
           final accounts = accountListStore.accounts;
-          print('accounts ${accounts.length}');
           return ListView.builder(
             itemCount: accounts == null
                 ? 0

@@ -51,14 +51,16 @@ PendingTransactionDescription createTransactionSync(
     int accountIndex = 0}) {
   final addressPointer = Utf8.toUtf8(address);
   final paymentIdPointer = Utf8.toUtf8(paymentId);
-  final amountPointer = Utf8.toUtf8(amount);
+  final amountPointer = amount != null ? Utf8.toUtf8(amount) : nullptr;
   final errorMessagePointer = allocate<Utf8>();
   final transaction = transactionCreateNative(addressPointer, paymentIdPointer,
       amountPointer, priorityRaw, accountIndex, errorMessagePointer);
 
   free(addressPointer);
   free(paymentIdPointer);
-  free(amountPointer);
+  if (amountPointer != nullptr) {
+    free(amountPointer);
+  }
 
   if (transaction == null) {
     throw CreationTransactionException(
@@ -69,7 +71,8 @@ PendingTransactionDescription createTransactionSync(
       amount: transaction.ref.amount,
       fee: transaction.ref.fee,
       hash: transaction.ref.getHash(),
-      pointerAddress: transaction.address);
+      pointerAddress: transaction.address
+      );
 }
 
 commitTransactionFromPointerAddress({int address}) => commitTransaction(

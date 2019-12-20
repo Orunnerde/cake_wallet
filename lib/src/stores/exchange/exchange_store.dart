@@ -1,3 +1,4 @@
+import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
@@ -53,12 +54,15 @@ abstract class ExchangeStoreBase with Store {
 
   String receiveAddress;
 
+  WalletStore walletStore;
+
   ExchangeStoreBase(
       {@required ExchangeProvider initialProvider,
       @required CryptoCurrency initialDepositCurrency,
       @required CryptoCurrency initialReceiveCurrency,
       @required this.providerList,
-      @required this.tradeHistory}) {
+      @required this.tradeHistory,
+      @required this.walletStore}) {
     provider = initialProvider;
     depositCurrency = initialDepositCurrency;
     receiveCurrency = initialReceiveCurrency;
@@ -157,6 +161,7 @@ abstract class ExchangeStoreBase with Store {
     try {
       tradeState = TradeIsCreating();
       final trade = await provider.createTrade(request: request);
+      trade.walletId = walletStore.id;
       await tradeHistory.add(trade: trade);
       tradeState = TradeIsCreatedSuccessfully(trade: trade);
     } catch (e) {

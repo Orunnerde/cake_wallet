@@ -63,6 +63,7 @@ class AuthPageState extends State<AuthPage> {
       if (state is AuthenticationFailure || state is AuthenticationBanned) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _pinCodeKey.currentState.clear();
+          _key.currentState.hideCurrentSnackBar();
           _key.currentState.showSnackBar(
             SnackBar(
               content: Text(S.of(context).failed_authentication(state.error)),

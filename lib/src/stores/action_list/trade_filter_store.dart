@@ -1,3 +1,4 @@
+import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:cake_wallet/src/domain/exchange/exchange_provider_description.dart';
 import 'package:cake_wallet/src/stores/action_list/trade_list_item.dart';
@@ -13,8 +14,12 @@ abstract class TradeFilterStoreBase with Store {
   @observable
   bool displayChangeNow;
 
+  WalletStore walletStore;
+
   TradeFilterStoreBase(
-      {this.displayXMRTO = true, this.displayChangeNow = true});
+      {this.displayXMRTO = true,
+      this.displayChangeNow = true,
+      this.walletStore});
 
   @action
   void toggleDisplayExchange(ExchangeProviderDescription provider) {
@@ -29,7 +34,8 @@ abstract class TradeFilterStoreBase with Store {
   }
 
   List<TradeListItem> filtered({List<TradeListItem> trades}) {
-    List<TradeListItem> _trades = [];
+    List<TradeListItem> _trades =
+        trades.where((item) => item.trade.walletId == walletStore.id).toList();
 
     final needToFilter = !displayChangeNow || !displayXMRTO;
 
@@ -40,10 +46,8 @@ abstract class TradeFilterStoreBase with Store {
             (!displayChangeNow &&
                 item.trade.provider != ExchangeProviderDescription.changeNow);
       }).toList();
-    } else {
-      _trades = trades;
     }
-
+    
     return _trades;
   }
 }

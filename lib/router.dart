@@ -207,7 +207,7 @@ class Router {
                   priceStore: priceStore,
                   tradeHistory: TradeHistory(db: db),
                   transactionFilterStore: TransactionFilterStore(),
-                  tradeFilterStore: TradeFilterStore()),
+                  tradeFilterStore: TradeFilterStore(walletStore: walletStore)),
               child: DashboardPage());
         });
 
@@ -473,7 +473,8 @@ class Router {
                         providerList: [
                           xmrtoprovider,
                           ChangeNowExchangeProvider()
-                        ]);
+                        ],
+                        walletStore: walletStore);
                   }),
                 ], child: ExchangePage()));
 

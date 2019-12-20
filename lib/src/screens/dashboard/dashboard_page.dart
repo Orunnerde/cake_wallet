@@ -86,8 +86,13 @@ class DashboardPage extends BasePage {
       child: Image.asset('assets/images/exchange_icon.png',
           color: Colors.white, height: 26, width: 22),
       backgroundColor: Palette.floatingActionButton,
-      onPressed: () => Navigator.of(context, rootNavigator: true)
-          .pushNamed(Routes.exchange));
+      onPressed: () async {
+        final actionListStore = Provider.of<ActionListStore>(context);
+
+        await Navigator.of(context, rootNavigator: true)
+          .pushNamed(Routes.exchange);
+        actionListStore.updateTradeList();  
+      });
 
   void _presentWalletMenu(BuildContext bodyContext) {
     final walletMenu = WalletMenu(bodyContext);
@@ -220,7 +225,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                     builder: (_) {
                                       final savedDisplayMode =
                                           settingsStore.balanceDisplayMode;
-                                      BalanceDisplayMode displayMode =
+                                      final displayMode =
                                           balanceStore.isReversing
                                               ? (savedDisplayMode ==
                                                       BalanceDisplayMode
@@ -243,7 +248,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                       final savedDisplayMode =
                                           settingsStore.balanceDisplayMode;
                                       var balance = '---';
-                                      BalanceDisplayMode displayMode =
+                                      final displayMode =
                                           balanceStore.isReversing
                                               ? (savedDisplayMode ==
                                                       BalanceDisplayMode
@@ -282,8 +287,18 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                     child: Observer(
                                         key: _balanceObserverKey,
                                         builder: (_) {
-                                          final displayMode =
+                                          final savedDisplayMode =
                                               settingsStore.balanceDisplayMode;
+                                          final displayMode =
+                                              balanceStore.isReversing
+                                                  ? (savedDisplayMode ==
+                                                          BalanceDisplayMode
+                                                              .availableBalance
+                                                      ? BalanceDisplayMode
+                                                          .fullBalance
+                                                      : BalanceDisplayMode
+                                                          .availableBalance)
+                                                  : savedDisplayMode;
                                           final symbol = settingsStore
                                               .fiatCurrency
                                               .toString();
