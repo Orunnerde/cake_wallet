@@ -14,6 +14,7 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/widgets/blockchain_height_widget.dart';
 import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
+import 'package:cake_wallet/palette.dart';
 
 class RestoreWalletFromKeysPage extends BasePage {
   final WalletListService walletsService;
@@ -96,8 +97,8 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                             hintText: S.of(context).restore_wallet_name,
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Theme.of(context).focusColor,
-                                    width: 1.0)),
+                                    color: Palette.cakeGreen,
+                                    width: 2.0)),
                             enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Theme.of(context).focusColor,
@@ -126,8 +127,8 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                             hintText: S.of(context).restore_address,
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Theme.of(context).focusColor,
-                                    width: 1.0)),
+                                    color: Palette.cakeGreen,
+                                    width: 2.0)),
                             enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Theme.of(context).focusColor,
@@ -154,8 +155,8 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                             hintText: S.of(context).restore_view_key_private,
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Theme.of(context).focusColor,
-                                    width: 1.0)),
+                                    color: Palette.cakeGreen,
+                                    width: 2.0)),
                             enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Theme.of(context).focusColor,
@@ -182,8 +183,8 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                             hintText: S.of(context).restore_spend_key_private,
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Theme.of(context).focusColor,
-                                    width: 1.0)),
+                                    color: Palette.cakeGreen,
+                                    width: 2.0)),
                             enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Theme.of(context).focusColor,

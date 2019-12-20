@@ -12,6 +12,7 @@ import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
+import 'package:cake_wallet/palette.dart';
 
 class NewWalletPage extends BasePage {
   final WalletListService walletsService;
@@ -88,7 +89,7 @@ class _WalletNameFormState extends State<WalletNameForm> {
                       hintText: S.of(context).wallet_name,
                       focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
-                              color: Theme.of(context).focusColor, width: 1.0)),
+                              color: Palette.cakeGreen, width: 2.0)),
                       enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                               color: Theme.of(context).focusColor,

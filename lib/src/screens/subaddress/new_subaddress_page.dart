@@ -8,6 +8,7 @@ import 'package:cake_wallet/src/stores/subaddress_creation/subaddress_creation_s
 import 'package:cake_wallet/src/stores/subaddress_creation/subaddress_creation_store.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/palette.dart';
 
 class NewSubaddressPage extends BasePage {
   String get title => S.current.new_subaddress_title;
@@ -58,7 +59,7 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
                       hintText: S.of(context).new_subaddress_label_name,
                       focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
-                              color: Theme.of(context).focusColor, width: 1.0)),
+                              color: Palette.cakeGreen, width: 2.0)),
                       enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                               color: Theme.of(context).focusColor,
