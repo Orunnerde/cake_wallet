@@ -36,7 +36,7 @@ class DisclaimerPageBody extends StatefulWidget {
 
 class DisclaimerBodyState extends State<DisclaimerPageBody> {
   static const xmrto_url = 'https://xmr.to/app_static/html/tos.html';
-  static const morphtoken_url = 'https://www.morphtoken.com/terms/';
+  static const changenow_url = 'https://changenow.io/terms-of-use';
 
   bool _isAccepted;
   bool _checked = false;
@@ -190,17 +190,17 @@ class DisclaimerBodyState extends State<DisclaimerPageBody> {
                     children: <Widget>[
                       Expanded(
                           child: GestureDetector(
-                        onTap: () => launchUrl(morphtoken_url),
-                        child: Text(
-                          morphtoken_url,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              color: Colors.blue,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.normal,
-                              decoration: TextDecoration.underline),
-                        ),
-                      ))
+                            onTap: () => launchUrl(changenow_url),
+                            child: Text(
+                              changenow_url,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.normal,
+                                  decoration: TextDecoration.underline),
+                            ),
+                          ))
                     ],
                   ),
                   SizedBox(

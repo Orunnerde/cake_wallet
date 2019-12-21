@@ -20,12 +20,19 @@ class ReceivePage extends BasePage {
   Widget trailing(BuildContext context) {
     final walletStore = Provider.of<WalletStore>(context);
 
-    return ButtonTheme(
-      minWidth: double.minPositive,
-      child: FlatButton(
-          onPressed: () => Share.text(S.of(context).share_address,
-              walletStore.subaddress.address, 'text/plain'),
-          child: Icon(Icons.share)),
+    return SizedBox(
+      height: 37.0,
+      width: 37.0,
+      child: ButtonTheme(
+        minWidth: double.minPositive,
+        child: FlatButton(
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            padding: EdgeInsets.all(0),
+            onPressed: () => Share.text(
+                'Share address', walletStore.subaddress.address, 'text/plain'),
+            child: Icon(Icons.share, size: 30.0,)),
+      ),
     );
   }
 
