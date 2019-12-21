@@ -139,8 +139,13 @@ abstract class SendStoreBase with Store {
     final symbol = PriceStoreBase.generateSymbolForPair(
         fiat: settingsStore.fiatCurrency, crypto: CryptoCurrency.xmr);
     final price = priceStore.prices[symbol] ?? 0;
-    final amount = double.parse(cryptoAmount) * price;
-    fiatAmount = _fiatNumberFormat.format(amount);
+
+    try {    
+      final amount = double.parse(cryptoAmount) * price;
+      fiatAmount = _fiatNumberFormat.format(amount);
+    } catch(e) {
+      fiatAmount = '0.00';
+    }
   }
 
   @action
@@ -148,8 +153,13 @@ abstract class SendStoreBase with Store {
     final symbol = PriceStoreBase.generateSymbolForPair(
         fiat: settingsStore.fiatCurrency, crypto: CryptoCurrency.xmr);
     final price = priceStore.prices[symbol] ?? 0;
-    final amount = double.parse(fiatAmount) / price;
-    cryptoAmount = _cryptoNumberFormat.format(amount);
+    
+    try {
+      final amount = double.parse(fiatAmount) / price;
+      cryptoAmount = _cryptoNumberFormat.format(amount);
+    } catch(e) {
+      cryptoAmount = '0.00';
+    }
   }
 
   void validateAddress(String value, {CryptoCurrency cryptoCurrency}) {

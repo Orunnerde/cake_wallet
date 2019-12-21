@@ -267,7 +267,7 @@ class S implements WidgetsLocalizations {
   String commit_transaction_amount_fee(String amount, String fee) => "Commit transaction\nAmount: ${amount}\nFee: ${fee}";
   String copied_key_to_clipboard(String key) => "Copied ${key} to Clipboard";
   String exchange_result_confirm(String fetchingLabel, String from, String walletName) => "By pressing confirm, you will be sending ${fetchingLabel} ${from} from your wallet called ${walletName} to the address shown above. Or you can send from your external wallet to the above address/QR code.\n\nPlease press confirm to continue or go back to change the amounts.\n\n";
-  String exchange_result_description(String fetchingLabel, String from) => "Please send ${fetchingLabel} ${from} to the address shown above.\n\n'";
+  String exchange_result_description(String fetchingLabel, String from) => "Please send ${fetchingLabel} ${from} to the address shown above.\n\n";
   String failed_authentication(String state_error) => "Failed authentication. ${state_error}";
   String max_value(String value, String currency) => "Max: ${value} ${currency}";
   String min_value(String value, String currency) => "Min: ${value} ${currency}";

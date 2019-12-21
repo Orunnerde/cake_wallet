@@ -15,7 +15,7 @@ class AddressTextField extends StatelessWidget {
 
   final TextEditingController controller;
   final bool isActive;
-  String placeholder;
+  final String placeholder;
   final Function(Uri) onURIScanned;
   final List<AddressTextFieldOption> options;
   final FormFieldValidator<String> validator;
@@ -23,21 +23,18 @@ class AddressTextField extends StatelessWidget {
   AddressTextField(
       {@required this.controller,
       this.isActive = true,
-      String placeholder,
+      this.placeholder,
       this.options = const [
         AddressTextFieldOption.qrCode,
         AddressTextFieldOption.addressBook
       ],
       this.onURIScanned,
-      this.validator}) {
-    placeholder != null
-        ? this.placeholder = placeholder
-        : this.placeholder = S.current.widgets_address;
-  }
+      this.validator});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onFieldSubmitted: (_) => FocusScope.of(context).unfocus(),
       enabled: isActive,
       controller: controller,
       decoration: InputDecoration(
@@ -106,7 +103,7 @@ class AddressTextField extends StatelessWidget {
           ),
         ),
         hintStyle: TextStyle(color: Theme.of(context).hintColor),
-        hintText: placeholder,
+        hintText: placeholder ?? S.current.widgets_address,
         focusedBorder: UnderlineInputBorder(
             borderSide:
                 BorderSide(color: Palette.cakeGreen, width: 2.0)),

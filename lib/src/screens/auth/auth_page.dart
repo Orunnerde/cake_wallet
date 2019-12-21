@@ -85,6 +85,7 @@ class AuthPageState extends State<AuthPage> {
           backgroundColor: Theme.of(context).backgroundColor,
           border: null,
         ),
+        resizeToAvoidBottomPadding: false,
         body: PinCode(
             (pin, _) => authStore.auth(
                 password: pin.fold('', (ac, val) => ac + '$val')),
