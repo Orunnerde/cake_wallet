@@ -74,6 +74,8 @@ abstract class ExchangeStoreBase with Store {
   @action
   void changeProvider({ExchangeProvider provider}) {
     this.provider = provider;
+    depositAmount = '';
+    receiveAmount = '';
   }
 
   @action
@@ -210,7 +212,7 @@ abstract class ExchangeStoreBase with Store {
           _providerForPair(from: depositCurrency, to: receiveCurrency);
 
       if (provider != null) {
-        this.provider = provider;
+        changeProvider(provider: provider);
       }
     }
 
