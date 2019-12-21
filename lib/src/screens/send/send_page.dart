@@ -347,7 +347,7 @@ class SendFormState extends State<SendForm> {
               onPressed: () async {
                 // Hack. Don't ask me.
                 FocusScope.of(context).requestFocus(FocusNode());
-                
+
                 if (_formKey.currentState.validate()) {
                   await showDialog(
                       context: context,
@@ -368,9 +368,9 @@ class SendFormState extends State<SendForm> {
 
                                     Navigator.of(auth.context).pop();
 
-                                    // sendStore.createTransaction(
-                                    //     address: _addressController.text,
-                                    //     paymentId: _paymentIdController.text);
+                                    sendStore.createTransaction(
+                                        address: _addressController.text,
+                                        paymentId: _paymentIdController.text);
                                   });
                                 }),
                             FlatButton(
