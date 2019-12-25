@@ -637,6 +637,11 @@ extern "C"
         Monero::Utils::onStartup();
     }
 
+    void rescan_blockchain()
+    {
+        m_wallet->rescanBlockchainAsync();
+    }
+
 #ifdef __cplusplus
 }
 #endif

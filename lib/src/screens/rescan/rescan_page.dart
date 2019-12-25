@@ -26,11 +26,15 @@ class RescanPage extends BasePage {
                 isLoading:
                     rescanWalletStore.state == RescanWalletState.rescaning,
                 text: S.of(context).rescan,
-                onPressed: () async =>
-                    await rescanWalletStore.rescanCurrentWallet(
-                        restoreHeight: blockchainKey.currentState.height),
-                color: Theme.of(context).primaryTextTheme.button.backgroundColor,
-                borderColor: Theme.of(context).primaryTextTheme.button.decorationColor))
+                onPressed: () async {
+                  await rescanWalletStore.rescanCurrentWallet(
+                      restoreHeight: blockchainKey.currentState.height);
+                  Navigator.of(context).pop();
+                },
+                color:
+                    Theme.of(context).primaryTextTheme.button.backgroundColor,
+                borderColor:
+                    Theme.of(context).primaryTextTheme.button.decorationColor))
       ]),
     );
   }

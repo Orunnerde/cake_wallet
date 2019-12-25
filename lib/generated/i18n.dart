@@ -124,7 +124,7 @@ class S implements WidgetsLocalizations {
   String get restore_description_from_seed => "Restore your wallet from either the 25 word\nor 13 word combination code";
   String get restore_description_from_seed_keys => "Get back your wallet from seed/keys that you've saved to secure place";
   String get restore_next => "Next";
-  String get restore_recover => "Recover";
+  String get restore_recover => "Restore";
   String get restore_restore_wallet => "Restore Wallet";
   String get restore_seed_keys_restore => "Seed/Keys Restore";
   String get restore_spend_key_private => "Spend key (private)";

@@ -487,8 +487,7 @@ class Router {
       case Routes.rescan:
         return MaterialPageRoute(
             builder: (_) => Provider(
-                builder: (_) =>
-                    RescanWalletStore(walletListService: walletListService),
+                builder: (_) => RescanWalletStore(walletService: walletService),
                 child: RescanPage()));
 
       case Routes.faq:

@@ -110,6 +110,10 @@ final onStartupNative = moneroApi
     .lookup<NativeFunction<on_startup>>('on_startup')
     .asFunction<OnStartup>();
 
+final rescanBlockchainAsyncNative = moneroApi
+    .lookup<NativeFunction<rescan_blockchain>>('rescan_blockchain')
+    .asFunction<RescanBlockchainAsync>();
+
 int getSyncingHeight() => getSyncingHeightNative();
 
 bool isNeededToRefresh() => isNeededToRefreshNative() != 0;
@@ -275,3 +279,5 @@ Future store() => compute(_storeSync, 0);
 Future<bool> isConnected() => compute(_isConnected, 0);
 
 Future<int> getNodeHeight() => compute(_getNodeHeight, 0);
+
+rescanBlockchainAsync() => rescanBlockchainAsyncNative();

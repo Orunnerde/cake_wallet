@@ -102,3 +102,5 @@ typedef public_spend_key = Pointer<Utf8> Function();
 typedef close_current_wallet = Void Function();
 
 typedef on_startup = Void Function();
+
+typedef rescan_blockchain = Void Function();

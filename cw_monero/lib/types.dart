@@ -100,3 +100,5 @@ typedef PublicSpendKey = Pointer<Utf8> Function();
 typedef CloseCurrentWallet = void Function();
 
 typedef OnStartup = void Function();
+
+typedef RescanBlockchainAsync = void Function();

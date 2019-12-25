@@ -148,7 +148,7 @@
   "restore_address" : "Address",
   "restore_view_key_private" : "View key (private)",
   "restore_spend_key_private" : "Spend key (private)",
-  "restore_recover" : "Recover",
+  "restore_recover" : "Restore",
   "restore_wallet_restore_description" : "Wallet restore description",
 
 

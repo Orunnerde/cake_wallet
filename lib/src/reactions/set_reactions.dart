@@ -20,7 +20,10 @@ setReactions(
     @required AuthenticationStore authenticationStore,
     @required LoginStore loginStore}) {
   connectToNode(settingsStore: settingsStore, walletStore: walletStore);
-  onSyncStatusChange(syncStore: syncStore, walletStore: walletStore);
+  onSyncStatusChange(
+      syncStore: syncStore,
+      walletStore: walletStore,
+      settingsStore: settingsStore);
   onCurrentWalletChange(
       walletStore: walletStore,
       settingsStore: settingsStore,
@@ -36,23 +39,41 @@ connectToNode({SettingsStore settingsStore, WalletStore walletStore}) =>
     reaction((_) => settingsStore.node,
         (node) async => await walletStore.connectToNode(node: node));
 
-onSyncStatusChange({SyncStore syncStore, WalletStore walletStore}) =>
-    reaction((_) => syncStore.status, (status) {
+onSyncStatusChange(
+        {SyncStore syncStore,
+        WalletStore walletStore,
+        SettingsStore settingsStore}) =>
+    reaction((_) => syncStore.status, (status) async {
       if (status is ConnectedSyncStatus) {
-        walletStore.startSync();
+        await walletStore.startSync();
       }
 
       // Reconnect to the node if the app is not started sync after 30 seconds
       if (status is StartingSyncStatus) {
-        Timer(Duration(seconds: 30), () async {
-          final isConnected = await walletStore.isConnected();
-
-          if (syncStore.status is StartingSyncStatus && !isConnected) {
-            walletStore.reconnect();
-          }
-        });
+        await startReconnectionObserver(
+            syncStore: syncStore, walletStore: walletStore);
       }
     });
+
+Timer _reconnectionTimer;
+
+startReconnectionObserver({SyncStore syncStore, WalletStore walletStore}) {
+  if (_reconnectionTimer != null) {
+    _reconnectionTimer.cancel();
+  }
+
+  _reconnectionTimer = Timer.periodic(Duration(minutes: 1), (_) async {
+    try {
+      final isConnected = await walletStore.isConnected();
+
+      if (!isConnected) {
+        await walletStore.reconnect();
+      }
+    } catch (e) {
+      print(e);
+    }
+  });
+}
 
 onCurrentWalletChange(
         {WalletStore walletStore,

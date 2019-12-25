@@ -306,7 +306,12 @@ class MoneroWallet extends Wallet {
 
   Future askForUpdateTransactionHistory() async => await getHistory().update();
 
-  Future rescan({int restoreHeight = 0}) async {}
+  Future rescan({int restoreHeight = 0}) async {
+    _syncStatus.value = StartingSyncStatus();
+    setRefreshFromBlockHeight(height: restoreHeight);
+    moneroWallet.rescanBlockchainAsync();
+    _syncStatus.value = StartingSyncStatus();
+  }
 
   changeCurrentSubaddress(Subaddress subaddress) =>
       _subaddress.value = subaddress;

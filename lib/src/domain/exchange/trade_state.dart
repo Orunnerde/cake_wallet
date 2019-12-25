@@ -19,6 +19,7 @@ class TradeState extends EnumerableItem<String> with Serializable<String> {
   static const notFound = TradeState(raw: 'NOT_FOUND', title: 'Not found');
   static const created = TradeState(raw: 'created', title: 'Created');
   static const finished = TradeState(raw: 'finished', title: 'Finished');
+  static const waiting = TradeState(raw: 'waiting', title: 'Waiting');
 
   static TradeState deserialize({String raw}) {
     switch (raw) {
@@ -50,6 +51,8 @@ class TradeState extends EnumerableItem<String> with Serializable<String> {
         return created;
       case 'finished':
         return finished;
+      case 'waiting':
+        return waiting;
       default:
         return null;
     }

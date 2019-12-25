@@ -291,14 +291,18 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
       }),
       bottomSection: Container(
         padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-        child: PrimaryButton(
-            onPressed: () => sendStore.createTransaction(
-                address: tradeStore.trade.inputAddress,
-                amount: tradeStore.trade.amount),
-            text: S.of(context).confirm,
-            color: Theme.of(context).primaryTextTheme.button.backgroundColor,
-            borderColor:
-                Theme.of(context).primaryTextTheme.button.decorationColor),
+        child: Observer(
+          builder: (_) => LoadingPrimaryButton(
+              isLoading: sendStore.state is CreatingTransaction ||
+                  sendStore.state is TransactionCommitted,
+              onPressed: () => sendStore.createTransaction(
+                  address: tradeStore.trade.inputAddress,
+                  amount: tradeStore.trade.amount),
+              text: S.of(context).confirm,
+              color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+              borderColor:
+                  Theme.of(context).primaryTextTheme.button.decorationColor),
+        ),
       ),
     );
   }
@@ -330,33 +334,6 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
       }
 
       if (state is TransactionCreatedSuccessfully) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text(S.of(context).confirm_sending),
-                  content: Text(S.of(context).commit_transaction_amount_fee(
-                      sendStore.pendingTransaction.amount,
-                      sendStore.pendingTransaction.fee)),
-                  actions: <Widget>[
-                    FlatButton(
-                        child: Text(S.of(context).ok),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          sendStore.commitTransaction();
-                        }),
-                    FlatButton(
-                      child: Text(S.of(context).cancel),
-                      onPressed: () => Navigator.of(context).pop(),
-                    )
-                  ],
-                );
-              });
-        });
-      }
-
-      if (state is TransactionCommitted) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showDialog(
               context: context,

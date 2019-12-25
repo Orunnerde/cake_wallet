@@ -1,3 +1,4 @@
+import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
 import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
@@ -13,18 +14,18 @@ enum RescanWalletState {
 abstract class RescanWalletStoreBase with Store {
   @observable
   RescanWalletState state;
+  
+  WalletService _walletService;
 
-  WalletListService _walletListService;
-
-  RescanWalletStoreBase({@required WalletListService walletListService}) {
-    _walletListService = walletListService;
+  RescanWalletStoreBase({@required WalletService walletService}) {
+    _walletService = walletService;
     state = RescanWalletState.none;
   }
 
   @action
   Future rescanCurrentWallet({int restoreHeight}) async {
     state = RescanWalletState.rescaning;
-    await _walletListService.rescanCurrentWallet(restoreHeight: restoreHeight);
+    await _walletService.rescan(restoreHeight: restoreHeight);
     state = RescanWalletState.none;
   }
 }
