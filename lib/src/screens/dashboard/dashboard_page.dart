@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
 import 'package:cake_wallet/src/domain/common/sync_status.dart';
 import 'package:cake_wallet/src/domain/exchange/exchange_provider_description.dart';
@@ -22,8 +23,6 @@ import 'package:cake_wallet/src/screens/dashboard/date_section_raw.dart';
 import 'package:cake_wallet/src/screens/dashboard/trade_row.dart';
 import 'package:cake_wallet/src/screens/dashboard/transaction_raw.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
-import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/src/screens/dashboard/wallet_menu.dart';
 import 'package:cake_wallet/src/widgets/picker.dart';
 
@@ -32,16 +31,14 @@ class DashboardPage extends BasePage {
 
   @override
   Widget leading(BuildContext context) {
-    final _themeChanger = Provider.of<ThemeChanger>(context);
-    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
-
     return SizedBox(
         width: 30,
         child: FlatButton(
             padding: EdgeInsets.all(0),
             onPressed: () => _presentWalletMenu(context),
             child: Image.asset('assets/images/more.png',
-                color: _isDarkTheme ? Colors.white : Colors.black, width: 30)));
+                color: Theme.of(context).primaryTextTheme.caption.color,
+                width: 30)));
   }
 
   @override
@@ -52,11 +49,18 @@ class DashboardPage extends BasePage {
       return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(walletStore.name),
+            Text(
+              walletStore.name,
+              style: TextStyle(
+                  color: Theme.of(context).primaryTextTheme.title.color),
+            ),
             SizedBox(height: 5),
             Text(
-              walletStore.account != null ? walletStore.account.label : '',
-              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 10),
+              walletStore.account != null ? '${walletStore.account.label}' : '',
+              style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 10,
+                  color: Theme.of(context).primaryTextTheme.title.color),
             ),
           ]);
     });
@@ -81,9 +85,14 @@ class DashboardPage extends BasePage {
   Widget floatingActionButton(BuildContext context) => FloatingActionButton(
       child: Image.asset('assets/images/exchange_icon.png',
           color: Colors.white, height: 26, width: 22),
-      backgroundColor: Color.fromRGBO(213, 56, 99, 1),
-      onPressed: () => Navigator.of(context, rootNavigator: true)
-          .pushNamed(Routes.exchange));
+      backgroundColor: Palette.floatingActionButton,
+      onPressed: () async {
+        final actionListStore = Provider.of<ActionListStore>(context);
+
+        await Navigator.of(context, rootNavigator: true)
+          .pushNamed(Routes.exchange);
+        actionListStore.updateTradeList();  
+      });
 
   void _presentWalletMenu(BuildContext bodyContext) {
     final walletMenu = WalletMenu(bodyContext);
@@ -92,9 +101,10 @@ class DashboardPage extends BasePage {
         builder: (_) => Picker(
             items: walletMenu.items,
             selectedAtIndex: -1,
-            title: 'Wallet Menu',
+            title: S.of(bodyContext).wallet_menu,
+            pickerHeight: 510,
             onItemSelected: (item) =>
-                walletMenu.action(item)),
+                walletMenu.action(walletMenu.items.indexOf(item))),
         context: bodyContext);
   }
 }
@@ -122,8 +132,6 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
     final actionListStore = Provider.of<ActionListStore>(context);
     final syncStore = Provider.of<SyncStore>(context);
     final settingsStore = Provider.of<SettingsStore>(context);
-    final _themeChanger = Provider.of<ThemeChanger>(context);
-    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return Observer(
         key: _listObserverKey,
@@ -141,9 +149,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                   return Container(
                     margin: EdgeInsets.only(bottom: 20),
                     decoration: BoxDecoration(
-                        color: _isDarkTheme
-                            ? Theme.of(context).backgroundColor
-                            : Colors.white,
+                        color: Theme.of(context).backgroundColor,
                         boxShadow: [
                           BoxShadow(
                               color: Palette.shadowGreyWithOpacity,
@@ -163,13 +169,16 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                               var descriptionText = '';
 
                               if (status is SyncingSyncStatus) {
-                                descriptionText =
-                                    '${syncStore.status.toString()} Blocks Remaining ';
+                                descriptionText = S
+                                    .of(context)
+                                    .Blocks_remaining(
+                                        syncStore.status.toString());
                               }
 
                               if (status is FailedSyncStatus) {
-                                descriptionText =
-                                    'Please try to connect to another node';
+                                descriptionText = S
+                                    .of(context)
+                                    .please_try_to_connect_to_another_node;
                               }
 
                               return Container(
@@ -191,7 +200,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                             color: isFialure
-                                                ? Color.fromRGBO(226, 35, 35, 1)
+                                                ? Palette.failure
                                                 : Palette.cakeGreen)),
                                     Text(descriptionText,
                                         style: TextStyle(
@@ -216,30 +225,17 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                     builder: (_) {
                                       final savedDisplayMode =
                                           settingsStore.balanceDisplayMode;
-                                      var title = 'XMR Hidden';
-                                      BalanceDisplayMode displayMode =
+                                      final displayMode =
                                           balanceStore.isReversing
-                                              ? (savedDisplayMode.serialize() ==
+                                              ? (savedDisplayMode ==
                                                       BalanceDisplayMode
                                                           .availableBalance
-                                                          .serialize()
                                                   ? BalanceDisplayMode
                                                       .fullBalance
                                                   : BalanceDisplayMode
                                                       .availableBalance)
                                               : savedDisplayMode;
-
-                                      if (displayMode.serialize() ==
-                                          BalanceDisplayMode.availableBalance
-                                              .serialize()) {
-                                        title = 'XMR Available Balance';
-                                      }
-
-                                      if (displayMode.serialize() ==
-                                          BalanceDisplayMode.fullBalance
-                                              .serialize()) {
-                                        title = 'XMR Full Balance';
-                                      }
+                                      var title = displayMode.toString();
 
                                       return Text(title,
                                           style: TextStyle(
@@ -252,29 +248,26 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                       final savedDisplayMode =
                                           settingsStore.balanceDisplayMode;
                                       var balance = '---';
-                                      BalanceDisplayMode displayMode =
+                                      final displayMode =
                                           balanceStore.isReversing
-                                              ? (savedDisplayMode.serialize() ==
+                                              ? (savedDisplayMode ==
                                                       BalanceDisplayMode
                                                           .availableBalance
-                                                          .serialize()
                                                   ? BalanceDisplayMode
                                                       .fullBalance
                                                   : BalanceDisplayMode
                                                       .availableBalance)
                                               : savedDisplayMode;
 
-                                      if (displayMode.serialize() ==
-                                          BalanceDisplayMode.availableBalance
-                                              .serialize()) {
+                                      if (displayMode ==
+                                          BalanceDisplayMode.availableBalance) {
                                         balance =
                                             balanceStore.unlockedBalance ??
                                                 '0.0';
                                       }
 
-                                      if (displayMode.serialize() ==
-                                          BalanceDisplayMode.fullBalance
-                                              .serialize()) {
+                                      if (displayMode ==
+                                          BalanceDisplayMode.fullBalance) {
                                         balance =
                                             balanceStore.fullBalance ?? '0.0';
                                       }
@@ -282,9 +275,10 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                       return Text(
                                         balance,
                                         style: TextStyle(
-                                            color: _isDarkTheme
-                                                ? Colors.white
-                                                : Colors.black87,
+                                            color: Theme.of(context)
+                                                .primaryTextTheme
+                                                .caption
+                                                .color,
                                             fontSize: 42),
                                       );
                                     }),
@@ -293,28 +287,36 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                     child: Observer(
                                         key: _balanceObserverKey,
                                         builder: (_) {
-                                          final displayMode =
+                                          final savedDisplayMode =
                                               settingsStore.balanceDisplayMode;
+                                          final displayMode =
+                                              balanceStore.isReversing
+                                                  ? (savedDisplayMode ==
+                                                          BalanceDisplayMode
+                                                              .availableBalance
+                                                      ? BalanceDisplayMode
+                                                          .fullBalance
+                                                      : BalanceDisplayMode
+                                                          .availableBalance)
+                                                  : savedDisplayMode;
                                           final symbol = settingsStore
                                               .fiatCurrency
                                               .toString();
                                           var balance = '---';
 
-                                          if (displayMode.serialize() ==
+                                          if (displayMode ==
                                               BalanceDisplayMode
-                                                  .availableBalance
-                                                  .serialize()) {
+                                                  .availableBalance) {
                                             balance =
                                                 '${balanceStore.fiatUnlockedBalance} $symbol';
                                           }
 
-                                          if (displayMode.serialize() ==
-                                              BalanceDisplayMode.fullBalance
-                                                  .serialize()) {
+                                          if (displayMode ==
+                                              BalanceDisplayMode.fullBalance) {
                                             balance =
                                                 '${balanceStore.fiatFullBalance} $symbol';
                                           }
-                                          
+
                                           return Text(balance,
                                               style: TextStyle(
                                                   color: Palette.wildDarkBlue,
@@ -338,17 +340,18 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                         'assets/images/send_icon.png',
                                         height: 25,
                                         width: 25),
-                                    text: 'Send',
+                                    text: S.of(context).send,
                                     onPressed: () => Navigator.of(context,
                                             rootNavigator: true)
                                         .pushNamed(Routes.send),
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemePurpleButton
-                                        : Palette.purple,
-                                    borderColor: _isDarkTheme
-                                        ? PaletteDark
-                                            .darkThemePurpleButtonBorder
-                                        : Palette.deepPink,
+                                    color: Theme.of(context)
+                                        .primaryTextTheme
+                                        .button
+                                        .backgroundColor,
+                                    borderColor: Theme.of(context)
+                                        .primaryTextTheme
+                                        .button
+                                        .decorationColor,
                                   )),
                                   SizedBox(width: 10),
                                   Expanded(
@@ -357,16 +360,18 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                         'assets/images/receive_icon.png',
                                         height: 25,
                                         width: 25),
-                                    text: 'Receive',
+                                    text: S.of(context).receive,
                                     onPressed: () => Navigator.of(context,
                                             rootNavigator: true)
                                         .pushNamed(Routes.receive),
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeBlueButton
-                                        : Palette.brightBlue,
-                                    borderColor: _isDarkTheme
-                                        ? PaletteDark.darkThemeBlueButtonBorder
-                                        : Palette.cloudySky,
+                                    color: Theme.of(context)
+                                        .accentTextTheme
+                                        .caption
+                                        .backgroundColor,
+                                    borderColor: Theme.of(context)
+                                        .accentTextTheme
+                                        .caption
+                                        .decorationColor,
                                   ))
                                 ],
                               ),
@@ -376,7 +381,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                   );
                 }
 
-                if (index == 1 && actionListStore.items.length > 0) {
+                if (index == 1 && actionListStore.totalCount > 0) {
                   return Padding(
                     padding: EdgeInsets.only(right: 20, top: 10, bottom: 20),
                     child: Row(
@@ -387,7 +392,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                               PopupMenuItem(
                                   enabled: false,
                                   value: -1,
-                                  child: Text('Transactions',
+                                  child: Text(S.of(context).transactions,
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black))),
@@ -399,7 +404,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                Text('Incoming'),
+                                                Text(S.of(context).incoming),
                                                 Checkbox(
                                                   value: actionListStore
                                                       .transactionFilterStore
@@ -418,7 +423,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                Text('Outgoing'),
+                                                Text(S.of(context).outgoing),
                                                 Checkbox(
                                                   value: actionListStore
                                                       .transactionFilterStore
@@ -431,12 +436,13 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                               ]))),
                               PopupMenuItem(
                                   value: 2,
-                                  child: Text('Transactions by date')),
+                                  child:
+                                      Text(S.of(context).transactions_by_date)),
                               PopupMenuDivider(),
                               PopupMenuItem(
                                   enabled: false,
                                   value: -1,
-                                  child: Text('Trades',
+                                  child: Text(S.of(context).trades,
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black))),
@@ -483,12 +489,13 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                                 )
                                               ])))
                             ],
-                            child: Text('Filters',
+                            child: Text(S.of(context).filters,
                                 style: TextStyle(
                                     fontSize: 16.0,
-                                    color: _isDarkTheme
-                                        ? PaletteDark.darkThemeGrey
-                                        : Palette.wildDarkBlue)),
+                                    color: Theme.of(context)
+                                        .primaryTextTheme
+                                        .subtitle
+                                        .color)),
                             onSelected: (item) async {
                               if (item == 2) {
                                 final List<DateTime> picked =
@@ -529,14 +536,14 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                 if (item is TransactionListItem) {
                   final transaction = item.transaction;
                   final savedDisplayMode = settingsStore.balanceDisplayMode;
-                  final formattedAmount = savedDisplayMode.serialize() ==
-                          BalanceDisplayMode.hiddenBalance.serialize()
-                      ? '---'
-                      : transaction.amountFormatted();
-                  final formattedFiatAmount = savedDisplayMode.serialize() ==
-                          BalanceDisplayMode.hiddenBalance.serialize()
-                      ? '---'
-                      : transaction.fiatAmount();
+                  final formattedAmount =
+                      savedDisplayMode == BalanceDisplayMode.hiddenBalance
+                          ? '---'
+                          : transaction.amountFormatted();
+                  final formattedFiatAmount =
+                      savedDisplayMode == BalanceDisplayMode.hiddenBalance
+                          ? '---'
+                          : transaction.fiatAmount();
 
                   return TransactionRow(
                       onTap: () => Navigator.of(context).pushNamed(
@@ -547,16 +554,14 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                           transactionDateFormat.format(transaction.date),
                       formattedAmount: formattedAmount,
                       formattedFiatAmount: formattedFiatAmount,
-                      isPending: transaction.isPending,
-                      isDarkTheme: _isDarkTheme);
+                      isPending: transaction.isPending);
                 }
 
                 if (item is TradeListItem) {
                   final trade = item.trade;
                   final savedDisplayMode = settingsStore.balanceDisplayMode;
                   final formattedAmount = trade.amount != null
-                      ? savedDisplayMode.serialize() ==
-                              BalanceDisplayMode.hiddenBalance.serialize()
+                      ? savedDisplayMode == BalanceDisplayMode.hiddenBalance
                           ? '---'
                           : trade.amount
                       : trade.amount;
@@ -569,8 +574,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                       to: trade.to,
                       createdAtFormattedDate:
                           DateFormat("dd.MM.yyyy, H:m").format(trade.createdAt),
-                      formattedAmount: formattedAmount,
-                      isDarkTheme: _isDarkTheme);
+                      formattedAmount: formattedAmount);
                 }
 
                 return Container();

@@ -109,11 +109,11 @@ class ChangeNowExchangeProvider extends ExchangeProvider {
     }
 
     final responseJSON = json.decode(response.body);
-
+    
     return Trade(
         id: id,
-        from: CryptoCurrency.fromString(responseJSON['from']),
-        to: CryptoCurrency.fromString(responseJSON['to']),
+        from: CryptoCurrency.fromString(responseJSON['fromCurrency']),
+        to: CryptoCurrency.fromString(responseJSON['toCurrency']),
         provider: description,
         inputAddress: responseJSON['payinAddress'],
         amount: responseJSON['amountSend'],

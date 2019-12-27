@@ -1,8 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/palette.dart';
 
 class PrimaryButton extends StatelessWidget {
@@ -19,13 +16,6 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
 
     return ButtonTheme(
         minWidth: double.infinity,
@@ -39,7 +29,7 @@ class PrimaryButton extends StatelessWidget {
           child: Text(text,
               style: TextStyle(
                   fontSize: 16.0,
-                  color: _isDarkTheme ? Palette.wildDarkBlue : Colors.black)),
+                  color: Theme.of(context).primaryTextTheme.button.color)),
         ));
   }
 }
@@ -60,13 +50,6 @@ class LoadingPrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
 
     return ButtonTheme(
         minWidth: double.infinity,
@@ -82,8 +65,7 @@ class LoadingPrimaryButton extends StatelessWidget {
               : Text(text,
                   style: TextStyle(
                       fontSize: 16.0,
-                      color:
-                          _isDarkTheme ? Palette.wildDarkBlue : Colors.black)),
+                      color: Theme.of(context).primaryTextTheme.button.color)),
         ));
   }
 }
@@ -109,13 +91,6 @@ class PrimaryIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
 
     return ButtonTheme(
         minWidth: double.infinity,
@@ -146,9 +121,7 @@ class PrimaryIconButton extends StatelessWidget {
                   child: Text(text,
                       style: TextStyle(
                           fontSize: 16.0,
-                          color: _isDarkTheme
-                              ? Palette.wildDarkBlue
-                              : Colors.black)),
+                          color: Theme.of(context).primaryTextTheme.button.color)),
                 ),
               )
             ],
@@ -200,7 +173,9 @@ class PrimaryImageButton extends StatelessWidget {
                     Container(
                       height: 56.0,
                       child: Center(
-                        child: Text(text, style: TextStyle(fontSize: 18.0)),
+                        child: Text(text, style: TextStyle(fontSize: 18.0,
+                          color: Theme.of(context).primaryTextTheme.button.color
+                        )),
                       ),
                     )
                   ]))

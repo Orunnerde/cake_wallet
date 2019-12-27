@@ -4,7 +4,6 @@ import 'package:cake_wallet/src/widgets/nav_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/palette.dart';
 
 enum AppBarStyle { regular, withShadow }
 
@@ -42,7 +41,7 @@ abstract class BasePage extends StatelessWidget {
 
     return SizedBox(
       height: 37,
-      width: isModalBackButton ? 37 : 10,
+      width: isModalBackButton ? 37 : 20,
       child: ButtonTheme(
         minWidth: double.minPositive,
         child: FlatButton(
@@ -56,14 +55,6 @@ abstract class BasePage extends StatelessWidget {
   }
 
   Widget middle(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
-
     return title == null
         ? null
         : Text(
@@ -71,8 +62,7 @@ abstract class BasePage extends StatelessWidget {
             style: TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.w600,
-                color:
-                    _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black),
+                color: Theme.of(context).primaryTextTheme.title.color),
           );
   }
 

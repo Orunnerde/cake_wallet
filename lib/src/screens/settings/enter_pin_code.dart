@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class EnterPinCode extends StatefulWidget{
 
@@ -80,7 +81,7 @@ class EnterPinCodeState extends State<EnterPinCode>{
           child: Column(
             children: <Widget>[
               Spacer(flex: 2),
-              Text('Enter your pin',
+              Text(S.of(context).enter_your_pin,
                 style: TextStyle(
                   fontSize: 24,
                   color: Palette.wildDarkBlue
@@ -175,10 +176,10 @@ class EnterPinCodeState extends State<EnterPinCode>{
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Text("PIN is incorrect"),
+            content: Text(S.of(context).pin_is_incorrect),
             actions: <Widget>[
               FlatButton(
-                child: Text("OK"),
+                child: Text(S.of(context).ok),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },

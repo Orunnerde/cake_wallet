@@ -1,4 +1,7 @@
 -
+  uri: xmr-node-uk.cakewallet.com:18081
+  is_default: true
+-
   uri: eu-node.cakewallet.io:18081
   login: cake
   password: public_node
@@ -10,7 +13,7 @@
   is_default: false
 -
   uri: node.moneroworld.com:18089
-  is_default: true
+  is_default: false
 -
   uri: node.xmr.pt:18081
   is_default: false

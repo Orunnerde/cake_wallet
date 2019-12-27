@@ -1,5 +1,6 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
+import 'package:flutter/foundation.dart';
 import 'package:cw_monero/signatures.dart';
 import 'package:cw_monero/types.dart';
 import 'package:cw_monero/monero_api.dart';
@@ -39,14 +40,33 @@ List<SubaddressRow> getAllSubaddresses() {
       .toList();
 }
 
-addSubaddress({int accountIndex, String label}) {
+addSubaddressSync({int accountIndex, String label}) {
   final labelPointer = Utf8.toUtf8(label);
   subaddrressAddNewNative(accountIndex, labelPointer);
   free(labelPointer);
 }
 
-setLabelForSubaddress({int accountIndex, int addressIndex, String label}) {
+setLabelForSubaddressSync({int accountIndex, int addressIndex, String label}) {
   final labelPointer = Utf8.toUtf8(label);
   subaddrressSetLabelNative(accountIndex, addressIndex, labelPointer);
   free(labelPointer);
 }
+
+_addSubaddress(Map args) =>
+    addSubaddressSync(accountIndex: args['accountIndex'], label: args['label']);
+
+_setLabelForSubaddress(Map args) => setLabelForSubaddressSync(
+    accountIndex: args['accountIndex'],
+    addressIndex: args['addressIndex'],
+    label: args['label']);
+
+Future addSubaddress({int accountIndex, String label}) async =>
+    compute(_addSubaddress, {'accountIndex': accountIndex, 'label': label});
+
+Future setLabelForSubaddress(
+        {int accountIndex, int addressIndex, String label}) =>
+    compute(_setLabelForSubaddress, {
+      'accountIndex': accountIndex,
+      'addressIndex': addressIndex,
+      'label': label
+    });

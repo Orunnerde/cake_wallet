@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
-import 'package:cake_wallet/src/domain/monero/monero_amount_format.dart';
 import 'package:cake_wallet/src/stores/price/price_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
@@ -10,8 +8,11 @@ import 'package:cake_wallet/src/domain/common/transaction_info.dart';
 import 'package:cake_wallet/src/domain/common/wallet.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/domain/monero/monero_wallet.dart';
-import 'package:cake_wallet/src/stores/settings/settings_store.dart';
+import 'package:cake_wallet/src/domain/common/calculate_fiat_amount_raw.dart';
+import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/src/domain/monero/monero_amount_format.dart';
 import 'package:cake_wallet/src/domain/exchange/trade_history.dart';
+import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/src/stores/action_list/action_list_display_mode.dart';
 import 'package:cake_wallet/src/stores/action_list/action_list_item.dart';
 import 'package:cake_wallet/src/stores/action_list/date_section_item.dart';
@@ -94,6 +95,9 @@ abstract class ActionListBase with Store {
 
     return formattedItemsList(_items);
   }
+
+  @computed
+  int get totalCount => transactions.length + trades.length;
 
   TransactionFilterStore transactionFilterStore;
   TradeFilterStore tradeFilterStore;

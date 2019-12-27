@@ -1,10 +1,9 @@
-import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:cw_monero/account_list.dart' as accountListAPI;
 import 'package:cake_wallet/src/domain/monero/account.dart';
 
 class AccountList {
-  get subaddresses => _accounts.stream;
+  get accounts => _accounts.stream;
   BehaviorSubject<List<Account>> _accounts;
 
   bool _isRefreshing;
@@ -40,13 +39,14 @@ class AccountList {
         .toList();
   }
 
-  addAccount({String label}) {
-    accountListAPI.addAccount(label: label);
+  Future addAccount({String label}) async {
+    await accountListAPI.addAccount(label: label);
+    await update();
   }
 
-  setLabelSubaddress({int accountIndex, String label}) {
-    accountListAPI.setLabelForAccount(accountIndex: accountIndex, label: label);
-    update();
+  Future setLabelSubaddress({int accountIndex, String label}) async {
+    await accountListAPI.setLabelForAccount(accountIndex: accountIndex, label: label);
+    await update();
   }
 
   refresh() {
@@ -58,7 +58,7 @@ class AccountList {
       _isRefreshing = true;
       accountListAPI.refreshAccounts();
       _isRefreshing = false;
-    } on PlatformException catch (e) {
+    } catch (e) {
       _isRefreshing = false;
       print(e);
       throw e;

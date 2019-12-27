@@ -1,9 +1,9 @@
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/palette.dart';
-import 'package:provider/provider.dart';
-import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/src/stores/settings/settings_store.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 abstract class PinCodeWidget extends StatefulWidget {
   Function(List<int> pin, PinCodeState state) onPinCodeEntered;
@@ -33,7 +33,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
 
   int pinLength = defaultPinLength;
   List<int> pin = List<int>.filled(defaultPinLength, null);
-  String title = 'Enter your pin';
+  String title = S.current.enter_your_pin;
   double _aspectRatio = 0;
 
   void setTitle(String title) {
@@ -57,7 +57,14 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
     });
   }
 
-  _getCurrentAspectRatio() {
+  setDefaultPinLength() {
+    final settingsStore = Provider.of<SettingsStore>(context);
+
+    pinLength = settingsStore.defaultPinLength;
+    changePinLength(pinLength);
+  }
+
+  getCurrentAspectRatio() {
     final RenderBox renderBox = _gridViewKey.currentContext.findRenderObject();
 
     double cellWidth = renderBox.size.width / 3;
@@ -69,11 +76,12 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
+    WidgetsBinding.instance.addPostFrameCallback(afterLayout);
   }
 
-  _afterLayout(_) {
-    _getCurrentAspectRatio();
+  afterLayout(_) {
+    setDefaultPinLength();
+    getCurrentAspectRatio();
   }
 
   @override
@@ -82,13 +90,6 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
   }
 
   Widget body(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
 
     return SafeArea(
         child: Container(
@@ -152,9 +153,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
                                   left: marginLeft, right: marginRight),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemePinButton
-                                    : Palette.darkGrey,
+                                color: Theme.of(context).buttonColor,
                               ),
                             );
                           } else if (index == 10) {
@@ -165,9 +164,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
                                   left: marginLeft, right: marginRight),
                               child: FlatButton(
                                 onPressed: () => _pop(),
-                                color: _isDarkTheme
-                                    ? PaletteDark.darkThemePinButton
-                                    : Palette.darkGrey,
+                                color: Theme.of(context).buttonColor,
                                 shape: CircleBorder(),
                                 child: deleteIconImage,
                               ),
@@ -181,9 +178,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
                                 left: marginLeft, right: marginRight),
                             child: FlatButton(
                               onPressed: () => _push(index),
-                              color: _isDarkTheme
-                                  ? PaletteDark.darkThemePinDigitButton
-                                  : Palette.creamyGrey,
+                              color: Theme.of(context).accentTextTheme.title.backgroundColor,
                               shape: CircleBorder(),
                               child: Text('$index',
                                   style: TextStyle(
@@ -238,10 +233,10 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
   }
 
   String _changePinLengthText() {
-    return 'Use ' +
+    return S.current.use +
         (pinLength == PinCodeState.fourPinLength
             ? '${PinCodeState.sixPinLength}'
             : '${PinCodeState.fourPinLength}') +
-        '-digit Pin';
+        S.current.digit_pin;
   }
 }

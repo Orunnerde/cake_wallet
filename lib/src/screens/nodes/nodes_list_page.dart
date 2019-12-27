@@ -4,27 +4,20 @@ import 'package:provider/provider.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/generated/i18n.dart';
+import 'package:cake_wallet/src/screens/nodes/node_indicator.dart';
 import 'package:cake_wallet/src/stores/node_list/node_list_store.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/src/widgets/standart_switch.dart';
 
 class NodeListPage extends BasePage {
   NodeListPage();
 
-  String get title => 'Nodes';
+  String get title => S.current.nodes;
 
   @override
   Widget trailing(context) {
     final nodeList = Provider.of<NodeListStore>(context);
-
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) _isDarkTheme = true;
-    else _isDarkTheme = false;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -38,11 +31,11 @@ class NodeListPage extends BasePage {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text(
-                          'Reset settings',
+                          S.of(context).node_reset_settings_title,
                           textAlign: TextAlign.center,
                         ),
                         content: Text(
-                          'Are you sure that you want to reset settings to default?',
+                          S.of(context).nodes_list_reset_to_default_message,
                           textAlign: TextAlign.center,
                         ),
                         actions: <Widget>[
@@ -50,32 +43,30 @@ class NodeListPage extends BasePage {
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text('Cancel')),
+                              child: Text(S.of(context).cancel)),
                           FlatButton(
                               onPressed: () async {
                                 Navigator.pop(context);
                                 await nodeList.reset();
                               },
-                              child: Text('Reset'))
+                              child: Text(S.of(context).reset))
                         ],
                       );
                     });
               },
               child: Text(
-                'Reset',
-                style: TextStyle(fontSize: 16.0,
-                    color: _isDarkTheme ? PaletteDark.darkThemeGrey : Palette.wildDarkBlue
-                ),
+                S.of(context).reset,
+                style: TextStyle(
+                    fontSize: 16.0,
+                    color: Theme.of(context).primaryTextTheme.subtitle.color),
               )),
         ),
         Container(
             width: 28.0,
             height: 28.0,
-            decoration:
-                BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _isDarkTheme ? PaletteDark.darkThemeViolet : Palette.purple
-                ),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Theme.of(context).selectedRowColor),
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[
@@ -98,24 +89,22 @@ class NodeListPage extends BasePage {
   }
 
   @override
-  Widget body(context) {
+  Widget body(context) => NodeListPageBody();
+}
+
+class NodeListPageBody extends StatefulWidget {
+  @override
+  createState() => NodeListPageBodyState();
+}
+
+class NodeListPageBodyState extends State<NodeListPageBody> {
+  @override
+  Widget build(BuildContext context) {
     final nodeList = Provider.of<NodeListStore>(context);
     final settings = Provider.of<SettingsStore>(context);
 
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    Color _currentColor, _notCurrentColor;
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) {
-      _currentColor = PaletteDark.darkThemeViolet;
-      _notCurrentColor = Theme.of(context).backgroundColor;
-      _isDarkTheme = true;
-    }
-    else {
-      _currentColor = Palette.purple;
-      _notCurrentColor = Colors.white;
-      _isDarkTheme = false;
-    }
+    final currentColor = Theme.of(context).selectedRowColor;
+    final notCurrentColor = Theme.of(context).backgroundColor;
 
     return Container(
       padding: EdgeInsets.only(bottom: 20.0),
@@ -123,10 +112,8 @@ class NodeListPage extends BasePage {
         children: <Widget>[
           Expanded(child: Observer(builder: (context) {
             return ListView.separated(
-                separatorBuilder: (_, __) =>
-                    Divider(
-                        color: _isDarkTheme ? PaletteDark.darkThemeDarkGrey : Palette.lightGrey,
-                        height: 1),
+                separatorBuilder: (_, __) => Divider(
+                    color: Theme.of(context).dividerTheme.color, height: 1),
                 itemCount: nodeList.nodes.length,
                 itemBuilder: (BuildContext context, int index) {
                   final node = nodeList.nodes[index];
@@ -137,22 +124,30 @@ class NodeListPage extends BasePage {
                         : node.id == settings.node.id;
 
                     final content = Container(
-                        color: isCurrent ? _currentColor : _notCurrentColor,
+                        color: isCurrent ? currentColor : notCurrentColor,
                         child: ListTile(
                           title: Text(
                             node.uri,
                             style: TextStyle(
                                 fontSize: 16.0,
-                                color: _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black
-                            ),
+                                color: Theme.of(context)
+                                    .primaryTextTheme
+                                    .title
+                                    .color),
                           ),
-                          trailing: Container(
-                            width: 10.0,
-                            height: 10.0,
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: isCurrent ? Palette.green : Palette.red),
-                          ),
+                          trailing: FutureBuilder(
+                              future: nodeList.isNodeOnline(node),
+                              builder: (context, snapshot) {
+                                switch (snapshot.connectionState) {
+                                  case ConnectionState.done:
+                                    return NodeIndicator(
+                                        color: snapshot.data
+                                            ? Palette.green
+                                            : Palette.red);
+                                  default:
+                                    return NodeIndicator();
+                                }
+                              }),
                           onTap: () async {
                             if (!isCurrent) {
                               await showDialog(
@@ -160,22 +155,23 @@ class NodeListPage extends BasePage {
                                   builder: (BuildContext context) {
                                     return AlertDialog(
                                       content: Text(
-                                        'Are you sure to change current node to '
-                                        '${node.uri}?',
+                                        S
+                                            .of(context)
+                                            .change_current_node(node.uri),
                                         textAlign: TextAlign.center,
                                       ),
                                       actions: <Widget>[
                                         FlatButton(
                                             onPressed: () =>
                                                 Navigator.pop(context),
-                                            child: const Text('Cancel')),
+                                            child: Text(S.of(context).cancel)),
                                         FlatButton(
                                             onPressed: () async {
                                               Navigator.of(context).pop();
                                               await settings.setCurrentNode(
                                                   node: node);
                                             },
-                                            child: const Text('Change')),
+                                            child: Text(S.of(context).change)),
                                       ],
                                     );
                                   });
@@ -192,33 +188,29 @@ class NodeListPage extends BasePage {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: const Text(
-                                        'Remove node',
+                                      title: Text(
+                                        S.of(context).remove_node,
                                         textAlign: TextAlign.center,
                                       ),
-                                      content: const Text(
-                                        'Are you sure that you want to remove selected node?',
+                                      content: Text(
+                                        S.of(context).remove_node_message,
                                         textAlign: TextAlign.center,
                                       ),
                                       actions: <Widget>[
                                         FlatButton(
                                             onPressed: () =>
                                                 Navigator.pop(context, false),
-                                            child: const Text('Cancel')),
+                                            child: Text(S.of(context).cancel)),
                                         FlatButton(
                                             onPressed: () =>
                                                 Navigator.pop(context, true),
-                                            child: const Text('Remove')),
+                                            child: Text(S.of(context).remove)),
                                       ],
                                     );
                                   });
                             },
-                            onDismissed: (direction) async {
-                              await nodeList.remove(node: node);
-                              // setState(() {
-                              //   _nodes.remove(_nodes.keys.elementAt(index));
-                              // });
-                            },
+                            onDismissed: (direction) async =>
+                                await nodeList.remove(node: node),
                             direction: DismissDirection.endToStart,
                             background: Container(
                                 padding: EdgeInsets.only(right: 10.0),
@@ -232,8 +224,8 @@ class NodeListPage extends BasePage {
                                       CupertinoIcons.delete,
                                       color: Colors.white,
                                     ),
-                                    const Text(
-                                      'Delete',
+                                    Text(
+                                      S.of(context).delete,
                                       style: TextStyle(color: Colors.white),
                                     )
                                   ],

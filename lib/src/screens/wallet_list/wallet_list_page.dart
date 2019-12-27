@@ -1,22 +1,21 @@
-import 'package:cake_wallet/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/domain/common/wallet_description.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
 import 'package:cake_wallet/src/stores/wallet_list/wallet_list_store.dart';
-import 'package:cake_wallet/theme_changer.dart';
-import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/src/screens/wallet_list/wallet_menu.dart';
 import 'package:cake_wallet/src/widgets/picker.dart';
 
 class WalletListPage extends BasePage {
   bool get isModalBackButton => true;
-  String get title => 'Monero Wallet';
+  String get title => S.current.wallet_list_title;
   AppBarStyle get appBarStyle => AppBarStyle.withShadow;
 
   @override
@@ -36,21 +35,19 @@ class WalletListBodyState extends State<WalletListBody> {
     List<String> items = walletMenu.generateItemsForWalletMenu(isCurrentWallet);
 
     showDialog(
-        context: bodyContext,
-        builder: (_) => Picker(
-            items: items,
-            selectedAtIndex: -1,
-            title: 'Wallet Menu',
-            onItemSelected: (item) =>
-                walletMenu.action(item, wallet, isCurrentWallet)),
-        );
+      context: bodyContext,
+      builder: (_) => Picker(
+          items: items,
+          selectedAtIndex: -1,
+          title: S.of(context).wallet_menu,
+          onItemSelected: (item) => walletMenu.action(
+              walletMenu.listItems.indexOf(item), wallet, isCurrentWallet)),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     _walletListStore = Provider.of<WalletListStore>(context);
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    final _isDarkTheme = _themeChanger.getTheme() == Themes.darkTheme;
 
     return ScrollableWithBottomSection(
         content: Container(
@@ -60,10 +57,7 @@ class WalletListBodyState extends State<WalletListBody> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 separatorBuilder: (_, index) => Divider(
-                    color: _isDarkTheme
-                        ? PaletteDark.darkThemeGreyWithOpacity
-                        : Palette.lightGrey,
-                    height: 1.0),
+                    color: Theme.of(context).dividerTheme.color, height: 1.0),
                 itemCount: _walletListStore.wallets.length,
                 itemBuilder: (__, index) {
                   final wallet = _walletListStore.wallets[index];
@@ -81,9 +75,10 @@ class WalletListBodyState extends State<WalletListBody> {
                                 style: TextStyle(
                                     color: isCurrentWallet
                                         ? Palette.cakeGreen
-                                        : _isDarkTheme
-                                            ? PaletteDark.darkThemeGrey
-                                            : Colors.black,
+                                        : Theme.of(context)
+                                            .primaryTextTheme
+                                            .headline
+                                            .color,
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.w600),
                               ),
@@ -102,33 +97,23 @@ class WalletListBodyState extends State<WalletListBody> {
               onPressed: () =>
                   Navigator.of(context).pushNamed(Routes.newWallet),
               iconData: Icons.add,
-              color: _isDarkTheme
-                  ? PaletteDark.darkThemePurpleButton
-                  : Palette.purple,
-              borderColor: _isDarkTheme
-                  ? PaletteDark.darkThemePurpleButtonBorder
-                  : Palette.deepPink,
+              color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+              borderColor:
+                  Theme.of(context).primaryTextTheme.button.decorationColor,
               iconColor: Palette.violet,
-              iconBackgroundColor:
-                  _isDarkTheme ? PaletteDark.darkThemeViolet : Colors.white,
-              text: 'Create New Wallet'),
+              iconBackgroundColor: Theme.of(context).primaryIconTheme.color,
+              text: S.of(context).wallet_list_create_new_wallet),
           SizedBox(height: 10.0),
           PrimaryIconButton(
-            onPressed: () =>
-                Navigator.of(context).pushNamed(Routes.restoreWalletOptions),
-            iconData: Icons.refresh,
-            text: 'Restore Wallet',
-            color: _isDarkTheme
-                ? PaletteDark.darkThemeIndigoButton
-                : Palette.indigo,
-            borderColor: _isDarkTheme
-                ? PaletteDark.darkThemeIndigoButtonBorder
-                : Palette.deepIndigo,
-            iconColor: _isDarkTheme ? Colors.white : Colors.black,
-            iconBackgroundColor: _isDarkTheme
-                ? PaletteDark.darkThemeIndigoButtonBorder
-                : Colors.white,
-          )
+              onPressed: () =>
+                  Navigator.of(context).pushNamed(Routes.restoreWalletOptions),
+              iconData: Icons.refresh,
+              text: S.of(context).wallet_list_restore_wallet,
+              color: Theme.of(context).accentTextTheme.button.backgroundColor,
+              borderColor:
+                  Theme.of(context).accentTextTheme.button.decorationColor,
+              iconColor: Theme.of(context).primaryTextTheme.caption.color,
+              iconBackgroundColor: Theme.of(context).accentIconTheme.color)
         ]));
   }
 }

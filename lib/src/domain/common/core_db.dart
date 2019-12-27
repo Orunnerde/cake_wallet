@@ -52,6 +52,7 @@ class CoreDB {
             '${TradeHistory.fromColumn} NUMERIC,' +
             '${TradeHistory.toColumn} NUMERIC,' +
             '${TradeHistory.amountColumn} TEXT,' +
+            '${TradeHistory.walletIdColumn} TEXT,' +
             '${TradeHistory.dateColumn} INTEGER);');
         await db.execute('CREATE TABLE ${RecipientAddressList.tableName}' +
             '(${RecipientAddressList.idColumn} INTEGER PRIMARY KEY,' +

@@ -1,3 +1,4 @@
+import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
@@ -10,6 +11,7 @@ import 'package:cake_wallet/src/domain/exchange/xmrto/xmrto_trade_request.dart';
 import 'package:cake_wallet/src/domain/exchange/trade_history.dart';
 import 'package:cake_wallet/src/stores/exchange/exchange_trade_state.dart';
 import 'package:cake_wallet/src/stores/exchange/limits_state.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 part 'exchange_store.g.dart';
 
@@ -52,12 +54,15 @@ abstract class ExchangeStoreBase with Store {
 
   String receiveAddress;
 
+  WalletStore walletStore;
+
   ExchangeStoreBase(
       {@required ExchangeProvider initialProvider,
       @required CryptoCurrency initialDepositCurrency,
       @required CryptoCurrency initialReceiveCurrency,
       @required this.providerList,
-      @required this.tradeHistory}) {
+      @required this.tradeHistory,
+      @required this.walletStore}) {
     provider = initialProvider;
     depositCurrency = initialDepositCurrency;
     receiveCurrency = initialReceiveCurrency;
@@ -69,6 +74,8 @@ abstract class ExchangeStoreBase with Store {
   @action
   void changeProvider({ExchangeProvider provider}) {
     this.provider = provider;
+    depositAmount = '';
+    receiveAmount = '';
   }
 
   @action
@@ -156,6 +163,7 @@ abstract class ExchangeStoreBase with Store {
     try {
       tradeState = TradeIsCreating();
       final trade = await provider.createTrade(request: request);
+      trade.walletId = walletStore.id;
       await tradeHistory.add(trade: trade);
       tradeState = TradeIsCreatedSuccessfully(trade: trade);
     } catch (e) {
@@ -204,7 +212,7 @@ abstract class ExchangeStoreBase with Store {
           _providerForPair(from: depositCurrency, to: receiveCurrency);
 
       if (provider != null) {
-        this.provider = provider;
+        changeProvider(provider: provider);
       }
     }
 
@@ -242,13 +250,13 @@ abstract class ExchangeStoreBase with Store {
           isValid = (value.length == 34);
       }
     }
-    errorMessage = isValid ? null : 'Wallet address must correspond to the type\nof cryptocurrency';
+    errorMessage = isValid ? null : S.current.error_text_address;
   }
 
   void validateCryptoCurrency(String value) {
     String p = '^([0-9]+([.][0-9]{0,12})?|[.][0-9]{1,12})\$';
     RegExp regExp = new RegExp(p);
     isValid = regExp.hasMatch(value);
-    errorMessage = isValid ? null : "The number of fraction digits\nmust be less or equal to 12";
+    errorMessage = isValid ? null : S.current.error_text_crypto_currency;
   }
 }

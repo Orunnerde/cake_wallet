@@ -20,10 +20,8 @@ abstract class ExchangeTradeStoreBase with Store {
   bool isSendable;
 
   ExchangeProvider _provider;
-  WalletStore _walletStore;
 
   ExchangeTradeStoreBase({@required this.trade, @required WalletStore walletStore}) {
-    _walletStore = walletStore;
     isSendable = trade.from == walletStore.type || trade.provider == ExchangeProviderDescription.xmrto;
 
     switch (trade.provider) {
@@ -49,7 +47,6 @@ abstract class ExchangeTradeStoreBase with Store {
       }
 
       trade = updatedTrade;
-      print('Trade updated');
     } catch (e) {
       print(e.toString());
     }

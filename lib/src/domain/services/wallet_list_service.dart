@@ -132,27 +132,12 @@ class WalletListService {
     }
   }
 
-  Future rescanCurrentWallet({int restoreHeight = 0}) async {
-    await rescanWallet(walletService.currentWallet,
-        restoreHeight: restoreHeight);
-  }
-
-  Future rescanWallet(Wallet wallet, {int restoreHeight = 0}) async {
-    final seed = await wallet.getSeed();
-    final name = await wallet.getName();
-    await wallet.close();
-    walletService.currentWallet = null;
-    await remove(WalletDescription(name: name, type: wallet.getType()));
-    await restoreFromSeed(name, seed, restoreHeight);
-  }
-
   Future onWalletChange(Wallet wallet) async {
     walletService.currentWallet = wallet;
     final walletName = await wallet.getName();
     await sharedPreferences.setString('current_wallet_name', walletName);
   }
 
-  Future remove(WalletDescription wallet) async {
-    await walletsManager.remove(wallet);
-  }
+  Future remove(WalletDescription wallet) async =>
+      await walletsManager.remove(wallet);
 }

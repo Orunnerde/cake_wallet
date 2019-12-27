@@ -77,7 +77,9 @@ int getHeigthByDate({DateTime date}) {
 
   if (endHeight <= 0) {
     endHeight = dates.values.toList()[dates.length - 1];
-    preLastMonth = date. month - 2;    
+    final preLastDate = dateFormat.parse(dates.keys.elementAt(dates.keys.length - 2));
+    preLastYear = preLastDate.year;
+    preLastMonth = preLastDate.month;
   } else {
     preLastYear = date.year;
     preLastMonth = date.month - 1;

@@ -36,7 +36,7 @@ class DisclaimerPageBody extends StatefulWidget {
 
 class DisclaimerBodyState extends State<DisclaimerPageBody> {
   static const xmrto_url = 'https://xmr.to/app_static/html/tos.html';
-  static const morphtoken_url = 'https://www.morphtoken.com/terms/';
+  static const changenow_url = 'https://changenow.io/terms-of-use';
 
   bool _isAccepted;
   bool _checked = false;
@@ -90,13 +90,6 @@ class DisclaimerBodyState extends State<DisclaimerPageBody> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme)
-      _isDarkTheme = true;
-    else
-      _isDarkTheme = false;
 
     return Column(
       children: <Widget>[
@@ -197,17 +190,17 @@ class DisclaimerBodyState extends State<DisclaimerPageBody> {
                     children: <Widget>[
                       Expanded(
                           child: GestureDetector(
-                        onTap: () => launchUrl(morphtoken_url),
-                        child: Text(
-                          morphtoken_url,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              color: Colors.blue,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.normal,
-                              decoration: TextDecoration.underline),
-                        ),
-                      ))
+                            onTap: () => launchUrl(changenow_url),
+                            child: Text(
+                              changenow_url,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.normal,
+                                  decoration: TextDecoration.underline),
+                            ),
+                          ))
                     ],
                   ),
                   SizedBox(
@@ -227,14 +220,8 @@ class DisclaimerBodyState extends State<DisclaimerPageBody> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            _isDarkTheme
-                                ? Theme.of(context)
-                                    .backgroundColor
-                                    .withOpacity(0.0)
-                                : Colors.white.withOpacity(0.0),
-                            _isDarkTheme
-                                ? Theme.of(context).backgroundColor
-                                : Colors.white,
+                            Theme.of(context).backgroundColor.withOpacity(0.0),
+                            Theme.of(context).backgroundColor,
                           ],
                           begin: FractionalOffset.topCenter,
                           end: FractionalOffset.bottomCenter,
@@ -304,12 +291,8 @@ class DisclaimerBodyState extends State<DisclaimerPageBody> {
                   child: PrimaryButton(
                     onPressed: _checked ? () {} : null,
                     text: 'Accept',
-                    color: _isDarkTheme
-                        ? PaletteDark.darkThemePurpleButton
-                        : Palette.purple,
-                    borderColor: _isDarkTheme
-                        ? PaletteDark.darkThemePurpleButtonBorder
-                        : Palette.deepPink,
+                    color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+                    borderColor: Theme.of(context).primaryTextTheme.button.decorationColor,
                   ),
                 )
               : Offstage(),

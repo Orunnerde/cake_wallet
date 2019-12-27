@@ -51,7 +51,7 @@ class TransactionInfo {
         height = row.blockHeight,
         direction = parseTransactionDirectionFromInt(row.direction) ??
             TransactionDirection.incoming,
-        date = DateTime.fromMillisecondsSinceEpoch(row.datetime * 1000),
+        date = DateTime.fromMillisecondsSinceEpoch(row.getDatetime() * 1000),
         isPending = row.isPending != 0,
         amount = row.getAmount(),
         accountIndex = row.subaddrAccount;

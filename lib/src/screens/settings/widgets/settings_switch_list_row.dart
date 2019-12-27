@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:cake_wallet/palette.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/src/widgets/standart_switch.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
+import 'package:cake_wallet/src/widgets/standart_switch.dart';
 
 class SettingsSwitchListRow extends StatelessWidget {
   final String title;
@@ -16,7 +16,8 @@ class SettingsSwitchListRow extends StatelessWidget {
     final settingsStore = Provider.of<SettingsStore>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
 
-    if (title == 'Save recipient address') {
+    if (settingsStore.itemHeaders[title] ==
+        S.of(context).settings_save_recipient_address) {
       return Observer(
           builder: (_) => StandartSwitch(
               value: settingsStore.shouldSaveRecipientAddress,
@@ -27,7 +28,8 @@ class SettingsSwitchListRow extends StatelessWidget {
               }));
     }
 
-    if (title == 'Allow biometrical authentication') {
+    if (settingsStore.itemHeaders[title] ==
+        S.of(context).settings_allow_biometrical_authentication) {
       return Observer(
           builder: (_) => StandartSwitch(
               value: settingsStore.allowBiometricalAuthentication,
@@ -39,7 +41,7 @@ class SettingsSwitchListRow extends StatelessWidget {
               }));
     }
 
-    if (title == 'Dark mode') {
+    if (settingsStore.itemHeaders[title] == S.of(context).settings_dark_mode) {
       return Observer(
           builder: (_) => StandartSwitch(
               value: settingsStore.isDarkTheme,
@@ -56,19 +58,17 @@ class SettingsSwitchListRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    bool _isDarkTheme = (_themeChanger.getTheme() == Themes.darkTheme);
+    final settingsStore = Provider.of<SettingsStore>(context);
 
     return Container(
-      color: _isDarkTheme ? PaletteDark.darkThemeMidGrey : Colors.white,
+      color: Theme.of(context).accentTextTheme.headline.backgroundColor,
       child: ListTile(
           contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
-          title: Text(
-            title,
-            style: TextStyle(
-                fontSize: 16.0,
-                color:
-                    _isDarkTheme ? PaletteDark.darkThemeTitle : Colors.black),
+          title: Observer(
+            builder: (_) => Text(settingsStore.itemHeaders[title],
+                style: TextStyle(
+                    fontSize: 16.0,
+                    color: Theme.of(context).primaryTextTheme.title.color)),
           ),
           trailing: _getSwitch(context)),
     );

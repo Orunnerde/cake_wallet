@@ -10,6 +10,7 @@ class TradeHistory {
   static const dateColumn = 'date';
   static const amountColumn = 'amount';
   static const transactionIdColumn = 'transactioin_id';
+  static const walletIdColumn = 'wallet_id';
 
   Database _db;
 

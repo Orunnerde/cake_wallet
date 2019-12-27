@@ -19,7 +19,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  intl: ^0.15.8
+  flutter_localizations:
+    sdk: flutter
+  flutter_cupertino_localizations: ^1.0.1
+  intl: ^0.16.0
   url_launcher: ^5.1.2
   qr: ^1.2.0
   uuid: 2.0.1
@@ -38,6 +41,7 @@ dependencies:
   share: ^0.6.2+1
   esys_flutter_share: ^1.0.2
   date_range_picker: ^1.0.6
+  dio: 3.0.7
   cw_monero:
     path: ./cw_monero
 

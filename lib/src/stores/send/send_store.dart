@@ -1,3 +1,4 @@
+import 'package:cake_wallet/src/stores/price/price_store.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
@@ -10,6 +11,7 @@ import 'package:cake_wallet/src/domain/monero/monero_transaction_creation_creden
 import 'package:cake_wallet/src/domain/common/recipient_address_list.dart';
 import 'package:cake_wallet/src/stores/send/sending_state.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 part 'send_store.g.dart';
 
@@ -18,6 +20,7 @@ class SendStore = SendStoreBase with _$SendStore;
 abstract class SendStoreBase with Store {
   WalletService walletService;
   SettingsStore settingsStore;
+  PriceStore priceStore;
   RecipientAddressList recipientAddressList;
 
   @observable
@@ -44,11 +47,18 @@ abstract class SendStoreBase with Store {
   SendStoreBase(
       {@required this.walletService,
       this.settingsStore,
-      this.recipientAddressList}) {
+      this.recipientAddressList,
+      this.priceStore}) {
     state = SendingStateInitial();
     _pendingTransaction = null;
     _cryptoNumberFormat = NumberFormat()..maximumFractionDigits = 12;
     _fiatNumberFormat = NumberFormat()..maximumFractionDigits = 2;
+
+    reaction((_) => this.state, (state) async {
+      if (state is TransactionCreatedSuccessfully) {
+        commitTransaction();
+      }
+    });
   }
 
   @action
@@ -59,7 +69,9 @@ abstract class SendStoreBase with Store {
     try {
       final _amount = amount != null
           ? amount
-          : cryptoAmount == 'ALL' ? null : cryptoAmount.replaceAll(',', '.');
+          : cryptoAmount == S.current.all
+              ? null
+              : cryptoAmount.replaceAll(',', '.');
       final credentials = MoneroTransactionCreationCredentials(
           address: address,
           paymentId: paymentId ?? '',
@@ -78,9 +90,9 @@ abstract class SendStoreBase with Store {
   Future commitTransaction() async {
     try {
       final transactionId = _pendingTransaction.hash;
-      state = TransactionCommiting();
+      // state = TransactionCommiting();
       await _pendingTransaction.commit();
-      state = TransactionCommitted();
+      // state = TransactionCommitted();
 
       if (settingsStore.shouldSaveRecipientAddress) {
         await recipientAddressList.add(
@@ -95,10 +107,9 @@ abstract class SendStoreBase with Store {
   }
 
   @action
-  void setSendAll(String availableBalance) {
-    /*cryptoAmount = 'ALL';
-    fiatAmount = '';*/
-    changeCryptoAmount(availableBalance);
+  void setSendAll() {
+    cryptoAmount = 'ALL';
+    fiatAmount = '';
   }
 
   @action
@@ -107,6 +118,8 @@ abstract class SendStoreBase with Store {
 
     if (cryptoAmount != null && cryptoAmount.isNotEmpty) {
       _calculateFiatAmount();
+    } else {
+      fiatAmount = '';
     }
   }
 
@@ -116,23 +129,37 @@ abstract class SendStoreBase with Store {
 
     if (fiatAmount != null && fiatAmount.isNotEmpty) {
       _calculateCryptoAmount();
+    } else {
+      cryptoAmount = '';
     }
   }
 
   @action
   Future _calculateFiatAmount() async {
-    final price =
-        await fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: settingsStore.fiatCurrency);
-    final amount = double.parse(cryptoAmount) * price;
-    fiatAmount = _fiatNumberFormat.format(amount);
+    final symbol = PriceStoreBase.generateSymbolForPair(
+        fiat: settingsStore.fiatCurrency, crypto: CryptoCurrency.xmr);
+    final price = priceStore.prices[symbol] ?? 0;
+
+    try {    
+      final amount = double.parse(cryptoAmount) * price;
+      fiatAmount = _fiatNumberFormat.format(amount);
+    } catch(e) {
+      fiatAmount = '0.00';
+    }
   }
 
   @action
   Future _calculateCryptoAmount() async {
-    final price =
-        await fetchPriceFor(crypto: CryptoCurrency.xmr, fiat: settingsStore.fiatCurrency);
-    final amount = double.parse(fiatAmount) / price;
-    cryptoAmount = _cryptoNumberFormat.format(amount);
+    final symbol = PriceStoreBase.generateSymbolForPair(
+        fiat: settingsStore.fiatCurrency, crypto: CryptoCurrency.xmr);
+    final price = priceStore.prices[symbol] ?? 0;
+    
+    try {
+      final amount = double.parse(fiatAmount) / price;
+      cryptoAmount = _cryptoNumberFormat.format(amount);
+    } catch(e) {
+      cryptoAmount = '0.00';
+    }
   }
 
   void validateAddress(String value, {CryptoCurrency cryptoCurrency}) {
@@ -161,7 +188,7 @@ abstract class SendStoreBase with Store {
           isValid = (value.length == 34);
       }
     }
-    errorMessage = isValid ? null : 'Wallet address must correspond to the type\nof cryptocurrency';
+    errorMessage = isValid ? null : S.current.error_text_address;
   }
 
   void validatePaymentID(String value) {
@@ -172,38 +199,44 @@ abstract class SendStoreBase with Store {
       RegExp regExp = new RegExp(p);
       isValid = regExp.hasMatch(value);
     }
-    errorMessage = isValid ? null : 'Payment ID can only contain from 16 to 64 chars in hex';
+    errorMessage = isValid ? null : S.current.error_text_payment_id;
   }
 
   void validateXMR(String value, String availableBalance) {
     const double maxValue = 18446744.073709551616;
-    String p = '^([0-9]+([.][0-9]{0,12})?|[.][0-9]{1,12})\$';
+    String p = '^([0-9]+([.][0-9]{0,12})?|[.][0-9]{1,12})\$|ALL';
     RegExp regExp = new RegExp(p);
     if (regExp.hasMatch(value)) {
-      try {
-        double dValue = double.parse(value);
-        double maxAvailable = double.parse(availableBalance);
-        isValid = (dValue <= maxAvailable && dValue <= maxValue && dValue > 0);
-      } catch (e) {
-        isValid = false;
+      if (value == 'ALL') isValid = true;
+      else {
+        try {
+          double dValue = double.parse(value);
+          double maxAvailable = double.parse(availableBalance);
+          isValid = (dValue <= maxAvailable && dValue <= maxValue && dValue > 0);
+        } catch (e) {
+          isValid = false;
+        }
       }
-    } else isValid = false;
-    errorMessage = isValid ? null : "XMR value can't exceed available balance.\n"
-                                    "The number of fraction digits must be less or equal to 12";
+    } else
+      isValid = false;
+    errorMessage = isValid ? null : S.current.error_text_xmr;
   }
 
-  void validateFiat(String value, double maxValue) {
+  void validateFiat(String value, {double maxValue}) {
     const double minValue = 0.01;
-    String p = '^([0-9]+([.][0-9]{0,2})?|[.][0-9]{1,2})\$';
-    RegExp regExp = new RegExp(p);
-    if (regExp.hasMatch(value)) {
-      try {
-        double dValue = double.parse(value);
-        isValid = (dValue >= minValue && dValue <= maxValue);
-      } catch (e) {
-        isValid = false;
-      }
-    } else isValid = false;
+    if (value.isEmpty && cryptoAmount == 'ALL') isValid = true;
+    else {
+      String p = '^([0-9]+([.][0-9]{0,2})?|[.][0-9]{1,2})\$';
+      RegExp regExp = new RegExp(p);
+      if (regExp.hasMatch(value)) {
+        try {
+          double dValue = double.parse(value);
+          isValid = (dValue >= minValue && dValue <= maxValue);
+        } catch (e) {
+          isValid = false;
+        }
+      } else isValid = false;
+    }
     errorMessage = isValid ? null : "Value of amount can't exceed available balance.\n"
                                     "The number of fraction digits must be less or equal to 2";
   }

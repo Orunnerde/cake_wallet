@@ -1,5 +1,6 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
+import 'package:flutter/foundation.dart';
 import 'package:cw_monero/convert_utf8_to_string.dart';
 import 'package:cw_monero/signatures.dart';
 import 'package:cw_monero/types.dart';
@@ -42,7 +43,7 @@ List<TransactionInfoRow> getAllTransations() {
       .toList();
 }
 
-PendingTransactionDescription createTransaction(
+PendingTransactionDescription createTransactionSync(
     {String address,
     String paymentId,
     String amount,
@@ -50,14 +51,16 @@ PendingTransactionDescription createTransaction(
     int accountIndex = 0}) {
   final addressPointer = Utf8.toUtf8(address);
   final paymentIdPointer = Utf8.toUtf8(paymentId);
-  final amountPointer = Utf8.toUtf8(amount);
+  final amountPointer = amount != null ? Utf8.toUtf8(amount) : nullptr;
   final errorMessagePointer = allocate<Utf8>();
   final transaction = transactionCreateNative(addressPointer, paymentIdPointer,
       amountPointer, priorityRaw, accountIndex, errorMessagePointer);
 
   free(addressPointer);
   free(paymentIdPointer);
-  free(amountPointer);
+  if (amountPointer != nullptr) {
+    free(amountPointer);
+  }
 
   if (transaction == null) {
     throw CreationTransactionException(
@@ -68,7 +71,8 @@ PendingTransactionDescription createTransaction(
       amount: transaction.ref.amount,
       fee: transaction.ref.fee,
       hash: transaction.ref.getHash(),
-      pointerAddress: transaction.address);
+      pointerAddress: transaction.address
+      );
 }
 
 commitTransactionFromPointerAddress({int address}) => commitTransaction(
@@ -84,3 +88,25 @@ commitTransaction({Pointer<PendingTransactionRaw> transactionPointer}) {
         message: convertUTF8ToString(pointer: errorMessagePointer));
   }
 }
+
+PendingTransactionDescription _createTransactionSync(Map args) =>
+    createTransactionSync(
+        address: args['address'],
+        paymentId: args['paymentId'],
+        amount: args['amount'],
+        priorityRaw: args['priorityRaw'],
+        accountIndex: args['accountIndex']);
+
+Future<PendingTransactionDescription> createTransaction(
+        {String address,
+        String paymentId,
+        String amount,
+        int priorityRaw,
+        int accountIndex = 0}) =>
+    compute(_createTransactionSync, {
+      'address': address,
+      'paymentId': paymentId,
+      'amount': amount,
+      'priorityRaw': priorityRaw,
+      'accountIndex': accountIndex
+    });

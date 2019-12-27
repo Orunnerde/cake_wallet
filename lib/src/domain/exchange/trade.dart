@@ -15,6 +15,7 @@ class Trade {
   String extraId;
   String outputTransaction;
   String refundAddress;
+  String walletId;
 
   static Trade fromMap(Map map) {
     return Trade(
@@ -25,7 +26,8 @@ class Trade {
         createdAt: map['date'] != null
             ? DateTime.fromMillisecondsSinceEpoch(map['date'])
             : null,
-        amount: map['amount']);
+        amount: map['amount'],
+        walletId: map['wallet_id']);
   }
 
   Trade(
@@ -40,7 +42,8 @@ class Trade {
       this.inputAddress,
       this.extraId,
       this.outputTransaction,
-      this.refundAddress});
+      this.refundAddress,
+      this.walletId});
 
   Map<String, dynamic> toMap() {
     return {
@@ -49,7 +52,8 @@ class Trade {
       'input': from.serialize(),
       'output': to.serialize(),
       'date': createdAt != null ? createdAt.millisecondsSinceEpoch : null,
-      'amount': amount
+      'amount': amount,
+      'wallet_id': walletId
     };
   }
 }
