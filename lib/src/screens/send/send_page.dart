@@ -347,7 +347,7 @@ class SendFormState extends State<SendForm> {
         ),
         bottomSection: Observer(builder: (_) {
           return LoadingPrimaryButton(
-              onPressed: () async {
+              onPressed: syncStore.status is SyncedSyncStatus ? () async {
                 // Hack. Don't ask me.
                 FocusScope.of(context).requestFocus(FocusNode());
 
@@ -383,7 +383,8 @@ class SendFormState extends State<SendForm> {
                         );
                       });
                 }
-              },
+              }
+              : null,
               text: S.of(context).send,
               color: Theme.of(context).accentTextTheme.button.backgroundColor,
               borderColor:
