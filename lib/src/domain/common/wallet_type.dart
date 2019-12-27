@@ -1,4 +1,15 @@
-enum WalletType { monero, none }
+import 'package:hive/hive.dart';
+
+part 'wallet_type.g.dart';
+
+@HiveType()
+enum WalletType {
+  @HiveField(0)
+  monero,
+
+  @HiveField(1)
+  none
+}
 
 int serializeToInt(WalletType type) {
   switch (type) {

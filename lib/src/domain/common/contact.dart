@@ -1,26 +1,30 @@
 import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 
-class Contact {
-  static final String tableName = 'AddressBook';
-  static final String primaryKey = 'id';
-  static final String nameColumn = 'name';
-  static final String addressColumn = 'address';
-  static final String typeColumn = 'type';
+part 'contact.g.dart';
 
-  static Contact fromMap(Map map) {
-    return Contact(
-        id: map['id'], name: map['name'], address: map['address'], type: CryptoCurrency.deserialize(raw: map['type']));
-  }
+@HiveType()
+class Contact extends HiveObject {
+  static const boxName = 'Contacts';
 
-  final int id;
-  final String name;
-  final String address;
-  final CryptoCurrency type;
+  @HiveField(0)
+  String name;
 
-  Contact({@required this.id, @required this.name, @required this.address, @required this.type});
+  @HiveField(1)
+  String address;
 
-  Map<String, dynamic> toMap() {
-    return {nameColumn: name, addressColumn: address, typeColumn: type.serialize()};
-  }
+  @HiveField(2)
+  int raw;
+
+  CryptoCurrency get type => CryptoCurrency.deserialize(raw: raw);
+
+  Contact(
+      {@required this.name,
+      @required this.address,
+      @required CryptoCurrency type})
+      : raw = type.raw;
+
+  updateCryptoCurrency({@required CryptoCurrency currency}) =>
+      raw = currency.raw;
 }

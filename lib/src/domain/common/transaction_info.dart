@@ -33,6 +33,7 @@ class TransactionInfo {
   final int accountIndex;
   final bool isPending;
   final int amount;
+  String recipientAddress;
   String _fiatAmount;
 
   TransactionInfo.fromMap(Map map)

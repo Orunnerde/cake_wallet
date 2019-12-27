@@ -1,10 +1,10 @@
 import 'dart:async';
+import 'package:cake_wallet/src/domain/common/wallet_info.dart';
 import 'package:flutter/foundation.dart';
-import 'package:sqflite/sqlite_api.dart';
+import 'package:hive/hive.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:uuid/uuid.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cake_wallet/src/domain/common/core_db.dart';
 import 'package:cake_wallet/src/domain/common/wallet.dart';
 import 'package:cake_wallet/src/domain/common/wallet_description.dart';
 import 'package:cake_wallet/src/domain/common/wallets_manager.dart';
@@ -25,26 +25,20 @@ class WalletIsExistException implements Exception {
 class WalletListService {
   final FlutterSecureStorage secureStorage;
   final WalletService walletService;
-  final Database db;
+  final Box<WalletInfo> walletInfoSource;
   final SharedPreferences sharedPreferences;
   WalletsManager walletsManager;
 
   WalletListService(
       {this.secureStorage,
-      this.db,
+      this.walletInfoSource,
       this.walletsManager,
       @required this.walletService,
       @required this.sharedPreferences});
 
-  Future<List<WalletDescription>> getAll() async {
-    List<Map> result = await db.query('wallets', columns: ['name']);
-    List<WalletDescription> wallets = result
-        .map((res) =>
-            WalletDescription(name: res['name'], type: WalletType.monero))
-        .toList();
-
-    return wallets;
-  }
+  Future<List<WalletDescription>> getAll() async => walletInfoSource.values
+      .map((info) => WalletDescription(name: info.name, type: info.type))
+      .toList();
 
   Future create(String name) async {
     if (await walletsManager.isWalletExit(name)) {
@@ -122,9 +116,8 @@ class WalletListService {
   Future changeWalletManger({WalletType walletType}) async {
     switch (walletType) {
       case WalletType.monero:
-        final dbHelper = await CoreDB.getInstance();
-        final db = await dbHelper.getDb();
-        walletsManager = MoneroWalletsManager(db: db);
+        walletsManager =
+            MoneroWalletsManager(walletInfoSource: walletInfoSource);
         break;
       case WalletType.none:
         walletsManager = null;

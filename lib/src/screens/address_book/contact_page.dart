@@ -213,13 +213,11 @@ class ContactFormState extends State<ContactForm> {
 
                           await addressBookStore.add(contact: newContact);
                         } else {
-                          final newContact = Contact(
-                              id: widget.contact.id,
-                              name: _contactNameController.text,
-                              address: _addressController.text,
-                              type: _selectectCrypto);
+                          widget.contact.name = _contactNameController.text;
+                          widget.contact.address = _addressController.text;
+                          widget.contact.updateCryptoCurrency(currency: _selectectCrypto);
 
-                          await addressBookStore.change(contact: newContact);
+                          await addressBookStore.update(contact: widget.contact);
                         }
                         Navigator.pop(context);
                       } catch (e) {

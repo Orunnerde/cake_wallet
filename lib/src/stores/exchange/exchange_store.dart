@@ -1,5 +1,5 @@
-import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
 import 'package:mobx/mobx.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/domain/exchange/changenow/changenow_exchange_provider.dart';
@@ -8,7 +8,8 @@ import 'package:cake_wallet/src/domain/exchange/exchange_provider.dart';
 import 'package:cake_wallet/src/domain/exchange/trade_request.dart';
 import 'package:cake_wallet/src/domain/exchange/xmrto/xmrto_exchange_provider.dart';
 import 'package:cake_wallet/src/domain/exchange/xmrto/xmrto_trade_request.dart';
-import 'package:cake_wallet/src/domain/exchange/trade_history.dart';
+import 'package:cake_wallet/src/domain/exchange/trade.dart';
+import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/src/stores/exchange/exchange_trade_state.dart';
 import 'package:cake_wallet/src/stores/exchange/limits_state.dart';
 import 'package:cake_wallet/generated/i18n.dart';
@@ -48,7 +49,7 @@ abstract class ExchangeStoreBase with Store {
   @observable
   String errorMessage;
 
-  TradeHistory tradeHistory;
+  Box<Trade> trades;
 
   String depositAddress;
 
@@ -61,7 +62,7 @@ abstract class ExchangeStoreBase with Store {
       @required CryptoCurrency initialDepositCurrency,
       @required CryptoCurrency initialReceiveCurrency,
       @required this.providerList,
-      @required this.tradeHistory,
+      @required this.trades,
       @required this.walletStore}) {
     provider = initialProvider;
     depositCurrency = initialDepositCurrency;
@@ -164,7 +165,7 @@ abstract class ExchangeStoreBase with Store {
       tradeState = TradeIsCreating();
       final trade = await provider.createTrade(request: request);
       trade.walletId = walletStore.id;
-      await tradeHistory.add(trade: trade);
+      await trades.add(trade);
       tradeState = TradeIsCreatedSuccessfully(trade: trade);
     } catch (e) {
       tradeState = TradeIsCreatedFailure(error: e.toString());
