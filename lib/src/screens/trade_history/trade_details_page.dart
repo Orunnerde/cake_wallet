@@ -12,14 +12,13 @@ import 'package:cake_wallet/src/screens/transaction_details/standart_list_row.da
 class TradeDetailsPage extends BasePage {
   String get title => S.current.trade_details_title;
   bool get isModalBackButton => true;
-  AppBarStyle get appBarStyle => AppBarStyle.withShadow;
 
   @override
   Widget body(BuildContext context) {
     final exchangeStore = Provider.of<ExchangeTradeStore>(context);
 
     return Container(
-        padding: EdgeInsets.only(top: 20.0, bottom: 20.0, left: 20, right: 20),
+        padding: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 20, right: 15),
         child: Observer(builder: (_) {
           final trade = exchangeStore.trade;
           final items = [
@@ -55,6 +54,7 @@ class TradeDetailsPage extends BasePage {
                     color: Theme.of(context).dividerTheme.color,
                     height: 1.0,
                   ),
+              padding: EdgeInsets.only(left: 25, top: 10, right: 25, bottom: 15),
               itemCount: items.length,
               itemBuilder: (BuildContext context, int index) {
                 final item = items[index];
