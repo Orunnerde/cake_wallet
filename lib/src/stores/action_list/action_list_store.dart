@@ -160,11 +160,13 @@ abstract class ActionListBase with Store {
   Future _updateTransactionsList() async {
     await _history.refresh();
     final _transactions = (await _history.getAll()).map((transaction) {
-      final description = transactionDescriptions.values
-          .firstWhere((desc) => desc.id == transaction.id);
+      if (transactionDescriptions.values.length > 0) {
+        final description = transactionDescriptions.values
+            .firstWhere((desc) => desc.id == transaction.id);
 
-      if (description != null && description.recipientAddress != null) {
-        transaction.recipientAddress = description.recipientAddress;
+        if (description != null && description.recipientAddress != null) {
+          transaction.recipientAddress = description.recipientAddress;
+        }
       }
 
       return transaction;

@@ -23,7 +23,7 @@ class Contact extends HiveObject {
       {@required this.name,
       @required this.address,
       @required CryptoCurrency type})
-      : raw = type.raw;
+      : raw = type?.raw;
 
   updateCryptoCurrency({@required CryptoCurrency currency}) =>
       raw = currency.raw;

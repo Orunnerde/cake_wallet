@@ -170,6 +170,7 @@ class MaterialAppWithTheme extends StatelessWidget {
     final contacts = Provider.of<Box<Contact>>(context);
     final nodes = Provider.of<Box<Node>>(context);
     final trades = Provider.of<Box<Trade>>(context);
+    final transactionDescriptions = Provider.of<Box<TransactionDescription>>(context);
 
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: statusBarColor));
@@ -198,7 +199,8 @@ class MaterialAppWithTheme extends StatelessWidget {
             settingsStore: settingsStore,
             contacts: contacts,
             nodes: nodes,
-            trades: trades),
+            trades: trades,
+            transactionDescriptions: transactionDescriptions),
         home: Root());
   }
 }

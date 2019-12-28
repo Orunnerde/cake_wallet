@@ -21,6 +21,8 @@ abstract class ExchangeTradeStoreBase with Store {
 
   ExchangeProvider _provider;
 
+  Timer _timer;
+
   ExchangeTradeStoreBase({@required this.trade, @required WalletStore walletStore}) {
     isSendable = trade.from == walletStore.type || trade.provider == ExchangeProviderDescription.xmrto;
 
@@ -34,7 +36,16 @@ abstract class ExchangeTradeStoreBase with Store {
     }
     
     _updateTrade();
-    Timer.periodic(Duration(seconds: 20), (_) async => _updateTrade());
+    _timer = Timer.periodic(Duration(seconds: 20), (_) async => _updateTrade());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    
+    if (_timer != null) {
+      _timer.cancel();
+    }
   }
 
   @action
