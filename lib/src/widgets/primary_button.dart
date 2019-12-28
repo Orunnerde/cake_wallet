@@ -55,7 +55,7 @@ class LoadingPrimaryButton extends StatelessWidget {
         minWidth: double.infinity,
         height: 56.0,
         child: FlatButton(
-          onPressed: onPressed,
+          onPressed: isLoading ? null : onPressed,
           color: color,
           shape: RoundedRectangleBorder(
               side: BorderSide(color: borderColor),

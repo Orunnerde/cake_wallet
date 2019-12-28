@@ -152,7 +152,7 @@ class SeedPage extends BasePage {
               ? PrimaryButton(
                   onPressed: () => onClose(context),
                   text: S.of(context).restore_next,
-                  color: Palette.lightGrey,
+                  color: Palette.darkGrey,
                   borderColor: Palette.darkGrey)
               : Offstage()
         ],
