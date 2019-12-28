@@ -116,7 +116,7 @@ class ChangeNowExchangeProvider extends ExchangeProvider {
         to: CryptoCurrency.fromString(responseJSON['toCurrency']),
         provider: description,
         inputAddress: responseJSON['payinAddress'],
-        amount: responseJSON['amountSend'],
+        amount: responseJSON['expectedSendAmount'],
         state: TradeState.deserialize(raw: responseJSON['status']),
         extraId: responseJSON['payinExtraId'],
         outputTransaction: responseJSON['payoutHash']);
@@ -133,11 +133,7 @@ class ChangeNowExchangeProvider extends ExchangeProvider {
         to.toString();
     final response = await get(url);
     final responseJSON = json.decode(response.body);
-
-    try {
-      return double.parse(responseJSON['estimatedAmount']);
-    } catch(_) {
-      return 0;
-    }
+    
+    return responseJSON['estimatedAmount'];
   }
 }

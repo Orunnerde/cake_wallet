@@ -169,8 +169,7 @@ abstract class SettingsStoreBase with Store {
   @action
   Future setCurrentNode({@required Node node}) async {
     this.node = node;
-    // FIXME: NOT IMPLEMENTED
-    // await _sharedPreferences.setInt(currentNodeIdKey, node.id);
+    await _sharedPreferences.setInt(currentNodeIdKey, node.key);
   }
 
   @action
@@ -241,14 +240,8 @@ abstract class SettingsStoreBase with Store {
 
   Future<Node> _fetchCurrentNode() async {
     final id = _sharedPreferences.getInt(currentNodeIdKey);
-    print('_nodes.values.length ${_nodes.values.length}');
-    _nodes.keys.forEach((k) {
-      print('Key $k');
-      print('NODE: ${_nodes.get(k).uri}');
-    });
-    final node = _nodes.get(id);
-    print('node found ${node.uri}');
-    return node;
+    
+    return _nodes.get(id);
   }
 
   @action

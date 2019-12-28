@@ -48,7 +48,6 @@ class MoneroWallet extends Wallet {
   static Future<MoneroWallet> load(
       Box<WalletInfo> walletInfoSource, String name, WalletType type) async {
     final id = walletTypeToString(type).toLowerCase() + '_' + name;
-    walletInfoSource.values.forEach((info) => print('${info.id}\n${info.name}\n${info.type}'));
     final walletInfo =
         walletInfoSource.values.firstWhere((info) => info.id == id);
     return await configured(

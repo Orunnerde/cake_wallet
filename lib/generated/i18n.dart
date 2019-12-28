@@ -44,6 +44,7 @@ class S implements WidgetsLocalizations {
   String get change_language => "Change language";
   String get clear => "Clear";
   String get confirm => "Confirm";
+  String get send_xmr => "Send XMR";
   String get confirm_sending => "Confirm sending";
   String get contact => "Contact";
   String get contact_name => "Contact Name";
@@ -399,6 +400,7 @@ class $de extends S {
   String get trade_details_pair => "Paar";
   @override
   String get confirm => "Bestätigen";
+  String get send_xmr => "Senden XMR";
   @override
   String get settings_display_balance_as => "Kontostand anzeigen als";
   @override
@@ -935,6 +937,7 @@ class $hi extends S {
   String get trade_details_pair => "जोड़ा";
   @override
   String get confirm => "की पुष्टि करें";
+  String get send_xmr => "संदेश XMR";
   @override
   String get settings_display_balance_as => "के रूप में संतुलन प्रदर्शित करें";
   @override
@@ -1471,6 +1474,7 @@ class $ru extends S {
   String get trade_details_pair => "Пара";
   @override
   String get confirm => "Подтвердить";
+  String get send_xmr => "Отправить XMR";
   @override
   String get settings_display_balance_as => "Отображать баланс";
   @override
@@ -2008,6 +2012,8 @@ class $ko extends S {
   @override
   String get confirm => "확인";
   @override
+  String get send_xmr => "보내다 XMR";
+  @override
   String get settings_display_balance_as => "잔액 표시";
   @override
   String get trade_details_provider => "공급자";
@@ -2544,6 +2550,8 @@ class $pt extends S {
   @override
   String get confirm => "Confirme";
   @override
+  String get send_xmr => "Mandar XMR";
+  @override
   String get settings_display_balance_as => "Exibir saldo como";
   @override
   String get trade_details_provider => "Fornecedor";
@@ -3079,6 +3087,8 @@ class $ja extends S {
   String get trade_details_pair => "ペア";
   @override
   String get confirm => "確認する";
+  @override
+  String get send_xmr => "送る XMR";
   @override
   String get settings_display_balance_as => "残高を表示";
   @override
@@ -3620,6 +3630,8 @@ class $pl extends S {
   @override
   String get confirm => "Potwierdzać";
   @override
+  String get send_xmr => "Wysłać XMR";
+  @override
   String get settings_display_balance_as => "Wyświetl saldo jako";
   @override
   String get trade_details_provider => "Dostawca";
@@ -4155,6 +4167,8 @@ class $es extends S {
   String get trade_details_pair => "Par";
   @override
   String get confirm => "Confirmar";
+  @override
+  String get send_xmr => "Enviar XMR";
   @override
   String get settings_display_balance_as => "Mostrar saldo como";
   @override
@@ -4692,6 +4706,8 @@ class $nl extends S {
   @override
   String get confirm => "Bevestigen";
   @override
+  String get send_xmr => "Sturen XMR";
+  @override
   String get settings_display_balance_as => "Toon saldo als";
   @override
   String get trade_details_provider => "Leverancier";
@@ -5227,6 +5243,8 @@ class $zh extends S {
   String get trade_details_pair => "对";
   @override
   String get confirm => "确认";
+  @override
+  String get send_xmr => "发送 XMR";
   @override
   String get settings_display_balance_as => "将余额显示为";
   @override

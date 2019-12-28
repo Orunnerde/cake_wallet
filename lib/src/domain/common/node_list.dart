@@ -12,5 +12,12 @@ Future<List<Node>> loadDefaultNodes() async {
 Future resetToDefault(Box<Node> nodeSource) async {
   final nodes = await loadDefaultNodes();
   await nodeSource.clear();
-  await nodeSource.addAll(nodes);
+
+  Map<int, Node> enteties = {};
+
+  for (var i = 0; i < nodes.length; i++) {
+    enteties[i] = nodes[i];
+  }
+
+  await nodeSource.putAll(enteties);
 }

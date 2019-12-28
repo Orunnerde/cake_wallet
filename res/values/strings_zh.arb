@@ -94,7 +94,7 @@
   "transaction_sent" : "交易已发送",
   "expired" : "已过期",
   "time" : "${minutes}m ${seconds}s",
-
+  "send_xmr" : "发送 XMR",
 
   "faq" : "FAQ",
 

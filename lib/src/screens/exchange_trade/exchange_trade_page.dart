@@ -1,3 +1,5 @@
+import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/src/domain/exchange/exchange_provider_description.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -291,21 +293,31 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
           ],
         );
       }),
-      bottomSection: Container(
-        padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-        child: Observer(
-          builder: (_) => LoadingPrimaryButton(
-              isLoading: sendStore.state is CreatingTransaction ||
-                  sendStore.state is TransactionCommitted,
-              onPressed: () => sendStore.createTransaction(
-                  address: tradeStore.trade.inputAddress,
-                  amount: tradeStore.trade.amount),
-              text: S.of(context).confirm,
-              color: Theme.of(context).primaryTextTheme.button.backgroundColor,
-              borderColor:
-                  Theme.of(context).primaryTextTheme.button.decorationColor),
-        ),
-      ),
+      bottomSection: tradeStore.trade.from == CryptoCurrency.xmr
+          ? Container(
+              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+              child: Observer(
+                builder: (_) => LoadingPrimaryButton(
+                    isLoading: sendStore.state is CreatingTransaction ||
+                        sendStore.state is TransactionCommitted,
+                    onPressed: () => sendStore.createTransaction(
+                        address: tradeStore.trade.inputAddress,
+                        amount: tradeStore.trade.amount),
+                    text: tradeStore.trade.provider ==
+                            ExchangeProviderDescription.xmrto
+                        ? S.of(context).confirm
+                        : S.of(context).send_xmr,
+                    color: Theme.of(context)
+                        .primaryTextTheme
+                        .button
+                        .backgroundColor,
+                    borderColor: Theme.of(context)
+                        .primaryTextTheme
+                        .button
+                        .decorationColor),
+              ),
+            )
+          : Offstage(),
     );
   }
 

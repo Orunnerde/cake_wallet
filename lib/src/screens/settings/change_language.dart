@@ -16,7 +16,7 @@ const Map<String, String> _languages = {
   'de': 'Deutsch (German)',
   'zh': '中文 (Chinese)',
   'pt': 'Português (Portuguese)',
-  'pl': 'Polskie (Polish)',
+  'pl': 'Polski (Polish)',
   'nl': 'Nederlands (Dutch)'
 };
 

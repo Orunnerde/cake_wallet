@@ -46,7 +46,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
           children: <Widget>[
             Expanded(
                 child: Container(
-              padding: EdgeInsets.only(left: 38.0, right: 38.0),
+              padding: EdgeInsets.only(left: 38.0, right: 38.0, top: 0),
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -62,8 +62,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
                                 hintText: S.of(context).node_address,
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: Palette.cakeGreen,
-                                        width: 2.0)),
+                                        color: Palette.cakeGreen, width: 2.0)),
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
                                         color: Theme.of(context).focusColor,
@@ -77,9 +76,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
                         )
                       ],
                     ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
+                    SizedBox(height: 10.0),
                     Row(
                       children: <Widget>[
                         Expanded(
@@ -93,8 +90,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
                                 hintText: S.of(context).node_port,
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: Palette.cakeGreen,
-                                        width: 2.0)),
+                                        color: Palette.cakeGreen, width: 2.0)),
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
                                         color: Theme.of(context).focusColor,
@@ -108,9 +104,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
                         )
                       ],
                     ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
+                    SizedBox(height: 10.0),
                     Row(
                       children: <Widget>[
                         Expanded(
@@ -122,8 +116,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
                                 hintText: S.of(context).login,
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: Palette.cakeGreen,
-                                        width: 2.0)),
+                                        color: Palette.cakeGreen, width: 2.0)),
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
                                         color: Theme.of(context).focusColor,
@@ -134,9 +127,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
                         )
                       ],
                     ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
+                    SizedBox(height: 10.0),
                     Row(
                       children: <Widget>[
                         Expanded(
@@ -148,8 +139,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
                                 hintText: S.of(context).password,
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: Palette.cakeGreen,
-                                        width: 2.0)),
+                                        color: Palette.cakeGreen, width: 2.0)),
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
                                         color: Theme.of(context).focusColor,
@@ -165,7 +155,7 @@ class NewNodeFormState extends State<NewNodePageForm> {
               ),
             )),
             Container(
-              padding: EdgeInsets.all(20.0),
+              padding: EdgeInsets.only(bottom: 20.0, left: 20.0, right: 20.0),
               child: Row(
                 children: <Widget>[
                   Flexible(

@@ -14,11 +14,12 @@ class DateSectionRaw extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final diffDays = date.difference(nowDate).inDays;
+    final isToday = nowDate.day == date.day && nowDate.month == date.month && nowDate.year == date.year;
     var title = "";
-
-    if (diffDays == 0) {
+    
+    if (isToday) {
       title = S.of(context).today;
-    } else if (diffDays == -1) {
+    } else if (diffDays == -1 || diffDays == 0) {
       title = S.of(context).yesterday;
     } else if (diffDays > -7 && diffDays < 0) {
       final dateFormat = DateFormat("EEEE");
