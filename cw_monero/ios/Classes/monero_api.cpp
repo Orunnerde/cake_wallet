@@ -166,6 +166,8 @@ extern "C"
     void change_current_wallet(Monero::Wallet *wallet)
     {
         m_wallet = wallet;
+        m_listener = nullptr;
+        
 
         if (wallet != nullptr)
         {

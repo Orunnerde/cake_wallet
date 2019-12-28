@@ -216,6 +216,9 @@ abstract class ExchangeStoreBase with Store {
       }
     }
 
+    depositAmount = '';
+    receiveAmount = '';
+
     loadLimits();
   }
 

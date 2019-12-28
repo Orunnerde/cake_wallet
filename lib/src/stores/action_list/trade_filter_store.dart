@@ -39,15 +39,15 @@ abstract class TradeFilterStoreBase with Store {
 
     final needToFilter = !displayChangeNow || !displayXMRTO;
 
-    if (needToFilter) {
-      _trades = trades.where((item) {
-        return (!displayXMRTO &&
-                item.trade.provider != ExchangeProviderDescription.xmrto) ||
-            (!displayChangeNow &&
-                item.trade.provider != ExchangeProviderDescription.changeNow);
-      }).toList();
-    }
-    
-    return _trades;
+    return needToFilter
+        ? trades
+            .where((item) =>
+                (displayXMRTO &&
+                    item.trade.provider == ExchangeProviderDescription.xmrto) ||
+                (displayChangeNow &&
+                    item.trade.provider ==
+                        ExchangeProviderDescription.changeNow))
+            .toList()
+        : _trades;
   }
 }

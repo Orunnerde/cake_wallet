@@ -4,6 +4,7 @@ import 'package:sqflite/sqlite_api.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:uuid/uuid.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cake_wallet/src/domain/common/encrypt.dart';
 import 'package:cake_wallet/src/domain/common/core_db.dart';
 import 'package:cake_wallet/src/domain/common/wallet.dart';
 import 'package:cake_wallet/src/domain/common/wallet_description.dart';
@@ -56,9 +57,8 @@ class WalletListService {
     }
 
     final password = Uuid().v4();
-    final key = generateStoreKeyFor(
-        key: SecretStoreKey.moneroWalletPassword, walletName: name);
-    await secureStorage.write(key: key, value: password);
+    
+    await saveWalletPassword(password: password, walletName: name);
 
     final wallet = await walletsManager.create(name, password);
 
@@ -75,9 +75,7 @@ class WalletListService {
     }
 
     final password = Uuid().v4();
-    final key = generateStoreKeyFor(
-        key: SecretStoreKey.moneroWalletPassword, walletName: name);
-    await secureStorage.write(key: key, value: password);
+    await saveWalletPassword(password: password, walletName: name);
 
     final wallet = await walletsManager.restoreFromSeed(
         name, password, seed, restoreHeight);
@@ -96,9 +94,7 @@ class WalletListService {
     }
 
     final password = Uuid().v4();
-    final key = generateStoreKeyFor(
-        key: SecretStoreKey.moneroWalletPassword, walletName: name);
-    await secureStorage.write(key: key, value: password);
+    
 
     final wallet = await walletsManager.restoreFromKeys(
         name, password, restoreHeight, address, viewKey, spendKey);
@@ -111,9 +107,7 @@ class WalletListService {
       await walletService.close();
     }
 
-    final key = generateStoreKeyFor(
-        key: SecretStoreKey.moneroWalletPassword, walletName: name);
-    final password = await secureStorage.read(key: key);
+    final password = await getWalletPassword(walletName: name);
     final wallet = await walletsManager.openWallet(name, password);
 
     await onWalletChange(wallet);
@@ -140,4 +134,20 @@ class WalletListService {
 
   Future remove(WalletDescription wallet) async =>
       await walletsManager.remove(wallet);
+
+  Future<String> getWalletPassword({String walletName}) async {
+    final key = generateStoreKeyFor(
+        key: SecretStoreKey.moneroWalletPassword, walletName: walletName);
+    final encodedPassword = await secureStorage.read(key: key);
+    
+    return decodeWalletPassword(password: encodedPassword);
+  }
+
+  Future saveWalletPassword({String walletName, String password}) async {
+    final key = generateStoreKeyFor(
+        key: SecretStoreKey.moneroWalletPassword, walletName: walletName);
+    final encodedPassword = encodeWalletPassword(password: password);
+
+    await secureStorage.write(key: key, value: encodedPassword);
+  }
 }

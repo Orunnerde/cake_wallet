@@ -1,6 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cake_wallet/src/domain/common/secret_store_key.dart';
+import 'package:cake_wallet/src/domain/common/encrypt.dart';
 
 class UserService {
   final FlutterSecureStorage secureStorage;
@@ -10,8 +11,11 @@ class UserService {
 
   Future setPassword(String password) async {
     final key = generateStoreKeyFor(key: SecretStoreKey.pinCodePassword);
+
     try {
-      await secureStorage.write(key: key, value: password);
+      final encodedPassord = encodedPinCode(pin: password);
+
+      await secureStorage.write(key: key, value: encodedPassord);
     } catch (e) {
       print(e);
     }
@@ -34,8 +38,9 @@ class UserService {
 
   Future<bool> authenticate(String pin) async {
     final key = generateStoreKeyFor(key: SecretStoreKey.pinCodePassword);
-    final original = await secureStorage.read(key: key);
+    final encodedPin = await secureStorage.read(key: key);
+    final decodedPin = decodedPinCode(pin: encodedPin);
 
-    return original == pin;
+    return decodedPin == pin;
   }
 }

@@ -18,7 +18,7 @@ class SyncingSyncStatus extends SyncStatus {
   double progress() {
     final line = blockchainHeight - refreshHeight;
     final diff = line - (blockchainHeight - height);
-    return diff < 0 ? 0.0 : diff / line;
+    return diff <= 0 ? 0.0 : diff / line;
   }
 
   String title() => S.current.sync_status_syncronizing;

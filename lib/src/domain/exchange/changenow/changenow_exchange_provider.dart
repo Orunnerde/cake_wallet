@@ -134,6 +134,10 @@ class ChangeNowExchangeProvider extends ExchangeProvider {
     final response = await get(url);
     final responseJSON = json.decode(response.body);
 
-    return responseJSON['estimatedAmount'] ?? 0;
+    try {
+      return double.parse(responseJSON['estimatedAmount']);
+    } catch(_) {
+      return 0;
+    }
   }
 }
