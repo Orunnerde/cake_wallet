@@ -44,6 +44,8 @@ class TransactionDetailsFormState extends State<TransactionDetailsForm> {
 
   @override
   void initState() {
+    super.initState();
+
     _items.addAll([
       StandartListItem(
           title: S.current.transaction_details_transaction_id,
@@ -62,8 +64,6 @@ class TransactionDetailsFormState extends State<TransactionDetailsForm> {
     if (widget.settingsStore.shouldSaveRecipientAddress) {
       _addRecipientAddress(address: widget.transactionInfo.recipientAddress);
     }
-
-    super.initState();
   }
 
   @override
