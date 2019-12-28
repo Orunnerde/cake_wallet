@@ -192,6 +192,8 @@ class ExchangeTradeState extends State<ExchangeTradeForm> {
                   ),
                   SizedBox(width: 10),
                   Container(
+                      padding: EdgeInsets.all(5),
+                      color: Colors.white,
                       constraints: BoxConstraints(minWidth: 100, maxWidth: 125),
                       child: QrImage(
                           data: trade.inputAddress ?? fetchingLabel,
