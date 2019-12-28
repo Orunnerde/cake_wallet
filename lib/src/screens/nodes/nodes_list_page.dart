@@ -121,7 +121,7 @@ class NodeListPageBodyState extends State<NodeListPageBody> {
                   return Observer(builder: (_) {
                     final isCurrent = settings.node == null
                         ? false
-                        : node.id == settings.node.id;
+                        : node.key == settings.node.key;
 
                     final content = Container(
                         color: isCurrent ? currentColor : notCurrentColor,
@@ -182,7 +182,7 @@ class NodeListPageBodyState extends State<NodeListPageBody> {
                     return isCurrent
                         ? content
                         : Dismissible(
-                            key: Key(node.id.toString()),
+                            key: Key('${node.key}'),
                             confirmDismiss: (direction) async {
                               return await showDialog(
                                   context: context,

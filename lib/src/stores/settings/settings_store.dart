@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive/hive.dart';
 import 'package:cake_wallet/src/domain/common/node_list.dart';
 import 'package:cake_wallet/src/domain/common/node.dart';
 import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
@@ -31,7 +32,7 @@ abstract class SettingsStoreBase with Store {
 
   static Future<SettingsStore> load(
       {@required SharedPreferences sharedPreferences,
-      @required NodeList nodeList,
+      @required Box<Node> nodes,
       @required FiatCurrency initialFiatCurrency,
       @required TransactionPriority initialTransactionPriority,
       @required BalanceDisplayMode initialBalanceDisplayMode}) async {
@@ -57,12 +58,13 @@ abstract class SettingsStoreBase with Store {
         ? 4
         : sharedPreferences.getInt(currentPinLength);
     final savedLanguageCode =
-    sharedPreferences.getString(currentLanguageCode) == null ? 'en'
-        : sharedPreferences.getString(currentLanguageCode);
+        sharedPreferences.getString(currentLanguageCode) == null
+            ? 'en'
+            : sharedPreferences.getString(currentLanguageCode);
 
     final store = SettingsStore(
         sharedPreferences: sharedPreferences,
-        nodeList: nodeList,
+        nodes: nodes,
         initialFiatCurrency: currentFiatCurrency,
         initialTransactionPriority: currentTransactionPriority,
         initialBalanceDisplayMode: currentBalanceDisplayMode,
@@ -107,14 +109,14 @@ abstract class SettingsStoreBase with Store {
   String languageCode;
 
   @observable
-  Map<String,String> itemHeaders;
+  Map<String, String> itemHeaders;
 
   SharedPreferences _sharedPreferences;
-  NodeList _nodeList;
+  Box<Node> _nodes;
 
   SettingsStoreBase(
       {@required SharedPreferences sharedPreferences,
-      @required NodeList nodeList,
+      @required Box<Node> nodes,
       @required FiatCurrency initialFiatCurrency,
       @required TransactionPriority initialTransactionPriority,
       @required BalanceDisplayMode initialBalanceDisplayMode,
@@ -129,7 +131,7 @@ abstract class SettingsStoreBase with Store {
     balanceDisplayMode = initialBalanceDisplayMode;
     shouldSaveRecipientAddress = initialSaveRecipientAddress;
     _sharedPreferences = sharedPreferences;
-    _nodeList = nodeList;
+    _nodes = nodes;
     allowBiometricalAuthentication = initialAllowBiometricalAuthentication;
     isDarkTheme = initialDarkTheme;
     defaultPinLength = initialPinLength;
@@ -167,7 +169,8 @@ abstract class SettingsStoreBase with Store {
   @action
   Future setCurrentNode({@required Node node}) async {
     this.node = node;
-    await _sharedPreferences.setInt(currentNodeIdKey, node.id);
+    // FIXME: NOT IMPLEMENTED
+    // await _sharedPreferences.setInt(currentNodeIdKey, node.id);
   }
 
   @action
@@ -201,10 +204,8 @@ abstract class SettingsStoreBase with Store {
         shouldSaveRecipientAddressKey, shouldSaveRecipientAddress);
   }
 
-  Future loadSettings() async {
-    node = await _fetchCurrentNode();
-  }
-
+  Future loadSettings() async => node = await _fetchCurrentNode();
+  
   @action
   void toggleTransactionsDisplay() =>
       actionlistDisplayMode.contains(ActionListDisplayMode.transactions)
@@ -240,28 +241,37 @@ abstract class SettingsStoreBase with Store {
 
   Future<Node> _fetchCurrentNode() async {
     final id = _sharedPreferences.getInt(currentNodeIdKey);
-    return await _nodeList.findBy(id: id);
+    print('_nodes.values.length ${_nodes.values.length}');
+    _nodes.keys.forEach((k) {
+      print('Key $k');
+      print('NODE: ${_nodes.get(k).uri}');
+    });
+    final node = _nodes.get(id);
+    print('node found ${node.uri}');
+    return node;
   }
 
   @action
   void setItemHeaders() {
     itemHeaders.clear();
     itemHeaders.addAll({
-      ItemHeaders.nodes : S.current.settings_nodes,
-      ItemHeaders.currentNode : S.current.settings_current_node,
-      ItemHeaders.wallets : S.current.settings_wallets,
-      ItemHeaders.displayBalanceAs : S.current.settings_display_balance_as,
-      ItemHeaders.currency : S.current.settings_currency,
-      ItemHeaders.feePriority : S.current.settings_fee_priority,
-      ItemHeaders.saveRecipientAddress : S.current.settings_save_recipient_address,
-      ItemHeaders.personal : S.current.settings_personal,
-      ItemHeaders.changePIN : S.current.settings_change_pin,
-      ItemHeaders.changeLanguage : S.current.settings_change_language,
-      ItemHeaders.allowBiometricalAuthentication : S.current.settings_allow_biometrical_authentication,
-      ItemHeaders.darkMode : S.current.settings_dark_mode,
-      ItemHeaders.support : S.current.settings_support,
-      ItemHeaders.termsAndConditions : S.current.settings_terms_and_conditions,
-      ItemHeaders.faq : S.current.faq
+      ItemHeaders.nodes: S.current.settings_nodes,
+      ItemHeaders.currentNode: S.current.settings_current_node,
+      ItemHeaders.wallets: S.current.settings_wallets,
+      ItemHeaders.displayBalanceAs: S.current.settings_display_balance_as,
+      ItemHeaders.currency: S.current.settings_currency,
+      ItemHeaders.feePriority: S.current.settings_fee_priority,
+      ItemHeaders.saveRecipientAddress:
+          S.current.settings_save_recipient_address,
+      ItemHeaders.personal: S.current.settings_personal,
+      ItemHeaders.changePIN: S.current.settings_change_pin,
+      ItemHeaders.changeLanguage: S.current.settings_change_language,
+      ItemHeaders.allowBiometricalAuthentication:
+          S.current.settings_allow_biometrical_authentication,
+      ItemHeaders.darkMode: S.current.settings_dark_mode,
+      ItemHeaders.support: S.current.settings_support,
+      ItemHeaders.termsAndConditions: S.current.settings_terms_and_conditions,
+      ItemHeaders.faq: S.current.faq
     });
   }
 }

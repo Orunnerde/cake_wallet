@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'package:cake_wallet/src/stores/price/price_store.dart';
+import 'package:cake_wallet/src/domain/exchange/trade.dart';
+import 'package:hive/hive.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cake_wallet/src/domain/monero/account.dart';
@@ -11,7 +12,8 @@ import 'package:cake_wallet/src/domain/monero/monero_wallet.dart';
 import 'package:cake_wallet/src/domain/common/calculate_fiat_amount_raw.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/domain/monero/monero_amount_format.dart';
-import 'package:cake_wallet/src/domain/exchange/trade_history.dart';
+import 'package:cake_wallet/src/domain/monero/transaction_description.dart';
+import 'package:cake_wallet/src/stores/price/price_store.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/src/stores/action_list/action_list_display_mode.dart';
 import 'package:cake_wallet/src/stores/action_list/action_list_item.dart';
@@ -101,10 +103,11 @@ abstract class ActionListBase with Store {
 
   TransactionFilterStore transactionFilterStore;
   TradeFilterStore tradeFilterStore;
+  Box<TransactionDescription> transactionDescriptions;
+  Box<Trade> tradesSource;
 
   WalletService _walletService;
   TransactionHistory _history;
-  TradeHistory _tradeHistory;
   SettingsStore _settingsStore;
   PriceStore _priceStore;
   Account _account;
@@ -114,17 +117,17 @@ abstract class ActionListBase with Store {
 
   ActionListBase(
       {@required WalletService walletService,
-      @required TradeHistory tradeHistory,
       @required SettingsStore settingsStore,
       @required PriceStore priceStore,
       @required this.transactionFilterStore,
-      @required this.tradeFilterStore}) {
+      @required this.tradeFilterStore,
+      @required this.transactionDescriptions,
+      @required this.tradesSource}) {
     trades = List<TradeListItem>();
     _transactions = List<TransactionListItem>();
     _walletService = walletService;
     _settingsStore = settingsStore;
     _priceStore = priceStore;
-    _tradeHistory = tradeHistory;
 
     if (walletService.currentWallet != null) {
       _onWalletChanged(walletService.currentWallet);
@@ -151,14 +154,22 @@ abstract class ActionListBase with Store {
   }
 
   @action
-  Future updateTradeList() async {
-    final trades = await _tradeHistory.all();
-    this.trades = trades.map((trade) => TradeListItem(trade: trade)).toList();
-  }
+  Future updateTradeList() async => this.trades =
+      tradesSource.values.map((trade) => TradeListItem(trade: trade)).toList();
 
   Future _updateTransactionsList() async {
     await _history.refresh();
-    final _transactions = await _history.getAll();
+    final _transactions = (await _history.getAll()).map((transaction) {
+      final description = transactionDescriptions.values
+          .firstWhere((desc) => desc.id == transaction.id);
+
+      if (description != null && description.recipientAddress != null) {
+        transaction.recipientAddress = description.recipientAddress;
+      }
+
+      return transaction;
+    }).toList();
+
     await _setTransactions(_transactions);
   }
 

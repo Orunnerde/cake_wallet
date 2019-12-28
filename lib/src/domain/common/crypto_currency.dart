@@ -1,5 +1,9 @@
 import 'package:cake_wallet/src/domain/common/enumerable_item.dart';
+import 'package:hive/hive.dart';
 
+part 'crypto_currency.g.dart';
+
+@HiveType()
 class CryptoCurrency extends EnumerableItem<int> with Serializable<int> {
   static const all = [
     CryptoCurrency.xmr,

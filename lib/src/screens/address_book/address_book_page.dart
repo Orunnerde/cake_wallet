@@ -119,7 +119,7 @@ class AddressBookPage extends BasePage {
 
                 return !isEditable ? content
                 : Slidable(
-                    key: Key(contact.id.toString()),
+                    key: Key('1'),// Key(contact.id.toString()),
                     actionPane: SlidableDrawerActionPane(),
                     child: content,
                     secondaryActions: <Widget>[

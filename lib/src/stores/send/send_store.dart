@@ -1,14 +1,13 @@
-import 'package:cake_wallet/src/stores/price/price_store.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/src/domain/common/pending_transaction.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
-import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
-import 'package:cake_wallet/src/domain/common/fetch_price.dart';
 import 'package:cake_wallet/src/domain/monero/monero_transaction_creation_credentials.dart';
-import 'package:cake_wallet/src/domain/common/recipient_address_list.dart';
+import 'package:cake_wallet/src/domain/monero/transaction_description.dart';
+import 'package:cake_wallet/src/stores/price/price_store.dart';
 import 'package:cake_wallet/src/stores/send/sending_state.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/generated/i18n.dart';
@@ -21,7 +20,7 @@ abstract class SendStoreBase with Store {
   WalletService walletService;
   SettingsStore settingsStore;
   PriceStore priceStore;
-  RecipientAddressList recipientAddressList;
+  Box<TransactionDescription> transactionDescriptions;
 
   @observable
   SendingState state;
@@ -47,7 +46,7 @@ abstract class SendStoreBase with Store {
   SendStoreBase(
       {@required this.walletService,
       this.settingsStore,
-      this.recipientAddressList,
+      this.transactionDescriptions,
       this.priceStore}) {
     state = SendingStateInitial();
     _pendingTransaction = null;
@@ -90,14 +89,11 @@ abstract class SendStoreBase with Store {
   Future commitTransaction() async {
     try {
       final transactionId = _pendingTransaction.hash;
-      // state = TransactionCommiting();
       await _pendingTransaction.commit();
-      // state = TransactionCommitted();
 
       if (settingsStore.shouldSaveRecipientAddress) {
-        await recipientAddressList.add(
-            recipientAddress: _lastRecipientAddress,
-            transactionId: transactionId);
+        await transactionDescriptions.add(TransactionDescription(
+            id: transactionId, recipientAddress: _lastRecipientAddress));
       }
     } catch (e) {
       state = SendingFailed(error: e.toString());
@@ -140,10 +136,10 @@ abstract class SendStoreBase with Store {
         fiat: settingsStore.fiatCurrency, crypto: CryptoCurrency.xmr);
     final price = priceStore.prices[symbol] ?? 0;
 
-    try {    
+    try {
       final amount = double.parse(cryptoAmount) * price;
       fiatAmount = _fiatNumberFormat.format(amount);
-    } catch(e) {
+    } catch (e) {
       fiatAmount = '0.00';
     }
   }
@@ -153,11 +149,11 @@ abstract class SendStoreBase with Store {
     final symbol = PriceStoreBase.generateSymbolForPair(
         fiat: settingsStore.fiatCurrency, crypto: CryptoCurrency.xmr);
     final price = priceStore.prices[symbol] ?? 0;
-    
+
     try {
       final amount = double.parse(fiatAmount) / price;
       cryptoAmount = _cryptoNumberFormat.format(amount);
-    } catch(e) {
+    } catch (e) {
       cryptoAmount = '0.00';
     }
   }
@@ -207,12 +203,14 @@ abstract class SendStoreBase with Store {
     String p = '^([0-9]+([.][0-9]{0,12})?|[.][0-9]{1,12})\$|ALL';
     RegExp regExp = new RegExp(p);
     if (regExp.hasMatch(value)) {
-      if (value == 'ALL') isValid = true;
+      if (value == 'ALL')
+        isValid = true;
       else {
         try {
           double dValue = double.parse(value);
           double maxAvailable = double.parse(availableBalance);
-          isValid = (dValue <= maxAvailable && dValue <= maxValue && dValue > 0);
+          isValid =
+              (dValue <= maxAvailable && dValue <= maxValue && dValue > 0);
         } catch (e) {
           isValid = false;
         }
@@ -224,7 +222,8 @@ abstract class SendStoreBase with Store {
 
   void validateFiat(String value, {double maxValue}) {
     const double minValue = 0.01;
-    if (value.isEmpty && cryptoAmount == 'ALL') isValid = true;
+    if (value.isEmpty && cryptoAmount == 'ALL')
+      isValid = true;
     else {
       String p = '^([0-9]+([.][0-9]{0,2})?|[.][0-9]{1,2})\$';
       RegExp regExp = new RegExp(p);
@@ -235,9 +234,12 @@ abstract class SendStoreBase with Store {
         } catch (e) {
           isValid = false;
         }
-      } else isValid = false;
+      } else
+        isValid = false;
     }
-    errorMessage = isValid ? null : "Value of amount can't exceed available balance.\n"
-                                    "The number of fraction digits must be less or equal to 2";
+    errorMessage = isValid
+        ? null
+        : "Value of amount can't exceed available balance.\n"
+            "The number of fraction digits must be less or equal to 2";
   }
 }

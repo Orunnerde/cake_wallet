@@ -1,5 +1,4 @@
 import 'package:rxdart/rxdart.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:cake_wallet/src/domain/common/sync_status.dart';
 import 'package:cake_wallet/src/domain/common/transaction_history.dart';
 import 'package:cake_wallet/src/domain/common/wallet_type.dart';
@@ -9,51 +8,8 @@ import 'package:cake_wallet/src/domain/common/balance.dart';
 import 'package:cake_wallet/src/domain/common/node.dart';
 
 abstract class Wallet {
-  static final walletsTable = 'wallets';
-  static final idColumn = 'id';
-  static final nameColumn = 'name';
-  static final isRecoveryColumn = 'is_recovery';
-  static final restoreHeightColumn = 'restore_height';
-
-  static Future setInitialWalletData(
-      {Database db,
-      bool isRecovery,
-      String name,
-      WalletType type,
-      int restoreHeight = 0}) async {
-    final id = walletTypeToString(type).toLowerCase() + '_' + name;
-    await db.insert(walletsTable, {
-      idColumn: id,
-      nameColumn: name,
-      isRecoveryColumn: isRecovery,
-      restoreHeightColumn: restoreHeight
-    });
-  }
-
-  static Future updateWalletData(
-      {Database db, bool isRecovery, String name, WalletType type}) async {
-    final id = walletTypeToString(type).toLowerCase() + '_' + name;
-    await db.update(walletsTable, {'$isRecoveryColumn': isRecovery},
-        where: '$idColumn = ?', whereArgs: [id]);
-  }
-
-  static Future<bool> getIsRecovery(
-      Database db, String name, WalletType type) async {
-    final id = walletTypeToString(type).toLowerCase() + '_' + name;
-    final wallets = await db.query(walletsTable,
-        columns: [isRecoveryColumn], where: '$idColumn = ?', whereArgs: [id]);
-    var isRecovery = false;
-
-    if (wallets.length != 0) {
-      isRecovery = wallets[0][isRecoveryColumn];
-    }
-
-    return isRecovery;
-  }
-
   WalletType getType();
 
-  Database db;
   WalletType walletType;
 
   Observable<Balance> onBalanceChange;

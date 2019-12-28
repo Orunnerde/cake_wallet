@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/sqlite_api.dart';
 import 'package:cw_monero/wallet_manager.dart' as moneroWalletManager;
+import 'package:cake_wallet/src/domain/common/wallet_info.dart';
 import 'package:cake_wallet/src/domain/common/wallet_type.dart';
 import 'package:cake_wallet/src/domain/common/wallets_manager.dart';
 import 'package:cake_wallet/src/domain/common/wallet.dart';
@@ -25,9 +26,9 @@ Future<String> pathForWallet({String name}) async {
 class MoneroWalletsManager extends WalletsManager {
   static const type = WalletType.monero;
 
-  Database db;
+  Box<WalletInfo> walletInfoSource;
 
-  MoneroWalletsManager({@required this.db});
+  MoneroWalletsManager({@required this.walletInfoSource});
 
   Future<Wallet> create(String name, String password) async {
     try {
@@ -37,7 +38,7 @@ class MoneroWalletsManager extends WalletsManager {
       await moneroWalletManager.createWallet(path: path, password: password);
 
       final wallet = await MoneroWallet.createdWallet(
-          db: db, name: name, isRecovery: isRecovery)
+          walletInfoSource: walletInfoSource, name: name, isRecovery: isRecovery)
         ..updateInfo();
 
       return wallet;
@@ -60,7 +61,7 @@ class MoneroWalletsManager extends WalletsManager {
           restoreHeight: restoreHeight);
 
       return await MoneroWallet.createdWallet(
-          db: db,
+          walletInfoSource: walletInfoSource,
           name: name,
           isRecovery: isRecovery,
           restoreHeight: restoreHeight)
@@ -91,7 +92,7 @@ class MoneroWalletsManager extends WalletsManager {
           spendKey: spendKey);
 
       final wallet = await MoneroWallet.createdWallet(
-          db: db,
+          walletInfoSource: walletInfoSource,
           name: name,
           isRecovery: isRecovery,
           restoreHeight: restoreHeight)
@@ -113,7 +114,7 @@ class MoneroWalletsManager extends WalletsManager {
 
       final loadWallet = DateTime.now().millisecondsSinceEpoch;
       print('Loaded wallet ${loadWallet - start}');
-      final wallet = await MoneroWallet.load(db, name, type)
+      final wallet = await MoneroWallet.load(walletInfoSource, name, type)
         ..updateInfo();
       final preReturn = DateTime.now().millisecondsSinceEpoch;
       print('Pre return ${preReturn - start}');
@@ -159,7 +160,8 @@ class MoneroWalletsManager extends WalletsManager {
 
     final id =
         walletTypeToString(wallet.type).toLowerCase() + '_' + wallet.name;
-    await db.delete(Wallet.walletsTable,
-        where: '${Wallet.idColumn} = ?', whereArgs: [id]);
+    final info = walletInfoSource.values.firstWhere((info) => info.id == id);
+    
+    await info.delete();
   }
 }

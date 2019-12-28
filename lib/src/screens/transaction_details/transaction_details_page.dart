@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/domain/common/transaction_info.dart';
-import 'package:cake_wallet/src/domain/common/recipient_address_list.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/src/screens/transaction_details/standart_list_item.dart';
 import 'package:cake_wallet/src/screens/transaction_details/standart_list_row.dart';
@@ -21,25 +20,19 @@ class TransactionDetailsPage extends BasePage {
 
   @override
   Widget body(BuildContext context) {
-    final recipientAddressList = Provider.of<RecipientAddressList>(context);
     final settingsStore = Provider.of<SettingsStore>(context);
 
     return TransactionDetailsForm(
-        transactionInfo: transactionInfo,
-        recipientAddressList: recipientAddressList,
-        settingsStore: settingsStore);
+        transactionInfo: transactionInfo, settingsStore: settingsStore);
   }
 }
 
 class TransactionDetailsForm extends StatefulWidget {
   final TransactionInfo transactionInfo;
-  final RecipientAddressList recipientAddressList;
   final SettingsStore settingsStore;
 
   TransactionDetailsForm(
-      {@required this.transactionInfo,
-      @required this.recipientAddressList,
-      @required this.settingsStore});
+      {@required this.transactionInfo, @required this.settingsStore});
 
   @override
   createState() => TransactionDetailsFormState();
@@ -53,24 +46,21 @@ class TransactionDetailsFormState extends State<TransactionDetailsForm> {
   void initState() {
     _items.addAll([
       StandartListItem(
-          title: S.current.transaction_details_transaction_id, value: widget.transactionInfo.id),
+          title: S.current.transaction_details_transaction_id,
+          value: widget.transactionInfo.id),
       StandartListItem(
           title: S.current.transaction_details_date,
           value: _dateFormat.format(widget.transactionInfo.date)),
-      StandartListItem(title: S.current.transaction_details_height, value: '${widget.transactionInfo.height}'),
-      StandartListItem(title: S.current.transaction_details_amount, value: widget.transactionInfo.amountFormatted())
+      StandartListItem(
+          title: S.current.transaction_details_height,
+          value: '${widget.transactionInfo.height}'),
+      StandartListItem(
+          title: S.current.transaction_details_amount,
+          value: widget.transactionInfo.amountFormatted())
     ]);
 
     if (widget.settingsStore.shouldSaveRecipientAddress) {
-      widget.recipientAddressList
-          .findRecipientAddress(transactionsId: widget.transactionInfo.id)
-          .then((address) {
-        if (address == null) {
-          return;
-        }
-
-        _addRecipientAddress(address: address);
-      });
+      _addRecipientAddress(address: widget.transactionInfo.recipientAddress);
     }
 
     super.initState();
@@ -78,7 +68,6 @@ class TransactionDetailsFormState extends State<TransactionDetailsForm> {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       padding: EdgeInsets.only(left: 20, right: 15, top: 10, bottom: 10),
       child: ListView.separated(
@@ -96,20 +85,23 @@ class TransactionDetailsFormState extends State<TransactionDetailsForm> {
                 Clipboard.setData(ClipboardData(text: item.value));
                 Scaffold.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(S.of(context).transaction_details_copied(item.title)),
+                    content: Text(
+                        S.of(context).transaction_details_copied(item.title)),
                     backgroundColor: Colors.green,
                     duration: Duration(milliseconds: 1500),
                   ),
                 );
               },
-              child: StandartListRow(title: '${item.title}:', value: item.value),
+              child:
+                  StandartListRow(title: '${item.title}:', value: item.value),
             );
           }),
     );
   }
 
   void _addRecipientAddress({String address}) {
-    setState(() => _items
-        .add(StandartListItem(title: S.of(context).transaction_details_recipient_address, value: address)));
+    setState(() => _items.add(StandartListItem(
+        title: S.of(context).transaction_details_recipient_address,
+        value: address)));
   }
 }

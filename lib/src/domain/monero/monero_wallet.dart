@@ -1,18 +1,17 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:cw_monero/wallet.dart' as moneroWallet;
 import 'package:cw_monero/transaction_history.dart' as transactionHistory;
-import 'package:cw_monero/structs/pending_transaction.dart';
+import 'package:cake_wallet/src/domain/common/wallet_info.dart';
 import 'package:cake_wallet/src/domain/common/wallet.dart';
 import 'package:cake_wallet/src/domain/common/sync_status.dart';
 import 'package:cake_wallet/src/domain/common/transaction_history.dart';
 import 'package:cake_wallet/src/domain/common/transaction_creation_credentials.dart';
 import 'package:cake_wallet/src/domain/common/pending_transaction.dart';
 import 'package:cake_wallet/src/domain/common/wallet_type.dart';
-import 'package:cake_wallet/src/domain/common/core_db.dart';
 import 'package:cake_wallet/src/domain/common/node.dart';
 import 'package:cake_wallet/src/domain/monero/monero_amount_format.dart';
 import 'package:cake_wallet/src/domain/monero/account.dart';
@@ -28,50 +27,46 @@ const monero_block_size = 1000;
 
 class MoneroWallet extends Wallet {
   static Future<MoneroWallet> createdWallet(
-      {Database db,
+      {Box<WalletInfo> walletInfoSource,
       String name,
-      WalletType type,
-      bool isRecovery,
+      bool isRecovery = false,
       int restoreHeight = 0}) async {
-    await Wallet.setInitialWalletData(
-        db: db,
-        isRecovery: isRecovery,
+    const type = WalletType.monero;
+    final id = walletTypeToString(type).toLowerCase() + '_' + name;
+    final walletInfo = WalletInfo(
+        id: id,
         name: name,
-        type: WalletType.monero,
+        type: type,
+        isRecovery: isRecovery,
         restoreHeight: restoreHeight);
+    await walletInfoSource.add(walletInfo);
+
     return await configured(
-        isRecovery: isRecovery, restoreHeight: restoreHeight);
+        walletInfo: walletInfo, walletInfoSource: walletInfoSource);
   }
 
   static Future<MoneroWallet> load(
-      Database db, String name, WalletType type) async {
+      Box<WalletInfo> walletInfoSource, String name, WalletType type) async {
     final id = walletTypeToString(type).toLowerCase() + '_' + name;
-    final wallets = await db.query(Wallet.walletsTable,
-        columns: [Wallet.isRecoveryColumn, Wallet.restoreHeightColumn],
-        where: '${Wallet.idColumn} = ?',
-        whereArgs: [id]);
-    var isRecovery = false;
-    var restoreHeight = 0;
-
-    if (wallets.length != 0) {
-      final wallet = wallets[0];
-      isRecovery = wallet[Wallet.isRecoveryColumn] == 1;
-      restoreHeight = wallet[Wallet.restoreHeightColumn] ?? 0;
-    }
-
+    walletInfoSource.values.forEach((info) => print('${info.id}\n${info.name}\n${info.type}'));
+    final walletInfo =
+        walletInfoSource.values.firstWhere((info) => info.id == id);
     return await configured(
-        isRecovery: isRecovery, restoreHeight: restoreHeight);
+        walletInfoSource: walletInfoSource, walletInfo: walletInfo);
   }
 
   static Future<MoneroWallet> configured(
-      {bool isRecovery, int restoreHeight}) async {
-    final wallet = MoneroWallet(isRecovery: isRecovery);
+      {@required Box<WalletInfo> walletInfoSource,
+      @required WalletInfo walletInfo}) async {
+    final wallet = MoneroWallet(
+        walletInfoSource: walletInfoSource, walletInfo: walletInfo);
 
-    if (isRecovery) {
+    if (walletInfo.isRecovery) {
       await wallet.setRecoveringFromSeed();
 
-      if (restoreHeight != null) {
-        await wallet.setRefreshFromBlockHeight(height: restoreHeight);
+      if (walletInfo.restoreHeight != null) {
+        await wallet.setRefreshFromBlockHeight(
+            height: walletInfo.restoreHeight);
       }
     }
 
@@ -79,7 +74,7 @@ class MoneroWallet extends Wallet {
   }
 
   WalletType getType() => WalletType.monero;
-  bool isRecovery;
+  bool get isRecovery => walletInfo.isRecovery;
   Observable<SyncStatus> get syncStatus => _syncStatus.stream;
   Observable<Balance> get onBalanceChange => _onBalanceChange.stream;
   Observable<Account> get onAccountChange => _account.stream;
@@ -90,6 +85,9 @@ class MoneroWallet extends Wallet {
   Account get account => _account.value;
   String get address => _address.value;
   String get name => _name.value;
+
+  Box<WalletInfo> walletInfoSource;
+  WalletInfo walletInfo;
 
   BehaviorSubject<Account> _account;
   BehaviorSubject<MoneroBalance> _onBalanceChange;
@@ -108,7 +106,8 @@ class MoneroWallet extends Wallet {
   SubaddressList _cachedSubaddressList;
   AccountList _cachedAccountList;
 
-  MoneroWallet({this.isRecovery = false}) {
+  MoneroWallet(
+      {this.walletInfoSource, this.walletInfo}) {
     _cachedBlockchainHeight = 0;
     _isSaving = false;
     _lastSaveTime = 0;
@@ -119,8 +118,7 @@ class MoneroWallet extends Wallet {
     _address = BehaviorSubject<String>();
     _syncStatus = BehaviorSubject<SyncStatus>();
     _onBalanceChange = BehaviorSubject<MoneroBalance>();
-    _account = BehaviorSubject<Account>()
-      ..add(Account(id: 0, label: 'Stupid ???'));
+    _account = BehaviorSubject<Account>()..add(Account(id: 0));
     _subaddress = BehaviorSubject<Subaddress>();
     setListeners();
   }
@@ -280,12 +278,8 @@ class MoneroWallet extends Wallet {
   Future<bool> isConnected() async => moneroWallet.isConnected();
 
   Future setAsRecovered() async {
-    final helper = await CoreDB.getInstance();
-    final db = await helper.getDb();
-    final name = await getName();
-    await Wallet.updateWalletData(
-        db: db, name: name, isRecovery: false, type: WalletType.monero);
-    isRecovery = true;
+    walletInfo.isRecovery = false;
+    await walletInfo.save();
   }
 
   Future askForUpdateBalance() async {

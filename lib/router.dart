@@ -3,22 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
-import 'package:sqflite/sqlite_api.dart';
+import 'package:hive/hive.dart';
 import 'package:cake_wallet/routes.dart';
 import 'package:cake_wallet/generated/i18n.dart';
 
 // MARK: Import domains
 
-import 'package:cake_wallet/src/domain/common/node_list.dart';
+import 'package:cake_wallet/src/domain/common/contact.dart';
 import 'package:cake_wallet/src/domain/services/user_service.dart';
 import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
 import 'package:cake_wallet/src/domain/services/wallet_service.dart';
-import 'package:cake_wallet/src/domain/services/address_book_service.dart';
-import 'package:cake_wallet/src/domain/exchange/trade_history.dart';
-import 'package:cake_wallet/src/domain/common/recipient_address_list.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/domain/exchange/changenow/changenow_exchange_provider.dart';
 import 'package:cake_wallet/src/domain/exchange/xmrto/xmrto_exchange_provider.dart';
+import 'package:cake_wallet/src/domain/common/node.dart';
+import 'package:cake_wallet/src/domain/monero/transaction_description.dart';
+import 'package:cake_wallet/src/domain/exchange/trade.dart';
 
 // MARK: Import stores
 
@@ -40,7 +40,6 @@ import 'package:cake_wallet/src/stores/account_list/account_list_store.dart';
 import 'package:cake_wallet/src/stores/address_book/address_book_store.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/src/stores/wallet/wallet_keys_store.dart';
-import 'package:cake_wallet/src/stores/trade_history/trade_history_store.dart';
 import 'package:cake_wallet/src/stores/exchange_trade/exchange_trade_store.dart';
 import 'package:cake_wallet/src/stores/exchange/exchange_store.dart';
 import 'package:cake_wallet/src/stores/action_list/action_list_store.dart';
@@ -77,16 +76,15 @@ import 'package:cake_wallet/src/screens/address_book/address_book_page.dart';
 import 'package:cake_wallet/src/screens/address_book/contact_page.dart';
 import 'package:cake_wallet/src/screens/show_keys/show_keys_page.dart';
 import 'package:cake_wallet/src/screens/exchange_trade/exchange_confirm_page.dart';
-import 'package:cake_wallet/src/screens/trade_history/trade_history_page.dart';
 import 'package:cake_wallet/src/screens/exchange_trade/exchange_trade_page.dart';
 import 'package:cake_wallet/src/screens/subaddress/subaddress_list_page.dart';
 import 'package:cake_wallet/src/screens/settings/change_language.dart';
 import 'package:cake_wallet/src/screens/restore/restore_wallet_from_seed_details.dart';
-import 'package:cake_wallet/src/screens/trade_history/trade_details_page.dart';
 import 'package:cake_wallet/src/screens/exchange/exchange_page.dart';
 import 'package:cake_wallet/src/screens/settings/settings.dart';
 import 'package:cake_wallet/src/screens/rescan/rescan_page.dart';
 import 'package:cake_wallet/src/screens/faq/faq_page.dart';
+import 'package:cake_wallet/src/screens/trade_details/trade_details_page.dart';
 
 class Router {
   static Route<dynamic> generateRoute(
@@ -94,13 +92,16 @@ class Router {
       WalletListService walletListService,
       WalletService walletService,
       UserService userService,
-      Database db,
       RouteSettings settings,
       PriceStore priceStore,
       WalletStore walletStore,
       SyncStore syncStore,
       BalanceStore balanceStore,
-      SettingsStore settingsStore}) {
+      SettingsStore settingsStore,
+      Box<Contact> contacts,
+      Box<Node> nodes,
+      Box<TransactionDescription> transactionDescriptions,
+      Box<Trade> trades}) {
     switch (settings.name) {
       case Routes.welcome:
         return MaterialPageRoute(builder: (_) => WelcomePage());
@@ -205,9 +206,10 @@ class Router {
                   walletService: walletService,
                   settingsStore: settingsStore,
                   priceStore: priceStore,
-                  tradeHistory: TradeHistory(db: db),
+                  tradesSource: trades,
                   transactionFilterStore: TransactionFilterStore(),
-                  tradeFilterStore: TradeFilterStore(walletStore: walletStore)),
+                  tradeFilterStore: TradeFilterStore(walletStore: walletStore),
+                  transactionDescriptions: transactionDescriptions),
               child: DashboardPage());
         });
 
@@ -229,7 +231,7 @@ class Router {
                       builder: (context) => SendStore(
                           walletService: walletService,
                           priceStore: priceStore,
-                          recipientAddressList: RecipientAddressList(db: db))),
+                          transactionDescriptions: transactionDescriptions)),
                 ], child: SendPage()));
 
       case Routes.receive:
@@ -244,10 +246,8 @@ class Router {
       case Routes.transactionDetails:
         return CupertinoPageRoute(
             fullscreenDialog: true,
-            builder: (_) => Provider(
-                builder: (_) => RecipientAddressList(db: db),
-                child: TransactionDetailsPage(
-                    transactionInfo: settings.arguments)));
+            builder: (_) =>
+                TransactionDetailsPage(transactionInfo: settings.arguments));
 
       case Routes.newSubaddress:
         return CupertinoPageRoute(
@@ -301,14 +301,14 @@ class Router {
       case Routes.nodeList:
         return CupertinoPageRoute(builder: (context) {
           return Provider(
-              builder: (_) => NodeListStore(nodeList: NodeList(db: db)),
+              builder: (_) => NodeListStore(nodesSource: nodes),
               child: NodeListPage());
         });
 
       case Routes.newNode:
         return CupertinoPageRoute(
             builder: (_) => Provider<NodeListStore>(
-                builder: (_) => NodeListStore(nodeList: NodeList(db: db)),
+                builder: (_) => NodeListStore(nodesSource: nodes),
                 child: NewNodePage()));
 
       case Routes.login:
@@ -357,9 +357,7 @@ class Router {
               Provider(
                   builder: (_) =>
                       AccountListStore(walletService: walletService)),
-              Provider(
-                  builder: (_) => AddressBookStore(
-                      addressBookService: AddressBookService(db: db)))
+              Provider(builder: (_) => AddressBookStore(contacts: contacts))
             ],
             child: AddressBookPage(),
           );
@@ -372,9 +370,7 @@ class Router {
               Provider(
                   builder: (_) =>
                       AccountListStore(walletService: walletService)),
-              Provider(
-                  builder: (_) => AddressBookStore(
-                      addressBookService: AddressBookService(db: db)))
+              Provider(builder: (_) => AddressBookStore(contacts: contacts))
             ],
             child: AddressBookPage(isEditable: false),
           );
@@ -387,9 +383,7 @@ class Router {
               Provider(
                 builder: (_) => AccountListStore(walletService: walletService),
               ),
-              Provider(
-                  builder: (_) => AddressBookStore(
-                      addressBookService: AddressBookService(db: db)))
+              Provider(builder: (_) => AddressBookStore(contacts: contacts))
             ],
             child: ContactPage(contact: settings.arguments),
           );
@@ -415,7 +409,7 @@ class Router {
                     ),
                     ProxyProvider<SettingsStore, SendStore>(
                         builder: (_, settingsStore, __) => SendStore(
-                            recipientAddressList: RecipientAddressList(db: db),
+                            transactionDescriptions: transactionDescriptions,
                             walletService: walletService,
                             settingsStore: settingsStore,
                             priceStore: priceStore)),
@@ -426,14 +420,6 @@ class Router {
       case Routes.exchangeConfirm:
         return MaterialPageRoute(
             builder: (_) => ExchangeConfirmPage(trade: settings.arguments));
-
-      case Routes.tradeHistory:
-        return MaterialPageRoute(builder: (context) {
-          return Provider(
-              builder: (_) =>
-                  TradeHistoryStore(tradeHistory: TradeHistory(db: db)),
-              child: TradeHistoryPage());
-        });
 
       case Routes.tradeDetails:
         return MaterialPageRoute(builder: (context) {
@@ -473,7 +459,7 @@ class Router {
                         initialProvider: xmrtoprovider,
                         initialDepositCurrency: CryptoCurrency.xmr,
                         initialReceiveCurrency: CryptoCurrency.btc,
-                        tradeHistory: TradeHistory(db: db),
+                        trades: trades,
                         providerList: [
                           xmrtoprovider,
                           ChangeNowExchangeProvider()
@@ -485,7 +471,7 @@ class Router {
       case Routes.settings:
         return MaterialPageRoute(
             builder: (_) => Provider(
-                builder: (_) => NodeListStore(nodeList: NodeList(db: db)),
+                builder: (_) => NodeListStore(nodesSource: nodes),
                 child: SettingsPage()));
 
       case Routes.rescan:

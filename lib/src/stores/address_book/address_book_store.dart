@@ -1,9 +1,9 @@
-import 'package:cake_wallet/src/domain/common/contact.dart';
-import 'package:cake_wallet/src/domain/services/address_book_service.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
-import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/generated/i18n.dart';
+import 'package:cake_wallet/src/domain/common/contact.dart';
+import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:hive/hive.dart';
 
 part 'address_book_store.g.dart';
 
@@ -19,33 +19,23 @@ abstract class AddressBookStoreBase with Store {
   @observable
   String errorMessage;
 
-  AddressBookService _addressBookService;
+  Box<Contact> contacts;
 
-  AddressBookStoreBase({@required AddressBookService addressBookService}) {
-    _addressBookService = addressBookService;
+  AddressBookStoreBase({@required this.contacts}) {
     updateContactList();
   }
 
   @action
-  Future add({Contact contact}) async {
-    await _addressBookService.add(contact: contact);
-  }
+  Future add({Contact contact}) async => contacts.add(contact);
 
   @action
-  Future updateContactList() async {
-    final contacts = await _addressBookService.getAll();
-    contactList = contacts;
-  }
+  Future updateContactList() async => contactList = contacts.values.toList();
 
   @action
-  Future change({Contact contact}) async {
-    await _addressBookService.change(contact: contact);
-  }
+  Future update({Contact contact}) async => contact.save();
 
   @action
-  Future delete({Contact contact}) async {
-    await _addressBookService.delete(contact: contact);
-  }
+  Future delete({Contact contact}) async => await contact.delete();
 
   void validateContactName(String value) {
     String p = '''^[^`,'"]{1,32}\$''';
