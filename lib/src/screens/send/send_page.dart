@@ -19,6 +19,8 @@ import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
 import 'package:cake_wallet/src/domain/common/calculate_estimated_fee.dart';
 import 'package:cake_wallet/generated/i18n.dart';
+import 'package:cake_wallet/src/domain/common/sync_status.dart';
+import 'package:cake_wallet/src/stores/sync/sync_store.dart';
 
 class SendPage extends BasePage {
   String get title => S.current.send_title;
@@ -51,6 +53,7 @@ class SendFormState extends State<SendForm> {
     sendStore.settingsStore = settingsStore;
     final balanceStore = Provider.of<BalanceStore>(context);
     final walletStore = Provider.of<WalletStore>(context);
+    final syncStore = Provider.of<SyncStore>(context);
 
     _setEffects(context);
 
@@ -344,7 +347,7 @@ class SendFormState extends State<SendForm> {
         ),
         bottomSection: Observer(builder: (_) {
           return LoadingPrimaryButton(
-              onPressed: () async {
+              onPressed: syncStore.status is SyncedSyncStatus ? () async {
                 // Hack. Don't ask me.
                 FocusScope.of(context).requestFocus(FocusNode());
 
@@ -380,7 +383,8 @@ class SendFormState extends State<SendForm> {
                         );
                       });
                 }
-              },
+              }
+              : null,
               text: S.of(context).send,
               color: Theme.of(context).accentTextTheme.button.backgroundColor,
               borderColor:

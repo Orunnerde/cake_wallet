@@ -222,6 +222,10 @@ class Router {
                         priceStore: priceStore),
                   ),
                   Provider(
+                      builder: (context) =>
+                          SyncStore(walletService: walletService),
+                  ),
+                  Provider(
                       builder: (context) => SendStore(
                           walletService: walletService,
                           priceStore: priceStore,
