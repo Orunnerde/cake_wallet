@@ -28,7 +28,7 @@ Future<void> startUpdatingPrice(
   priceStore.changePriceForPair(
       fiat: settingsStore.fiatCurrency, crypto: walletStore.type, price: price);
 
-  Timer.periodic(Duration(seconds: 30), (_) async {
+  Timer.periodic(Duration(seconds: 10), (_) async {
     final price = await updatePrice(
         <String, dynamic>{'fiat': settingsStore.fiatCurrency, 'crypto': walletStore.type});
     priceStore.changePriceForPair(
