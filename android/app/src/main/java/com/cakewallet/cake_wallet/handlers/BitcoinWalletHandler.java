@@ -13,6 +13,7 @@ import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.FilteredBlock;
 import org.bitcoinj.core.LegacyAddress;
@@ -175,6 +176,9 @@ public class BitcoinWalletHandler {
         NetworkParameters params = MainNetParams.get();
 
         currentWallet = Wallet.createDeterministic(params, Script.ScriptType.P2PKH);
+
+        ECKey ecKey = new ECKey();
+        currentWallet.importKey(ecKey);
 
         setWalletListeners();
         saveWalletToFile();
@@ -356,6 +360,7 @@ public class BitcoinWalletHandler {
                 //PeerAddress peerAddress = new PeerAddress(params, inetAddress, port);
 
                 peerGroup = new PeerGroup(params, chain);
+                peerGroup.setFastCatchupTimeSecs(currentWallet.getEarliestKeyCreationTime());
 
                 if (!host.equals("localhost")) {
                     peerGroup.addPeerDiscovery(new DnsDiscovery(params));
@@ -467,6 +472,19 @@ public class BitcoinWalletHandler {
     }
 
     private void refresh(MethodCall call, MethodChannel.Result result) {
+        /*String height = call.argument("height");
+        int blockHeight;
+
+        try {
+            blockHeight = Integer.parseInt(height);
+        } catch (Exception e) {
+            blockHeight = 0;
+        }
+
+        if (blockHeight > chain.getBestChainHeight()) {
+            currentWallet.setLastBlockSeenHeight(blockHeight);
+        }*/
+
         downloadBlockChain(call, result);
     }
 

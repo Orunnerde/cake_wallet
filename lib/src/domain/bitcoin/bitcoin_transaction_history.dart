@@ -62,7 +62,11 @@ class BitcoinTransactionHistory extends TransactionHistory {
 
     try {
       _isRefreshing = true;
-      await bitcoinWalletChannel.invokeMethod<int>("refresh");
+      await bitcoinWalletChannel.invokeMethod<int>("refresh",
+        <String,String> {
+          'height' : '0'
+        }
+      );
       _isRefreshing = false;
     } on PlatformException catch (e) {
       _isRefreshing = false;

@@ -200,8 +200,6 @@ class BitcoinWallet extends Wallet {
 
   @override
   Future<String> getUnlockedBalance() async {
-    //final unlockedBalance = await bitcoinWalletChannel.invokeMethod<int>('getUnlockedBalance');
-    //return bitcoinAmountToDouble(amount: unlockedBalance).toString();
     final fullBalance = await bitcoinWalletChannel.invokeMethod<int>('getFullBalance');
     return bitcoinAmountToDouble(amount: fullBalance).toString();
   }
@@ -280,7 +278,11 @@ class BitcoinWallet extends Wallet {
   @override
   Future rescan({int restoreHeight = 0}) async {
     try {
-      await bitcoinWalletChannel.invokeMethod<void>('refresh');
+      await bitcoinWalletChannel.invokeMethod<void>('refresh',
+        <String,String> {
+          'height' : restoreHeight.toString()
+        }
+      );
     } on PlatformException catch (e) {
       print(e);
       rethrow;
@@ -290,7 +292,11 @@ class BitcoinWallet extends Wallet {
   @override
   Future startSync() async {
     try {
-      await bitcoinWalletChannel.invokeMethod<void>('refresh');
+      await bitcoinWalletChannel.invokeMethod<void>('refresh',
+        <String,String> {
+          'height' : '0'
+        }
+      );
       _syncStatus.value = StartingSyncStatus();
     } on PlatformException catch (e) {
       _syncStatus.value = FailedSyncStatus();
