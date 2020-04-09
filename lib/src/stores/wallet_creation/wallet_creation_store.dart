@@ -40,13 +40,11 @@ abstract class WalletCreationStoreBase with Store {
     try {
       state = WalletIsCreating();
       await walletListService.changeWalletManger(walletType: walletType);
-      await walletListService.setCurrentWalletType(walletType);
       await walletListService.create(name, language);
       authStore.created();
       state = WalletCreatedSuccessfully();
     } catch (e) {
       await walletListService.changeWalletManger(walletType: _currentWalletType);
-      await walletListService.setCurrentWalletType(_currentWalletType);
       state = WalletCreationFailure(error: e.toString());
     }
   }

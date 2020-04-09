@@ -6,66 +6,38 @@ import android.os.Looper;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 
 import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.FilteredBlock;
 import org.bitcoinj.core.LegacyAddress;
 import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Peer;
 import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionConfidence;
-import org.bitcoinj.core.listeners.BlocksDownloadedEventListener;
 import org.bitcoinj.core.listeners.DownloadProgressTracker;
-import org.bitcoinj.core.listeners.OnTransactionBroadcastListener;
-import org.bitcoinj.core.listeners.PeerConnectedEventListener;
 import org.bitcoinj.crypto.DeterministicKey;
-import org.bitcoinj.crypto.KeyCrypter;
-import org.bitcoinj.net.BlockingClient;
-import org.bitcoinj.net.BlockingClientManager;
 import org.bitcoinj.params.MainNetParams;
 import org.bitcoinj.net.discovery.DnsDiscovery;
 import org.bitcoinj.script.Script;
-import org.bitcoinj.store.BlockStore;
-import org.bitcoinj.store.MemoryBlockStore;
 import org.bitcoinj.store.SPVBlockStore;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.SendRequest;
 import org.bitcoinj.wallet.Wallet;
-import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener;
-import org.bouncycastle.crypto.params.KeyParameter;
-import org.bouncycastle.util.StreamParser;
-import org.bouncycastle.util.StreamParsingException;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.math.BigInteger;
 import java.net.InetAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.AbstractExecutorService;
-
-import javax.annotation.Nullable;
-import javax.net.SocketFactory;
 
 import io.flutter.plugin.common.BasicMessageChannel;
 import io.flutter.plugin.common.MethodCall;
@@ -73,10 +45,10 @@ import io.flutter.plugin.common.MethodChannel;
 
 public class BitcoinWalletHandler {
     public static final String BITCOIN_WALLET_CHANNEL = "com.cakewallet.cake_wallet/bitcoin-wallet";
-    public static final int SYNCING_START = 1;
-    public static final int SYNCING_IN_PROGRESS = 2;
-    public static final int SYNCING_FINISHED = 0;
-    public static final int NEED_TO_REFRESH = 0;
+    private static final int SYNCING_START = 1;
+    private static final int SYNCING_IN_PROGRESS = 2;
+    private static final int SYNCING_FINISHED = 0;
+    private static final int NEED_TO_REFRESH = 0;
 
     private PeerGroup peerGroup;
     private BlockChain chain;
@@ -432,14 +404,14 @@ public class BitcoinWalletHandler {
 
                 Coin difference = elem.getValue(currentWallet);
                 int direction;
-                int amount;
+                long amount;
 
                 if (difference.isPositive()) {
                     direction = 0;
-                    amount = (int) difference.value;
+                    amount = difference.value;
                 } else {
                     direction = 1;
-                    amount = (int) (-difference.value);
+                    amount = -difference.value;
                 }
 
                 hashMap.put("direction", String.valueOf(direction));

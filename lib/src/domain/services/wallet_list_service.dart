@@ -25,8 +25,6 @@ class WalletIsExistException implements Exception {
 }
 
 class WalletListService {
-  static const currentWalletTypeKey = 'current_wallet_type';
-
   WalletListService(
       {this.secureStorage,
       this.walletInfoSource,
@@ -47,10 +45,12 @@ class WalletListService {
         currentWalletType = WalletType.bitcoin;
         break;
       default:
-        currentWalletType = WalletType.monero;
+        currentWalletType = WalletType.none;
     }
 
   }
+
+  static const currentWalletTypeKey = 'current_wallet_type';
 
   final FlutterSecureStorage secureStorage;
   final WalletService walletService;
@@ -151,6 +151,8 @@ class WalletListService {
     walletService.currentWallet = wallet;
     final walletName = await wallet.getName();
     await sharedPreferences.setString('current_wallet_name', walletName);
+    currentWalletType = wallet.getType();
+    await sharedPreferences.setString(currentWalletTypeKey, walletTypeToString(currentWalletType));
   }
 
   Future remove(WalletDescription wallet) async =>
@@ -170,10 +172,5 @@ class WalletListService {
     final encodedPassword = encodeWalletPassword(password: password);
 
     await secureStorage.write(key: key, value: encodedPassword);
-  }
-
-  Future setCurrentWalletType(WalletType walletType) async {
-    currentWalletType = walletType;
-    await sharedPreferences.setString(currentWalletTypeKey, walletTypeToString(walletType));
   }
 }

@@ -58,7 +58,7 @@ abstract class SettingsStoreBase with Store {
         selectedWalletType = WalletType.bitcoin;
         break;
       default:
-        selectedWalletType = WalletType.monero;
+        selectedWalletType = WalletType.none;
     }
 
     actionlistDisplayMode.observe(

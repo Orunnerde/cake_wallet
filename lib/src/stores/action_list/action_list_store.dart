@@ -96,7 +96,11 @@ abstract class ActionListBase with Store {
 
   @computed
   List<TransactionListItem> get transactions {
-    final cryptoCurrency = getCryptoCurrency(_walletService.currentWallet.getType());
+    CryptoCurrency cryptoCurrency = CryptoCurrency.xmr;
+
+    if (_walletService.currentWallet != null) {
+      cryptoCurrency = getCryptoCurrency(_walletService.currentWallet.getType());
+    }
 
     final symbol = PriceStoreBase.generateSymbolForPair(
         fiat: _settingsStore.fiatCurrency, crypto: cryptoCurrency);

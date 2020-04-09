@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cake_wallet/src/domain/common/wallet.dart';
@@ -46,7 +47,11 @@ abstract class BalanceStoreBase with Store {
 
   @computed
   String get fiatFullBalance {
-    final cryptoCurrency = getCryptoCurrency(_walletService.currentWallet.getType());
+    CryptoCurrency cryptoCurrency = CryptoCurrency.xmr;
+
+    if (_walletService.currentWallet != null) {
+      cryptoCurrency = getCryptoCurrency(_walletService.currentWallet.getType());
+    }
 
     if (fullBalance == null) {
       return '0.00';
@@ -60,7 +65,11 @@ abstract class BalanceStoreBase with Store {
 
   @computed
   String get fiatUnlockedBalance {
-    final cryptoCurrency = getCryptoCurrency(_walletService.currentWallet.getType());
+    CryptoCurrency cryptoCurrency = CryptoCurrency.xmr;
+
+    if (_walletService.currentWallet != null) {
+      cryptoCurrency = getCryptoCurrency(_walletService.currentWallet.getType());
+    }
 
     if (unlockedBalance == null) {
       return '0.00';
@@ -93,26 +102,39 @@ abstract class BalanceStoreBase with Store {
   }
 
   Future _onBalanceChange(Balance balance) async {
-    if (_walletService.currentWallet.getType() == WalletType.bitcoin) {
-      final _balance = balance as BitcoinBalance;
+    WalletType type = WalletType.monero;
 
-      if (this.fullBalance != _balance.fullBalance) {
-        this.fullBalance = _balance.fullBalance;
-      }
+    if (_walletService.currentWallet != null) {
+      type = _walletService.currentWallet.getType();
+    }
 
-      if (this.unlockedBalance != _balance.unlockedBalance) {
-        this.unlockedBalance = _balance.unlockedBalance;
-      }
-    } else {
-      final _balance = balance as MoneroBalance;
+    switch (type) {
+      case WalletType.monero:
+        final _balance = balance as MoneroBalance;
 
-      if (this.fullBalance != _balance.fullBalance) {
-        this.fullBalance = _balance.fullBalance;
-      }
+        if (this.fullBalance != _balance.fullBalance) {
+          this.fullBalance = _balance.fullBalance;
+        }
 
-      if (this.unlockedBalance != _balance.unlockedBalance) {
-        this.unlockedBalance = _balance.unlockedBalance;
-      }
+        if (this.unlockedBalance != _balance.unlockedBalance) {
+          this.unlockedBalance = _balance.unlockedBalance;
+        }
+
+        break;
+      case WalletType.bitcoin:
+        final _balance = balance as BitcoinBalance;
+
+        if (this.fullBalance != _balance.fullBalance) {
+          this.fullBalance = _balance.fullBalance;
+        }
+
+        if (this.unlockedBalance != _balance.unlockedBalance) {
+          this.unlockedBalance = _balance.unlockedBalance;
+        }
+
+        break;
+      case WalletType.none:
+        break;
     }
   }
 

@@ -37,7 +37,7 @@ class WalletService extends Wallet {
   String get name => _currentWallet.name;
 
   @override
-  WalletType get walletType => _currentWallet.walletType;
+  WalletType get walletType => _currentWallet.getType();
 
   Observable<Wallet> get onWalletChange => _onWalletChanged.stream;
 
