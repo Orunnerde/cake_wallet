@@ -6,14 +6,21 @@ import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
 import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
 import 'package:cake_wallet/src/domain/common/node_list.dart';
 import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
+import 'package:cake_wallet/src/domain/common/wallet_type.dart';
 
 Future defaultSettingsMigration(
     {@required int version,
     @required SharedPreferences sharedPreferences,
-    @required Box<Node> nodes}) async {
+    @required Box<Node> nodes,
+    @required WalletType walletType}) async {
   final currentVersion =
       sharedPreferences.getInt('current_default_settings_migration_version') ??
           0;
+
+  await addNodeType(
+      sharedPreferences: sharedPreferences,
+      nodes: nodes,
+      walletType: walletType); // FIXME: move to version 3
 
   if (currentVersion >= version) {
     return;
@@ -83,21 +90,41 @@ Future<void> replaceNodesMigration({@required Box<Node> nodes}) async {
 
 Future<void> changeCurrentNodeToDefault(
     {@required SharedPreferences sharedPreferences,
-    @required Box<Node> nodes}) async {
-  final timeZone = DateTime.now().timeZoneOffset.inHours;
+    @required Box<Node> nodes,
+    WalletType walletType}) async {
   String nodeUri = '';
 
-  if (timeZone >= 1) { // Eurasia
-    nodeUri = 'xmr-node-eu.cakewallet.com:18081';
-  } else if (timeZone <= -4) { // America
-    nodeUri = 'xmr-node-usa-east.cakewallet.com:18081';
+  switch (walletType) {
+    case WalletType.monero:
+      final timeZone = DateTime.now().timeZoneOffset.inHours;
+
+      if (timeZone >= 1) { // Eurasia
+        nodeUri = 'xmr-node-eu.cakewallet.com:18081';
+      } else if (timeZone <= -4) { // America
+        nodeUri = 'xmr-node-usa-east.cakewallet.com:18081';
+      }
+
+      final node = nodes.values.firstWhere((Node node) => node.uri == nodeUri) ??
+          nodes.values.firstWhere((Node node) => node.type == 'Monero');
+
+      final nodeId = node != null ? node.key as int : 0; // 0 - England
+
+      await sharedPreferences.setInt('current_node_id', nodeId);
+
+      break;
+    case WalletType.bitcoin:
+      nodeUri = 'default';
+      final node = nodes.values.firstWhere((Node node) => node.uri == nodeUri) ??
+          nodes.values.firstWhere((Node node) => node.type == 'Bitcoin');
+
+      final nodeId = node != null ? node.key as int : 0; // 0 - England
+
+      await sharedPreferences.setInt('current_btc_node_id', nodeId);
+
+      break;
+    case WalletType.none:
+      break;
   }
-
-  final node = nodes.values.firstWhere((Node node) => node.uri == nodeUri) ??
-      nodes.values.first;
-  final nodeId = node != null ? node.key as int : 0; // 0 - England
-
-  await sharedPreferences.setInt('current_node_id', nodeId);
 }
 
 Future<void> replaceDefaultNode(
@@ -120,4 +147,13 @@ Future<void> replaceDefaultNode(
 
   await changeCurrentNodeToDefault(
       sharedPreferences: sharedPreferences, nodes: nodes);
+}
+
+Future<void> addNodeType(
+    {@required SharedPreferences sharedPreferences,
+      @required Box<Node> nodes,
+      WalletType walletType}) async {
+  await resetToDefault(nodes);
+  await changeCurrentNodeToDefault(
+      sharedPreferences: sharedPreferences, nodes: nodes, walletType: walletType);
 }

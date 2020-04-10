@@ -1,16 +1,18 @@
 import 'dart:async';
+import 'package:cake_wallet/src/domain/common/wallet_type.dart';
 import 'package:mobx/mobx.dart';
 import 'package:hive/hive.dart';
 import 'package:cake_wallet/src/domain/common/node.dart';
 import 'package:cake_wallet/src/domain/common/node_list.dart';
 import 'package:cake_wallet/generated/i18n.dart';
+import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
 
 part 'node_list_store.g.dart';
 
 class NodeListStore = NodeListBase with _$NodeListStore;
 
 abstract class NodeListBase with Store {
-  NodeListBase({this.nodesSource}) {
+  NodeListBase({this.nodesSource, this.walletListService}) {
     nodes = ObservableList<Node>();
     _onNodesChangeSubscription = nodesSource.watch().listen((e) => update());
     update();
@@ -26,6 +28,7 @@ abstract class NodeListBase with Store {
   String errorMessage;
 
   Box<Node> nodesSource;
+  WalletListService walletListService;
 
   StreamSubscription<BoxEvent> _onNodesChangeSubscription;
 
@@ -51,7 +54,8 @@ abstract class NodeListBase with Store {
       uri += ':' + port;
     }
 
-    final node = Node(uri: uri, login: login, password: password);
+    final node = Node(uri: uri, login: login, password: password,
+        type: walletTypeToString(walletListService.currentWalletType));
     await nodesSource.add(node);
   }
 
@@ -69,6 +73,8 @@ abstract class NodeListBase with Store {
       return false;
     }
   }
+
+
 
   void validateNodeAddress(String value) {
     const pattern =

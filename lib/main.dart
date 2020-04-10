@@ -88,6 +88,7 @@ void main() async {
   final settingsStore = await SettingsStoreBase.load(
       nodes: nodes,
       sharedPreferences: sharedPreferences,
+      walletListService: walletListService,
       initialFiatCurrency: FiatCurrency.usd,
       initialTransactionPriority: TransactionPriority.slow,
       initialBalanceDisplayMode: BalanceDisplayMode.availableBalance);
@@ -142,7 +143,8 @@ Future<void> initialSetup(
   await defaultSettingsMigration(
       version: initialMigrationVersion,
       sharedPreferences: sharedPreferences,
-      nodes: nodes);
+      nodes: nodes,
+      walletType: initialWalletType);
   await authStore.started();
   monero_wallet.onStartup();
 }

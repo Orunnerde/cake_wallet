@@ -56,6 +56,7 @@ void onCurrentWalletChange(
   _onCurrentWalletChangeDisposer?.call();
 
   reaction((_) => walletStore.name, (String _) {
+    settingsStore.loadSettings();
     walletStore.connectToNode(node: settingsStore.node);
     startUpdatingPrice(
       settingsStore: settingsStore,

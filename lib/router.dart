@@ -302,14 +302,14 @@ class Router {
       case Routes.nodeList:
         return CupertinoPageRoute<void>(builder: (context) {
           return Provider(
-              create: (_) => NodeListStore(nodesSource: nodes),
-              child: NodeListPage());
+              create: (_) => NodeListStore(nodesSource: nodes, walletListService: walletListService),
+              child: NodeListPage(walletListService: walletListService));
         });
 
       case Routes.newNode:
         return CupertinoPageRoute<void>(
             builder: (_) => Provider<NodeListStore>(
-                create: (_) => NodeListStore(nodesSource: nodes),
+                create: (_) => NodeListStore(nodesSource: nodes, walletListService: walletListService),
                 child: NewNodePage()));
 
       case Routes.login:
@@ -470,7 +470,7 @@ class Router {
       case Routes.settings:
         return MaterialPageRoute<void>(
             builder: (_) => Provider(
-                create: (_) => NodeListStore(nodesSource: nodes),
+                create: (_) => NodeListStore(nodesSource: nodes, walletListService: walletListService),
                 child: SettingsPage()));
 
       case Routes.rescan:

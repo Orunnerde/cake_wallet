@@ -17,6 +17,7 @@ import 'package:cake_wallet/src/domain/common/language.dart';
 import 'package:devicelocale/devicelocale.dart';
 import 'package:intl/intl.dart';
 import 'package:cake_wallet/src/domain/common/wallet_type.dart';
+import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
 
 part 'settings_store.g.dart';
 
@@ -25,6 +26,7 @@ class SettingsStore = SettingsStoreBase with _$SettingsStore;
 abstract class SettingsStoreBase with Store {
   SettingsStoreBase(
       {@required SharedPreferences sharedPreferences,
+      @required WalletListService walletListService,
       @required Box<Node> nodes,
       @required FiatCurrency initialFiatCurrency,
       @required TransactionPriority initialTransactionPriority,
@@ -35,13 +37,13 @@ abstract class SettingsStoreBase with Store {
       this.actionlistDisplayMode,
       @required int initialPinLength,
       @required String initialLanguageCode,
-      @required String initialCurrentLocale,
-      @required String initialWalletTypeString}) {
+      @required String initialCurrentLocale}) {
     fiatCurrency = initialFiatCurrency;
     transactionPriority = initialTransactionPriority;
     balanceDisplayMode = initialBalanceDisplayMode;
     shouldSaveRecipientAddress = initialSaveRecipientAddress;
     _sharedPreferences = sharedPreferences;
+    _walletListService = walletListService;
     _nodes = nodes;
     allowBiometricalAuthentication = initialAllowBiometricalAuthentication;
     isDarkTheme = initialDarkTheme;
@@ -50,16 +52,7 @@ abstract class SettingsStoreBase with Store {
     currentLocale = initialCurrentLocale;
     itemHeaders = Map();
 
-    switch (initialWalletTypeString) {
-      case 'Monero':
-        selectedWalletType = WalletType.monero;
-        break;
-      case 'Bitcoin':
-        selectedWalletType = WalletType.bitcoin;
-        break;
-      default:
-        selectedWalletType = WalletType.monero;
-    }
+    selectedWalletType = _walletListService.currentWalletType;
 
     actionlistDisplayMode.observe(
         (dynamic _) => _sharedPreferences.setInt(displayActionListModeKey,
@@ -71,6 +64,7 @@ abstract class SettingsStoreBase with Store {
   }
 
   static const currentNodeIdKey = 'current_node_id';
+  static const currentBTCNodeIdKey = 'current_btc_node_id';
   static const currentFiatCurrencyKey = 'current_fiat_currency';
   static const currentTransactionPriorityKey = 'current_fee_priority';
   static const currentBalanceDisplayModeKey = 'current_balance_display_mode';
@@ -81,10 +75,10 @@ abstract class SettingsStoreBase with Store {
   static const displayActionListModeKey = 'display_list_mode';
   static const currentPinLength = 'current_pin_length';
   static const currentLanguageCode = 'language_code';
-  static const currentWalletTypeKey = 'current_wallet_type';
 
   static Future<SettingsStore> load(
       {@required SharedPreferences sharedPreferences,
+      @required WalletListService walletListService,
       @required Box<Node> nodes,
       @required FiatCurrency initialFiatCurrency,
       @required TransactionPriority initialTransactionPriority,
@@ -115,13 +109,10 @@ abstract class SettingsStoreBase with Store {
             ? await Language.localeDetection()
             : sharedPreferences.getString(currentLanguageCode);
     final initialCurrentLocale = await Devicelocale.currentLocale;
-    final currentWalletTypeString =
-    sharedPreferences.getString(currentWalletTypeKey) == null
-        ? walletTypeToString(WalletType.monero)
-        : sharedPreferences.getString(currentWalletTypeKey);
 
     final store = SettingsStore(
         sharedPreferences: sharedPreferences,
+        walletListService: walletListService,
         nodes: nodes,
         initialFiatCurrency: currentFiatCurrency,
         initialTransactionPriority: currentTransactionPriority,
@@ -132,8 +123,7 @@ abstract class SettingsStoreBase with Store {
         actionlistDisplayMode: actionlistDisplayMode,
         initialPinLength: defaultPinLength,
         initialLanguageCode: savedLanguageCode,
-        initialCurrentLocale: initialCurrentLocale,
-        initialWalletTypeString: currentWalletTypeString);
+        initialCurrentLocale: initialCurrentLocale);
 
     await store.loadSettings();
 
@@ -175,6 +165,7 @@ abstract class SettingsStoreBase with Store {
   Map<String, String> itemHeaders;
 
   SharedPreferences _sharedPreferences;
+  WalletListService _walletListService;
   Box<Node> _nodes;
   String currentVersion;
   WalletType selectedWalletType;
@@ -204,7 +195,18 @@ abstract class SettingsStoreBase with Store {
   @action
   Future setCurrentNode({@required Node node}) async {
     this.node = node;
-    await _sharedPreferences.setInt(currentNodeIdKey, node.key as int);
+
+    switch (_walletListService.currentWalletType) {
+      case WalletType.monero:
+        await _sharedPreferences.setInt(currentNodeIdKey, node.key as int);
+        break;
+      case WalletType.bitcoin:
+        await _sharedPreferences.setInt(currentBTCNodeIdKey, node.key as int);
+        break;
+      case WalletType.none:
+        await _sharedPreferences.setInt(currentNodeIdKey, node.key as int);
+        break;
+    }
   }
 
   @action
@@ -274,7 +276,19 @@ abstract class SettingsStoreBase with Store {
   }
 
   Future<Node> _fetchCurrentNode() async {
-    final id = _sharedPreferences.getInt(currentNodeIdKey);
+    int id;
+
+    switch (_walletListService.currentWalletType) {
+      case WalletType.monero:
+        id = _sharedPreferences.getInt(currentNodeIdKey);
+        break;
+      case WalletType.bitcoin:
+        id = _sharedPreferences.getInt(currentBTCNodeIdKey);
+        break;
+      case WalletType.none:
+        id = _sharedPreferences.getInt(currentNodeIdKey);
+        break;
+    }
 
     return _nodes.get(id);
   }
@@ -305,7 +319,10 @@ abstract class SettingsStoreBase with Store {
   }
 
   Future setCurrentNodeToDefault() async {
-    await changeCurrentNodeToDefault(sharedPreferences: _sharedPreferences, nodes: _nodes);
+    await changeCurrentNodeToDefault(
+        sharedPreferences: _sharedPreferences,
+        nodes: _nodes,
+        walletType: _walletListService.currentWalletType);
     await loadSettings();
   }
 

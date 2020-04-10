@@ -9,9 +9,13 @@ import 'package:cake_wallet/src/screens/nodes/node_indicator.dart';
 import 'package:cake_wallet/src/stores/node_list/node_list_store.dart';
 import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
+import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
+import 'package:cake_wallet/src/domain/common/wallet_type.dart';
 
 class NodeListPage extends BasePage {
-  NodeListPage();
+  NodeListPage({this.walletListService});
+
+  final WalletListService walletListService;
 
   @override
   String get title => S.current.nodes;
@@ -90,10 +94,14 @@ class NodeListPage extends BasePage {
   }
 
   @override
-  Widget body(context) => NodeListPageBody();
+  Widget body(context) => NodeListPageBody(walletListService: walletListService);
 }
 
 class NodeListPageBody extends StatefulWidget {
+  NodeListPageBody({this.walletListService});
+
+  final WalletListService walletListService;
+
   @override
   NodeListPageBodyState createState() => NodeListPageBodyState();
 }
@@ -107,6 +115,8 @@ class NodeListPageBodyState extends State<NodeListPageBody> {
     final currentColor = Theme.of(context).selectedRowColor;
     final notCurrentColor = Theme.of(context).backgroundColor;
 
+    final nodeType = walletTypeToString(widget.walletListService.currentWalletType);
+
     return Container(
       padding: EdgeInsets.only(bottom: 20.0),
       child: Column(
@@ -119,7 +129,8 @@ class NodeListPageBodyState extends State<NodeListPageBody> {
                 itemBuilder: (BuildContext context, int index) {
                   final node = nodeList.nodes[index];
 
-                  return Observer(builder: (_) {
+                  return node.type == nodeType
+                  ? Observer(builder: (_) {
                     final isCurrent = settings.node == null
                         ? false
                         : node.key == settings.node.key;
@@ -183,56 +194,58 @@ class NodeListPageBodyState extends State<NodeListPageBody> {
                     return isCurrent
                         ? content
                         : Dismissible(
-                            key: Key('${node.key}'),
-                            confirmDismiss: (direction) async {
-                              return await showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text(
-                                        S.of(context).remove_node,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      content: Text(
-                                        S.of(context).remove_node_message,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context, false),
-                                            child: Text(S.of(context).cancel)),
-                                        FlatButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context, true),
-                                            child: Text(S.of(context).remove)),
-                                      ],
-                                    );
-                                  });
-                            },
-                            onDismissed: (direction) async =>
-                                await nodeList.remove(node: node),
-                            direction: DismissDirection.endToStart,
-                            background: Container(
-                                padding: EdgeInsets.only(right: 10.0),
-                                alignment: AlignmentDirectional.centerEnd,
-                                color: Palette.red,
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    const Icon(
-                                      CupertinoIcons.delete,
-                                      color: Colors.white,
-                                    ),
-                                    Text(
-                                      S.of(context).delete,
-                                      style: TextStyle(color: Colors.white),
-                                    )
+                        key: Key('${node.key}'),
+                        confirmDismiss: (direction) async {
+                          return await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text(
+                                    S.of(context).remove_node,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  content: Text(
+                                    S.of(context).remove_node_message,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, false),
+                                        child: Text(S.of(context).cancel)),
+                                    FlatButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, true),
+                                        child: Text(S.of(context).remove)),
                                   ],
-                                )),
-                            child: content);
-                  });
+                                );
+                              });
+                        },
+                        onDismissed: (direction) async =>
+                        await nodeList.remove(node: node),
+                        direction: DismissDirection.endToStart,
+                        background: Container(
+                            padding: EdgeInsets.only(right: 10.0),
+                            alignment: AlignmentDirectional.centerEnd,
+                            color: Palette.red,
+                            child: Column(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                const Icon(
+                                  CupertinoIcons.delete,
+                                  color: Colors.white,
+                                ),
+                                Text(
+                                  S.of(context).delete,
+                                  style: TextStyle(color: Colors.white),
+                                )
+                              ],
+                            )),
+                        child: content);
+                  })
+                  : Offstage();
+
                 });
           }))
         ],

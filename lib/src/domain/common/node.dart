@@ -8,12 +8,13 @@ part 'node.g.dart';
 
 @HiveType()
 class Node extends HiveObject {
-  Node({@required this.uri, this.login, this.password});
+  Node({@required this.uri, this.login, this.password, this.type});
 
   Node.fromMap(Map map)
       : uri = (map['uri'] ?? '') as String,
         login = map['login'] as String,
-        password = map['password'] as String;
+        password = map['password'] as String,
+        type = map['type'] as String;
 
   static const boxName = 'Nodes';
 
@@ -25,6 +26,9 @@ class Node extends HiveObject {
 
   @HiveField(2)
   String password;
+
+  @HiveField(3)
+  String type;
 
   Future<bool> requestNode(String uri, {String login, String password}) async {
     Map<String, dynamic> resBody;
