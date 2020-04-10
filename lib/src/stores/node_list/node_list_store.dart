@@ -3,21 +3,30 @@ import 'package:mobx/mobx.dart';
 import 'package:hive/hive.dart';
 import 'package:cake_wallet/src/domain/common/node.dart';
 import 'package:cake_wallet/src/domain/common/node_list.dart';
+import 'package:cake_wallet/src/domain/bitcoin/bitcoin_node.dart';
+import 'package:cake_wallet/src/domain/bitcoin/bitcoin_node_list.dart';
 import 'package:cake_wallet/generated/i18n.dart';
+import 'package:rxdart/rxdart.dart';
 
 part 'node_list_store.g.dart';
 
 class NodeListStore = NodeListBase with _$NodeListStore;
 
 abstract class NodeListBase with Store {
-  NodeListBase({this.nodesSource}) {
+  NodeListBase({this.nodesSource, this.btcNodesSource}) {
     nodes = ObservableList<Node>();
+    bitcoinNodes = ObservableList<BitcoinNode>();
     _onNodesChangeSubscription = nodesSource.watch().listen((e) => update());
+    _onBTCNodesChangeSubscription = btcNodesSource.watch().listen((e) => btcUpdate());
     update();
+    btcUpdate();
   }
 
   @observable
   ObservableList<Node> nodes;
+
+  @observable
+  ObservableList<BitcoinNode> bitcoinNodes;
 
   @observable
   bool isValid;
@@ -26,8 +35,10 @@ abstract class NodeListBase with Store {
   String errorMessage;
 
   Box<Node> nodesSource;
+  Box<BitcoinNode> btcNodesSource;
 
   StreamSubscription<BoxEvent> _onNodesChangeSubscription;
+  StreamSubscription<BoxEvent> _onBTCNodesChangeSubscription;
 
   @override
   void dispose() {
@@ -36,11 +47,19 @@ abstract class NodeListBase with Store {
     if (_onNodesChangeSubscription != null) {
       _onNodesChangeSubscription.cancel();
     }
+
+    if (_onBTCNodesChangeSubscription != null) {
+      _onBTCNodesChangeSubscription.cancel();
+    }
   }
 
   @action
   void update() =>
       nodes.replaceRange(0, nodes.length, nodesSource.values.toList());
+
+  @action
+  void btcUpdate() =>
+      bitcoinNodes.replaceRange(0, bitcoinNodes.length, btcNodesSource.values.toList());
 
   @action
   Future addNode(
@@ -56,7 +75,23 @@ abstract class NodeListBase with Store {
   }
 
   @action
+  Future addBTCNode(
+      {String address, String port, String login, String password}) async {
+    var uri = address;
+
+    if (port != null && port.isNotEmpty) {
+      uri += ':' + port;
+    }
+
+    final node = BitcoinNode(uri: uri, login: login, password: password);
+    await btcNodesSource.add(node);
+  }
+
+  @action
   Future remove({Node node}) async => await node.delete();
+
+  @action
+  Future btcRemove({BitcoinNode node}) async => await node.delete();
 
   @action
   Future reset() async => await resetToDefault(nodesSource);

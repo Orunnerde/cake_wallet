@@ -36,6 +36,7 @@ import 'package:cake_wallet/src/domain/services/wallet_service.dart';
 import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/domain/common/language.dart';
 import 'package:cake_wallet/src/stores/seed_language/seed_language_store.dart';
+import 'package:cake_wallet/src/domain/bitcoin/bitcoin_node.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,6 +49,7 @@ void main() async {
   Hive.registerAdapter(TradeAdapter(), 3);
   Hive.registerAdapter(WalletInfoAdapter(), 4);
   Hive.registerAdapter(WalletTypeAdapter(), 5);
+  Hive.registerAdapter(BitcoinNodeAdapter(), 6);
 
   final secureStorage = FlutterSecureStorage();
   final transactionDescriptionsBoxKey = await getEncryptionKey(
@@ -65,6 +67,7 @@ void main() async {
   final trades =
       await Hive.openBox<Trade>(Trade.boxName, encryptionKey: tradesBoxKey);
   final walletInfoSource = await Hive.openBox<WalletInfo>(WalletInfo.boxName);
+  final bitcoinNodes = await Hive.openBox<BitcoinNode>(BitcoinNode.boxName);
 
   final sharedPreferences = await SharedPreferences.getInstance();
   final walletService = WalletService();
@@ -81,13 +84,16 @@ void main() async {
       sharedPreferences: sharedPreferences,
       walletListService: walletListService,
       nodes: nodes,
+      bitcoinNodes: bitcoinNodes,
       authStore: authenticationStore,
       initialMigrationVersion: 2,
       initialWalletType: walletListService.currentWalletType);
 
   final settingsStore = await SettingsStoreBase.load(
       nodes: nodes,
+      bitcoinNodes: bitcoinNodes,
       sharedPreferences: sharedPreferences,
+      walletListService: walletListService,
       initialFiatCurrency: FiatCurrency.usd,
       initialTransactionPriority: TransactionPriority.slow,
       initialBalanceDisplayMode: BalanceDisplayMode.availableBalance);
@@ -127,7 +133,8 @@ void main() async {
     Provider(create: (_) => nodes),
     Provider(create: (_) => transactionDescriptions),
     Provider(create: (_) => trades),
-    Provider(create: (_) => seedLanguageStore)
+    Provider(create: (_) => seedLanguageStore),
+    Provider(create: (_) => bitcoinNodes)
   ], child: CakeWalletApp()));
 }
 
@@ -135,6 +142,7 @@ Future<void> initialSetup(
     {WalletListService walletListService,
     SharedPreferences sharedPreferences,
     Box<Node> nodes,
+    Box<BitcoinNode> bitcoinNodes,
     AuthenticationStore authStore,
     int initialMigrationVersion = 1,
     WalletType initialWalletType = WalletType.monero}) async {
@@ -142,7 +150,8 @@ Future<void> initialSetup(
   await defaultSettingsMigration(
       version: initialMigrationVersion,
       sharedPreferences: sharedPreferences,
-      nodes: nodes);
+      nodes: nodes,
+      bitcoinNodes: bitcoinNodes);
   await authStore.started();
   monero_wallet.onStartup();
 }
@@ -187,6 +196,7 @@ class MaterialAppWithTheme extends StatelessWidget {
     final trades = Provider.of<Box<Trade>>(context);
     final transactionDescriptions =
         Provider.of<Box<TransactionDescription>>(context);
+    final bitcoinNodes = Provider.of<Box<BitcoinNode>>(context);
 
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: statusBarColor));
@@ -215,6 +225,7 @@ class MaterialAppWithTheme extends StatelessWidget {
             settingsStore: settingsStore,
             contacts: contacts,
             nodes: nodes,
+            bitcoinNodes: bitcoinNodes,
             trades: trades,
             transactionDescriptions: transactionDescriptions),
         home: Root());

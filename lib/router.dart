@@ -25,6 +25,7 @@ import 'package:cake_wallet/src/domain/monero/account.dart';
 import 'package:cake_wallet/src/domain/common/mnemotic_item.dart';
 import 'package:cake_wallet/src/domain/common/transaction_info.dart';
 import 'package:cake_wallet/src/domain/monero/subaddress.dart';
+import 'package:cake_wallet/src/domain/bitcoin/bitcoin_node.dart';
 
 // MARK: Import stores
 
@@ -103,6 +104,7 @@ class Router {
       SettingsStore settingsStore,
       Box<Contact> contacts,
       Box<Node> nodes,
+      Box<BitcoinNode> bitcoinNodes,
       Box<TransactionDescription> transactionDescriptions,
       Box<Trade> trades}) {
     switch (settings.name) {
@@ -302,14 +304,14 @@ class Router {
       case Routes.nodeList:
         return CupertinoPageRoute<void>(builder: (context) {
           return Provider(
-              create: (_) => NodeListStore(nodesSource: nodes),
+              create: (_) => NodeListStore(nodesSource: nodes, btcNodesSource: bitcoinNodes),
               child: NodeListPage());
         });
 
       case Routes.newNode:
         return CupertinoPageRoute<void>(
             builder: (_) => Provider<NodeListStore>(
-                create: (_) => NodeListStore(nodesSource: nodes),
+                create: (_) => NodeListStore(nodesSource: nodes, btcNodesSource: bitcoinNodes),
                 child: NewNodePage()));
 
       case Routes.login:

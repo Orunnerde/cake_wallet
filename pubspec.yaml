@@ -85,6 +85,7 @@ flutter:
   assets:
     - assets/images/
     - assets/node_list.yml
+    - assets/btc_node_list.yml
     - assets/text/
     - assets/faq/
 

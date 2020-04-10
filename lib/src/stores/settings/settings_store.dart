@@ -17,6 +17,8 @@ import 'package:cake_wallet/src/domain/common/language.dart';
 import 'package:devicelocale/devicelocale.dart';
 import 'package:intl/intl.dart';
 import 'package:cake_wallet/src/domain/common/wallet_type.dart';
+import 'package:cake_wallet/src/domain/bitcoin/bitcoin_node.dart';
+import 'package:cake_wallet/src/domain/services/wallet_list_service.dart';
 
 part 'settings_store.g.dart';
 
@@ -25,7 +27,9 @@ class SettingsStore = SettingsStoreBase with _$SettingsStore;
 abstract class SettingsStoreBase with Store {
   SettingsStoreBase(
       {@required SharedPreferences sharedPreferences,
+      @required WalletListService walletListService,
       @required Box<Node> nodes,
+      @required Box<BitcoinNode> bitcoinNodes,
       @required FiatCurrency initialFiatCurrency,
       @required TransactionPriority initialTransactionPriority,
       @required BalanceDisplayMode initialBalanceDisplayMode,
@@ -35,14 +39,14 @@ abstract class SettingsStoreBase with Store {
       this.actionlistDisplayMode,
       @required int initialPinLength,
       @required String initialLanguageCode,
-      @required String initialCurrentLocale,
-      @required String initialWalletTypeString}) {
+      @required String initialCurrentLocale}) {
     fiatCurrency = initialFiatCurrency;
     transactionPriority = initialTransactionPriority;
     balanceDisplayMode = initialBalanceDisplayMode;
     shouldSaveRecipientAddress = initialSaveRecipientAddress;
     _sharedPreferences = sharedPreferences;
     _nodes = nodes;
+    _bitcoinNodes = bitcoinNodes;
     allowBiometricalAuthentication = initialAllowBiometricalAuthentication;
     isDarkTheme = initialDarkTheme;
     defaultPinLength = initialPinLength;
@@ -50,16 +54,7 @@ abstract class SettingsStoreBase with Store {
     currentLocale = initialCurrentLocale;
     itemHeaders = Map();
 
-    switch (initialWalletTypeString) {
-      case 'Monero':
-        selectedWalletType = WalletType.monero;
-        break;
-      case 'Bitcoin':
-        selectedWalletType = WalletType.bitcoin;
-        break;
-      default:
-        selectedWalletType = WalletType.monero;
-    }
+    selectedWalletType = walletListService.currentWalletType;
 
     actionlistDisplayMode.observe(
         (dynamic _) => _sharedPreferences.setInt(displayActionListModeKey,
@@ -71,6 +66,7 @@ abstract class SettingsStoreBase with Store {
   }
 
   static const currentNodeIdKey = 'current_node_id';
+  static const currentBTCNodeIdKey = 'current_btc_node_id';
   static const currentFiatCurrencyKey = 'current_fiat_currency';
   static const currentTransactionPriorityKey = 'current_fee_priority';
   static const currentBalanceDisplayModeKey = 'current_balance_display_mode';
@@ -81,11 +77,12 @@ abstract class SettingsStoreBase with Store {
   static const displayActionListModeKey = 'display_list_mode';
   static const currentPinLength = 'current_pin_length';
   static const currentLanguageCode = 'language_code';
-  static const currentWalletTypeKey = 'current_wallet_type';
 
   static Future<SettingsStore> load(
       {@required SharedPreferences sharedPreferences,
+      @required WalletListService walletListService,
       @required Box<Node> nodes,
+      @required Box<BitcoinNode> bitcoinNodes,
       @required FiatCurrency initialFiatCurrency,
       @required TransactionPriority initialTransactionPriority,
       @required BalanceDisplayMode initialBalanceDisplayMode}) async {
@@ -115,14 +112,12 @@ abstract class SettingsStoreBase with Store {
             ? await Language.localeDetection()
             : sharedPreferences.getString(currentLanguageCode);
     final initialCurrentLocale = await Devicelocale.currentLocale;
-    final currentWalletTypeString =
-    sharedPreferences.getString(currentWalletTypeKey) == null
-        ? walletTypeToString(WalletType.monero)
-        : sharedPreferences.getString(currentWalletTypeKey);
 
     final store = SettingsStore(
         sharedPreferences: sharedPreferences,
+        walletListService: walletListService,
         nodes: nodes,
+        bitcoinNodes: bitcoinNodes,
         initialFiatCurrency: currentFiatCurrency,
         initialTransactionPriority: currentTransactionPriority,
         initialBalanceDisplayMode: currentBalanceDisplayMode,
@@ -132,16 +127,19 @@ abstract class SettingsStoreBase with Store {
         actionlistDisplayMode: actionlistDisplayMode,
         initialPinLength: defaultPinLength,
         initialLanguageCode: savedLanguageCode,
-        initialCurrentLocale: initialCurrentLocale,
-        initialWalletTypeString: currentWalletTypeString);
+        initialCurrentLocale: initialCurrentLocale);
 
     await store.loadSettings();
+    await store.loadBTCSettings();
 
     return store;
   }
 
   @observable
   Node node;
+
+  @observable
+  BitcoinNode bitcoinNode;
 
   @observable
   FiatCurrency fiatCurrency;
@@ -176,6 +174,7 @@ abstract class SettingsStoreBase with Store {
 
   SharedPreferences _sharedPreferences;
   Box<Node> _nodes;
+  Box<BitcoinNode> _bitcoinNodes;
   String currentVersion;
   WalletType selectedWalletType;
 
@@ -205,6 +204,12 @@ abstract class SettingsStoreBase with Store {
   Future setCurrentNode({@required Node node}) async {
     this.node = node;
     await _sharedPreferences.setInt(currentNodeIdKey, node.key as int);
+  }
+
+  @action
+  Future setCurrentBTCNode({@required BitcoinNode bitcoinNode}) async {
+    this.bitcoinNode = bitcoinNode;
+    await _sharedPreferences.setInt(currentBTCNodeIdKey, bitcoinNode.key as int);
   }
 
   @action
@@ -239,6 +244,8 @@ abstract class SettingsStoreBase with Store {
   }
 
   Future loadSettings() async => node = await _fetchCurrentNode();
+
+  Future loadBTCSettings() async => bitcoinNode = await _fetchCurrentBTCNode();
 
   @action
   void toggleTransactionsDisplay() =>
@@ -279,6 +286,12 @@ abstract class SettingsStoreBase with Store {
     return _nodes.get(id);
   }
 
+  Future<BitcoinNode> _fetchCurrentBTCNode() async {
+    final id = _sharedPreferences.getInt(currentBTCNodeIdKey);
+
+    return _bitcoinNodes.get(id);
+  }
+
   @action
   void setItemHeaders() {
     itemHeaders.clear();
@@ -307,6 +320,11 @@ abstract class SettingsStoreBase with Store {
   Future setCurrentNodeToDefault() async {
     await changeCurrentNodeToDefault(sharedPreferences: _sharedPreferences, nodes: _nodes);
     await loadSettings();
+  }
+
+  Future setCurrentBTCNodeToDefault() async {
+    await changeCurrentBTCNodeToDefault(sharedPreferences: _sharedPreferences, bitcoinNodes: _bitcoinNodes);
+    await loadBTCSettings();
   }
 
   DateFormat getCurrentDateFormat({

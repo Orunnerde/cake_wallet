@@ -108,7 +108,7 @@ abstract class WalletStoreBase with Store {
 
   @action
   Future reconnect() async =>
-      await _walletService.connectToNode(node: _settingsStore.node);
+      await _walletService.connectToNode(node: _settingsStore.node); // FIXME
 
   @action
   Future rescan({int restoreHeight}) async =>

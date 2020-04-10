@@ -79,7 +79,7 @@ class SettingsFormState extends State<SettingsForm> {
           title: ItemHeaders.currentNode,
           widget: Observer(
               builder: (_) => Text(
-                    settingsStore.node == null ? '' : settingsStore.node.uri,
+                    settingsStore.node == null ? '' : settingsStore.node.uri, // FIXME: show node according to wallet type
                     textAlign: TextAlign.right,
                     style: TextStyle(
                         fontSize: 16.0,

@@ -42,7 +42,7 @@ void setReactions(
   });
 }
 
-void connectToNode({SettingsStore settingsStore, WalletStore walletStore}) {
+void connectToNode({SettingsStore settingsStore, WalletStore walletStore}) { // FIXME
   _connectToNodeDisposer?.call();
 
   _connectToNodeDisposer = reaction((_) => settingsStore.node,
@@ -56,7 +56,7 @@ void onCurrentWalletChange(
   _onCurrentWalletChangeDisposer?.call();
 
   reaction((_) => walletStore.name, (String _) {
-    walletStore.connectToNode(node: settingsStore.node);
+    walletStore.connectToNode(node: settingsStore.node); // FIXME
     startUpdatingPrice(
       settingsStore: settingsStore,
       priceStore: priceStore,

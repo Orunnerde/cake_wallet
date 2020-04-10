@@ -6,14 +6,22 @@ import 'package:cake_wallet/src/domain/common/balance_display_mode.dart';
 import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
 import 'package:cake_wallet/src/domain/common/node_list.dart';
 import 'package:cake_wallet/src/domain/common/transaction_priority.dart';
+import 'package:cake_wallet/src/domain/bitcoin/bitcoin_node.dart';
+import 'package:cake_wallet/src/domain/bitcoin/bitcoin_node_list.dart';
 
 Future defaultSettingsMigration(
     {@required int version,
     @required SharedPreferences sharedPreferences,
-    @required Box<Node> nodes}) async {
+    @required Box<Node> nodes,
+    @required Box<BitcoinNode> bitcoinNodes}) async {
   final currentVersion =
       sharedPreferences.getInt('current_default_settings_migration_version') ??
           0;
+
+  await btcResetToDefault(bitcoinNodes); // FIXME: move to version 3
+  await changeCurrentBTCNodeToDefault(
+      sharedPreferences: sharedPreferences,
+      bitcoinNodes: bitcoinNodes); // FIXME: move to version 3
 
   if (currentVersion >= version) {
     return;
@@ -98,6 +106,18 @@ Future<void> changeCurrentNodeToDefault(
   final nodeId = node != null ? node.key as int : 0; // 0 - England
 
   await sharedPreferences.setInt('current_node_id', nodeId);
+}
+
+Future <void> changeCurrentBTCNodeToDefault(
+    {@required SharedPreferences sharedPreferences,
+    @required Box<BitcoinNode> bitcoinNodes}) async {
+  final nodeUri = 'default';
+
+  final node = bitcoinNodes.values.firstWhere((BitcoinNode node) => node.uri == nodeUri) ??
+      bitcoinNodes.values.first;
+  final nodeId = node != null ? node.key as int : 0;
+
+  await sharedPreferences.setInt('current_btc_node_id', nodeId);
 }
 
 Future<void> replaceDefaultNode(
