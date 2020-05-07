@@ -42,6 +42,7 @@ class MoneroWalletsManager extends WalletsManager {
           walletInfoSource: walletInfoSource,
           name: name,
           isRecovery: isRecovery);
+      await wallet.store();
       await wallet.updateInfo();
 
       return wallet;
