@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/domain/common/transaction_direction.dart';
 import 'package:cake_wallet/generated/i18n.dart';
 

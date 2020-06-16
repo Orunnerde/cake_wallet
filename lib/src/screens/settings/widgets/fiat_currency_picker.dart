@@ -38,6 +38,7 @@ class FiatCurrencyPicker extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 18,
+                            fontFamily: 'Montserrat',
                             fontWeight: FontWeight.bold,
                             decoration: TextDecoration.none,
                             color: Colors.white
@@ -86,6 +87,7 @@ class FiatCurrencyPicker extends StatelessWidget {
                                           item.toString(),
                                           style: TextStyle(
                                               fontSize: 18,
+                                              fontFamily: 'Montserrat',
                                               fontWeight: FontWeight.bold,
                                               decoration: TextDecoration.none,
                                               color: textColor

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cake_wallet/routes.dart';
-import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/screens/restore/widgets/restore_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/generated/i18n.dart';

@@ -133,7 +133,7 @@ class WalletListBodyState extends State<WalletListBody> {
                                                   item,
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                      fontSize: 12,
+                                                      fontSize: 10,
                                                       color: Colors.white
                                                   ),
                                                 )

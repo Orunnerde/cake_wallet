@@ -60,6 +60,7 @@ class SeedLanguagePickerState extends State<SeedLanguagePicker> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 18,
+                          fontFamily: 'Montserrat',
                           fontWeight: FontWeight.bold,
                           decoration: TextDecoration.none,
                           color: Colors.white
@@ -223,6 +224,7 @@ class SeedLanguagePickerState extends State<SeedLanguagePicker> {
                   text,
                   style: TextStyle(
                     fontSize: 18,
+                    fontFamily: 'Montserrat',
                     fontWeight: FontWeight.bold,
                     decoration: TextDecoration.none,
                     color: textColor

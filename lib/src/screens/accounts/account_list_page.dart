@@ -47,6 +47,7 @@ class AccountListPageForm extends State<AccountListPage> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 18,
+                        fontFamily: 'Montserrat',
                         fontWeight: FontWeight.bold,
                         decoration: TextDecoration.none,
                         color: Colors.white
@@ -125,6 +126,7 @@ class AccountListPageForm extends State<AccountListPage> {
                                             S.of(context).create_new_account,
                                             style: TextStyle(
                                               fontSize: 15,
+                                              fontFamily: 'Montserrat',
                                               fontWeight: FontWeight.w600,
                                               color: PaletteDark.darkNightBlue,
                                               decoration: TextDecoration.none,

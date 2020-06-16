@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cake_wallet/palette.dart';
 
 class HeaderTile extends StatelessWidget {
   HeaderTile({

@@ -7,7 +7,6 @@ import 'package:cake_wallet/src/stores/account_list/account_list_store.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/domain/monero/account.dart';
-import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/widgets/base_text_form_field.dart';
 
 class AccountPage extends BasePage {

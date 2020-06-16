@@ -25,7 +25,8 @@ class NodeListPage extends BasePage {
 
     return Container(
       height: 32,
-      width: 72,
+      width: 82,
+      margin: EdgeInsets.only(left: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(16)),
         color: Theme.of(context).accentTextTheme.title.backgroundColor
@@ -56,6 +57,7 @@ class NodeListPage extends BasePage {
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: 10.0,
+                  fontFamily: 'Montserrat',
                   color: Colors.blue),
             )),
       ),

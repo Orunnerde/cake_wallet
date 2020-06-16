@@ -127,7 +127,7 @@ class MenuWidgetState extends State<MenuWidget> {
                                             style: TextStyle(
                                                 color: Theme.of(context).primaryTextTheme.title.color,
                                                 decoration: TextDecoration.none,
-                                                fontFamily: 'Lato',
+                                                fontFamily: 'Montserrat',
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.bold
                                             ),
@@ -137,7 +137,7 @@ class MenuWidgetState extends State<MenuWidget> {
                                             style: TextStyle(
                                                 color: Theme.of(context).primaryTextTheme.caption.color,
                                                 decoration: TextDecoration.none,
-                                                fontFamily: 'Lato',
+                                                fontFamily: 'Montserrat',
                                                 fontSize: 12
                                             ),
                                           )
@@ -184,7 +184,7 @@ class MenuWidgetState extends State<MenuWidget> {
                                       style: TextStyle(
                                           decoration: TextDecoration.none,
                                           color: Theme.of(context).primaryTextTheme.title.color,
-                                          fontFamily: 'Lato',
+                                          fontFamily: 'Montserrat',
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold
                                       ),
@@ -209,7 +209,7 @@ class MenuWidgetState extends State<MenuWidget> {
                                       style: TextStyle(
                                           decoration: TextDecoration.none,
                                           color: Theme.of(context).primaryTextTheme.title.color,
-                                          fontFamily: 'Lato',
+                                          fontFamily: 'Montserrat',
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold
                                       ),

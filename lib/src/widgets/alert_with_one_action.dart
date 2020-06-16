@@ -49,6 +49,7 @@ class AlertWithOneAction extends BaseAlertDialog {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 15,
+                fontFamily: 'Montserrat',
                 fontWeight: FontWeight.w600,
                 color: Colors.blue,
                 decoration: TextDecoration.none,

@@ -17,6 +17,7 @@ class BaseAlertDialog extends StatelessWidget {
       textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: 20,
+        fontFamily: 'Montserrat',
         fontWeight: FontWeight.w600,
         color: Theme.of(context).primaryTextTheme.title.color,
         decoration: TextDecoration.none,
@@ -30,6 +31,7 @@ class BaseAlertDialog extends StatelessWidget {
       textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: 16,
+        fontFamily: 'Montserrat',
         fontWeight: FontWeight.w600,
         color: Theme.of(context).primaryTextTheme.title.color,
         decoration: TextDecoration.none,
@@ -68,6 +70,7 @@ class BaseAlertDialog extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 15,
+                      fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w600,
                       color: Colors.blue,
                       decoration: TextDecoration.none,
@@ -98,6 +101,7 @@ class BaseAlertDialog extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 15,
+                        fontFamily: 'Montserrat',
                         fontWeight: FontWeight.w600,
                         color: Colors.red,
                         decoration: TextDecoration.none,

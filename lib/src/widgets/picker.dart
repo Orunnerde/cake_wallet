@@ -40,6 +40,7 @@ class Picker<Item extends Object> extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 18,
+                            fontFamily: 'Montserrat',
                             fontWeight: FontWeight.bold,
                             decoration: TextDecoration.none,
                             color: Colors.white
@@ -101,6 +102,7 @@ class Picker<Item extends Object> extends StatelessWidget {
                                               item.toString(),
                                               style: TextStyle(
                                                 fontSize: 18,
+                                                fontFamily: 'Montserrat',
                                                 fontWeight: FontWeight.bold,
                                                 color: textColor,
                                                 decoration: TextDecoration.none,

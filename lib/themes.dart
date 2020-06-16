@@ -4,7 +4,7 @@ import 'palette.dart';
 class Themes {
 
   static final ThemeData lightTheme = ThemeData(
-    fontFamily: 'Lato',
+    fontFamily: 'Montserrat',
     brightness: Brightness.light,
     backgroundColor: Colors.white,
     focusColor: Colors.white, // wallet card border
@@ -72,7 +72,7 @@ class Themes {
 
 
   static final ThemeData darkTheme = ThemeData(
-    fontFamily: 'Lato',
+    fontFamily: 'Montserrat',
     brightness: Brightness.dark,
     backgroundColor: PaletteDark.darkNightBlue,
     focusColor: PaletteDark.lightDistantBlue, // wallet card border
