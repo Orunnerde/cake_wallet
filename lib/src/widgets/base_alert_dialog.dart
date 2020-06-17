@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/src/domain/common/main_font.dart';
 
 class BaseAlertDialog extends StatelessWidget {
   String get titleText => '';
@@ -17,7 +18,7 @@ class BaseAlertDialog extends StatelessWidget {
       textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: 20,
-        fontFamily: 'Montserrat',
+        fontFamily: mainFont,
         fontWeight: FontWeight.w600,
         color: Theme.of(context).primaryTextTheme.title.color,
         decoration: TextDecoration.none,
@@ -31,7 +32,7 @@ class BaseAlertDialog extends StatelessWidget {
       textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: 16,
-        fontFamily: 'Montserrat',
+        fontFamily: mainFont,
         fontWeight: FontWeight.w600,
         color: Theme.of(context).primaryTextTheme.title.color,
         decoration: TextDecoration.none,
@@ -70,7 +71,7 @@ class BaseAlertDialog extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 15,
-                      fontFamily: 'Montserrat',
+                      fontFamily: mainFont,
                       fontWeight: FontWeight.w600,
                       color: Colors.blue,
                       decoration: TextDecoration.none,
@@ -101,7 +102,7 @@ class BaseAlertDialog extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 15,
-                        fontFamily: 'Montserrat',
+                        fontFamily: mainFont,
                         fontWeight: FontWeight.w600,
                         color: Colors.red,
                         decoration: TextDecoration.none,

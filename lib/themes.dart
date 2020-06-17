@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'palette.dart';
+import 'package:cake_wallet/src/domain/common/main_font.dart';
 
 class Themes {
 
   static final ThemeData lightTheme = ThemeData(
-    fontFamily: 'Montserrat',
+    fontFamily: mainFont,
     brightness: Brightness.light,
     backgroundColor: Colors.white,
     focusColor: Colors.white, // wallet card border
@@ -72,7 +73,7 @@ class Themes {
 
 
   static final ThemeData darkTheme = ThemeData(
-    fontFamily: 'Montserrat',
+    fontFamily: mainFont,
     brightness: Brightness.dark,
     backgroundColor: PaletteDark.darkNightBlue,
     focusColor: PaletteDark.lightDistantBlue, // wallet card border

@@ -228,7 +228,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
                               child: Text('$index',
                                   style: TextStyle(
                                       fontSize: 30.0,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w600,
                                       color: Theme.of(context).primaryTextTheme.title.color)),
                             ),
                           );

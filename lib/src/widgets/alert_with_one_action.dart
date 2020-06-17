@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/src/widgets/base_alert_dialog.dart';
+import 'package:cake_wallet/src/domain/common/main_font.dart';
 
 class AlertWithOneAction extends BaseAlertDialog {
   AlertWithOneAction({
@@ -49,7 +50,7 @@ class AlertWithOneAction extends BaseAlertDialog {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 15,
-                fontFamily: 'Montserrat',
+                fontFamily: mainFont,
                 fontWeight: FontWeight.w600,
                 color: Colors.blue,
                 decoration: TextDecoration.none,

@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/src/domain/common/main_font.dart';
 
 class Picker<Item extends Object> extends StatelessWidget {
   Picker({
@@ -40,7 +41,7 @@ class Picker<Item extends Object> extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 18,
-                            fontFamily: 'Montserrat',
+                            fontFamily: mainFont,
                             fontWeight: FontWeight.bold,
                             decoration: TextDecoration.none,
                             color: Colors.white
@@ -102,7 +103,7 @@ class Picker<Item extends Object> extends StatelessWidget {
                                               item.toString(),
                                               style: TextStyle(
                                                 fontSize: 18,
-                                                fontFamily: 'Montserrat',
+                                                fontFamily: mainFont,
                                                 fontWeight: FontWeight.bold,
                                                 color: textColor,
                                                 decoration: TextDecoration.none,

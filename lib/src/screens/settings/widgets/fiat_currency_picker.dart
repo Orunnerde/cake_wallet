@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/domain/common/fiat_currency.dart';
+import 'package:cake_wallet/src/domain/common/main_font.dart';
 
 class FiatCurrencyPicker extends StatelessWidget {
   FiatCurrencyPicker({
@@ -38,7 +39,7 @@ class FiatCurrencyPicker extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 18,
-                            fontFamily: 'Montserrat',
+                            fontFamily: mainFont,
                             fontWeight: FontWeight.bold,
                             decoration: TextDecoration.none,
                             color: Colors.white
@@ -87,7 +88,7 @@ class FiatCurrencyPicker extends StatelessWidget {
                                           item.toString(),
                                           style: TextStyle(
                                               fontSize: 18,
-                                              fontFamily: 'Montserrat',
+                                              fontFamily: mainFont,
                                               fontWeight: FontWeight.bold,
                                               decoration: TextDecoration.none,
                                               color: textColor

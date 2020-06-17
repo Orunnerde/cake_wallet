@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cake_wallet/src/screens/dashboard/wallet_menu.dart';
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:provider/provider.dart';
+import 'package:cake_wallet/src/domain/common/main_font.dart';
 
 class MenuWidget extends StatefulWidget {
   @override
@@ -127,7 +128,7 @@ class MenuWidgetState extends State<MenuWidget> {
                                             style: TextStyle(
                                                 color: Theme.of(context).primaryTextTheme.title.color,
                                                 decoration: TextDecoration.none,
-                                                fontFamily: 'Montserrat',
+                                                fontFamily: mainFont,
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.bold
                                             ),
@@ -137,7 +138,7 @@ class MenuWidgetState extends State<MenuWidget> {
                                             style: TextStyle(
                                                 color: Theme.of(context).primaryTextTheme.caption.color,
                                                 decoration: TextDecoration.none,
-                                                fontFamily: 'Montserrat',
+                                                fontFamily: mainFont,
                                                 fontSize: 12
                                             ),
                                           )
@@ -184,7 +185,7 @@ class MenuWidgetState extends State<MenuWidget> {
                                       style: TextStyle(
                                           decoration: TextDecoration.none,
                                           color: Theme.of(context).primaryTextTheme.title.color,
-                                          fontFamily: 'Montserrat',
+                                          fontFamily: mainFont,
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold
                                       ),
@@ -209,7 +210,7 @@ class MenuWidgetState extends State<MenuWidget> {
                                       style: TextStyle(
                                           decoration: TextDecoration.none,
                                           color: Theme.of(context).primaryTextTheme.title.color,
-                                          fontFamily: 'Montserrat',
+                                          fontFamily: mainFont,
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold
                                       ),

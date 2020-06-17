@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/palette.dart';
 import 'package:cake_wallet/src/domain/common/crypto_currency.dart';
+import 'package:cake_wallet/src/domain/common/main_font.dart';
 
 class CurrencyPicker extends StatelessWidget {
   CurrencyPicker({
@@ -38,7 +39,7 @@ class CurrencyPicker extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 18,
-                          fontFamily: 'Montserrat',
+                          fontFamily: mainFont,
                           fontWeight: FontWeight.bold,
                           decoration: TextDecoration.none,
                           color: Colors.white
@@ -95,7 +96,7 @@ class CurrencyPicker extends StatelessWidget {
                                         item.toString(),
                                         style: TextStyle(
                                             fontSize: 18,
-                                            fontFamily: 'Montserrat',
+                                            fontFamily: mainFont,
                                             fontWeight: FontWeight.bold,
                                             decoration: TextDecoration.none,
                                             color: textColor

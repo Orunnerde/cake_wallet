@@ -11,6 +11,7 @@ import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/screens/nodes/widgets/node_list_row.dart';
 import 'package:cake_wallet/src/widgets/alert_with_two_actions.dart';
+import 'package:cake_wallet/src/domain/common/main_font.dart';
 
 class NodeListPage extends BasePage {
   NodeListPage();
@@ -57,7 +58,7 @@ class NodeListPage extends BasePage {
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: 10.0,
-                  fontFamily: 'Montserrat',
+                  fontFamily: mainFont,
                   color: Colors.blue),
             )),
       ),

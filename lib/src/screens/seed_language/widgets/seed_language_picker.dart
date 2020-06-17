@@ -5,6 +5,7 @@ import 'package:cake_wallet/palette.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/src/stores/seed_language/seed_language_store.dart';
 import 'package:cake_wallet/generated/i18n.dart';
+import 'package:cake_wallet/src/domain/common/main_font.dart';
 
 List<Image> flagImages = [
   Image.asset('assets/images/usa.png'),
@@ -60,7 +61,7 @@ class SeedLanguagePickerState extends State<SeedLanguagePicker> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 18,
-                          fontFamily: 'Montserrat',
+                          fontFamily: mainFont,
                           fontWeight: FontWeight.bold,
                           decoration: TextDecoration.none,
                           color: Colors.white
@@ -224,7 +225,7 @@ class SeedLanguagePickerState extends State<SeedLanguagePicker> {
                   text,
                   style: TextStyle(
                     fontSize: 18,
-                    fontFamily: 'Montserrat',
+                    fontFamily: mainFont,
                     fontWeight: FontWeight.bold,
                     decoration: TextDecoration.none,
                     color: textColor

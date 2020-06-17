@@ -304,7 +304,7 @@ class WalletCardState extends State<WalletCard> {
                                               balance,
                                               style: TextStyle(
                                                   fontSize: 28,
-                                                  fontWeight: FontWeight.bold,
+                                                  fontWeight: FontWeight.w600,
                                                   height: 1,
                                                   color: Theme.of(context).primaryTextTheme.title.color
                                               ),

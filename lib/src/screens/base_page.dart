@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/src/domain/common/main_font.dart';
 
 enum AppBarStyle { regular, withShadow }
 
@@ -63,7 +64,7 @@ abstract class BasePage extends StatelessWidget {
             title,
             style: TextStyle(
                 fontSize: 18.0,
-                fontFamily: 'Montserrat',
+                fontFamily: mainFont,
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).primaryTextTheme.title.color),
           );

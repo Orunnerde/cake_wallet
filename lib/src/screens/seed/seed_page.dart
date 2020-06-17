@@ -10,6 +10,7 @@ import 'package:cake_wallet/src/stores/wallet_seed/wallet_seed_store.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/src/domain/common/main_font.dart';
 
 class SeedPage extends BasePage {
   SeedPage({this.onCloseCallback});
@@ -49,7 +50,7 @@ class SeedPage extends BasePage {
               S.of(context).seed_language_next,
               style: TextStyle(
                 fontSize: 14,
-                fontFamily: 'Montserrat',
+                fontFamily: mainFont,
                 fontWeight: FontWeight.w600,
                 color: Colors.blue
               ),

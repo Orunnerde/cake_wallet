@@ -9,6 +9,7 @@ import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/stores/account_list/account_list_store.dart';
 import 'package:cake_wallet/src/screens/accounts/widgets/account_tile.dart';
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
+import 'package:cake_wallet/src/domain/common/main_font.dart';
 
 class AccountListPage extends StatefulWidget {
   AccountListPage({@required this.accountListStore});
@@ -47,7 +48,7 @@ class AccountListPageForm extends State<AccountListPage> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 18,
-                        fontFamily: 'Montserrat',
+                        fontFamily: mainFont,
                         fontWeight: FontWeight.bold,
                         decoration: TextDecoration.none,
                         color: Colors.white
@@ -126,7 +127,7 @@ class AccountListPageForm extends State<AccountListPage> {
                                             S.of(context).create_new_account,
                                             style: TextStyle(
                                               fontSize: 15,
-                                              fontFamily: 'Montserrat',
+                                              fontFamily: mainFont,
                                               fontWeight: FontWeight.w600,
                                               color: PaletteDark.darkNightBlue,
                                               decoration: TextDecoration.none,
