@@ -19,7 +19,7 @@ import 'package:cake_wallet/src/widgets/base_text_form_field.dart';
 
 class SendTemplatePage extends BasePage {
   @override
-  String get title => S.current.send_title;
+  String get title => S.current.exchange_new_template;
 
   @override
   Color get backgroundLightColor => Palette.lavender;
