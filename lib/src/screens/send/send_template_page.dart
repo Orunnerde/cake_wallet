@@ -15,6 +15,7 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/widgets/top_panel.dart';
 import 'package:cake_wallet/src/stores/send_template/send_template_store.dart';
+import 'package:cake_wallet/src/widgets/base_text_form_field.dart';
 
 class SendTemplatePage extends BasePage {
   @override
@@ -78,28 +79,13 @@ class SendTemplateFormState extends State<SendTemplateForm> {
               widget: Form(
                 key: _formKey,
                 child: Column(children: <Widget>[
-                  TextFormField(
-                      style: TextStyle(
-                          fontSize: 16.0,
-                          color: Theme.of(context).primaryTextTheme.title.color),
-                      controller: _nameController,
-                      decoration: InputDecoration(
-                          hintStyle: TextStyle(
-                              fontSize: 16.0,
-                              color: Theme.of(context).primaryTextTheme.caption.color),
-                          hintText: S.of(context).send_name,
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context).dividerColor,
-                                  width: 1.0)),
-                          enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context).dividerColor,
-                                  width: 1.0))),
-                      validator: (value) {
-                        sendTemplateStore.validateTemplate(value);
-                        return sendTemplateStore.errorMessage;
-                      },
+                  BaseTextFormField(
+                    controller: _nameController,
+                    hintText: S.of(context).send_name,
+                    validator: (value) {
+                      sendTemplateStore.validateTemplate(value);
+                      return sendTemplateStore.errorMessage;
+                    },
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 20),
@@ -121,10 +107,11 @@ class SendTemplateFormState extends State<SendTemplateForm> {
                         _cryptoAmountController.text = amount;
                       },
                       options: [
+                        AddressTextFieldOption.paste,
                         AddressTextFieldOption.qrCode,
                         AddressTextFieldOption.addressBook
                       ],
-                      buttonColor: Theme.of(context).accentTextTheme.title.color,
+                      buttonColor: Theme.of(context).accentTextTheme.headline.decorationColor,
                       validator: (value) {
                         sendTemplateStore.validateTemplate(value);
                         return sendTemplateStore.errorMessage;
@@ -135,80 +122,52 @@ class SendTemplateFormState extends State<SendTemplateForm> {
                       builder: (_) {
                         return Padding(
                           padding: const EdgeInsets.only(top: 20),
-                          child: TextFormField(
-                              style: TextStyle(
-                                  fontSize: 16.0,
-                                  color: Theme.of(context).primaryTextTheme.title.color
+                          child: BaseTextFormField(
+                            controller: _cryptoAmountController,
+                            keyboardType: TextInputType.numberWithOptions(
+                                signed: false, decimal: true),
+                            inputFormatters: [
+                              BlacklistingTextInputFormatter(
+                                  RegExp('[\\-|\\ |\\,]'))
+                            ],
+                            prefixIcon: Padding(
+                              padding: EdgeInsets.only(top: 12),
+                              child: Text('XMR:',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).primaryTextTheme.title.color,
+                                )
                               ),
-                              controller: _cryptoAmountController,
-                              keyboardType: TextInputType.numberWithOptions(
-                                  signed: false, decimal: true),
-                              inputFormatters: [
-                                BlacklistingTextInputFormatter(
-                                    RegExp('[\\-|\\ |\\,]'))
-                              ],
-                              decoration: InputDecoration(
-                                  prefixIcon: Padding(
-                                    padding: EdgeInsets.only(top: 12),
-                                    child: Text('XMR:',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Theme.of(context).primaryTextTheme.title.color,
-                                        )),
-                                  ),
-                                  hintStyle: TextStyle(
-                                      fontSize: 16.0,
-                                      color: Theme.of(context).primaryTextTheme.title.color),
-                                  hintText: '0.0000',
-                                  focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context).dividerColor,
-                                          width: 1.0)),
-                                  enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context).dividerColor,
-                                          width: 1.0))),
-                              ),
+                            ),
+                            hintText: '0.0000',
+                          )
                         );
                       }
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
-                    child: TextFormField(
-                        style: TextStyle(
-                            fontSize: 16.0,
-                            color: Theme.of(context).primaryTextTheme.title.color),
-                        controller: _fiatAmountController,
-                        keyboardType: TextInputType.numberWithOptions(
-                            signed: false, decimal: true),
-                        inputFormatters: [
-                          BlacklistingTextInputFormatter(
-                              RegExp('[\\-|\\ |\\,]'))
-                        ],
-                        decoration: InputDecoration(
-                            prefixIcon: Padding(
-                              padding: EdgeInsets.only(top: 12),
-                              child: Text(
-                                  '${settingsStore.fiatCurrency.toString()}:',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).primaryTextTheme.title.color,
-                                  )),
-                            ),
-                            hintStyle: TextStyle(
-                                fontSize: 16.0,
-                                color: Theme.of(context).primaryTextTheme.caption.color),
-                            hintText: '0.00',
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context).dividerColor,
-                                    width: 1.0)),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context).dividerColor,
-                                    width: 1.0)))),
+                    child: BaseTextFormField(
+                      controller: _fiatAmountController,
+                      keyboardType: TextInputType.numberWithOptions(
+                          signed: false, decimal: true),
+                      inputFormatters: [
+                        BlacklistingTextInputFormatter(
+                            RegExp('[\\-|\\ |\\,]'))
+                      ],
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(top: 12),
+                        child: Text(
+                          '${settingsStore.fiatCurrency.toString()}:',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryTextTheme.title.color,
+                          )
+                        ),
+                      ),
+                      hintText: '0.00',
+                    )
                   ),
                 ]),
               ),
@@ -230,7 +189,7 @@ class SendTemplateFormState extends State<SendTemplateForm> {
             }
           },
           text: S.of(context).save,
-          color: Colors.blue,
+          color: Colors.green,
           textColor: Colors.white
         ),
       ),

@@ -56,7 +56,7 @@ class SendingAlertState extends State<SendingAlert> {
                 right: 24,
                 bottom: 24,
                 child: PrimaryButton(
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
                   text: S.of(context).send_got_it,
                   color: Colors.blue,
                   textColor: Colors.white

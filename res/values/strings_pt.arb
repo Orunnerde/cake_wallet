@@ -136,11 +136,11 @@
 
   "share_address" : "Compartilhar endereço",
   "receive_amount" : "Quantia",
-  "subaddresses" : "Sub-endereços",
+  "subaddresses" : "Endereços",
   "rename" : "Renomear",
   "choose_account" : "Escolha uma conta",
   "create_new_account" : "Criar nova conta",
-  "accounts_subaddresses" : "Contas e sub-endereços",
+  "accounts_subaddresses" : "Contas e endereços",
 
 
   "restore_restore_wallet" : "Restaurar carteira",
@@ -240,12 +240,12 @@
   "copied_key_to_clipboard" : "${key} copiada para a área de transferência",
 
 
-  "new_subaddress_title" : "Criar sub-endereço",
+  "new_subaddress_title" : "Criar endereço",
   "new_subaddress_label_name" : "Nome",
   "new_subaddress_create" : "Criar",
 
 
-  "subaddress_title" : "Sub-endereços",
+  "subaddress_title" : "Endereços",
 
 
   "trade_details_title" : "Detalhes da troca",
@@ -298,7 +298,7 @@
   "error_text_payment_id" : "O ID de pagamento pode conter apenas de 16 a 64 caracteres em hexadecimal",
   "error_text_xmr" : "A quantia em XMR não pode exceder o saldo disponível.\nTO número de dígitos decimais deve ser menor ou igual a 12",
   "error_text_fiat" : "O valor do valor não pode exceder o saldo disponível.\nO número de dígitos decimais deve ser menor ou igual a 2",
-  "error_text_subaddress_name" : "O nome do sub-endereço não pode conter os símbolos ` , ' \" \ne deve ter entre 1 e 20 caracteres",
+  "error_text_subaddress_name" : "O nome do endereço não pode conter os símbolos ` , ' \" \ne deve ter entre 1 e 20 caracteres",
   "error_text_amount" : "A quantia deve conter apenas números",
   "error_text_wallet_name" : "O nome da carteira só pode conter letras, números\ne deve ter entre 1 e 15 caracteres",
   "error_text_keys" : "As chaves da carteira podem conter apenas 64 caracteres em hexadecimal",
@@ -377,5 +377,7 @@
   "buy" : "Comprar",
 
   "placeholder_transactions" : "Suas transações serão exibidas aqui",
-  "placeholder_contacts" : "Seus contatos serão exibidos aqui"
+  "placeholder_contacts" : "Seus contatos serão exibidos aqui",
+
+  "confirm_change_wallet" : "Deseja alterar a carteira atual para a selecionada?"
 }

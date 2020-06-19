@@ -136,11 +136,11 @@
 
   "share_address" : "Compartir dirección",
   "receive_amount" : "Cantidad",
-  "subaddresses" : "Subdirecciones",
+  "subaddresses" : "Direcciones",
   "rename" : "Rebautizar",
   "choose_account" : "Elegir cuenta",
   "create_new_account" : "Crear una nueva cuenta",
-  "accounts_subaddresses" : "Cuentas y subdirecciones",
+  "accounts_subaddresses" : "Cuentas y direcciones",
 
 
   "restore_restore_wallet" : "Recuperar Cartera",
@@ -240,12 +240,12 @@
   "copied_key_to_clipboard" : "Copiado ${key} al portapapeles",
 
 
-  "new_subaddress_title" : "Nueva subdirección",
+  "new_subaddress_title" : "Nueva dirección",
   "new_subaddress_label_name" : "Nombre de etiqueta",
   "new_subaddress_create" : "Crear",
 
 
-  "subaddress_title" : "Lista de subdirecciones",
+  "subaddress_title" : "Lista de direcciones",
 
 
   "trade_details_title" : "Detalles comerciales",
@@ -298,7 +298,7 @@
   "error_text_payment_id" : "La ID de pago solo puede contener de 16 a 64 caracteres en hexadecimal",
   "error_text_xmr" : "El valor XMR no puede exceder el saldo disponible.\nTEl número de dígitos de fracción debe ser menor o igual a 12",
   "error_text_fiat" : "El valor de la cantidad no puede exceder el saldo disponible.\nEl número de dígitos de fracción debe ser menor o igual a 2",
-  "error_text_subaddress_name" : "El nombre de la subdirección no puede contener símbolos `, '\" \ny debe tener entre 1 y 20 caracteres de longitud",
+  "error_text_subaddress_name" : "El nombre de la dirección no puede contener símbolos `, '\" \ny debe tener entre 1 y 20 caracteres de longitud",
   "error_text_amount" : "La cantidad solo puede contener números",
   "error_text_wallet_name" : "El nombre de la billetera solo puede contener letras, números \ny debe tener entre 1 y 15 caracteres de longitud",
   "error_text_keys" : "Las llaves de billetera solo pueden contener 64 caracteres en hexadecimal",
@@ -377,5 +377,7 @@
   "buy" : "Comprar",
 
   "placeholder_transactions" : "Sus transacciones se mostrarán aquí",
-  "placeholder_contacts" : "Tus contactos se mostrarán aquí"
+  "placeholder_contacts" : "Tus contactos se mostrarán aquí",
+
+  "confirm_change_wallet" : "¿Desea cambiar la billetera actual a la seleccionada?"
 }

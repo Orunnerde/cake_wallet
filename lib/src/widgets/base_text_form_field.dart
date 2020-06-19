@@ -17,6 +17,7 @@ class BaseTextFormField extends StatelessWidget {
     this.textFontSize = 16.0,
     this.hintFontSize = 16.0,
     this.prefix,
+    this.prefixIcon,
     this.suffix,
     this.suffixIcon,
     this.enabled = true,
@@ -37,6 +38,7 @@ class BaseTextFormField extends StatelessWidget {
   final double textFontSize;
   final double hintFontSize;
   final Widget prefix;
+  final Widget prefixIcon;
   final Widget suffix;
   final Widget suffixIcon;
   final bool enabled;
@@ -59,6 +61,7 @@ class BaseTextFormField extends StatelessWidget {
       ),
       decoration: InputDecoration(
         prefix: prefix,
+        prefixIcon: prefixIcon,
         suffix: suffix,
         suffixIcon: suffixIcon,
         hintStyle: TextStyle(

@@ -136,11 +136,11 @@
 
   "share_address" : "分享地址",
   "receive_amount" : "量",
-  "subaddresses" : "子地址",
+  "subaddresses" : "地址",
   "rename" : "改名",
   "choose_account" : "選擇帳號",
   "create_new_account" : "建立新帳戶",
-  "accounts_subaddresses" : "帳戶和子地址",
+  "accounts_subaddresses" : "帳號和地址",
 
 
   "restore_restore_wallet" : "恢复钱包",
@@ -240,12 +240,12 @@
   "copied_key_to_clipboard" : "复制 ${key} 到剪贴板",
 
 
-  "new_subaddress_title" : "新子地址",
+  "new_subaddress_title" : "新地址",
   "new_subaddress_label_name" : "标签名称",
   "new_subaddress_create" : "创建",
 
 
-  "subaddress_title" : "子地址清单",
+  "subaddress_title" : "地址清單",
 
 
   "trade_details_title" : "交易明细",
@@ -298,7 +298,7 @@
   "error_text_payment_id" : "付款ID只能包含16到64个字符（十六进制）",
   "error_text_xmr" : "XMR值不能超过可用余额.\n小数位数必须小于或等于12",
   "error_text_fiat" : "金额不能超过可用余额.\n小数位数必须小于或等于2",
-  "error_text_subaddress_name" : "子地址名称不能包含`，' \" 符号\n并且必须在1到20个字符之间",
+  "error_text_subaddress_name" : "地址名稱不能包含 `，' \" 符号\n并且必须在1到20个字符之间",
   "error_text_amount" : "金额只能包含数字",
   "error_text_wallet_name" : "钱包名称只能包含字母，数字\n且必须介于1到15个字符之间",
   "error_text_keys" : "钱包密钥只能包含16个字符的十六进制字符",
@@ -377,5 +377,7 @@
   "buy" : "購買",
 
   "placeholder_transactions" : "您的交易將顯示在這裡",
-  "placeholder_contacts" : "您的聯繫人將顯示在這裡"
+  "placeholder_contacts" : "您的聯繫人將顯示在這裡",
+
+  "confirm_change_wallet" : "您想將當前的錢包更改為選定的錢包嗎？"
 }

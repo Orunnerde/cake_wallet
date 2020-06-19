@@ -136,11 +136,11 @@
 
   "share_address" : "주소 공유",
   "receive_amount" : "양",
-  "subaddresses" : "하위 주소",
+  "subaddresses" : "구애",
   "rename" : "이름 바꾸기",
   "choose_account" : "계정을 선택하십시오",
   "create_new_account" : "새 계정을 만들",
-  "accounts_subaddresses" : "계정 및 하위 주소",
+  "accounts_subaddresses" : "계정 및 주소",
 
 
   "restore_restore_wallet" : "월렛 복원",
@@ -240,12 +240,12 @@
   "copied_key_to_clipboard" : "복사 ${key} 클립 보드로",
 
 
-  "new_subaddress_title" : "새로운 하위 주소",
+  "new_subaddress_title" : "새 주소",
   "new_subaddress_label_name" : "라벨 이름",
   "new_subaddress_create" : "몹시 떠들어 대다",
 
 
-  "subaddress_title" : "하위 주소 목록",
+  "subaddress_title" : "주소 목록",
 
 
   "trade_details_title" : "거래 세부 사항",
@@ -298,7 +298,7 @@
   "error_text_payment_id" : "지불 ID는 16 ~ 64 자의 16 진 문자 만 포함 할 수 있습니다",
   "error_text_xmr" : "XMR 값은 사용 가능한 잔액을 초과 할 수 없습니다.\n소수 자릿수는 12 이하 여야합니다",
   "error_text_fiat" : "금액은 사용 가능한 잔액을 초과 할 수 없습니다.\n소수 자릿수는 2보다 작거나 같아야합니다",
-  "error_text_subaddress_name" : "하위 주소 이름은 포함 할 수 없습니다 ` , ' \" 기호 \n1 ~ 20 자 사이 여야합니다",
+  "error_text_subaddress_name" : "주소 이름은 포함 할 수 없습니다 ` , ' \" 기호 \n1 ~ 20 자 사이 여야합니다",
   "error_text_amount" : "금액은 숫자 만 포함 할 수 있습니다",
   "error_text_wallet_name" : "지갑 이름은 문자, 숫자 만 포함 할 수 있습니다\n1 ~ 15 자 사이 여야합니다",
   "error_text_keys" : "지갑 키는 16 진수로 64 자만 포함 할 수 있습니다",
@@ -377,5 +377,7 @@
   "buy" : "구입",
 
   "placeholder_transactions" : "거래가 여기에 표시됩니다",
-  "placeholder_contacts" : "연락처가 여기에 표시됩니다"
+  "placeholder_contacts" : "연락처가 여기에 표시됩니다",
+
+  "confirm_change_wallet" : "현재 지갑을 선택된 지갑으로 변경 하시겠습니까?"
 }

@@ -120,7 +120,7 @@ class BaseExchangeWidgetState extends State<BaseExchangeWidget> {
                                     exchangeStore.changeDepositCurrency(currency: currency),
                                 imageArrow: arrowBottomPurple,
                                 currencyButtonColor: Theme.of(context).accentTextTheme.title.color,
-                                addressButtonsColor: Theme.of(context).accentTextTheme.title.backgroundColor,
+                                addressButtonsColor: Theme.of(context).accentTextTheme.subhead.color,
                                 currencyValueValidator: (value) {
                                   exchangeStore.validateCryptoCurrency(value);
                                   return exchangeStore.errorMessage;
@@ -153,7 +153,7 @@ class BaseExchangeWidgetState extends State<BaseExchangeWidget> {
                                     .changeReceiveCurrency(currency: currency),
                                 imageArrow: arrowBottomCakeGreen,
                                 currencyButtonColor: Theme.of(context).accentTextTheme.title.backgroundColor,
-                                addressButtonsColor: Theme.of(context).accentTextTheme.title.color,
+                                addressButtonsColor: Theme.of(context).accentTextTheme.headline.decorationColor,
                                 currencyValueValidator: (value) {
                                   exchangeStore.validateCryptoCurrency(value);
                                   return exchangeStore.errorMessage;

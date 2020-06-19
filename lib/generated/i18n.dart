@@ -23,7 +23,7 @@ class S implements WidgetsLocalizations {
 
   String get account => "Account";
   String get accounts => "Accounts";
-  String get accounts_subaddresses => "Accounts and subaddresses";
+  String get accounts_subaddresses => "Accounts and addresses";
   String get add => "Add";
   String get add_new_node => "Add new node";
   String get add_new_word => "Add new word";
@@ -55,6 +55,7 @@ class S implements WidgetsLocalizations {
   String get choose_wallet_currency => "Please choose wallet currency:";
   String get clear => "Clear";
   String get confirm => "Confirm";
+  String get confirm_change_wallet => "Do you want to change current wallet to selected one?";
   String get confirm_sending => "Confirm sending";
   String get contact => "Contact";
   String get contact_name => "Contact Name";
@@ -81,7 +82,7 @@ class S implements WidgetsLocalizations {
   String get error_text_node_address => "Please enter a iPv4 address";
   String get error_text_node_port => "Node port can only contain numbers between 0 and 65535";
   String get error_text_payment_id => "Payment ID can only contain from 16 to 64 chars in hex";
-  String get error_text_subaddress_name => "Subaddress name can't contain ` , ' \" symbols\nand must be between 1 and 20 characters long";
+  String get error_text_subaddress_name => "Address name can't contain ` , ' \" symbols\nand must be between 1 and 20 characters long";
   String get error_text_template => "Template name and address can't contain ` , ' \" symbols\nand must be between 1 and 106 characters long";
   String get error_text_wallet_name => "Wallet name can only contain letters, numbers\nand must be between 1 and 15 characters long";
   String get error_text_xmr => "XMR value can't exceed available balance.\nThe number of fraction digits must be less or equal to 12";
@@ -104,7 +105,7 @@ class S implements WidgetsLocalizations {
   String get login => "Login";
   String get new_subaddress_create => "Create";
   String get new_subaddress_label_name => "Label name";
-  String get new_subaddress_title => "New subaddress";
+  String get new_subaddress_title => "New address";
   String get new_wallet => "New Wallet";
   String get node_address => "Node Address";
   String get node_new => "New Node";
@@ -224,8 +225,8 @@ class S implements WidgetsLocalizations {
   String get spend_key_private => "Spend key (private)";
   String get spend_key_public => "Spend key (public)";
   String get status => "Status: ";
-  String get subaddress_title => "Subaddress list";
-  String get subaddresses => "Subaddresses";
+  String get subaddress_title => "Address list";
+  String get subaddresses => "Addresses";
   String get sync_status_connected => "CONNECTED";
   String get sync_status_connecting => "CONNECTING";
   String get sync_status_failed_connect => "FAILED CONNECT TO THE NODE";
@@ -438,13 +439,15 @@ class $de extends S {
   @override
   String get reconnect => "Erneut verbinden";
   @override
+  String get confirm_change_wallet => "Möchten Sie die aktuelle Brieftasche in eine ausgewählte ändern?";
+  @override
   String get reconnect_alert_text => "Sind Sie sicher, dass Sie die Verbindung wiederherstellen möchten?";
   @override
   String get send_error_minimum_value => "Der Mindestbetrag beträgt 0,01";
   @override
   String get copy_address => "Adresse kopieren";
   @override
-  String get error_text_subaddress_name => "Der Name der Unteradresse darf nicht enthalten sein ` , ' \" symbole\nund muss zwischen 1 und 20 Zeichen lang sein";
+  String get error_text_subaddress_name => "Der Name der Adresse darf nicht enthalten sein ` , ' \" symbole\nund muss zwischen 1 und 20 Zeichen lang sein";
   @override
   String get incorrect_seed => "Der eingegebene Text ist ungültig.";
   @override
@@ -586,7 +589,7 @@ class $de extends S {
   @override
   String get loading_your_wallet => "Laden Sie Ihre Brieftasche";
   @override
-  String get subaddresses => "Unteradressen";
+  String get subaddresses => "Adressen";
   @override
   String get trade_state_timeout => "Auszeit";
   @override
@@ -610,7 +613,7 @@ class $de extends S {
   @override
   String get send_error_currency => "Die Währung kann nur Zahlen enthalten";
   @override
-  String get subaddress_title => "Unteradressenliste";
+  String get subaddress_title => "Adressliste";
   @override
   String get wallet_store_monero_wallet => "Monero Wallet";
   @override
@@ -640,7 +643,7 @@ class $de extends S {
   @override
   String get change_language => "Sprache ändern";
   @override
-  String get accounts_subaddresses => "Konten und Unteradressen";
+  String get accounts_subaddresses => "Konten und Adressen";
   @override
   String get wallet_name => "Walletname";
   @override
@@ -714,7 +717,7 @@ class $de extends S {
   @override
   String get exchange_result_write_down_trade_id => "Bitte kopieren oder notieren Sie die Handel-ID, um fortzufahren.";
   @override
-  String get new_subaddress_title => "Neue Unteradresse";
+  String get new_subaddress_title => "Neue Adresse";
   @override
   String get change => "Veränderung";
   @override
@@ -1058,13 +1061,15 @@ class $hi extends S {
   @override
   String get reconnect => "रिकनेक्ट";
   @override
+  String get confirm_change_wallet => "क्या आप वर्तमान बटुए को चयनित में बदलना चाहते हैं?";
+  @override
   String get reconnect_alert_text => "क्या आप पुन: कनेक्ट होना सुनिश्चित करते हैं?";
   @override
   String get send_error_minimum_value => "राशि का न्यूनतम मूल्य 0.01 है";
   @override
   String get copy_address => "पता कॉपी करें";
   @override
-  String get error_text_subaddress_name => "सबड्रेस नाम नहीं हो सकता` , ' \" प्रतीकों\nऔर 1 और 20 वर्णों के बीच लंबा होना चाहिए";
+  String get error_text_subaddress_name => "पता नाम नहीं हो सकता ` , ' \" प्रतीकों\nऔर 1 और 20 वर्णों के बीच लंबा होना चाहिए";
   @override
   String get incorrect_seed => "दर्ज किया गया पाठ मान्य नहीं है।";
   @override
@@ -1206,7 +1211,7 @@ class $hi extends S {
   @override
   String get loading_your_wallet => "अपना बटुआ लोड कर रहा है";
   @override
-  String get subaddresses => "उप पते";
+  String get subaddresses => "पतों";
   @override
   String get trade_state_timeout => "समय समाप्त";
   @override
@@ -1230,7 +1235,7 @@ class $hi extends S {
   @override
   String get send_error_currency => "मुद्रा में केवल संख्याएँ हो सकती हैं";
   @override
-  String get subaddress_title => "उपखंड सूची";
+  String get subaddress_title => "पता सूची";
   @override
   String get wallet_store_monero_wallet => "मोनरो वॉलेट";
   @override
@@ -1260,7 +1265,7 @@ class $hi extends S {
   @override
   String get change_language => "भाषा बदलो";
   @override
-  String get accounts_subaddresses => "लेखा और उपदेस";
+  String get accounts_subaddresses => "खाते और पते";
   @override
   String get wallet_name => "बटुए का नाम";
   @override
@@ -1334,7 +1339,7 @@ class $hi extends S {
   @override
   String get exchange_result_write_down_trade_id => "जारी रखने के लिए कृपया ट्रेड ID की प्रतिलिपि बनाएँ या लिखें.";
   @override
-  String get new_subaddress_title => "नई उपशादी";
+  String get new_subaddress_title => "नया पता";
   @override
   String get change => "परिवर्तन";
   @override
@@ -1678,13 +1683,15 @@ class $ru extends S {
   @override
   String get reconnect => "Переподключиться";
   @override
+  String get confirm_change_wallet => "Вы хотите изменить текущий кошелек на выбранный?";
+  @override
   String get reconnect_alert_text => "Вы хотите переподключиться?";
   @override
   String get send_error_minimum_value => "Mинимальная сумма 0.01";
   @override
   String get copy_address => "Cкопировать адрес";
   @override
-  String get error_text_subaddress_name => "Имя субадреса не может содержать ` , ' \" символы\nи должно быть от 1 до 20 символов в длину";
+  String get error_text_subaddress_name => "Имя адреса не может содержать ` , ' \" символы\nи должно быть от 1 до 20 символов в длину";
   @override
   String get incorrect_seed => "Введённый текст некорректный.";
   @override
@@ -1826,7 +1833,7 @@ class $ru extends S {
   @override
   String get loading_your_wallet => "Загрузка кошелька";
   @override
-  String get subaddresses => "Субадреса";
+  String get subaddresses => "Адреса";
   @override
   String get trade_state_timeout => "Таймаут";
   @override
@@ -1850,7 +1857,7 @@ class $ru extends S {
   @override
   String get send_error_currency => "Валюта может содержать только цифры";
   @override
-  String get subaddress_title => "Список субадресов";
+  String get subaddress_title => "Список адресов";
   @override
   String get wallet_store_monero_wallet => "Monero Кошелёк";
   @override
@@ -1880,7 +1887,7 @@ class $ru extends S {
   @override
   String get change_language => "Изменить язык";
   @override
-  String get accounts_subaddresses => "Аккаунты и субадреса";
+  String get accounts_subaddresses => "Аккаунты и адреса";
   @override
   String get wallet_name => "Имя кошелька";
   @override
@@ -1954,7 +1961,7 @@ class $ru extends S {
   @override
   String get exchange_result_write_down_trade_id => "Пожалуйста, скопируйте или запишите ID сделки.";
   @override
-  String get new_subaddress_title => "Новый субадрес";
+  String get new_subaddress_title => "Новый адрес";
   @override
   String get change => "Изменить";
   @override
@@ -2298,13 +2305,15 @@ class $ko extends S {
   @override
   String get reconnect => "다시 연결";
   @override
+  String get confirm_change_wallet => "현재 지갑을 선택된 지갑으로 변경 하시겠습니까?";
+  @override
   String get reconnect_alert_text => "다시 연결 하시겠습니까?";
   @override
   String get send_error_minimum_value => "금액의 최소값은 0.01입니다";
   @override
   String get copy_address => "주소 복사";
   @override
-  String get error_text_subaddress_name => "하위 주소 이름은 포함 할 수 없습니다 ` , ' \" 기호 \n1 ~ 20 자 사이 여야합니다";
+  String get error_text_subaddress_name => "주소 이름은 포함 할 수 없습니다 ` , ' \" 기호 \n1 ~ 20 자 사이 여야합니다";
   @override
   String get incorrect_seed => "입력하신 텍스트가 유효하지 않습니다.";
   @override
@@ -2446,7 +2455,7 @@ class $ko extends S {
   @override
   String get loading_your_wallet => "지갑 넣기";
   @override
-  String get subaddresses => "하위 주소";
+  String get subaddresses => "구애";
   @override
   String get trade_state_timeout => "타임 아웃";
   @override
@@ -2470,7 +2479,7 @@ class $ko extends S {
   @override
   String get send_error_currency => "통화는 숫자 만 포함 할 수 있습니다";
   @override
-  String get subaddress_title => "하위 주소 목록";
+  String get subaddress_title => "주소 목록";
   @override
   String get wallet_store_monero_wallet => "모네로 월렛";
   @override
@@ -2500,7 +2509,7 @@ class $ko extends S {
   @override
   String get change_language => "언어 변경";
   @override
-  String get accounts_subaddresses => "계정 및 하위 주소";
+  String get accounts_subaddresses => "계정 및 주소";
   @override
   String get wallet_name => "지갑 이름";
   @override
@@ -2574,7 +2583,7 @@ class $ko extends S {
   @override
   String get exchange_result_write_down_trade_id => "계속하려면 거래 ID를 복사하거나 적어 두십시오..";
   @override
-  String get new_subaddress_title => "새로운 하위 주소";
+  String get new_subaddress_title => "새 주소";
   @override
   String get change => "변화";
   @override
@@ -2918,13 +2927,15 @@ class $pt extends S {
   @override
   String get reconnect => "Reconectar";
   @override
+  String get confirm_change_wallet => "Deseja alterar a carteira atual para a selecionada?";
+  @override
   String get reconnect_alert_text => "Você tem certeza de que deseja reconectar?";
   @override
   String get send_error_minimum_value => "O valor mínimo da quantia é 0,01";
   @override
   String get copy_address => "Copiar endereço";
   @override
-  String get error_text_subaddress_name => "O nome do sub-endereço não pode conter os símbolos ` , ' \" \ne deve ter entre 1 e 20 caracteres";
+  String get error_text_subaddress_name => "O nome do endereço não pode conter os símbolos ` , ' \" \ne deve ter entre 1 e 20 caracteres";
   @override
   String get incorrect_seed => "O texto digitado não é válido.";
   @override
@@ -3066,7 +3077,7 @@ class $pt extends S {
   @override
   String get loading_your_wallet => "Abrindo sua carteira";
   @override
-  String get subaddresses => "Sub-endereços";
+  String get subaddresses => "Endereços";
   @override
   String get trade_state_timeout => "Tempo esgotado";
   @override
@@ -3090,7 +3101,7 @@ class $pt extends S {
   @override
   String get send_error_currency => "A moeda só pode conter números";
   @override
-  String get subaddress_title => "Sub-endereços";
+  String get subaddress_title => "Endereços";
   @override
   String get wallet_store_monero_wallet => "Carteira Monero";
   @override
@@ -3120,7 +3131,7 @@ class $pt extends S {
   @override
   String get change_language => "Mudar idioma";
   @override
-  String get accounts_subaddresses => "Contas e sub-endereços";
+  String get accounts_subaddresses => "Contas e endereços";
   @override
   String get wallet_name => "Nome da carteira";
   @override
@@ -3194,7 +3205,7 @@ class $pt extends S {
   @override
   String get exchange_result_write_down_trade_id => "Copie ou anote o ID da troca para continuar.";
   @override
-  String get new_subaddress_title => "Criar sub-endereço";
+  String get new_subaddress_title => "Criar endereço";
   @override
   String get change => "Mudar";
   @override
@@ -3538,13 +3549,15 @@ class $uk extends S {
   @override
   String get reconnect => "Перепідключитися";
   @override
+  String get confirm_change_wallet => "Ви бажаєте змінити поточний гаманець на вибраний?";
+  @override
   String get reconnect_alert_text => "Ви хочете перепідключитися?";
   @override
   String get send_error_minimum_value => "Мінімальна сума 0.01";
   @override
   String get copy_address => "Cкопіювати адресу";
   @override
-  String get error_text_subaddress_name => "Ім'я субадреси не може містити ` , ' \" символи\nі може бути від 1 до 20 символів в довжину";
+  String get error_text_subaddress_name => "Ім'я адресу не може містити ` , ' \" символи\nі може бути від 1 до 20 символів в довжину";
   @override
   String get incorrect_seed => "Введений текст невірний.";
   @override
@@ -3686,7 +3699,7 @@ class $uk extends S {
   @override
   String get loading_your_wallet => "Завантаження гаманця";
   @override
-  String get subaddresses => "Субадреси";
+  String get subaddresses => "Адреси";
   @override
   String get trade_state_timeout => "Таймаут";
   @override
@@ -3710,7 +3723,7 @@ class $uk extends S {
   @override
   String get send_error_currency => "Валюта може містити тільки цифри";
   @override
-  String get subaddress_title => "Список Субадрес";
+  String get subaddress_title => "Список адрес";
   @override
   String get wallet_store_monero_wallet => "Monero гаманець";
   @override
@@ -3740,7 +3753,7 @@ class $uk extends S {
   @override
   String get change_language => "Змінити мову";
   @override
-  String get accounts_subaddresses => "Акаунти та субадреси";
+  String get accounts_subaddresses => "Акаунти та адреси";
   @override
   String get wallet_name => "Ім'я гаманця";
   @override
@@ -3814,7 +3827,7 @@ class $uk extends S {
   @override
   String get exchange_result_write_down_trade_id => "Будь ласка, скопіюйте або запишіть ID операції.";
   @override
-  String get new_subaddress_title => "Нова субадреса";
+  String get new_subaddress_title => "Нова адреса";
   @override
   String get change => "Змінити";
   @override
@@ -4158,13 +4171,15 @@ class $ja extends S {
   @override
   String get reconnect => "再接続";
   @override
+  String get confirm_change_wallet => "現在のウォレットを選択したウォレットに変更しますか？";
+  @override
   String get reconnect_alert_text => "再接続しますか？";
   @override
   String get send_error_minimum_value => "金額の最小値は0.01です";
   @override
   String get copy_address => "住所をコピー";
   @override
-  String get error_text_subaddress_name => "サブアドレス名に含めることはできません` , ' \" シンボル\n1〜20文字の長さである必要があります";
+  String get error_text_subaddress_name => "アドレス名に含めることはできません ` , ' \" シンボル\n1〜20文字の長さである必要があります";
   @override
   String get incorrect_seed => "入力されたテキストは無効です。";
   @override
@@ -4306,7 +4321,7 @@ class $ja extends S {
   @override
   String get loading_your_wallet => "ウォレットをロードしています";
   @override
-  String get subaddresses => "サブアドレス";
+  String get subaddresses => "住所";
   @override
   String get trade_state_timeout => "タイムアウト";
   @override
@@ -4330,7 +4345,7 @@ class $ja extends S {
   @override
   String get send_error_currency => "通貨には数字のみを含めることができます";
   @override
-  String get subaddress_title => "サブアドレス一覧";
+  String get subaddress_title => "アドレス一覧";
   @override
   String get wallet_store_monero_wallet => "Monero 財布";
   @override
@@ -4360,7 +4375,7 @@ class $ja extends S {
   @override
   String get change_language => "言語を変えてください";
   @override
-  String get accounts_subaddresses => "アカウントとサブアドレス";
+  String get accounts_subaddresses => "アカウントと住所";
   @override
   String get wallet_name => "ウォレット名";
   @override
@@ -4434,7 +4449,7 @@ class $ja extends S {
   @override
   String get exchange_result_write_down_trade_id => "続行するには、取引IDをコピーまたは書き留めてください.";
   @override
-  String get new_subaddress_title => "新しいサブアドレス";
+  String get new_subaddress_title => "新しいアドレス";
   @override
   String get change => "変化する";
   @override
@@ -4782,13 +4797,15 @@ class $pl extends S {
   @override
   String get reconnect => "Na nowo połączyć";
   @override
+  String get confirm_change_wallet => "Czy chcesz zmienić bieżący portfel na wybrany?";
+  @override
   String get reconnect_alert_text => "Czy na pewno ponownie się połączysz?";
   @override
   String get send_error_minimum_value => "Minimalna wartość kwoty to 0,01";
   @override
   String get copy_address => "Skopiuj adress";
   @override
-  String get error_text_subaddress_name => "Nazwa podadresu nie może zawierać ` , ' \" symbolika\ni musi mieć od 1 do 20 znaków";
+  String get error_text_subaddress_name => "Nazwa adresu nie może zawierać ` , ' \" symbolika\ni musi mieć od 1 do 20 znaków";
   @override
   String get incorrect_seed => "Wprowadzony tekst jest nieprawidłowy.";
   @override
@@ -4930,7 +4947,7 @@ class $pl extends S {
   @override
   String get loading_your_wallet => "Ładowanie portfela";
   @override
-  String get subaddresses => "Podadresy";
+  String get subaddresses => "Adresy";
   @override
   String get trade_state_timeout => "Koniec czasu";
   @override
@@ -4954,7 +4971,7 @@ class $pl extends S {
   @override
   String get send_error_currency => "Waluta może zawierać tylko cyfry";
   @override
-  String get subaddress_title => "Lista podadresów";
+  String get subaddress_title => "Lista adresów";
   @override
   String get wallet_store_monero_wallet => "Portfel Monero";
   @override
@@ -4984,7 +5001,7 @@ class $pl extends S {
   @override
   String get change_language => "Zmień język";
   @override
-  String get accounts_subaddresses => "Konta i podadresy";
+  String get accounts_subaddresses => "Konta i adresy";
   @override
   String get wallet_name => "Nazwa portfela";
   @override
@@ -5058,7 +5075,7 @@ class $pl extends S {
   @override
   String get exchange_result_write_down_trade_id => "Skopiuj lub zanotuj identyfikator transakcji, aby kontynuować.";
   @override
-  String get new_subaddress_title => "Nowy podadres";
+  String get new_subaddress_title => "Nowy adres";
   @override
   String get change => "Zmiana";
   @override
@@ -5402,13 +5419,15 @@ class $es extends S {
   @override
   String get reconnect => "Volver a conectar";
   @override
+  String get confirm_change_wallet => "¿Desea cambiar la billetera actual a la seleccionada?";
+  @override
   String get reconnect_alert_text => "¿Estás seguro de reconectar?";
   @override
   String get send_error_minimum_value => "El valor mínimo de la cantidad es 0.01";
   @override
   String get copy_address => "Copiar dirección ";
   @override
-  String get error_text_subaddress_name => "El nombre de la subdirección no puede contener símbolos `, '\" \ny debe tener entre 1 y 20 caracteres de longitud";
+  String get error_text_subaddress_name => "El nombre de la dirección no puede contener símbolos `, '\" \ny debe tener entre 1 y 20 caracteres de longitud";
   @override
   String get incorrect_seed => "El texto ingresado no es válido.";
   @override
@@ -5550,7 +5569,7 @@ class $es extends S {
   @override
   String get loading_your_wallet => "Cargando tu billetera";
   @override
-  String get subaddresses => "Subdirecciones";
+  String get subaddresses => "Direcciones";
   @override
   String get trade_state_timeout => "Se acabó el tiempo";
   @override
@@ -5574,7 +5593,7 @@ class $es extends S {
   @override
   String get send_error_currency => "La moneda solo puede contener números";
   @override
-  String get subaddress_title => "Lista de subdirecciones";
+  String get subaddress_title => "Lista de direcciones";
   @override
   String get wallet_store_monero_wallet => "Monedero Monero";
   @override
@@ -5604,7 +5623,7 @@ class $es extends S {
   @override
   String get change_language => "Cambiar idioma";
   @override
-  String get accounts_subaddresses => "Cuentas y subdirecciones";
+  String get accounts_subaddresses => "Cuentas y direcciones";
   @override
   String get wallet_name => "Nombre de la billetera";
   @override
@@ -5678,7 +5697,7 @@ class $es extends S {
   @override
   String get exchange_result_write_down_trade_id => "Por favor, copia o escribe el ID.";
   @override
-  String get new_subaddress_title => "Nueva subdirección";
+  String get new_subaddress_title => "Nueva dirección";
   @override
   String get change => "Cambio";
   @override
@@ -6022,13 +6041,15 @@ class $nl extends S {
   @override
   String get reconnect => "Sluit";
   @override
+  String get confirm_change_wallet => "Wilt u de huidige portemonnee wijzigen in de geselecteerde?";
+  @override
   String get reconnect_alert_text => "Weet u zeker dat u opnieuw verbinding wilt maken?";
   @override
   String get send_error_minimum_value => "Minimale waarde van bedrag is 0,01";
   @override
   String get copy_address => "Adres kopiëren";
   @override
-  String get error_text_subaddress_name => "Naam subadres mag niet bevatten ` , ' \" symbolen\nen moet tussen de 1 en 20 tekens lang zijn";
+  String get error_text_subaddress_name => "Naam adres mag niet bevatten ` , ' \" symbolen\nen moet tussen de 1 en 20 tekens lang zijn";
   @override
   String get incorrect_seed => "De ingevoerde tekst is niet geldig.";
   @override
@@ -6170,7 +6191,7 @@ class $nl extends S {
   @override
   String get loading_your_wallet => "Uw portemonnee laden";
   @override
-  String get subaddresses => "Subadressen";
+  String get subaddresses => "Adressen";
   @override
   String get trade_state_timeout => "Time-out";
   @override
@@ -6194,7 +6215,7 @@ class $nl extends S {
   @override
   String get send_error_currency => "Valuta kan alleen cijfers bevatten";
   @override
-  String get subaddress_title => "Subadreslijst";
+  String get subaddress_title => "Adreslijst";
   @override
   String get wallet_store_monero_wallet => "Monero portemonnee";
   @override
@@ -6224,7 +6245,7 @@ class $nl extends S {
   @override
   String get change_language => "Verander de taal";
   @override
-  String get accounts_subaddresses => "Accounts en subadressen";
+  String get accounts_subaddresses => "Accounts en adressen";
   @override
   String get wallet_name => "Portemonnee naam";
   @override
@@ -6298,7 +6319,7 @@ class $nl extends S {
   @override
   String get exchange_result_write_down_trade_id => "Kopieer of noteer de handels-ID om door te gaan.";
   @override
-  String get new_subaddress_title => "Nieuw subadres";
+  String get new_subaddress_title => "Nieuw adres";
   @override
   String get change => "Verandering";
   @override
@@ -6642,13 +6663,15 @@ class $zh extends S {
   @override
   String get reconnect => "重新连接";
   @override
+  String get confirm_change_wallet => "您想將當前的錢包更改為選定的錢包嗎？";
+  @override
   String get reconnect_alert_text => "您确定要重新连接吗？";
   @override
   String get send_error_minimum_value => "最小金额为0.01";
   @override
   String get copy_address => "复制地址";
   @override
-  String get error_text_subaddress_name => "子地址名称不能包含`，' \" 符号\n并且必须在1到20个字符之间";
+  String get error_text_subaddress_name => "地址名稱不能包含 `，' \" 符号\n并且必须在1到20个字符之间";
   @override
   String get incorrect_seed => "输入的文字无效。";
   @override
@@ -6790,7 +6813,7 @@ class $zh extends S {
   @override
   String get loading_your_wallet => "装钱包";
   @override
-  String get subaddresses => "子地址";
+  String get subaddresses => "地址";
   @override
   String get trade_state_timeout => "超时";
   @override
@@ -6814,7 +6837,7 @@ class $zh extends S {
   @override
   String get send_error_currency => "货币只能包含数字";
   @override
-  String get subaddress_title => "子地址清单";
+  String get subaddress_title => "地址清單";
   @override
   String get wallet_store_monero_wallet => "Monero 钱包";
   @override
@@ -6844,7 +6867,7 @@ class $zh extends S {
   @override
   String get change_language => "改變語言";
   @override
-  String get accounts_subaddresses => "帳戶和子地址";
+  String get accounts_subaddresses => "帳號和地址";
   @override
   String get wallet_name => "钱包名称";
   @override
@@ -6918,7 +6941,7 @@ class $zh extends S {
   @override
   String get exchange_result_write_down_trade_id => "请复制或写下交易编号以继续.";
   @override
-  String get new_subaddress_title => "新子地址";
+  String get new_subaddress_title => "新地址";
   @override
   String get change => "更改";
   @override

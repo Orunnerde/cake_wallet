@@ -211,6 +211,7 @@ class ExchangeCardState extends State<ExchangeCard> {
             ? _walletName != null
             ? []
             : [
+              AddressTextFieldOption.paste,
               AddressTextFieldOption.qrCode,
               AddressTextFieldOption.addressBook,
             ]

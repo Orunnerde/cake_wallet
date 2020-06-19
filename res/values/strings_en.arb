@@ -136,11 +136,11 @@
 
   "share_address" : "Share address",
   "receive_amount" : "Amount",
-  "subaddresses" : "Subaddresses",
+  "subaddresses" : "Addresses",
   "rename" : "Rename",
   "choose_account" : "Choose account",
   "create_new_account" : "Create new account",
-  "accounts_subaddresses" : "Accounts and subaddresses",
+  "accounts_subaddresses" : "Accounts and addresses",
 
 
   "restore_restore_wallet" : "Restore Wallet",
@@ -240,12 +240,12 @@
   "copied_key_to_clipboard" : "Copied ${key} to Clipboard",
 
 
-  "new_subaddress_title" : "New subaddress",
+  "new_subaddress_title" : "New address",
   "new_subaddress_label_name" : "Label name",
   "new_subaddress_create" : "Create",
 
 
-  "subaddress_title" : "Subaddress list",
+  "subaddress_title" : "Address list",
 
 
   "trade_details_title" : "Trade Details",
@@ -298,7 +298,7 @@
   "error_text_payment_id" : "Payment ID can only contain from 16 to 64 chars in hex",
   "error_text_xmr" : "XMR value can't exceed available balance.\nThe number of fraction digits must be less or equal to 12",
   "error_text_fiat" : "Value of amount can't exceed available balance.\nThe number of fraction digits must be less or equal to 2",
-  "error_text_subaddress_name" : "Subaddress name can't contain ` , ' \" symbols\nand must be between 1 and 20 characters long",
+  "error_text_subaddress_name" : "Address name can't contain ` , ' \" symbols\nand must be between 1 and 20 characters long",
   "error_text_amount" : "Amount can only contain numbers",
   "error_text_wallet_name" : "Wallet name can only contain letters, numbers\nand must be between 1 and 15 characters long",
   "error_text_keys" : "Wallet keys can only contain 64 chars in hex",
@@ -377,5 +377,7 @@
   "buy" : "Buy",
 
   "placeholder_transactions" : "Your transactions will be displayed here",
-  "placeholder_contacts" : "Your contacts will be displayed here"
+  "placeholder_contacts" : "Your contacts will be displayed here",
+
+  "confirm_change_wallet" : "Do you want to change current wallet to selected one?"
 }

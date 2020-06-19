@@ -136,11 +136,11 @@
 
   "share_address" : "Udostępnij adres",
   "receive_amount" : "Ilość",
-  "subaddresses" : "Podadresy",
+  "subaddresses" : "Adresy",
   "rename" : "Przemianować",
   "choose_account" : "Wybierz konto",
   "create_new_account" : "Stwórz nowe konto",
-  "accounts_subaddresses" : "Konta i podadresy",
+  "accounts_subaddresses" : "Konta i adresy",
 
 
   "restore_restore_wallet" : "Przywróć portfel",
@@ -240,12 +240,12 @@
   "copied_key_to_clipboard" : "Skopiowane ${key} do schowka",
 
 
-  "new_subaddress_title" : "Nowy podadres",
+  "new_subaddress_title" : "Nowy adres",
   "new_subaddress_label_name" : "Nazwa etykiety",
   "new_subaddress_create" : "Stwórz",
 
 
-  "subaddress_title" : "Lista podadresów",
+  "subaddress_title" : "Lista adresów",
 
 
   "trade_details_title" : "Szczegóły handlu",
@@ -298,7 +298,7 @@
   "error_text_payment_id" : "ID może zawierać od 16 do 64 znaków w formacie szesnastkowym",
   "error_text_xmr" : "Wartość XMR nie może przekraczać dostępnego salda.\nLiczba cyfr ułamkowych musi być mniejsza lub równa 12",
   "error_text_fiat" : "Wartość kwoty nie może przekroczyć dostępnego salda.\nLiczba cyfr ułamkowych musi być mniejsza lub równa 2",
-  "error_text_subaddress_name" : "Nazwa podadresu nie może zawierać ` , ' \" symbolika\ni musi mieć od 1 do 20 znaków",
+  "error_text_subaddress_name" : "Nazwa adresu nie może zawierać ` , ' \" symbolika\ni musi mieć od 1 do 20 znaków",
   "error_text_amount" : "Kwota może zawierać tylko liczby",
   "error_text_wallet_name" : "Nazwa portfela może zawierać tylko litery i cyfry\ni musi mieć od 1 do 15 znaków",
   "error_text_keys" : "Klucze portfela mogą zawierać tylko 64 znaki w systemie szesnastkowym",
@@ -377,5 +377,7 @@
   "buy" : "Kup",
 
   "placeholder_transactions" : "Twoje transakcje zostaną wyświetlone tutaj",
-  "placeholder_contacts" : "Twoje kontakty zostaną wyświetlone tutaj"
+  "placeholder_contacts" : "Twoje kontakty zostaną wyświetlone tutaj",
+
+  "confirm_change_wallet" : "Czy chcesz zmienić bieżący portfel na wybrany?"
 }

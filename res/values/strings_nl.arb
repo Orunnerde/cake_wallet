@@ -136,11 +136,11 @@
 
   "share_address" : "Deel adres",
   "receive_amount" : "Bedrag",
-  "subaddresses" : "Subadressen",
+  "subaddresses" : "Adressen",
   "rename" : "Hernoemen",
   "choose_account" : "Kies account",
   "create_new_account" : "Creëer een nieuw account",
-  "accounts_subaddresses" : "Accounts en subadressen",
+  "accounts_subaddresses" : "Accounts en adressen",
 
 
   "restore_restore_wallet" : "Portemonnee herstellen",
@@ -240,12 +240,12 @@
   "copied_key_to_clipboard" : "Gekopieerd ${key} naar het klembord",
 
 
-  "new_subaddress_title" : "Nieuw subadres",
+  "new_subaddress_title" : "Nieuw adres",
   "new_subaddress_label_name" : "Label naam",
   "new_subaddress_create" : "Creëren",
 
 
-  "subaddress_title" : "Subadreslijst",
+  "subaddress_title" : "Adreslijst",
 
 
   "trade_details_title" : "Handelsgegevens",
@@ -298,7 +298,7 @@
   "error_text_payment_id" : "Betalings-ID kan alleen 16 tot 64 tekens bevatten in hexadecimale volgorde",
   "error_text_xmr" : "XMR-waarde kan het beschikbare saldo niet overschrijden.\nHet aantal breukcijfers moet kleiner zijn dan of gelijk zijn aan 12",
   "error_text_fiat" : "Waarde van bedrag kan het beschikbare saldo niet overschrijden.\nHet aantal breukcijfers moet kleiner zijn dan of gelijk zijn aan 2",
-  "error_text_subaddress_name" : "Naam subadres mag niet bevatten ` , ' \" symbolen\nen moet tussen de 1 en 20 tekens lang zijn",
+  "error_text_subaddress_name" : "Naam adres mag niet bevatten ` , ' \" symbolen\nen moet tussen de 1 en 20 tekens lang zijn",
   "error_text_amount" : "Bedrag kan alleen cijfers bevatten",
   "error_text_wallet_name" : "Naam portemonnee kan alleen letters, cijfers bevatten\nen moet tussen de 1 en 15 tekens lang zijn",
   "error_text_keys" : "Portefeuillesleutels kunnen maximaal 64 tekens bevatten in hexadecimale volgorde",
@@ -377,5 +377,7 @@
   "buy" : "Kopen",
 
   "placeholder_transactions" : "Uw transacties worden hier weergegeven",
-  "placeholder_contacts" : "Je contacten worden hier weergegeven"
+  "placeholder_contacts" : "Je contacten worden hier weergegeven",
+
+  "confirm_change_wallet" : "Wilt u de huidige portemonnee wijzigen in de geselecteerde?"
 }

@@ -4,8 +4,9 @@ import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/domain/common/contact.dart';
 import 'package:cake_wallet/src/domain/monero/subaddress.dart';
 import 'package:cake_wallet/src/domain/common/qr_scanner.dart';
+import 'package:flutter/services.dart';
 
-enum AddressTextFieldOption { qrCode, addressBook, subaddressList }
+enum AddressTextFieldOption { paste, qrCode, addressBook, subaddressList }
 
 class AddressTextField extends StatelessWidget {
   AddressTextField(
@@ -79,7 +80,7 @@ class AddressTextField extends StatelessWidget {
           validator: validator,
         ),
         Positioned(
-          bottom: 10,
+          top: 2,
           right: 0,
           child: SizedBox(
             width: prefixIconWidth * options.length +
@@ -88,6 +89,25 @@ class AddressTextField extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(width: 5),
+                if (this
+                    .options
+                    .contains(AddressTextFieldOption.paste)) ...[
+                  Container(
+                      width: prefixIconWidth,
+                      height: prefixIconHeight,
+                      padding: EdgeInsets.only(top: 0),
+                      child: InkWell(
+                        onTap: () async => _pasteAddress(context),
+                        child: Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                                color: buttonColor ?? Theme.of(context).accentTextTheme.title.color,
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(6))),
+                            child: Image.asset(
+                                'assets/images/duplicate.png')),
+                      )),
+                ],
                 if (this.options.contains(AddressTextFieldOption.qrCode)) ...[
                   Container(
                       width: prefixIconWidth,
@@ -140,7 +160,7 @@ class AddressTextField extends StatelessWidget {
                                 BorderRadius.all(Radius.circular(6))),
                             child: Image.asset(
                                 'assets/images/receive_icon_raw.png')),
-                      ))
+                      )),
                 ],
               ],
             ),
@@ -187,6 +207,16 @@ class AddressTextField extends StatelessWidget {
 
     if (subaddress is Subaddress && subaddress.address != null) {
       controller.text = subaddress.address;
+    }
+  }
+
+  Future<void> _pasteAddress(BuildContext context) async {
+    String address;
+
+    await Clipboard.getData('text/plain').then((value) => address = value.text);
+
+    if (address.isNotEmpty) {
+      controller.text = address;
     }
   }
 }

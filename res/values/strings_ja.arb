@@ -136,11 +136,11 @@
 
   "share_address" : "住所を共有する",
   "receive_amount" : "量",
-  "subaddresses" : "サブアドレス",
+  "subaddresses" : "住所",
   "rename" : "リネーム",
   "choose_account" : "アカウントを選択",
   "create_new_account" : "新しいアカウントを作成する",
-  "accounts_subaddresses" : "アカウントとサブアドレス",
+  "accounts_subaddresses" : "アカウントと住所",
 
 
   "restore_restore_wallet" : "ウォレットを復元",
@@ -240,12 +240,12 @@
   "copied_key_to_clipboard" : "コピー済み ${key} クリップボードへ",
 
 
-  "new_subaddress_title" : "新しいサブアドレス",
+  "new_subaddress_title" : "新しいアドレス",
   "new_subaddress_label_name" : "ラベル名",
   "new_subaddress_create" : "作成する",
 
 
-  "subaddress_title" : "サブアドレス一覧",
+  "subaddress_title" : "アドレス一覧",
 
 
   "trade_details_title" : "取引の詳細",
@@ -298,7 +298,7 @@
   "error_text_payment_id" : "支払いIDには、16進数で16〜64文字しか含めることができません",
   "error_text_xmr" : "XMR値は利用可能な残高を超えることはできません.\n小数桁数は12以下でなければなりません",
   "error_text_fiat" : "金額は利用可能な残高を超えることはできません.\n小数桁の数は2以下でなければなりません",
-  "error_text_subaddress_name" : "サブアドレス名に含めることはできません` , ' \" シンボル\n1〜20文字の長さである必要があります",
+  "error_text_subaddress_name" : "アドレス名に含めることはできません ` , ' \" シンボル\n1〜20文字の長さである必要があります",
   "error_text_amount" : "金額には数字のみを含めることができます",
   "error_text_wallet_name" : "ウォレット名には文字のみを含めることができます\n1〜15文字である必要があります",
   "error_text_keys" : "ウォレットキーには、16進数で64文字しか含めることができません",
@@ -377,5 +377,7 @@
   "buy" : "購入",
 
   "placeholder_transactions" : "あなたの取引はここに表示されます",
-  "placeholder_contacts" : "連絡先はここに表示されます"
+  "placeholder_contacts" : "連絡先はここに表示されます",
+
+  "confirm_change_wallet" : "現在のウォレットを選択したウォレットに変更しますか？"
 }

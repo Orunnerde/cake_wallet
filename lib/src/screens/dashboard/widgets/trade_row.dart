@@ -25,7 +25,7 @@ class TradeRow extends StatelessWidget {
     return InkWell(
         onTap: onTap,
         child: Container(
-          height: 60,
+          height: 52,
           decoration: BoxDecoration(
             color: Theme.of(context).backgroundColor,
             border: Border.all(
@@ -33,47 +33,45 @@ class TradeRow extends StatelessWidget {
                 color: Theme.of(context).backgroundColor
             ),
           ),
-          padding: EdgeInsets.only(top: 5, bottom: 5, left: 20, right: 20),
-          child: Row(children: <Widget>[
-            Container(
-              height: 36,
-              width: 36,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Theme.of(context).backgroundColor
-              ),
-              child: _getPoweredImage(provider),
-            ),
+          padding: EdgeInsets.only(left: 24, right: 24),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+            _getPoweredImage(provider),
             Expanded(
                 child: Padding(
               padding: const EdgeInsets.only(left: 10),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text('${from.toString()} → ${to.toString()}',
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Theme.of(context).primaryTextTheme.title.color
-                                )),
-                        formattedAmount != null
-                            ? Text(formattedAmount + ' ' + amountCrypto,
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: Theme.of(context).primaryTextTheme.title.color
-                                ))
-                            : Container()
-                      ]),
-                  SizedBox(height: 5),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(createdAtFormattedDate,
-                            style: TextStyle(
-                                fontSize: 14, color: Theme.of(context).primaryTextTheme.headline.color))
-                      ]),
-                ],
+              child: Container(
+                height: 42,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text('${from.toString()} → ${to.toString()}',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Theme.of(context).primaryTextTheme.title.color
+                              )),
+                          formattedAmount != null
+                              ? Text(formattedAmount + ' ' + amountCrypto,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Theme.of(context).primaryTextTheme.title.color
+                              ))
+                              : Container()
+                        ]),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(createdAtFormattedDate,
+                              style: TextStyle(
+                                  fontSize: 14, color: Theme.of(context).primaryTextTheme.headline.color))
+                        ]),
+                  ],
+                ),
               ),
             ))
           ]),
@@ -84,13 +82,13 @@ class TradeRow extends StatelessWidget {
     Image image;
     switch (provider) {
       case ExchangeProviderDescription.xmrto:
-        image = Image.asset('assets/images/xmr_btc.png');
+        image = Image.asset('assets/images/xmrto.png', height: 36, width: 36);
         break;
       case ExchangeProviderDescription.changeNow:
-        image = Image.asset('assets/images/change_now.png');
+        image = Image.asset('assets/images/changenow.png', height: 36, width: 36);
         break;
       case ExchangeProviderDescription.morphToken:
-        image = Image.asset('assets/images/morph_icon.png');
+        image = Image.asset('assets/images/morph.png', height: 36, width: 36);
         break;
       default:
         image = null;

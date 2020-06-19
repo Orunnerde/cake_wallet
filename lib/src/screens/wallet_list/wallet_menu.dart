@@ -5,6 +5,8 @@ import 'package:cake_wallet/generated/i18n.dart';
 import 'package:cake_wallet/src/stores/wallet_list/wallet_list_store.dart';
 import 'package:cake_wallet/src/domain/common/wallet_description.dart';
 import 'package:cake_wallet/src/screens/auth/auth_page.dart';
+import 'package:cake_wallet/src/widgets/alert_with_two_actions.dart';
+import 'package:cake_wallet/generated/i18n.dart';
 
 class WalletMenu {
   WalletMenu(this.context);
@@ -70,24 +72,39 @@ class WalletMenu {
 
     switch (index) {
       case 0:
-        Navigator.of(context).pushNamed(Routes.auth, arguments:
-            (bool isAuthenticatedSuccessfully, AuthPageState auth) async {
-          if (!isAuthenticatedSuccessfully) {
-            return;
-          }
+        showDialog<void>(
+          context: context,
+          builder: (dialogContext) {
+            return AlertWithTwoActions(
+              alertTitle: S.of(context).wallets,
+              alertContent: S.of(context).confirm_change_wallet,
+              leftButtonText: S.of(context).ok,
+              rightButtonText: S.of(context).cancel,
+              actionLeftButton: () {
+                Navigator.of(dialogContext).pop();
+                Navigator.of(context).pushNamed(Routes.auth, arguments:
+                    (bool isAuthenticatedSuccessfully, AuthPageState auth) async {
+                    if (!isAuthenticatedSuccessfully) {
+                      return;
+                    }
 
-          try {
-            auth.changeProcessText(
-                S.of(context).wallet_list_loading_wallet(wallet.name));
-            await _walletListStore.loadWallet(wallet);
-            auth.close();
-            Navigator.of(context).pop();
-          } catch (e) {
-            auth.changeProcessText(S
-                .of(context)
-                .wallet_list_failed_to_load(wallet.name, e.toString()));
+                    try {
+                      auth.changeProcessText(
+                          S.of(context).wallet_list_loading_wallet(wallet.name));
+                      await _walletListStore.loadWallet(wallet);
+                      auth.close();
+                      Navigator.of(context).pop();
+                    } catch (e) {
+                      auth.changeProcessText(S
+                          .of(context)
+                          .wallet_list_failed_to_load(wallet.name, e.toString()));
+                    }
+                  });
+                },
+              actionRightButton: () => Navigator.of(dialogContext).pop()
+            );
           }
-        });
+        );
         break;
       case 1:
         Navigator.of(context).pushNamed(Routes.auth, arguments:

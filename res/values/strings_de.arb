@@ -136,11 +136,11 @@
 
   "share_address" : "Adresse teilen ",
   "receive_amount" : "Menge",
-  "subaddresses" : "Unteradressen",
+  "subaddresses" : "Adressen",
   "rename" : "Umbenennen",
   "choose_account" : "Konto auswählen",
   "create_new_account" : "Neues Konto erstellen",
-  "accounts_subaddresses" : "Konten und Unteradressen",
+  "accounts_subaddresses" : "Konten und Adressen",
 
 
   "restore_restore_wallet" : "Wallet wiederherstellen",
@@ -240,12 +240,12 @@
   "copied_key_to_clipboard" : "Kopiert ${key} Zur Zwischenablage",
 
 
-  "new_subaddress_title" : "Neue Unteradresse",
+  "new_subaddress_title" : "Neue Adresse",
   "new_subaddress_label_name" : "Markenname",
   "new_subaddress_create" : "Erstellen",
 
 
-  "subaddress_title" : "Unteradressenliste",
+  "subaddress_title" : "Adressliste",
 
 
   "trade_details_title" : "Handel Einzelheiten",
@@ -298,7 +298,7 @@
   "error_text_payment_id" : "Die Zahlungs-ID kann nur 16 bis 64 hexadezimale Zeichen enthalten",
   "error_text_xmr" : "Der XMR-Wert kann das verfügbare Guthaben nicht überschreiten.\nDie Anzahl der Nachkommastellen muss kleiner oder gleich 12 sein",
   "error_text_fiat" : "Der Wert des Betrags darf den verfügbaren Kontostand nicht überschreiten.\nDie Anzahl der Nachkommastellen muss kleiner oder gleich 2 sein",
-  "error_text_subaddress_name" : "Der Name der Unteradresse darf nicht enthalten sein ` , ' \" symbole\nund muss zwischen 1 und 20 Zeichen lang sein",
+  "error_text_subaddress_name" : "Der Name der Adresse darf nicht enthalten sein ` , ' \" symbole\nund muss zwischen 1 und 20 Zeichen lang sein",
   "error_text_amount" : "Betrag kann nur Zahlen enthalten",
   "error_text_wallet_name" : "Der Wallet darf nur Buchstaben und Zahlen enthalten\nund muss zwischen 1 und 15 Zeichen lang sein",
   "error_text_keys" : "Walletschlüssel können nur 64 hexadezimale Zeichen enthalten",
@@ -377,5 +377,7 @@
   "buy" : "Kaufen",
 
   "placeholder_transactions" : "Ihre Transaktionen werden hier angezeigt",
-  "placeholder_contacts" : "Ihre Kontakte werden hier angezeigt"
+  "placeholder_contacts" : "Ihre Kontakte werden hier angezeigt",
+
+  "confirm_change_wallet" : "Möchten Sie die aktuelle Brieftasche in eine ausgewählte ändern?"
 }

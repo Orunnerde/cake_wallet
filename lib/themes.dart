@@ -65,7 +65,11 @@ class Themes {
       ),
       headline: TextStyle(
         color: Palette.darkLavender, // faq background
-        backgroundColor: Palette.lavender // faq extension
+        backgroundColor: Palette.lavender, // faq extension
+        decorationColor: Colors.white // buttons on the send and exchange pages
+      ),
+      subhead: TextStyle(
+        color: Colors.white, // buttons on the send and exchange pages
       )
     ),
   );
@@ -133,7 +137,11 @@ class Themes {
       ),
       headline: TextStyle(
         color: PaletteDark.lightNightBlue, // faq background
-        backgroundColor: PaletteDark.headerNightBlue // faq extension
+        backgroundColor: PaletteDark.headerNightBlue, // faq extension
+        decorationColor: PaletteDark.moderateBlue, // buttons on the send and exchange pages
+      ),
+      subhead: TextStyle(
+        color: PaletteDark.violetBlue, // buttons on the send and exchange pages
       )
     ),
   );

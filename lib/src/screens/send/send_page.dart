@@ -30,6 +30,7 @@ import 'package:cake_wallet/src/screens/send/widgets/sending_alert.dart';
 import 'package:cake_wallet/src/widgets/template_tile.dart';
 import 'package:cake_wallet/src/stores/send_template/send_template_store.dart';
 import 'package:cake_wallet/src/widgets/trail_button.dart';
+import 'package:cake_wallet/src/widgets/base_text_form_field.dart';
 
 class SendPage extends BasePage {
   @override
@@ -147,10 +148,11 @@ class SendFormState extends State<SendForm> {
                       _cryptoAmountController.text = amount;
                     },
                     options: [
+                      AddressTextFieldOption.paste,
                       AddressTextFieldOption.qrCode,
                       AddressTextFieldOption.addressBook
                     ],
-                    buttonColor: Theme.of(context).accentTextTheme.title.color,
+                    buttonColor: Theme.of(context).accentTextTheme.headline.decorationColor,
                     validator: (value) {
                       sendStore.validateAddress(value,
                           cryptoCurrency: CryptoCurrency.xmr);
@@ -161,130 +163,99 @@ class SendFormState extends State<SendForm> {
                     builder: (_) {
                       return Padding(
                         padding: const EdgeInsets.only(top: 20),
-                        child: TextFormField(
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                color: Theme.of(context).primaryTextTheme.title.color
-                            ),
-                            controller: _cryptoAmountController,
-                            keyboardType: TextInputType.numberWithOptions(
-                                signed: false, decimal: true),
-                            inputFormatters: [
-                              BlacklistingTextInputFormatter(
-                                  RegExp('[\\-|\\ |\\,]'))
-                            ],
-                            decoration: InputDecoration(
-                                prefixIcon: Padding(
-                                  padding: EdgeInsets.only(top: 12),
-                                  child: Text('XMR:',
+                        child: BaseTextFormField(
+                          controller: _cryptoAmountController,
+                          keyboardType: TextInputType.numberWithOptions(
+                              signed: false, decimal: true),
+                          inputFormatters: [
+                            BlacklistingTextInputFormatter(
+                                RegExp('[\\-|\\ |\\,]'))
+                          ],
+                          prefixIcon: Padding(
+                            padding: EdgeInsets.only(top: 12),
+                            child: Text('XMR:',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).primaryTextTheme.title.color,
+                                )),
+                          ),
+                          suffixIcon: Padding(
+                            padding: EdgeInsets.only(bottom: 5),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Container(
+                                  width: MediaQuery.of(context).size.width/2,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                      ' / ' + balanceStore.unlockedBalance,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Theme.of(context).primaryTextTheme.title.color,
-                                      )),
-                                ),
-                                suffixIcon: Padding(
-                                  padding: EdgeInsets.only(
-                                      bottom: 5
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Container(
-                                        width: MediaQuery.of(context).size.width/2,
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                            ' / ' + balanceStore.unlockedBalance,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Theme.of(context).primaryTextTheme.caption.color
-                                            )
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 32,
-                                        width: 32,
-                                        margin: EdgeInsets.only(left: 12, bottom: 7, top: 4),
-                                        decoration: BoxDecoration(
-                                            color: Theme.of(context).accentTextTheme.title.color,
-                                            borderRadius: BorderRadius.all(Radius.circular(6))
-                                        ),
-                                        child: InkWell(
-                                          onTap: () => sendStore.setSendAll(),
-                                          child: Center(
-                                            child: Text(S.of(context).all,
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    fontSize: 9,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Theme.of(context).primaryTextTheme.caption.color
-                                                )
-                                            ),
-                                          ),
-                                        ),
+                                          fontSize: 16,
+                                          color: Theme.of(context).primaryTextTheme.caption.color
                                       )
-                                    ],
                                   ),
                                 ),
-                                hintStyle: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Theme.of(context).primaryTextTheme.title.color),
-                                hintText: '0.0000',
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Theme.of(context).dividerColor,
-                                        width: 1.0)),
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Theme.of(context).dividerColor,
-                                        width: 1.0))),
-                            validator: (value) {
-                              sendStore.validateXMR(
-                                  value, balanceStore.unlockedBalance);
-                              return sendStore.errorMessage;
-                            }),
+                                Container(
+                                  height: 34,
+                                  width: 34,
+                                  margin: EdgeInsets.only(left: 12, bottom: 7, top: 4),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).accentTextTheme.headline.decorationColor,
+                                    borderRadius: BorderRadius.all(Radius.circular(6))
+                                  ),
+                                  child: InkWell(
+                                    onTap: () => sendStore.setSendAll(),
+                                    child: Center(
+                                      child: Text(S.of(context).all,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 9,
+                                              fontWeight: FontWeight.bold,
+                                              color: Theme.of(context).primaryTextTheme.caption.color
+                                          )
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          hintText: '0.0000',
+                          validator: (value) {
+                            sendStore.validateXMR(
+                                value, balanceStore.unlockedBalance);
+                            return sendStore.errorMessage;
+                          }
+                        )
                       );
                     }
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
-                    child: TextFormField(
-                        style: TextStyle(
-                            fontSize: 16.0,
-                            color: Theme.of(context).primaryTextTheme.title.color),
-                        controller: _fiatAmountController,
-                        keyboardType: TextInputType.numberWithOptions(
-                            signed: false, decimal: true),
-                        inputFormatters: [
-                          BlacklistingTextInputFormatter(
-                              RegExp('[\\-|\\ |\\,]'))
-                        ],
-                        decoration: InputDecoration(
-                            prefixIcon: Padding(
-                              padding: EdgeInsets.only(top: 12),
-                              child: Text(
-                                  '${settingsStore.fiatCurrency.toString()}:',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).primaryTextTheme.title.color,
-                                  )),
-                            ),
-                            hintStyle: TextStyle(
-                                fontSize: 16.0,
-                                color: Theme.of(context).primaryTextTheme.caption.color),
-                            hintText: '0.00',
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context).dividerColor,
-                                    width: 1.0)),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context).dividerColor,
-                                    width: 1.0)))),
+                    child: BaseTextFormField(
+                      controller: _fiatAmountController,
+                      keyboardType: TextInputType.numberWithOptions(
+                          signed: false, decimal: true),
+                      inputFormatters: [
+                        BlacklistingTextInputFormatter(
+                            RegExp('[\\-|\\ |\\,]'))
+                      ],
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(top: 12),
+                        child: Text(
+                            '${settingsStore.fiatCurrency.toString()}:',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).primaryTextTheme.title.color,
+                            )),
+                      ),
+                      hintText: '0.00',
+                    )
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
@@ -404,8 +375,7 @@ class SendFormState extends State<SendForm> {
           return LoadingPrimaryButton(
               onPressed: syncStore.status is SyncedSyncStatus
                   ? () async {
-                // Hack. Don't ask me.
-                FocusScope.of(context).requestFocus(FocusNode());
+                await SystemChannels.textInput.invokeMethod<void>('TextInput.hide');
 
                 if (_formKey.currentState.validate()) {
                   await showDialog<void>(
@@ -519,9 +489,10 @@ class SendFormState extends State<SendForm> {
 
       if (state is TransactionCreatedSuccessfully) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
+          SystemChannels.textInput.invokeMethod<void>('TextInput.hide');
           showDialog<void>(
               context: context,
-              builder: (BuildContext context) {
+              builder: (BuildContext dialogContext) {
                 return ConfirmSendingAlert(
                     alertTitle: S.of(context).confirm_sending,
                     amount: S.of(context).send_amount,
@@ -531,16 +502,16 @@ class SendFormState extends State<SendForm> {
                     leftButtonText: S.of(context).ok,
                     rightButtonText: S.of(context).cancel,
                     actionLeftButton: () {
-                      Navigator.of(context).pop();
+                      Navigator.of(dialogContext).pop();
                       sendStore.commitTransaction();
                       showDialog<void>(
                         context: context,
-                        builder: (BuildContext context) {
+                        builder: (BuildContext dialogContext) {
                           return SendingAlert(sendStore: sendStore);
                         }
                       );
                     },
-                    actionRightButton: () => Navigator.of(context).pop()
+                    actionRightButton: () => Navigator.of(dialogContext).pop()
                 );
               });
         });
@@ -550,6 +521,7 @@ class SendFormState extends State<SendForm> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _addressController.text = '';
           _cryptoAmountController.text = '';
+          SystemChannels.textInput.invokeMethod<void>('TextInput.hide');
         });
       }
     });

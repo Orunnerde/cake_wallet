@@ -153,8 +153,9 @@ class ReceivePageState extends State<ReceivePage> {
                                   child: AspectRatio(
                                     aspectRatio: 1.0,
                                     child: QrImage(
-                                      data: walletStore.subaddress.address +
-                                          walletStore.amountValue,
+                                      /*data: walletStore.subaddress.address +
+                                          walletStore.amountValue,*/
+                                      data: walletStore.subaddress.address,
                                       backgroundColor: Colors.transparent,
                                       foregroundColor: Theme.of(context).primaryTextTheme.display4.color,
                                     ),
@@ -309,7 +310,7 @@ class ReceivePageState extends State<ReceivePage> {
                                               final isShortAddressShow = subaddressListStore.isShortAddressShow[index];
 
                                               final label = index == 0
-                                                  ? 'Primary subaddress'
+                                                  ? 'Primary address'
                                                   : subaddress.label.isNotEmpty
                                                     ? subaddress.label
                                                     : subaddress.address;

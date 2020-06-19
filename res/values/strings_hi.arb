@@ -136,11 +136,11 @@
 
   "share_address" : "पता साझा करें",
   "receive_amount" : "रकम",
-  "subaddresses" : "उप पते",
+  "subaddresses" : "पतों",
   "rename" : "नाम बदलें",
   "choose_account" : "खाता चुनें",
   "create_new_account" : "नया खाता बनाएँ",
-  "accounts_subaddresses" : "लेखा और उपदेस",
+  "accounts_subaddresses" : "खाते और पते",
 
 
   "restore_restore_wallet" : "वॉलेट को पुनर्स्थापित करें",
@@ -240,12 +240,12 @@
   "copied_key_to_clipboard" : "की नकल की ${key} क्लिपबोर्ड पर",
 
 
-  "new_subaddress_title" : "नई उपशादी",
+  "new_subaddress_title" : "नया पता",
   "new_subaddress_label_name" : "लेबल का नाम",
   "new_subaddress_create" : "सर्जन करना",
 
 
-  "subaddress_title" : "उपखंड सूची",
+  "subaddress_title" : "पता सूची",
 
 
   "trade_details_title" : "व्यापार विवरण",
@@ -298,7 +298,7 @@
   "error_text_payment_id" : "पेमेंट आईडी केवल हेक्स में 16 से 64 चार्ट तक हो सकती है",
   "error_text_xmr" : "एक्सएमआर मूल्य उपलब्ध शेष राशि से अधिक नहीं हो सकता.\nअंश अंकों की संख्या 12 से कम या इसके बराबर होनी चाहिए",
   "error_text_fiat" : "राशि का मूल्य उपलब्ध शेष राशि से अधिक नहीं हो सकता.\nअंश अंकों की संख्या कम या 2 के बराबर होनी चाहिए",
-  "error_text_subaddress_name" : "सबड्रेस नाम नहीं हो सकता` , ' \" प्रतीकों\nऔर 1 और 20 वर्णों के बीच लंबा होना चाहिए",
+  "error_text_subaddress_name" : "पता नाम नहीं हो सकता ` , ' \" प्रतीकों\nऔर 1 और 20 वर्णों के बीच लंबा होना चाहिए",
   "error_text_amount" : "राशि में केवल संख्याएँ हो सकती हैं",
   "error_text_wallet_name" : "वॉलेट नाम में केवल अक्षर, संख्याएं हो सकती हैं\nऔर 1 और 15 वर्णों के बीच लंबा होना चाहिए",
   "error_text_keys" : "वॉलेट कीज़ में हेक्स में केवल 64 वर्ण हो सकते हैं",
@@ -377,5 +377,7 @@
   "buy" : "खरीदें",
 
   "placeholder_transactions" : "आपके लेनदेन यहां प्रदर्शित होंगे",
-  "placeholder_contacts" : "आपके संपर्क यहां प्रदर्शित होंगे"
+  "placeholder_contacts" : "आपके संपर्क यहां प्रदर्शित होंगे",
+
+  "confirm_change_wallet" : "क्या आप वर्तमान बटुए को चयनित में बदलना चाहते हैं?"
 }

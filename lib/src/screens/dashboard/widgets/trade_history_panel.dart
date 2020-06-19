@@ -112,7 +112,7 @@ class TradeHistoryPanelState extends State<TradeHistoryPanel> {
                               }
 
                               if (item is TransactionListItem) {
-                                freeSpaceHeight -= 62;
+                                freeSpaceHeight -= 54;
                                 final transaction = item.transaction;
                                 final savedDisplayMode = settingsStore.balanceDisplayMode;
                                 final formattedAmount =
@@ -137,7 +137,7 @@ class TradeHistoryPanelState extends State<TradeHistoryPanel> {
                               }
 
                               if (item is TradeListItem) {
-                                freeSpaceHeight -= 62;
+                                freeSpaceHeight -= 54;
                                 final trade = item.trade;
                                 final savedDisplayMode = settingsStore.balanceDisplayMode;
                                 final formattedAmount = trade.amount != null
