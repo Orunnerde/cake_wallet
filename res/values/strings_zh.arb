@@ -379,5 +379,7 @@
   "placeholder_transactions" : "您的交易將顯示在這裡",
   "placeholder_contacts" : "您的聯繫人將顯示在這裡",
 
-  "confirm_change_wallet" : "您想將當前的錢包更改為選定的錢包嗎？"
+  "confirm_change_wallet" : "您想將當前的錢包更改為選定的錢包嗎？",
+
+  "filter" : "過濾"
 }

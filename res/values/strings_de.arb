@@ -379,5 +379,7 @@
   "placeholder_transactions" : "Ihre Transaktionen werden hier angezeigt",
   "placeholder_contacts" : "Ihre Kontakte werden hier angezeigt",
 
-  "confirm_change_wallet" : "Möchten Sie die aktuelle Brieftasche in eine ausgewählte ändern?"
+  "confirm_change_wallet" : "Möchten Sie die aktuelle Brieftasche in eine ausgewählte ändern?",
+
+  "filter" : "Filter"
 }

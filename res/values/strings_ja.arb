@@ -379,5 +379,7 @@
   "placeholder_transactions" : "あなたの取引はここに表示されます",
   "placeholder_contacts" : "連絡先はここに表示されます",
 
-  "confirm_change_wallet" : "現在のウォレットを選択したウォレットに変更しますか？"
+  "confirm_change_wallet" : "現在のウォレットを選択したウォレットに変更しますか？",
+
+  "filter" : "フィルタ"
 }

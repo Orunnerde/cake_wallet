@@ -17,6 +17,9 @@ import 'package:cake_wallet/src/screens/disclaimer/disclaimer_page.dart';
 import 'package:cake_wallet/src/screens/settings/items/settings_item.dart';
 import 'package:cake_wallet/src/screens/settings/items/item_headers.dart';
 import 'package:cake_wallet/src/widgets/picker.dart';
+import 'package:cake_wallet/src/widgets/filter_widget.dart';
+import 'package:cake_wallet/src/widgets/checkbox_widget.dart';
+import 'package:cake_wallet/src/screens/dashboard/widgets/filter_tile.dart';
 // Settings widgets
 import 'package:cake_wallet/src/screens/settings/widgets/settings_arrow_list_row.dart';
 import 'package:cake_wallet/src/screens/settings/widgets/settings_header_list_row.dart';
@@ -131,95 +134,94 @@ class SettingsFormState extends State<SettingsForm> {
       SettingsItem(title: ItemHeaders.darkMode, attribute: Attributes.switcher),
       SettingsItem(
           widgetBuilder: (context) {
-            return PopupMenuButton<ActionListDisplayMode>(
-                itemBuilder: (context) => [
-                      PopupMenuItem(
-                          value: ActionListDisplayMode.transactions,
-                          child: Observer(
-                              builder: (_) => Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(S
-                                            .of(context)
-                                            .settings_transactions,
-                                          style: TextStyle(
-                                              color: Theme.of(context).primaryTextTheme.title.color
-                                          ),
-                                        ),
-                                        Checkbox(
-                                          value: settingsStore
-                                              .actionlistDisplayMode
-                                              .contains(ActionListDisplayMode
-                                                  .transactions),
-                                          onChanged: (value) => settingsStore
-                                              .toggleTransactionsDisplay(),
-                                        )
-                                      ]))),
-                      PopupMenuItem(
-                          value: ActionListDisplayMode.trades,
-                          child: Observer(
-                              builder: (_) => Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                            S.of(context).settings_trades,
-                                          style: TextStyle(
-                                            color: Theme.of(context).primaryTextTheme.title.color
-                                          ),
-                                        ),
-                                        Checkbox(
-                                          value: settingsStore
-                                              .actionlistDisplayMode
-                                              .contains(
-                                                  ActionListDisplayMode.trades),
-                                          onChanged: (value) => settingsStore
-                                              .toggleTradesDisplay(),
-                                        )
-                                      ])))
-                    ],
-                child: Container(
-                  height: 56,
-                  padding: EdgeInsets.only(left: 24, right: 24),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(S.of(context).settings_display_on_dashboard_list,
+            return GestureDetector(
+              onTap: () {
+                showDialog<void>(
+                  context: context,
+                  builder: (_) {
+                    return FilterWidget(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          FilterTile(
+                              child: CheckboxWidget(
+                                  caption: S.of(context).settings_transactions,
+                                  value: settingsStore
+                                      .actionlistDisplayMode
+                                      .contains(ActionListDisplayMode
+                                      .transactions),
+                                  onChanged: (value) => settingsStore
+                                      .toggleTransactionsDisplay()
+                              )
+                          ),
+                          Container(
+                            height: 1,
+                            padding: EdgeInsets.only(left: 24),
+                            color: Theme.of(context).accentTextTheme.title.backgroundColor,
+                            child: Container(
+                              height: 1,
+                              color: Theme.of(context).dividerColor,
+                            ),
+                          ),
+                          FilterTile(
+                              child: CheckboxWidget(
+                                  caption: S.of(context).settings_trades,
+                                  value: settingsStore
+                                      .actionlistDisplayMode
+                                      .contains(
+                                      ActionListDisplayMode.trades),
+                                  onChanged: (value) => settingsStore
+                                      .toggleTradesDisplay()
+                              )
+                          ),
+                        ],
+                      )
+                    );
+                  }
+                );
+              },
+              child: Container(
+                height: 56,
+                padding: EdgeInsets.only(left: 24, right: 24),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(S.of(context).settings_display_on_dashboard_list,
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Theme.of(context).primaryTextTheme.title.color)),
+                      Observer(builder: (_) {
+                        var title = '';
+
+                        if (settingsStore.actionlistDisplayMode.length ==
+                            ActionListDisplayMode.values.length) {
+                          title = S.of(context).settings_all;
+                        }
+
+                        if (title.isEmpty &&
+                            settingsStore.actionlistDisplayMode
+                                .contains(ActionListDisplayMode.trades)) {
+                          title = S.of(context).settings_only_trades;
+                        }
+
+                        if (title.isEmpty &&
+                            settingsStore.actionlistDisplayMode.contains(
+                                ActionListDisplayMode.transactions)) {
+                          title = S.of(context).settings_only_transactions;
+                        }
+
+                        if (title.isEmpty) {
+                          title = S.of(context).settings_none;
+                        }
+
+                        return Text(title,
                             style: TextStyle(
-                                fontSize: 14,
-                                color: Theme.of(context).primaryTextTheme.title.color)),
-                        Observer(builder: (_) {
-                          var title = '';
-
-                          if (settingsStore.actionlistDisplayMode.length ==
-                              ActionListDisplayMode.values.length) {
-                            title = S.of(context).settings_all;
-                          }
-
-                          if (title.isEmpty &&
-                              settingsStore.actionlistDisplayMode
-                                  .contains(ActionListDisplayMode.trades)) {
-                            title = S.of(context).settings_only_trades;
-                          }
-
-                          if (title.isEmpty &&
-                              settingsStore.actionlistDisplayMode.contains(
-                                  ActionListDisplayMode.transactions)) {
-                            title = S.of(context).settings_only_transactions;
-                          }
-
-                          if (title.isEmpty) {
-                            title = S.of(context).settings_none;
-                          }
-
-                          return Text(title,
-                              style: TextStyle(
-                                  fontSize: 14.0,
-                                  color: Theme.of(context).primaryTextTheme.caption.color));
-                        })
-                      ]),
-                ));
+                                fontSize: 14.0,
+                                color: Theme.of(context).primaryTextTheme.caption.color));
+                      })
+                    ]),
+              ),
+            );
           },
           attribute: Attributes.rawWidget),
       SettingsItem(title: '', attribute: Attributes.header),
@@ -433,7 +435,9 @@ class SettingsFormState extends State<SettingsForm> {
             mainAxisAlignment: MainAxisAlignment.center,
             onItemSelected: (TransactionPriority priority) async =>
             await settingsStore.setCurrentTransactionPriority(
-                priority: priority)),
+                priority: priority),
+            isAlwaysShowScrollThumb: true,
+        ),
         context: context);
   }
 }

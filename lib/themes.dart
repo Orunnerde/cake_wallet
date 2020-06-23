@@ -70,6 +70,8 @@ class Themes {
       ),
       subhead: TextStyle(
         color: Colors.white, // buttons on the send and exchange pages
+        backgroundColor: PaletteDark.moderatePurpleBlue, // scrollbar thumb
+        decorationColor: Palette.blueAlice // scrollbar background
       )
     ),
   );
@@ -142,6 +144,8 @@ class Themes {
       ),
       subhead: TextStyle(
         color: PaletteDark.violetBlue, // buttons on the send and exchange pages
+        backgroundColor: Palette.lightBlueGrey, // scrollbar thumb
+        decorationColor: PaletteDark.violetBlue // scrollbar background
       )
     ),
   );

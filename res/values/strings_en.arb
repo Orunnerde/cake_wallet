@@ -379,5 +379,7 @@
   "placeholder_transactions" : "Your transactions will be displayed here",
   "placeholder_contacts" : "Your contacts will be displayed here",
 
-  "confirm_change_wallet" : "Do you want to change current wallet to selected one?"
+  "confirm_change_wallet" : "Do you want to change current wallet to selected one?",
+
+  "filter" : "Filter"
 }

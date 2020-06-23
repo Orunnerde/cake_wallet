@@ -379,5 +379,7 @@
   "placeholder_transactions" : "Twoje transakcje zostaną wyświetlone tutaj",
   "placeholder_contacts" : "Twoje kontakty zostaną wyświetlone tutaj",
 
-  "confirm_change_wallet" : "Czy chcesz zmienić bieżący portfel na wybrany?"
+  "confirm_change_wallet" : "Czy chcesz zmienić bieżący portfel na wybrany?",
+
+  "filter" : "Filtr"
 }

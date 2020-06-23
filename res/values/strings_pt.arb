@@ -379,5 +379,7 @@
   "placeholder_transactions" : "Suas transações serão exibidas aqui",
   "placeholder_contacts" : "Seus contatos serão exibidos aqui",
 
-  "confirm_change_wallet" : "Deseja alterar a carteira atual para a selecionada?"
+  "confirm_change_wallet" : "Deseja alterar a carteira atual para a selecionada?",
+
+  "filter" : "Filtro"
 }

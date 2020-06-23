@@ -94,6 +94,7 @@ class S implements WidgetsLocalizations {
   String get expired => "Expired";
   String get faq => "FAQ";
   String get fetching => "Fetching";
+  String get filter => "Filter";
   String get filters => "Filters";
   String get first_wallet_text => "Awesome wallet for Monero";
   String get full_balance => "Full Balance";
@@ -731,6 +732,8 @@ class $de extends S {
   @override
   String get widgets_seed => "Seed";
   @override
+  String get filter => "Filter";
+  @override
   String get settings_fee_priority => "Gebührenpriorität";
   @override
   String get rename => "Umbenennen";
@@ -1352,6 +1355,8 @@ class $hi extends S {
   String get restore_wallet_name => "बटुए का नाम";
   @override
   String get widgets_seed => "बीज";
+  @override
+  String get filter => "फ़िल्टर";
   @override
   String get settings_fee_priority => "शुल्क प्राथमिकता";
   @override
@@ -1975,6 +1980,8 @@ class $ru extends S {
   @override
   String get widgets_seed => "Мнемоническая фраза";
   @override
+  String get filter => "Фильтр";
+  @override
   String get settings_fee_priority => "Приоритет транзакции";
   @override
   String get rename => "Переименовать";
@@ -2596,6 +2603,8 @@ class $ko extends S {
   String get restore_wallet_name => "지갑 이름";
   @override
   String get widgets_seed => "씨";
+  @override
+  String get filter => "필터";
   @override
   String get settings_fee_priority => "수수료 우선";
   @override
@@ -3219,6 +3228,8 @@ class $pt extends S {
   @override
   String get widgets_seed => "Semente";
   @override
+  String get filter => "Filtro";
+  @override
   String get settings_fee_priority => "Prioridade da taxa";
   @override
   String get rename => "Renomear";
@@ -3841,6 +3852,8 @@ class $uk extends S {
   @override
   String get widgets_seed => "Мнемонічна фраза";
   @override
+  String get filter => "Фільтр";
+  @override
   String get settings_fee_priority => "Пріоритет транзакції";
   @override
   String get rename => "Перейменувати";
@@ -4462,6 +4475,8 @@ class $ja extends S {
   String get restore_wallet_name => "ウォレット名";
   @override
   String get widgets_seed => "シード";
+  @override
+  String get filter => "フィルタ";
   @override
   String get settings_fee_priority => "料金優先";
   @override
@@ -5089,6 +5104,8 @@ class $pl extends S {
   @override
   String get widgets_seed => "Ziarno";
   @override
+  String get filter => "Filtr";
+  @override
   String get settings_fee_priority => "Priorytet opłaty";
   @override
   String get rename => "Przemianować";
@@ -5710,6 +5727,8 @@ class $es extends S {
   String get restore_wallet_name => "Nombre de la billetera";
   @override
   String get widgets_seed => "Semilla";
+  @override
+  String get filter => "Filtrar";
   @override
   String get settings_fee_priority => "Prioridad de tasa";
   @override
@@ -6333,6 +6352,8 @@ class $nl extends S {
   @override
   String get widgets_seed => "Zaad";
   @override
+  String get filter => "Filter";
+  @override
   String get settings_fee_priority => "Tariefprioriteit";
   @override
   String get rename => "Hernoemen";
@@ -6954,6 +6975,8 @@ class $zh extends S {
   String get restore_wallet_name => "钱包名称";
   @override
   String get widgets_seed => "种子";
+  @override
+  String get filter => "過濾";
   @override
   String get settings_fee_priority => "费用优先";
   @override

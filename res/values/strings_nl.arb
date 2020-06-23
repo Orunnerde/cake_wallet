@@ -379,5 +379,7 @@
   "placeholder_transactions" : "Uw transacties worden hier weergegeven",
   "placeholder_contacts" : "Je contacten worden hier weergegeven",
 
-  "confirm_change_wallet" : "Wilt u de huidige portemonnee wijzigen in de geselecteerde?"
+  "confirm_change_wallet" : "Wilt u de huidige portemonnee wijzigen in de geselecteerde?",
+
+  "filter" : "Filter"
 }

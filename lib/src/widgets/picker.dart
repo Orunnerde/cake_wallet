@@ -1,15 +1,17 @@
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/src/widgets/alert_background.dart';
 
-class Picker<Item extends Object> extends StatelessWidget {
+class Picker<Item extends Object> extends StatefulWidget {
   Picker({
     @required this.selectedAtIndex,
     @required this.items,
     this.images,
     @required this.title,
     @required this.onItemSelected,
-    this.mainAxisAlignment = MainAxisAlignment.start
+    this.mainAxisAlignment = MainAxisAlignment.start,
+    this.isAlwaysShowScrollThumb = false
   });
 
   final int selectedAtIndex;
@@ -18,44 +20,70 @@ class Picker<Item extends Object> extends StatelessWidget {
   final String title;
   final Function(Item) onItemSelected;
   final MainAxisAlignment mainAxisAlignment;
+  final bool isAlwaysShowScrollThumb;
+
+  @override
+  PickerState createState() => PickerState<Item>(items, images, onItemSelected);
+}
+
+class PickerState<Item> extends State<Picker> {
+  PickerState(this.items, this.images, this.onItemSelected);
+
+  final Function(Item) onItemSelected;
+  final List<Item> items;
+  final List<Image> images;
+
+  final closeButton = Image.asset('assets/images/close.png');
+  ScrollController controller = ScrollController();
+
+  final double backgroundHeight = 205;
+  final double thumbHeight = 72;
+  double fromTop = 0;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => Navigator.of(context).pop(),
-      child: Container(
-        color: Colors.transparent,
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
-          child: Container(
-              decoration: BoxDecoration(color: PaletteDark.darkNightBlue.withOpacity(0.75)),
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.only(left: 24, right: 24),
-                      child: Text(
-                        title,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.none,
-                            color: Colors.white
-                        ),
-                      ),
+    controller.addListener(() {
+      fromTop = controller.hasClients
+          ? (controller.offset / controller.position.maxScrollExtent * (backgroundHeight - thumbHeight))
+          : 0;
+      setState(() {
+      });
+    });
+
+    return AlertBackground(
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(left: 24, right: 24),
+                  child: Text(
+                    widget.title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.none,
+                        color: Colors.white
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 24, right: 24, top: 24),
-                      child: GestureDetector(
-                        onTap: () => null,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(14)),
-                          child: Container(
-                              height: 233,
-                              color: Theme.of(context).accentTextTheme.title.backgroundColor,
-                              child: ListView.separated(
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 24, right: 24, top: 24),
+                  child: GestureDetector(
+                    onTap: () => null,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(14)),
+                      child: Container(
+                          height: 233,
+                          color: Theme.of(context).accentTextTheme.title.backgroundColor,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: <Widget>[
+                              ListView.separated(
+                                controller: controller,
                                 separatorBuilder: (context, index) => Divider(
                                   color: Theme.of(context).dividerColor,
                                   height: 1,
@@ -64,7 +92,7 @@ class Picker<Item extends Object> extends StatelessWidget {
                                 itemBuilder: (context, index) {
                                   final item = items[index];
                                   final image = images != null? images[index] : null;
-                                  final isItemSelected = index == selectedAtIndex;
+                                  final isItemSelected = index == widget.selectedAtIndex;
 
                                   final color = isItemSelected
                                       ? Theme.of(context).accentTextTheme.subtitle.decorationColor
@@ -87,15 +115,15 @@ class Picker<Item extends Object> extends StatelessWidget {
                                       color: color,
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment: mainAxisAlignment,
+                                        mainAxisAlignment: widget.mainAxisAlignment,
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: <Widget>[
                                           image != null
-                                          ? image
-                                          : Offstage(),
+                                              ? image
+                                              : Offstage(),
                                           Padding(
                                             padding: EdgeInsets.only(
-                                              left: image != null ? 12 : 0
+                                                left: image != null ? 12 : 0
                                             ),
                                             child: Text(
                                               item.toString(),
@@ -112,17 +140,63 @@ class Picker<Item extends Object> extends StatelessWidget {
                                     ),
                                   );
                                 },
+                              ),
+                              widget.isAlwaysShowScrollThumb
+                                  ? Positioned(
+                                  right: 6,
+                                  child: Container(
+                                    height: backgroundHeight,
+                                    width: 6,
+                                    decoration: BoxDecoration(
+                                        color: Theme.of(context).accentTextTheme.subhead.decorationColor,
+                                        borderRadius: BorderRadius.all(Radius.circular(3))
+                                    ),
+                                    child: Stack(
+                                      children: <Widget>[
+                                        AnimatedPositioned(
+                                          duration: Duration(milliseconds: 0),
+                                          top: fromTop,
+                                          child: Container(
+                                            height: thumbHeight,
+                                            width: 6.0,
+                                            decoration: BoxDecoration(
+                                                color: Theme.of(context).accentTextTheme.subhead.backgroundColor,
+                                                borderRadius: BorderRadius.all(Radius.circular(3))
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )
                               )
-                          ),
-                        ),
+                              : Offstage(),
+                            ],
+                          )
                       ),
-                    )
-                  ],
-                ),
-              )
-          ),
-        ),
-      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Positioned(
+                bottom: 50,
+                child: GestureDetector(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Container(
+                    height: 42,
+                    width: 42,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle
+                    ),
+                    child: Center(
+                      child: closeButton,
+                    ),
+                  ),
+                )
+            )
+          ],
+        )
     );
   }
 }

@@ -3,12 +3,14 @@ import 'package:cake_wallet/src/stores/action_list/action_list_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/generated/i18n.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_wallet/routes.dart';
 import 'package:date_range_picker/date_range_picker.dart' as date_rage_picker;
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/src/widgets/filter_widget.dart';
+import 'package:cake_wallet/src/widgets/checkbox_widget.dart';
+import 'package:cake_wallet/src/screens/dashboard/widgets/filter_tile.dart';
 
 class ButtonHeader extends SliverPersistentHeaderDelegate {
   final sendImage = Image.asset('assets/images/send.png');
@@ -19,6 +21,21 @@ class ButtonHeader extends SliverPersistentHeaderDelegate {
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     final actionListStore = Provider.of<ActionListStore>(context);
     final historyPanelWidth = MediaQuery.of(context).size.width;
+
+    final shortDivider = Container(
+      height: 1,
+      padding: EdgeInsets.only(left: 24),
+      color: Theme.of(context).accentTextTheme.title.backgroundColor,
+      child: Container(
+        height: 1,
+        color: Theme.of(context).dividerColor,
+      ),
+    );
+
+    final longDivider = Container(
+      height: 1,
+      color: Theme.of(context).dividerColor,
+    );
 
     final _themeChanger = Provider.of<ThemeChanger>(context);
     Image filterButton;
@@ -88,151 +105,154 @@ class ButtonHeader extends SliverPersistentHeaderDelegate {
                     ),
                     Positioned(
                       right: 4,
-                      child: PopupMenuButton<int>(
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                              enabled: false,
-                              value: -1,
-                              child: Text(S.of(context).transactions,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).primaryTextTheme.caption.color))),
-                          PopupMenuItem(
-                              value: 0,
-                              child: Observer(
-                                  builder: (_) => Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
-                                      children: [
-                                        Text(S.of(context).incoming),
-                                        Checkbox(
-                                          value: actionListStore
-                                              .transactionFilterStore
-                                              .displayIncoming,
-                                          onChanged: (value) =>
-                                              actionListStore
+                      child: GestureDetector(
+                        onTap: () {
+                          showDialog<void>(
+                              context: context,
+                              builder: (_) {
+                                return FilterWidget(
+                                    title: S.of(context).filter,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 24,
+                                              left: 24,
+                                              right: 24
+                                          ),
+                                          child: Text(
+                                            S.of(context).transactions,
+                                            style: TextStyle(
+                                                color: Theme.of(context).primaryTextTheme.caption.color,
+                                                fontSize: 16,
+                                                decoration: TextDecoration.none
+                                            ),
+                                          ),
+                                        ),
+                                        FilterTile(
+                                          child: CheckboxWidget(
+                                              caption: S.of(context).incoming,
+                                              value: actionListStore
                                                   .transactionFilterStore
-                                                  .toggleIncoming(),
-                                        )
-                                      ]))),
-                          PopupMenuItem(
-                              value: 1,
-                              child: Observer(
-                                  builder: (_) => Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
-                                      children: [
-                                        Text(S.of(context).outgoing),
-                                        Checkbox(
-                                          value: actionListStore
-                                              .transactionFilterStore
-                                              .displayOutgoing,
-                                          onChanged: (value) =>
-                                              actionListStore
+                                                  .displayIncoming,
+                                              onChanged: (value) => actionListStore
                                                   .transactionFilterStore
-                                                  .toggleOutgoing(),
-                                        )
-                                      ]))),
-                          PopupMenuItem(
-                              value: 2,
-                              child:
-                              Text(S.of(context).transactions_by_date)),
-                          PopupMenuDivider(),
-                          PopupMenuItem(
-                              enabled: false,
-                              value: -1,
-                              child: Text(S.of(context).trades,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).primaryTextTheme.caption.color))),
-                          PopupMenuItem(
-                              value: 3,
-                              child: Observer(
-                                  builder: (_) => Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
-                                      children: [
-                                        Text('XMR.TO'),
-                                        Checkbox(
-                                          value: actionListStore
-                                              .tradeFilterStore
-                                              .displayXMRTO,
-                                          onChanged: (value) =>
-                                              actionListStore
-                                                  .tradeFilterStore
-                                                  .toggleDisplayExchange(
-                                                  ExchangeProviderDescription
-                                                      .xmrto),
-                                        )
-                                      ]))),
-                          PopupMenuItem(
-                              value: 4,
-                              child: Observer(
-                                  builder: (_) => Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
-                                      children: [
-                                        Text('Change.NOW'),
-                                        Checkbox(
-                                          value: actionListStore
-                                              .tradeFilterStore
-                                              .displayChangeNow,
-                                          onChanged: (value) =>
-                                              actionListStore
-                                                  .tradeFilterStore
-                                                  .toggleDisplayExchange(
-                                                  ExchangeProviderDescription
-                                                      .changeNow),
-                                        )
-                                      ]))),
-                          PopupMenuItem(
-                              value: 5,
-                              child: Observer(
-                                  builder: (_) => Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
-                                      children: [
-                                        Text('MorphToken'),
-                                        Checkbox(
-                                          value: actionListStore
-                                              .tradeFilterStore
-                                              .displayMorphToken,
-                                          onChanged: (value) =>
-                                              actionListStore
-                                                  .tradeFilterStore
-                                                  .toggleDisplayExchange(
-                                                  ExchangeProviderDescription
-                                                      .morphToken),
-                                        )
-                                      ])))
-                        ],
-                        child: filterButton,
-                        onSelected: (item) async {
-                          if (item == 2) {
-                            final List<DateTime> picked =
-                            await date_rage_picker.showDatePicker(
-                                context: context,
-                                initialFirstDate: DateTime.now()
-                                    .subtract(Duration(days: 1)),
-                                initialLastDate: (DateTime.now()),
-                                firstDate: DateTime(2015),
-                                lastDate: DateTime.now()
-                                    .add(Duration(days: 1)));
+                                                  .toggleIncoming()
+                                          )
+                                        ),
+                                        shortDivider,
+                                        FilterTile(
+                                          child: CheckboxWidget(
+                                              caption: S.of(context).outgoing,
+                                              value: actionListStore
+                                                  .transactionFilterStore
+                                                  .displayOutgoing,
+                                              onChanged: (value) => actionListStore
+                                                  .transactionFilterStore
+                                                  .toggleOutgoing()
+                                          ),
+                                        ),
+                                        shortDivider,
+                                        FilterTile(
+                                            child: GestureDetector(
+                                              onTap: () async {
+                                                final List<DateTime> picked =
+                                                await date_rage_picker.showDatePicker(
+                                                    context: context,
+                                                    initialFirstDate: DateTime.now()
+                                                        .subtract(Duration(days: 1)),
+                                                    initialLastDate: (DateTime.now()),
+                                                    firstDate: DateTime(2015),
+                                                    lastDate: DateTime.now()
+                                                        .add(Duration(days: 1)));
 
-                            if (picked != null && picked.length == 2) {
-                              actionListStore.transactionFilterStore
-                                  .changeStartDate(picked.first);
-                              actionListStore.transactionFilterStore
-                                  .changeEndDate(picked.last);
-                            }
-                          }
+                                                if (picked != null && picked.length == 2) {
+                                                  actionListStore.transactionFilterStore
+                                                      .changeStartDate(picked.first);
+                                                  actionListStore.transactionFilterStore
+                                                      .changeEndDate(picked.last);
+                                                }
+                                              },
+                                              child: Padding(
+                                                padding: EdgeInsets.only(left: 32),
+                                                child: Text(
+                                                  S.of(context).transactions_by_date,
+                                                  style: TextStyle(
+                                                      color: Theme.of(context).primaryTextTheme.title.color,
+                                                      fontSize: 18,
+                                                      fontWeight: FontWeight.w600,
+                                                      decoration: TextDecoration.none
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                        ),
+                                        longDivider,
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 24,
+                                              left: 24,
+                                              right: 24
+                                          ),
+                                          child: Text(
+                                            S.of(context).trades,
+                                            style: TextStyle(
+                                                color: Theme.of(context).primaryTextTheme.caption.color,
+                                                fontSize: 16,
+                                                decoration: TextDecoration.none
+                                            ),
+                                          ),
+                                        ),
+                                        FilterTile(
+                                            child: CheckboxWidget(
+                                                caption: 'XMR.TO',
+                                                value: actionListStore
+                                                    .tradeFilterStore
+                                                    .displayXMRTO,
+                                                onChanged: (value) => actionListStore
+                                                    .tradeFilterStore
+                                                    .toggleDisplayExchange(
+                                                    ExchangeProviderDescription
+                                                        .xmrto)
+                                            )
+                                        ),
+                                        shortDivider,
+                                        FilterTile(
+                                            child: CheckboxWidget(
+                                                caption: 'Change.NOW',
+                                                value: actionListStore
+                                                    .tradeFilterStore
+                                                    .displayChangeNow,
+                                                onChanged: (value) => actionListStore
+                                                    .tradeFilterStore
+                                                    .toggleDisplayExchange(
+                                                    ExchangeProviderDescription
+                                                        .changeNow)
+                                            )
+                                        ),
+                                        shortDivider,
+                                        FilterTile(
+                                            child: CheckboxWidget(
+                                                caption: 'MorphToken',
+                                                value: actionListStore
+                                                    .tradeFilterStore
+                                                    .displayMorphToken,
+                                                onChanged: (value) => actionListStore
+                                                    .tradeFilterStore
+                                                    .toggleDisplayExchange(
+                                                    ExchangeProviderDescription
+                                                        .morphToken)
+                                            )
+                                        )
+                                      ],
+                                    )
+                                );
+                              }
+                          );
                         },
-                      ),
+                        child: filterButton,
+                      )
                     )
                   ],
                 ),

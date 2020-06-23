@@ -91,7 +91,8 @@ class WalletListBodyState extends State<WalletListBody> {
                                   image: moneroIcon,
                                   walletName: wallet.name,
                                   walletAddress: shortAddress,
-                                  isCurrent: isCurrentWallet
+                                  isCurrent: isCurrentWallet,
+                                  onTap: () => walletMenu.action(0, wallet)
                               ),
                             ),
                             SliverList(
@@ -107,8 +108,7 @@ class WalletListBodyState extends State<WalletListBody> {
                                     return GestureDetector(
                                       onTap: () {
                                         scrollController.animateTo(0.0, duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
-                                        walletMenu.action(
-                                            walletMenu.listItems.indexOf(item), wallet, isCurrentWallet);
+                                        walletMenu.action(walletMenu.listItems.indexOf(item), wallet);
                                       },
                                       child: Container(
                                         height: 108,

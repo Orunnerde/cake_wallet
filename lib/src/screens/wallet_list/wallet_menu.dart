@@ -6,7 +6,6 @@ import 'package:cake_wallet/src/stores/wallet_list/wallet_list_store.dart';
 import 'package:cake_wallet/src/domain/common/wallet_description.dart';
 import 'package:cake_wallet/src/screens/auth/auth_page.dart';
 import 'package:cake_wallet/src/widgets/alert_with_two_actions.dart';
-import 'package:cake_wallet/generated/i18n.dart';
 
 class WalletMenu {
   WalletMenu(this.context);
@@ -67,7 +66,7 @@ class WalletMenu {
     return images;
   }
 
-  void action(int index, WalletDescription wallet, bool isCurrentWallet) {
+  void action(int index, WalletDescription wallet) {
     final _walletListStore = Provider.of<WalletListStore>(context);
 
     switch (index) {

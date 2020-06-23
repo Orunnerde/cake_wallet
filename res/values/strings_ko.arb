@@ -379,5 +379,7 @@
   "placeholder_transactions" : "거래가 여기에 표시됩니다",
   "placeholder_contacts" : "연락처가 여기에 표시됩니다",
 
-  "confirm_change_wallet" : "현재 지갑을 선택된 지갑으로 변경 하시겠습니까?"
+  "confirm_change_wallet" : "현재 지갑을 선택된 지갑으로 변경 하시겠습니까?",
+
+  "filter" : "필터"
 }

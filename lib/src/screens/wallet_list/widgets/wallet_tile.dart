@@ -8,7 +8,8 @@ class WalletTile extends SliverPersistentHeaderDelegate {
     @required this.image,
     @required this.walletName,
     @required this.walletAddress,
-    @required this.isCurrent
+    @required this.isCurrent,
+    @required this.onTap
   });
 
   final double min;
@@ -17,6 +18,7 @@ class WalletTile extends SliverPersistentHeaderDelegate {
   final String walletName;
   final String walletAddress;
   final bool isCurrent;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
@@ -65,12 +67,15 @@ class WalletTile extends SliverPersistentHeaderDelegate {
                   children: <Widget>[
                     image,
                     SizedBox(width: 10),
-                    Text(
-                      walletName,
-                      style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).primaryTextTheme.title.color
+                    GestureDetector(
+                      onTap: onTap,
+                      child: Text(
+                        walletName,
+                        style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryTextTheme.title.color
+                        ),
                       ),
                     )
                   ],
