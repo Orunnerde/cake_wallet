@@ -245,12 +245,17 @@ class BaseExchangeWidgetState extends State<BaseExchangeWidget> {
                               final template = exchangeTemplateStore.templates[index];
 
                               return TemplateTile(
+                                  key: UniqueKey(),
                                   amount: template.amount,
                                   from: template.depositCurrency,
                                   to: template.receiveCurrency,
                                   onTap: () {
                                     applyTemplate(exchangeStore, template);
-                                  }
+                                  },
+                                  onRemove: () {
+                                    exchangeTemplateStore.remove(template: template);
+                                    exchangeTemplateStore.update();
+                                  },
                               );
                             }
                         );

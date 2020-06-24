@@ -1,3 +1,4 @@
+import 'package:cake_wallet/src/domain/common/template.dart';
 import 'package:cake_wallet/src/screens/auth/auth_page.dart';
 import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
 import 'package:flutter/cupertino.dart';
@@ -307,7 +308,8 @@ class SendFormState extends State<SendForm> {
               padding: EdgeInsets.only(left: 24),
               child: Observer(
                 builder: (_) {
-                  final itemCount = sendTemplateStore.templates.length + 1;
+                  final templates = sendTemplateStore.templates;
+                  final itemCount = templates.length + 1;
 
                   return ListView.builder(
                       scrollDirection: Axis.horizontal,
@@ -351,17 +353,22 @@ class SendFormState extends State<SendForm> {
 
                         index -= 1;
 
-                        final template = sendTemplateStore.templates[index];
+                        final template = templates[index];
 
                         return TemplateTile(
-                            to: template.name,
-                            amount: template.amount,
-                            from: template.cryptoCurrency,
-                            onTap: () {
-                              _addressController.text = template.address;
-                              _cryptoAmountController.text = template.amount;
-                              getOpenaliasRecord(context);
-                            }
+                          key: UniqueKey(),
+                          to: template.name,
+                          amount: template.amount,
+                          from: template.cryptoCurrency,
+                          onTap: () {
+                            _addressController.text = template.address;
+                            _cryptoAmountController.text = template.amount;
+                            getOpenaliasRecord(context);
+                          },
+                          onRemove: () async {
+                            await sendTemplateStore.remove(template: template);
+                            sendTemplateStore.update();
+                          },
                         );
                       }
                   );

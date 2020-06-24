@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/src/widgets/alert_background.dart';
+import 'package:cake_wallet/src/widgets/alert_close_button.dart';
 
 class FilterWidget extends StatelessWidget {
   FilterWidget({@required this.child, this.title = ''});
@@ -46,23 +47,7 @@ class FilterWidget extends StatelessWidget {
               ),
             ],
           ),
-          Positioned(
-            bottom: 10,
-            child: GestureDetector(
-              onTap: () => Navigator.of(context).pop(),
-              child: Container(
-                height: 42,
-                width: 42,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle
-                ),
-                child: Center(
-                  child: backVector,
-                ),
-              ),
-            )
-          )
+          AlertCloseButton(image: backVector)
         ],
       ),
     );

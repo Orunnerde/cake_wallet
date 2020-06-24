@@ -117,7 +117,7 @@ class ButtonHeader extends SliverPersistentHeaderDelegate {
                                       children: <Widget>[
                                         Padding(
                                           padding: EdgeInsets.only(
-                                              top: 24,
+                                              top: 20,
                                               left: 24,
                                               right: 24
                                           ),
@@ -191,7 +191,7 @@ class ButtonHeader extends SliverPersistentHeaderDelegate {
                                         longDivider,
                                         Padding(
                                           padding: EdgeInsets.only(
-                                              top: 24,
+                                              top: 20,
                                               left: 24,
                                               right: 24
                                           ),

@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cake_wallet/src/widgets/alert_background.dart';
+import 'package:cake_wallet/src/widgets/cake_scrollbar.dart';
+import 'package:cake_wallet/src/widgets/alert_close_button.dart';
 
 class Picker<Item extends Object> extends StatefulWidget {
   Picker({
@@ -36,7 +38,7 @@ class PickerState<Item> extends State<Picker> {
   final closeButton = Image.asset('assets/images/close.png');
   ScrollController controller = ScrollController();
 
-  final double backgroundHeight = 205;
+  final double backgroundHeight = 193;
   final double thumbHeight = 72;
   double fromTop = 0;
 
@@ -46,8 +48,7 @@ class PickerState<Item> extends State<Picker> {
       fromTop = controller.hasClients
           ? (controller.offset / controller.position.maxScrollExtent * (backgroundHeight - thumbHeight))
           : 0;
-      setState(() {
-      });
+      setState(() {});
     });
 
     return AlertBackground(
@@ -142,32 +143,10 @@ class PickerState<Item> extends State<Picker> {
                                 },
                               ),
                               widget.isAlwaysShowScrollThumb
-                                  ? Positioned(
-                                  right: 6,
-                                  child: Container(
-                                    height: backgroundHeight,
-                                    width: 6,
-                                    decoration: BoxDecoration(
-                                        color: Theme.of(context).accentTextTheme.subhead.decorationColor,
-                                        borderRadius: BorderRadius.all(Radius.circular(3))
-                                    ),
-                                    child: Stack(
-                                      children: <Widget>[
-                                        AnimatedPositioned(
-                                          duration: Duration(milliseconds: 0),
-                                          top: fromTop,
-                                          child: Container(
-                                            height: thumbHeight,
-                                            width: 6.0,
-                                            decoration: BoxDecoration(
-                                                color: Theme.of(context).accentTextTheme.subhead.backgroundColor,
-                                                borderRadius: BorderRadius.all(Radius.circular(3))
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  )
+                              ? CakeScrollbar(
+                                  backgroundHeight: backgroundHeight,
+                                  thumbHeight: thumbHeight,
+                                  fromTop: fromTop
                               )
                               : Offstage(),
                             ],
@@ -178,23 +157,7 @@ class PickerState<Item> extends State<Picker> {
                 )
               ],
             ),
-            Positioned(
-                bottom: 50,
-                child: GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Container(
-                    height: 42,
-                    width: 42,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle
-                    ),
-                    child: Center(
-                      child: closeButton,
-                    ),
-                  ),
-                )
-            )
+            AlertCloseButton(image: closeButton)
           ],
         )
     );

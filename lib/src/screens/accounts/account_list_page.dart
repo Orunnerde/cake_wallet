@@ -10,6 +10,8 @@ import 'package:cake_wallet/src/stores/account_list/account_list_store.dart';
 import 'package:cake_wallet/src/screens/accounts/widgets/account_tile.dart';
 import 'package:cake_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:cake_wallet/src/widgets/alert_background.dart';
+import 'package:cake_wallet/src/widgets/cake_scrollbar.dart';
+import 'package:cake_wallet/src/widgets/alert_close_button.dart';
 
 class AccountListPage extends StatefulWidget {
   AccountListPage({@required this.accountListStore});
@@ -28,6 +30,11 @@ class AccountListPageForm extends State<AccountListPage> {
 
   ScrollController controller = ScrollController();
 
+  final double backgroundHeight = 194;
+  final double thumbHeight = 72;
+  double fromTop = 0;
+  bool isAlwaysShowScrollThumb = false;
+
   @override
   void dispose() {
     controller.dispose();
@@ -37,6 +44,13 @@ class AccountListPageForm extends State<AccountListPage> {
   @override
   Widget build(BuildContext context) {
     final walletStore = Provider.of<WalletStore>(context);
+
+    controller.addListener(() {
+      fromTop = controller.hasClients
+          ? (controller.offset / controller.position.maxScrollExtent * (backgroundHeight - thumbHeight))
+          : 0;
+      setState(() {});
+    });
 
     return AlertBackground(
       child: Stack(
@@ -73,39 +87,51 @@ class AccountListPageForm extends State<AccountListPage> {
                               child: Observer(
                                   builder: (_) {
                                     final accounts = accountListStore.accounts;
+                                    isAlwaysShowScrollThumb = accounts == null
+                                        ? false
+                                        : accounts.length > 3;
 
-                                    return CupertinoScrollbar(
-                                      controller: controller,
-                                      child: ListView.separated(
-                                        controller: controller,
-                                        separatorBuilder: (context, index) => Divider(
-                                          color: Theme.of(context).dividerColor,
-                                          height: 1,
-                                        ),
-                                        itemCount: accounts == null ? 0 : accounts.length,
-                                        itemBuilder: (context, index) {
-                                          final account = accounts[index];
+                                    return Stack(
+                                      alignment: Alignment.center,
+                                      children: <Widget>[
+                                        ListView.separated(
+                                          controller: controller,
+                                          separatorBuilder: (context, index) => Divider(
+                                            color: Theme.of(context).dividerColor,
+                                            height: 1,
+                                          ),
+                                          itemCount: accounts == null ? 0 : accounts.length,
+                                          itemBuilder: (context, index) {
+                                            final account = accounts[index];
 
-                                          return Observer(
-                                              builder: (_) {
-                                                final isCurrent = walletStore.account.id == account.id;
+                                            return Observer(
+                                                builder: (_) {
+                                                  final isCurrent = walletStore.account.id == account.id;
 
-                                                return AccountTile(
-                                                    isCurrent: isCurrent,
-                                                    accountName: account.label,
-                                                    onTap: () {
-                                                      if (isCurrent) {
-                                                        return;
+                                                  return AccountTile(
+                                                      isCurrent: isCurrent,
+                                                      accountName: account.label,
+                                                      onTap: () {
+                                                        if (isCurrent) {
+                                                          return;
+                                                        }
+
+                                                        walletStore.setAccount(account);
+                                                        Navigator.of(context).pop();
                                                       }
-
-                                                      walletStore.setAccount(account);
-                                                      Navigator.of(context).pop();
-                                                    }
-                                                );
-                                              }
-                                          );
-                                        },
-                                      )
+                                                  );
+                                                }
+                                            );
+                                          },
+                                        ),
+                                        isAlwaysShowScrollThumb
+                                        ? CakeScrollbar(
+                                            backgroundHeight: backgroundHeight,
+                                            thumbHeight: thumbHeight,
+                                            fromTop: fromTop
+                                        )
+                                        : Offstage(),
+                                      ],
                                     );
                                   }
                               )
@@ -153,23 +179,7 @@ class AccountListPageForm extends State<AccountListPage> {
               )
             ],
           ),
-          Positioned(
-              bottom: 50,
-              child: GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
-                child: Container(
-                  height: 42,
-                  width: 42,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle
-                  ),
-                  child: Center(
-                    child: closeButton,
-                  ),
-                ),
-              )
-          )
+          AlertCloseButton(image: closeButton)
         ],
       ),
     );

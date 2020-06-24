@@ -9,7 +9,12 @@ class FilterTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(24),
+      padding: EdgeInsets.only(
+        top: 20,
+        bottom: 20,
+        left: 24,
+        right: 24
+      ),
       child: child,
     );
   }
