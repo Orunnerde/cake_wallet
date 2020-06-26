@@ -62,8 +62,8 @@ class ConfirmSendingAlert extends BaseAlertDialog {
             Text(
               amountValue,
               style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
                 color: Theme.of(context).primaryTextTheme.title.color,
                 decoration: TextDecoration.none,
               ),
@@ -86,8 +86,8 @@ class ConfirmSendingAlert extends BaseAlertDialog {
             Text(
               feeValue,
               style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
                 color: Theme.of(context).primaryTextTheme.title.color,
                 decoration: TextDecoration.none,
               ),
