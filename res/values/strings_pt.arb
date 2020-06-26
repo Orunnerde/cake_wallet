@@ -381,5 +381,9 @@
 
   "confirm_change_wallet" : "Deseja alterar a carteira atual para a selecionada?",
 
-  "filter" : "Filtro"
+  "filter" : "Filtro",
+
+  "template" : "Modelo",
+  "confirm_delete_template" : "Esta ação excluirá este modelo. Você deseja continuar?",
+  "confirm_delete_wallet" : "Esta ação excluirá esta carteira. Você deseja continuar?"
 }

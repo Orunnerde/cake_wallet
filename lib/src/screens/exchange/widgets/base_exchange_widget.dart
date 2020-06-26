@@ -20,6 +20,7 @@ import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
 import 'package:cake_wallet/src/widgets/top_panel.dart';
 import 'package:cake_wallet/src/stores/exchange_template/exchange_template_store.dart';
 import 'package:cake_wallet/src/widgets/alert_with_one_action.dart';
+import 'package:cake_wallet/src/widgets/alert_with_two_actions.dart';
 
 class BaseExchangeWidget extends StatefulWidget {
   BaseExchangeWidget({
@@ -121,6 +122,7 @@ class BaseExchangeWidgetState extends State<BaseExchangeWidget> {
                                 imageArrow: arrowBottomPurple,
                                 currencyButtonColor: Theme.of(context).accentTextTheme.title.color,
                                 addressButtonsColor: Theme.of(context).accentTextTheme.subhead.color,
+                                dividerColor: Theme.of(context).primaryTextTheme.caption.backgroundColor,
                                 currencyValueValidator: (value) {
                                   exchangeStore.validateCryptoCurrency(value);
                                   return exchangeStore.errorMessage;
@@ -154,6 +156,7 @@ class BaseExchangeWidgetState extends State<BaseExchangeWidget> {
                                 imageArrow: arrowBottomCakeGreen,
                                 currencyButtonColor: Theme.of(context).accentTextTheme.title.backgroundColor,
                                 addressButtonsColor: Theme.of(context).accentTextTheme.headline.decorationColor,
+                                dividerColor: Theme.of(context).primaryTextTheme.caption.decorationColor,
                                 currencyValueValidator: (value) {
                                   exchangeStore.validateCryptoCurrency(value);
                                   return exchangeStore.errorMessage;
@@ -253,8 +256,23 @@ class BaseExchangeWidgetState extends State<BaseExchangeWidget> {
                                     applyTemplate(exchangeStore, template);
                                   },
                                   onRemove: () {
-                                    exchangeTemplateStore.remove(template: template);
-                                    exchangeTemplateStore.update();
+                                    showDialog<void>(
+                                        context: context,
+                                        builder: (dialogContext) {
+                                          return AlertWithTwoActions(
+                                              alertTitle: S.of(context).template,
+                                              alertContent: S.of(context).confirm_delete_template,
+                                              leftButtonText: S.of(context).delete,
+                                              rightButtonText: S.of(context).cancel,
+                                              actionLeftButton: () {
+                                                Navigator.of(dialogContext).pop();
+                                                exchangeTemplateStore.remove(template: template);
+                                                exchangeTemplateStore.update();
+                                              },
+                                              actionRightButton: () => Navigator.of(dialogContext).pop()
+                                          );
+                                        }
+                                    );
                                   },
                               );
                             }

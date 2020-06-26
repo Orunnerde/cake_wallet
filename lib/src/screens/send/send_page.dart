@@ -1,4 +1,3 @@
-import 'package:cake_wallet/src/domain/common/template.dart';
 import 'package:cake_wallet/src/screens/auth/auth_page.dart';
 import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,6 +44,9 @@ class SendPage extends BasePage {
 
   @override
   bool get resizeToAvoidBottomPadding => false;
+
+  @override
+  bool get isModalBackButton => true;
 
   @override
   Widget trailing(context) {
@@ -154,6 +156,7 @@ class SendFormState extends State<SendForm> {
                       AddressTextFieldOption.addressBook
                     ],
                     buttonColor: Theme.of(context).accentTextTheme.headline.decorationColor,
+                    borderColor: Theme.of(context).primaryTextTheme.caption.decorationColor,
                     validator: (value) {
                       sendStore.validateAddress(value,
                           cryptoCurrency: CryptoCurrency.xmr);
@@ -226,6 +229,7 @@ class SendFormState extends State<SendForm> {
                             ),
                           ),
                           hintText: '0.0000',
+                          borderColor: Theme.of(context).primaryTextTheme.caption.decorationColor,
                           validator: (value) {
                             sendStore.validateXMR(
                                 value, balanceStore.unlockedBalance);
@@ -256,6 +260,7 @@ class SendFormState extends State<SendForm> {
                             )),
                       ),
                       hintText: '0.00',
+                      borderColor: Theme.of(context).primaryTextTheme.caption.decorationColor,
                     )
                   ),
                   Padding(
@@ -365,9 +370,24 @@ class SendFormState extends State<SendForm> {
                             _cryptoAmountController.text = template.amount;
                             getOpenaliasRecord(context);
                           },
-                          onRemove: () async {
-                            await sendTemplateStore.remove(template: template);
-                            sendTemplateStore.update();
+                          onRemove: () {
+                            showDialog<void>(
+                                context: context,
+                                builder: (dialogContext) {
+                                  return AlertWithTwoActions(
+                                      alertTitle: S.of(context).template,
+                                      alertContent: S.of(context).confirm_delete_template,
+                                      leftButtonText: S.of(context).delete,
+                                      rightButtonText: S.of(context).cancel,
+                                      actionLeftButton: () {
+                                        Navigator.of(dialogContext).pop();
+                                        sendTemplateStore.remove(template: template);
+                                        sendTemplateStore.update();
+                                      },
+                                      actionRightButton: () => Navigator.of(dialogContext).pop()
+                                  );
+                                }
+                            );
                           },
                         );
                       }

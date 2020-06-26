@@ -16,6 +16,9 @@ class TradeDetailsPage extends BasePage {
   String get title => S.current.trade_details_title;
 
   @override
+  bool get isModalBackButton => true;
+
+  @override
   Widget body(BuildContext context) {
     final exchangeStore = Provider.of<ExchangeTradeStore>(context);
     final settingsStore = Provider.of<SettingsStore>(context);

@@ -21,6 +21,7 @@ class AddressTextField extends StatelessWidget {
       this.focusNode,
       this.isBorderExist = true,
       this.buttonColor,
+      this.borderColor,
       this.validator});
 
   static const prefixIconWidth = 34.0;
@@ -35,6 +36,7 @@ class AddressTextField extends StatelessWidget {
   final FormFieldValidator<String> validator;
   final bool isBorderExist;
   final Color buttonColor;
+  final Color borderColor;
   FocusNode focusNode;
 
   @override
@@ -63,18 +65,18 @@ class AddressTextField extends StatelessWidget {
             focusedBorder: isBorderExist
                 ? UnderlineInputBorder(
                 borderSide: BorderSide(
-                    color: Theme.of(context).dividerColor,
+                    color: borderColor ?? Theme.of(context).dividerColor,
                     width: 1.0))
                 : InputBorder.none,
             disabledBorder: isBorderExist
                 ? UnderlineInputBorder(
                 borderSide:
-                BorderSide(color: Theme.of(context).dividerColor, width: 1.0))
+                BorderSide(color: borderColor ?? Theme.of(context).dividerColor, width: 1.0))
                 : InputBorder.none,
             enabledBorder: isBorderExist
                 ? UnderlineInputBorder(
                 borderSide:
-                BorderSide(color: Theme.of(context).dividerColor, width: 1.0))
+                BorderSide(color: borderColor ?? Theme.of(context).dividerColor, width: 1.0))
                 : InputBorder.none,
           ),
           validator: validator,

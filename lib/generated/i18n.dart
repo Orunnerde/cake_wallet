@@ -56,6 +56,8 @@ class S implements WidgetsLocalizations {
   String get clear => "Clear";
   String get confirm => "Confirm";
   String get confirm_change_wallet => "Do you want to change current wallet to selected one?";
+  String get confirm_delete_template => "This action will delete this template. Do you wish to continue?";
+  String get confirm_delete_wallet => "This action will delete this wallet. Do you wish to continue?";
   String get confirm_sending => "Confirm sending";
   String get contact => "Contact";
   String get contact_name => "Contact Name";
@@ -235,6 +237,7 @@ class S implements WidgetsLocalizations {
   String get sync_status_starting_sync => "STARTING SYNC";
   String get sync_status_syncronized => "SYNCHRONIZED";
   String get sync_status_syncronizing => "SYNCHRONIZING";
+  String get template => "Template";
   String get today => "Today";
   String get trade_details_created_at => "Created at";
   String get trade_details_fetching => "Fetching";
@@ -680,6 +683,8 @@ class $de extends S {
   @override
   String get sync_status_syncronized => "SYNCHRONISIERT";
   @override
+  String get template => "Vorlage";
+  @override
   String get transaction_priority_medium => "Mittel";
   @override
   String get transaction_details_transaction_id => "Transaktions-ID";
@@ -728,6 +733,8 @@ class $de extends S {
   @override
   String get trade_not_created => "Handel nicht angelegt.";
   @override
+  String get confirm_delete_wallet => "Diese Aktion löscht diese Brieftasche. Möchten Sie fortfahren?";
+  @override
   String get restore_wallet_name => "Walletname";
   @override
   String get widgets_seed => "Seed";
@@ -737,6 +744,8 @@ class $de extends S {
   String get settings_fee_priority => "Gebührenpriorität";
   @override
   String get rename => "Umbenennen";
+  @override
+  String get confirm_delete_template => "Diese Aktion löscht diese Vorlage. Möchten Sie fortfahren?";
   @override
   String get restore_active_seed => "Aktives Seed";
   @override
@@ -1304,6 +1313,8 @@ class $hi extends S {
   @override
   String get sync_status_syncronized => "सिंक्रनाइज़";
   @override
+  String get template => "खाका";
+  @override
   String get transaction_priority_medium => "मध्यम";
   @override
   String get transaction_details_transaction_id => "लेनदेन आईडी";
@@ -1352,6 +1363,8 @@ class $hi extends S {
   @override
   String get trade_not_created => "व्यापार नहीं बनाया गया.";
   @override
+  String get confirm_delete_wallet => "यह क्रिया इस वॉलेट को हटा देगी। क्या आप जारी रखना चाहते हैं?";
+  @override
   String get restore_wallet_name => "बटुए का नाम";
   @override
   String get widgets_seed => "बीज";
@@ -1361,6 +1374,8 @@ class $hi extends S {
   String get settings_fee_priority => "शुल्क प्राथमिकता";
   @override
   String get rename => "नाम बदलें";
+  @override
+  String get confirm_delete_template => "यह क्रिया इस टेम्पलेट को हटा देगी। क्या आप जारी रखना चाहते हैं?";
   @override
   String get restore_active_seed => "सक्रिय बीज";
   @override
@@ -1928,6 +1943,8 @@ class $ru extends S {
   @override
   String get sync_status_syncronized => "СИНХРОНИЗИРОВАН";
   @override
+  String get template => "Шаблон";
+  @override
   String get transaction_priority_medium => "Средний";
   @override
   String get transaction_details_transaction_id => "ID транзакции";
@@ -1976,6 +1993,8 @@ class $ru extends S {
   @override
   String get trade_not_created => "Сделка не создана.";
   @override
+  String get confirm_delete_wallet => "Это действие удалит кошелек. Вы хотите продолжить?";
+  @override
   String get restore_wallet_name => "Имя кошелька";
   @override
   String get widgets_seed => "Мнемоническая фраза";
@@ -1985,6 +2004,8 @@ class $ru extends S {
   String get settings_fee_priority => "Приоритет транзакции";
   @override
   String get rename => "Переименовать";
+  @override
+  String get confirm_delete_template => "Это действие удалит шаблон. Вы хотите продолжить?";
   @override
   String get restore_active_seed => "Активная мнемоническая фраза";
   @override
@@ -2552,6 +2573,8 @@ class $ko extends S {
   @override
   String get sync_status_syncronized => "동기화";
   @override
+  String get template => "주형";
+  @override
   String get transaction_priority_medium => "매질";
   @override
   String get transaction_details_transaction_id => "트랜잭션 ID";
@@ -2600,6 +2623,8 @@ class $ko extends S {
   @override
   String get trade_not_created => "거래가 생성되지 않았습니다.";
   @override
+  String get confirm_delete_wallet => "이 작업은이 지갑을 삭제합니다. 계속 하시겠습니까?";
+  @override
   String get restore_wallet_name => "지갑 이름";
   @override
   String get widgets_seed => "씨";
@@ -2609,6 +2634,8 @@ class $ko extends S {
   String get settings_fee_priority => "수수료 우선";
   @override
   String get rename => "이름 바꾸기";
+  @override
+  String get confirm_delete_template => "이 작업은이 템플릿을 삭제합니다. 계속 하시겠습니까?";
   @override
   String get restore_active_seed => "활성 종자";
   @override
@@ -3176,6 +3203,8 @@ class $pt extends S {
   @override
   String get sync_status_syncronized => "SINCRONIZADO";
   @override
+  String get template => "Modelo";
+  @override
   String get transaction_priority_medium => "Média";
   @override
   String get transaction_details_transaction_id => "ID da transação";
@@ -3224,6 +3253,8 @@ class $pt extends S {
   @override
   String get trade_not_created => "Troca não criada.";
   @override
+  String get confirm_delete_wallet => "Esta ação excluirá esta carteira. Você deseja continuar?";
+  @override
   String get restore_wallet_name => "Nome da carteira";
   @override
   String get widgets_seed => "Semente";
@@ -3233,6 +3264,8 @@ class $pt extends S {
   String get settings_fee_priority => "Prioridade da taxa";
   @override
   String get rename => "Renomear";
+  @override
+  String get confirm_delete_template => "Esta ação excluirá este modelo. Você deseja continuar?";
   @override
   String get restore_active_seed => "Semente ativa";
   @override
@@ -3800,6 +3833,8 @@ class $uk extends S {
   @override
   String get sync_status_syncronized => "СИНХРОНІЗОВАНИЙ";
   @override
+  String get template => "Шаблон";
+  @override
   String get transaction_priority_medium => "Середній";
   @override
   String get transaction_details_transaction_id => "ID транзакції";
@@ -3848,6 +3883,8 @@ class $uk extends S {
   @override
   String get trade_not_created => "Операція не створена.";
   @override
+  String get confirm_delete_wallet => "Ця дія видалить гаманець. Ви хочете продовжити?";
+  @override
   String get restore_wallet_name => "Ім'я гаманця";
   @override
   String get widgets_seed => "Мнемонічна фраза";
@@ -3857,6 +3894,8 @@ class $uk extends S {
   String get settings_fee_priority => "Пріоритет транзакції";
   @override
   String get rename => "Перейменувати";
+  @override
+  String get confirm_delete_template => "Ця дія видалить шаблон. Ви хочете продовжити?";
   @override
   String get restore_active_seed => "Активна мнемонічна фраза";
   @override
@@ -4424,6 +4463,8 @@ class $ja extends S {
   @override
   String get sync_status_syncronized => "同期された";
   @override
+  String get template => "テンプレート";
+  @override
   String get transaction_priority_medium => "中";
   @override
   String get transaction_details_transaction_id => "トランザクションID";
@@ -4472,6 +4513,8 @@ class $ja extends S {
   @override
   String get trade_not_created => "作成されていない取引";
   @override
+  String get confirm_delete_wallet => "このアクションにより、このウォレットが削除されます。 続行しますか？";
+  @override
   String get restore_wallet_name => "ウォレット名";
   @override
   String get widgets_seed => "シード";
@@ -4481,6 +4524,8 @@ class $ja extends S {
   String get settings_fee_priority => "料金優先";
   @override
   String get rename => "リネーム";
+  @override
+  String get confirm_delete_template => "この操作により、このテンプレートが削除されます。 続行しますか？";
   @override
   String get restore_active_seed => "アクティブシード";
   @override
@@ -5052,6 +5097,8 @@ class $pl extends S {
   @override
   String get sync_status_syncronized => "SYNCHRONIZOWANY";
   @override
+  String get template => "Szablon";
+  @override
   String get transaction_priority_medium => "Średni";
   @override
   String get transaction_details_transaction_id => "Transakcja ID";
@@ -5100,6 +5147,8 @@ class $pl extends S {
   @override
   String get trade_not_created => "Handel nie utworzony.";
   @override
+  String get confirm_delete_wallet => "Ta czynność usunie ten portfel. Czy chcesz kontynuować?";
+  @override
   String get restore_wallet_name => "Nazwa portfela";
   @override
   String get widgets_seed => "Ziarno";
@@ -5109,6 +5158,8 @@ class $pl extends S {
   String get settings_fee_priority => "Priorytet opłaty";
   @override
   String get rename => "Przemianować";
+  @override
+  String get confirm_delete_template => "Ta czynność usunie ten szablon. Czy chcesz kontynuować?";
   @override
   String get restore_active_seed => "Aktywne nasiona";
   @override
@@ -5676,6 +5727,8 @@ class $es extends S {
   @override
   String get sync_status_syncronized => "SINCRONIZADO";
   @override
+  String get template => "Plantilla";
+  @override
   String get transaction_priority_medium => "Medio";
   @override
   String get transaction_details_transaction_id => "ID de transacción";
@@ -5724,6 +5777,8 @@ class $es extends S {
   @override
   String get trade_not_created => "Comercio no se crea.";
   @override
+  String get confirm_delete_wallet => "Esta acción eliminará esta billetera. ¿Desea continuar?";
+  @override
   String get restore_wallet_name => "Nombre de la billetera";
   @override
   String get widgets_seed => "Semilla";
@@ -5733,6 +5788,8 @@ class $es extends S {
   String get settings_fee_priority => "Prioridad de tasa";
   @override
   String get rename => "Rebautizar";
+  @override
+  String get confirm_delete_template => "Esta acción eliminará esta plantilla. ¿Desea continuar?";
   @override
   String get restore_active_seed => "Semilla activa";
   @override
@@ -6300,6 +6357,8 @@ class $nl extends S {
   @override
   String get sync_status_syncronized => "SYNCHRONIZED";
   @override
+  String get template => "Sjabloon";
+  @override
   String get transaction_priority_medium => "Medium";
   @override
   String get transaction_details_transaction_id => "Transactie ID";
@@ -6348,6 +6407,8 @@ class $nl extends S {
   @override
   String get trade_not_created => "Handel niet gecreëerd.";
   @override
+  String get confirm_delete_wallet => "Met deze actie wordt deze portemonnee verwijderd. Wilt u doorgaan?";
+  @override
   String get restore_wallet_name => "Portemonnee naam";
   @override
   String get widgets_seed => "Zaad";
@@ -6357,6 +6418,8 @@ class $nl extends S {
   String get settings_fee_priority => "Tariefprioriteit";
   @override
   String get rename => "Hernoemen";
+  @override
+  String get confirm_delete_template => "Met deze actie wordt deze sjabloon verwijderd. Wilt u doorgaan?";
   @override
   String get restore_active_seed => "Actief zaad";
   @override
@@ -6924,6 +6987,8 @@ class $zh extends S {
   @override
   String get sync_status_syncronized => "已同步";
   @override
+  String get template => "模板";
+  @override
   String get transaction_priority_medium => "介质";
   @override
   String get transaction_details_transaction_id => "交易编号";
@@ -6972,6 +7037,8 @@ class $zh extends S {
   @override
   String get trade_not_created => "未建立交易.";
   @override
+  String get confirm_delete_wallet => "此操作將刪除此錢包。 你想繼續嗎？";
+  @override
   String get restore_wallet_name => "钱包名称";
   @override
   String get widgets_seed => "种子";
@@ -6981,6 +7048,8 @@ class $zh extends S {
   String get settings_fee_priority => "费用优先";
   @override
   String get rename => "改名";
+  @override
+  String get confirm_delete_template => "此操作將刪除此模板。 你想繼續嗎？";
   @override
   String get restore_active_seed => "活性種子";
   @override

@@ -19,10 +19,13 @@ class Themes {
     primaryTextTheme: TextTheme(
       title: TextStyle(
         color: Palette.oceanBlue, // primary text
-        backgroundColor: Colors.white // selectButton text
+        backgroundColor: Colors.white, // selectButton text
+        decorationColor: Palette.lightPeriwinkle // receive page divider
       ),
       caption: TextStyle(
         color: Palette.lightBlueGrey, // secondary text
+        backgroundColor: Palette.darkDustBlue, // top panel divider
+        decorationColor: Palette.dustBlue, // bottom panel divider
       ),
       overline: TextStyle(
         color: Palette.lavender // address field in the wallet card
@@ -93,10 +96,13 @@ class Themes {
     primaryTextTheme: TextTheme(
       title: TextStyle(
         color: Colors.white,
-        backgroundColor: PaletteDark.moderatePurpleBlue // selectButton text
+        backgroundColor: PaletteDark.moderatePurpleBlue, // selectButton text
+        decorationColor: PaletteDark.lightNightBlue // receive page divider
       ),
       caption: TextStyle(
         color: PaletteDark.gray,
+        backgroundColor: PaletteDark.cyanBlue, // top panel divider
+        decorationColor: PaletteDark.lightVioletBlue, // bottom panel divider
       ),
       overline: TextStyle(
         color: PaletteDark.lightDistantBlue // address field in the wallet card

@@ -10,9 +10,12 @@ class Palette {
   static const Color oceanBlue = Color.fromRGBO(30, 52, 78, 1.0);
   static const Color lightBlueGrey = Color.fromRGBO(118, 131, 169, 1.0);
   static const Color periwinkle = Color.fromRGBO(197, 208, 230, 1.0);
+  static const Color lightPeriwinkle = Color.fromRGBO(197, 208, 230, 1.0);
   static const Color blue = Color.fromRGBO(88, 143, 252, 1.0);
   static const Color darkLavender = Color.fromRGBO(225, 238, 250, 1.0);
   static const Color nightBlue = Color.fromRGBO(46, 57, 96, 1.0);
+  static const Color darkDustBlue = Color.fromRGBO(192, 216, 235, 1.0);
+  static const Color dustBlue = Color.fromRGBO(206, 225, 240, 1.0);
 }
 
 class PaletteDark {
@@ -28,4 +31,6 @@ class PaletteDark {
   static const Color headerNightBlue = Color.fromRGBO(41, 52, 84, 1.0); // menuHeader
   static const Color lightNightBlue = Color.fromRGBO(48, 59, 95, 1.0); // menuList
   static const Color moderatePurpleBlue = Color.fromRGBO(57, 74, 95, 1.0); // selectButtonText
+  static const Color cyanBlue = Color.fromRGBO(87, 98, 138, 1.0);
+  static const Color lightVioletBlue = Color.fromRGBO(62, 73, 113, 1.0);
 }

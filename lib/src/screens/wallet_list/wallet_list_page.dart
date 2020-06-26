@@ -92,7 +92,13 @@ class WalletListBodyState extends State<WalletListBody> {
                                   walletName: wallet.name,
                                   walletAddress: shortAddress,
                                   isCurrent: isCurrentWallet,
-                                  onTap: () => walletMenu.action(0, wallet)
+                                  onTap: () {
+                                    if (isCurrentWallet) {
+                                      return;
+                                    }
+
+                                    walletMenu.action(0, wallet);
+                                  }
                               ),
                             ),
                             SliverList(

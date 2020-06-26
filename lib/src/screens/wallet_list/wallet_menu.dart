@@ -116,23 +116,38 @@ class WalletMenu {
         });
         break;
       case 2:
-        Navigator.of(context).pushNamed(Routes.auth, arguments:
-            (bool isAuthenticatedSuccessfully, AuthPageState auth) async {
-          if (!isAuthenticatedSuccessfully) {
-            return;
-          }
+        showDialog<void>(
+            context: context,
+            builder: (dialogContext) {
+              return AlertWithTwoActions(
+                  alertTitle: S.of(context).wallets,
+                  alertContent: S.of(context).confirm_delete_wallet,
+                  leftButtonText: S.of(context).remove,
+                  rightButtonText: S.of(context).cancel,
+                  actionLeftButton: () {
+                    Navigator.of(dialogContext).pop();
+                    Navigator.of(context).pushNamed(Routes.auth, arguments:
+                        (bool isAuthenticatedSuccessfully, AuthPageState auth) async {
+                      if (!isAuthenticatedSuccessfully) {
+                        return;
+                      }
 
-          try {
-            auth.changeProcessText(
-                S.of(context).wallet_list_removing_wallet(wallet.name));
-            await _walletListStore.remove(wallet);
-            auth.close();
-          } catch (e) {
-            auth.changeProcessText(S
-                .of(context)
-                .wallet_list_failed_to_remove(wallet.name, e.toString()));
-          }
-        });
+                      try {
+                        auth.changeProcessText(
+                            S.of(context).wallet_list_removing_wallet(wallet.name));
+                        await _walletListStore.remove(wallet);
+                        auth.close();
+                      } catch (e) {
+                        auth.changeProcessText(S
+                            .of(context)
+                            .wallet_list_failed_to_remove(wallet.name, e.toString()));
+                      }
+                    });
+                  },
+                  actionRightButton: () => Navigator.of(dialogContext).pop()
+              );
+            }
+        );
         break;
       case 3:
         Navigator.of(context).pushNamed(Routes.rescan);

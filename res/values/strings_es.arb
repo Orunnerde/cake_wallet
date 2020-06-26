@@ -381,5 +381,9 @@
 
   "confirm_change_wallet" : "¿Desea cambiar la billetera actual a la seleccionada?",
 
-  "filter" : "Filtrar"
+  "filter" : "Filtrar",
+
+  "template" : "Plantilla",
+  "confirm_delete_template" : "Esta acción eliminará esta plantilla. ¿Desea continuar?",
+  "confirm_delete_wallet" : "Esta acción eliminará esta billetera. ¿Desea continuar?"
 }

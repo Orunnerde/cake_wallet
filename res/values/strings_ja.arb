@@ -381,5 +381,9 @@
 
   "confirm_change_wallet" : "現在のウォレットを選択したウォレットに変更しますか？",
 
-  "filter" : "フィルタ"
+  "filter" : "フィルタ",
+
+  "template" : "テンプレート",
+  "confirm_delete_template" : "この操作により、このテンプレートが削除されます。 続行しますか？",
+  "confirm_delete_wallet" : "このアクションにより、このウォレットが削除されます。 続行しますか？"
 }

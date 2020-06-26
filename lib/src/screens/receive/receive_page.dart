@@ -14,8 +14,7 @@ import 'package:cake_wallet/src/screens/accounts/account_list_page.dart';
 import 'package:cake_wallet/src/stores/account_list/account_list_store.dart';
 import 'package:cake_wallet/src/screens/receive/widgets/header_tile.dart';
 import 'package:cake_wallet/src/widgets/base_text_form_field.dart';
-import 'package:cake_wallet/themes.dart';
-import 'package:cake_wallet/theme_changer.dart';
+import 'package:cake_wallet/src/widgets/close_button_widget.dart';
 
 class ReceivePage extends StatefulWidget {
   @override
@@ -25,9 +24,6 @@ class ReceivePage extends StatefulWidget {
 class ReceivePageState extends State<ReceivePage> {
   final amountController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final _backArrowImage = Image.asset('assets/images/back_arrow.png');
-  final _backArrowImageDarkTheme =
-  Image.asset('assets/images/back_arrow_dark_theme.png');
 
   @override
   void dispose() {
@@ -53,15 +49,6 @@ class ReceivePageState extends State<ReceivePage> {
 
     final currentTextColor = Colors.blue;
     final notCurrentTextColor = Theme.of(context).primaryTextTheme.caption.color;
-
-    final _themeChanger = Provider.of<ThemeChanger>(context);
-    Image _backButton;
-
-    if (_themeChanger.getTheme() == Themes.darkTheme) {
-      _backButton = _backArrowImageDarkTheme;
-    } else {
-      _backButton = _backArrowImage;
-    }
 
     amountController.addListener(() {
       if (_formKey.currentState.validate()) {
@@ -93,26 +80,14 @@ class ReceivePageState extends State<ReceivePage> {
                 padding: EdgeInsets.only(
                   top: 10,
                   bottom: 20,
-                  left: 5,
+                  left: 15,
                   right: 10
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(
-                      height: 44,
-                      width: 44,
-                      child: ButtonTheme(
-                        minWidth: double.minPositive,
-                        child: FlatButton(
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            padding: EdgeInsets.all(0),
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: _backButton),
-                      ),
-                    ),
+                    CloseButtonWidget(),
                     Text(
                       S.of(context).receive,
                       style: TextStyle(
@@ -252,7 +227,7 @@ class ReceivePageState extends State<ReceivePage> {
                             return ListView.separated(
                                 separatorBuilder: (context, index) => Divider(
                                   height: 1,
-                                  color: Theme.of(context).dividerColor,
+                                  color: Theme.of(context).primaryTextTheme.title.decorationColor,
                                 ),
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),

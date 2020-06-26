@@ -21,6 +21,7 @@ class ExchangeCard extends StatefulWidget {
       this.imageArrow,
       this.currencyButtonColor = Colors.transparent,
       this.addressButtonsColor = Colors.transparent,
+      this.dividerColor,
       this.currencyValueValidator,
       this.addressTextFieldValidator})
       : super(key: key);
@@ -37,6 +38,7 @@ class ExchangeCard extends StatefulWidget {
   final Image imageArrow;
   final Color currencyButtonColor;
   final Color addressButtonsColor;
+  final Color dividerColor;
   final FormFieldValidator<String> currencyValueValidator;
   final FormFieldValidator<String> addressTextFieldValidator;
 
@@ -143,6 +145,7 @@ class ExchangeCardState extends State<ExchangeCard> {
                         RegExp('[\\-|\\ |\\,]'))
                   ],
                   hintText: '0.0000',
+                  borderColor: widget.dividerColor,
                   validator: widget.currencyValueValidator
               ),
               Positioned(
@@ -218,6 +221,7 @@ class ExchangeCardState extends State<ExchangeCard> {
             : [],
             isBorderExist: false,
             buttonColor: widget.addressButtonsColor,
+            borderColor: widget.dividerColor,
             validator: widget.addressTextFieldValidator,
           ),
         )

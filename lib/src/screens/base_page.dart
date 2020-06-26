@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:cake_wallet/themes.dart';
 import 'package:cake_wallet/theme_changer.dart';
 import 'package:cake_wallet/palette.dart';
+import 'package:cake_wallet/src/widgets/close_button_widget.dart';
 
 enum AppBarStyle { regular, withShadow }
 
@@ -19,9 +20,6 @@ abstract class BasePage extends StatelessWidget {
   final _backArrowImage = Image.asset('assets/images/back_arrow.png');
   final _backArrowImageDarkTheme =
       Image.asset('assets/images/back_arrow_dark_theme.png');
-  final _closeButtonImage = Image.asset('assets/images/close_button.png');
-  final _closeButtonImageDarkTheme =
-      Image.asset('assets/images/close_button_dark_theme.png');
 
   void onClose(BuildContext context) => Navigator.of(context).pop();
 
@@ -31,27 +29,22 @@ abstract class BasePage extends StatelessWidget {
     }
 
     final _themeChanger = Provider.of<ThemeChanger>(context);
-    Image _closeButton, _backButton;
+    final _backButton = _themeChanger.getTheme() == Themes.darkTheme
+    ? _backArrowImageDarkTheme : _backArrowImage;
 
-    if (_themeChanger.getTheme() == Themes.darkTheme) {
-      _backButton = _backArrowImageDarkTheme;
-      _closeButton = _closeButtonImageDarkTheme;
-    } else {
-      _backButton = _backArrowImage;
-      _closeButton = _closeButtonImage;
-    }
-
-    return SizedBox(
-      height: 37,
-      width: isModalBackButton ? 37 : 20,
-      child: ButtonTheme(
-        minWidth: double.minPositive,
-        child: FlatButton(
-            highlightColor: Colors.transparent,
-            splashColor: Colors.transparent,
-            padding: EdgeInsets.all(0),
-            onPressed: () => onClose(context),
-            child: isModalBackButton ? _closeButton : _backButton),
+    return isModalBackButton
+      ? CloseButtonWidget()
+      : SizedBox(
+         height: 37,
+         width: 20,
+         child: ButtonTheme(
+           minWidth: double.minPositive,
+           child: FlatButton(
+             highlightColor: Colors.transparent,
+             splashColor: Colors.transparent,
+             padding: EdgeInsets.all(0),
+             onPressed: () => onClose(context),
+             child: _backButton),
       ),
     );
   }

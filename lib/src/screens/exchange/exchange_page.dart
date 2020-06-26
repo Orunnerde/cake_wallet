@@ -23,6 +23,9 @@ class ExchangePage extends BasePage {
   Color get backgroundDarkColor => PaletteDark.moderateBlue;
 
   @override
+  bool get isModalBackButton => true;
+
+  @override
   Widget middle(BuildContext context) {
     final exchangeStore = Provider.of<ExchangeStore>(context);
 

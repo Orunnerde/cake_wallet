@@ -381,5 +381,9 @@
 
   "confirm_change_wallet" : "현재 지갑을 선택된 지갑으로 변경 하시겠습니까?",
 
-  "filter" : "필터"
+  "filter" : "필터",
+
+  "template" : "주형",
+  "confirm_delete_template" : "이 작업은이 템플릿을 삭제합니다. 계속 하시겠습니까?",
+  "confirm_delete_wallet" : "이 작업은이 지갑을 삭제합니다. 계속 하시겠습니까?"
 }

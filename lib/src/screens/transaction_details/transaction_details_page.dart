@@ -8,7 +8,6 @@ import 'package:cake_wallet/src/stores/settings/settings_store.dart';
 import 'package:cake_wallet/src/screens/transaction_details/standart_list_item.dart';
 import 'package:cake_wallet/src/widgets/standart_list_row.dart';
 import 'package:cake_wallet/src/screens/base_page.dart';
-import 'package:cake_wallet/palette.dart';
 
 class TransactionDetailsPage extends BasePage {
   TransactionDetailsPage({this.transactionInfo});
@@ -17,6 +16,9 @@ class TransactionDetailsPage extends BasePage {
 
   @override
   String get title => S.current.transaction_details_title;
+
+  @override
+  bool get isModalBackButton => true;
 
   @override
   Widget body(BuildContext context) {
