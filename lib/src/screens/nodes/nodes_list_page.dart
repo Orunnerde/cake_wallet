@@ -83,6 +83,9 @@ class NodeListPageBodyState extends State<NodeListPageBody> {
     final currentTextColor = Colors.blue;
     final notCurrentTextColor = Theme.of(context).primaryTextTheme.title.color;
 
+    final add = Image.asset('assets/images/union.png',
+      color: Theme.of(context).primaryTextTheme.title.color);
+
     return Container(
       height: double.infinity,
       padding: EdgeInsets.only(top: 12),
@@ -91,9 +94,7 @@ class NodeListPageBodyState extends State<NodeListPageBody> {
         children: <Widget>[
           NodeListRow(
               title: S.of(context).add_new_node,
-              trailing: Icon(Icons.add,
-                  color: Theme.of(context).primaryTextTheme.title.color,
-                  size: 24.0),
+              trailing: add,
               color: Theme.of(context).accentTextTheme.title.backgroundColor,
               textColor: Theme.of(context).primaryTextTheme.title.color,
               onTap: () async =>

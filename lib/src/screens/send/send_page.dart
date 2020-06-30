@@ -156,7 +156,7 @@ class SendFormState extends State<SendForm> {
                       AddressTextFieldOption.addressBook
                     ],
                     buttonColor: Theme.of(context).accentTextTheme.headline.decorationColor,
-                    borderColor: Theme.of(context).primaryTextTheme.caption.decorationColor,
+                    borderColor: Theme.of(context).primaryTextTheme.display4.decorationColor,
                     validator: (value) {
                       sendStore.validateAddress(value,
                           cryptoCurrency: CryptoCurrency.xmr);
@@ -206,7 +206,7 @@ class SendFormState extends State<SendForm> {
                                 Container(
                                   height: 34,
                                   width: 34,
-                                  margin: EdgeInsets.only(left: 12, bottom: 7, top: 4),
+                                  margin: EdgeInsets.only(left: 12, bottom: 7, top: 2),
                                   decoration: BoxDecoration(
                                     color: Theme.of(context).accentTextTheme.headline.decorationColor,
                                     borderRadius: BorderRadius.all(Radius.circular(6))
@@ -229,7 +229,7 @@ class SendFormState extends State<SendForm> {
                             ),
                           ),
                           hintText: '0.0000',
-                          borderColor: Theme.of(context).primaryTextTheme.caption.decorationColor,
+                          borderColor: Theme.of(context).primaryTextTheme.display4.decorationColor,
                           validator: (value) {
                             sendStore.validateXMR(
                                 value, balanceStore.unlockedBalance);
@@ -260,7 +260,7 @@ class SendFormState extends State<SendForm> {
                             )),
                       ),
                       hintText: '0.00',
-                      borderColor: Theme.of(context).primaryTextTheme.caption.decorationColor,
+                      borderColor: Theme.of(context).primaryTextTheme.display4.decorationColor,
                     )
                   ),
                   Padding(

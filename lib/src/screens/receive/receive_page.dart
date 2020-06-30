@@ -227,7 +227,7 @@ class ReceivePageState extends State<ReceivePage> {
                             return ListView.separated(
                                 separatorBuilder: (context, index) => Divider(
                                   height: 1,
-                                  color: Theme.of(context).primaryTextTheme.title.decorationColor,
+                                  color: Theme.of(context).primaryTextTheme.display2.decorationColor,
                                 ),
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),

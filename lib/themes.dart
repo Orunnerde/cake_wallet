@@ -20,12 +20,9 @@ class Themes {
       title: TextStyle(
         color: Palette.oceanBlue, // primary text
         backgroundColor: Colors.white, // selectButton text
-        decorationColor: Palette.lightPeriwinkle // receive page divider
       ),
       caption: TextStyle(
         color: Palette.lightBlueGrey, // secondary text
-        backgroundColor: Palette.darkDustBlue, // top panel divider
-        decorationColor: Palette.dustBlue, // bottom panel divider
       ),
       overline: TextStyle(
         color: Palette.lavender // address field in the wallet card
@@ -40,13 +37,16 @@ class Themes {
         color: Colors.white // menuList
       ),
       display2: TextStyle(
-        color: Palette.lavender // menuHeader
+        color: Palette.lavender, // menuHeader
+        decorationColor: Palette.lightPeriwinkle // receive page divider
       ),
       display3: TextStyle(
-        color: Palette.lavender // historyPanelButton
+        color: Palette.lavender, // historyPanelButton
+        decorationColor: Palette.darkDustBlue, // top panel divider
       ),
       display4: TextStyle(
-        color: Palette.oceanBlue // QR code
+        color: Palette.oceanBlue, // QR code
+        decorationColor: Palette.dustBlue, // bottom panel divider
       )
     ),
     dividerColor: Palette.periwinkle,
@@ -97,12 +97,9 @@ class Themes {
       title: TextStyle(
         color: Colors.white,
         backgroundColor: PaletteDark.moderatePurpleBlue, // selectButton text
-        decorationColor: PaletteDark.lightNightBlue // receive page divider
       ),
       caption: TextStyle(
         color: PaletteDark.gray,
-        backgroundColor: PaletteDark.cyanBlue, // top panel divider
-        decorationColor: PaletteDark.lightVioletBlue, // bottom panel divider
       ),
       overline: TextStyle(
         color: PaletteDark.lightDistantBlue // address field in the wallet card
@@ -117,13 +114,16 @@ class Themes {
         color: PaletteDark.lightNightBlue // menuList
       ),
       display2: TextStyle(
-        color: PaletteDark.headerNightBlue // menuHeader
+        color: PaletteDark.headerNightBlue, // menuHeader
+        decorationColor: PaletteDark.lightNightBlue // receive page divider
       ),
       display3: TextStyle(
-        color: PaletteDark.moderateNightBlue // historyPanelButton
+        color: PaletteDark.moderateNightBlue, // historyPanelButton
+        decorationColor: PaletteDark.cyanBlue, // top panel divider
       ),
       display4: TextStyle(
-        color: PaletteDark.gray // QR code
+        color: PaletteDark.gray, // QR code
+        decorationColor: PaletteDark.lightVioletBlue, // bottom panel divider
       )
     ),
     dividerColor: PaletteDark.distantBlue,

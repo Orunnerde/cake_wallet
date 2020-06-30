@@ -82,7 +82,7 @@ class SendTemplateFormState extends State<SendTemplateForm> {
                   BaseTextFormField(
                     controller: _nameController,
                     hintText: S.of(context).send_name,
-                    borderColor: Theme.of(context).primaryTextTheme.caption.decorationColor,
+                    borderColor: Theme.of(context).primaryTextTheme.display4.decorationColor,
                     validator: (value) {
                       sendTemplateStore.validateTemplate(value);
                       return sendTemplateStore.errorMessage;
@@ -113,7 +113,7 @@ class SendTemplateFormState extends State<SendTemplateForm> {
                         AddressTextFieldOption.addressBook
                       ],
                       buttonColor: Theme.of(context).accentTextTheme.headline.decorationColor,
-                      borderColor: Theme.of(context).primaryTextTheme.caption.decorationColor,
+                      borderColor: Theme.of(context).primaryTextTheme.display4.decorationColor,
                       validator: (value) {
                         sendTemplateStore.validateTemplate(value);
                         return sendTemplateStore.errorMessage;
@@ -143,7 +143,7 @@ class SendTemplateFormState extends State<SendTemplateForm> {
                               ),
                             ),
                             hintText: '0.0000',
-                            borderColor: Theme.of(context).primaryTextTheme.caption.decorationColor,
+                            borderColor: Theme.of(context).primaryTextTheme.display4.decorationColor,
                           )
                         );
                       }
@@ -170,7 +170,7 @@ class SendTemplateFormState extends State<SendTemplateForm> {
                         ),
                       ),
                       hintText: '0.00',
-                      borderColor: Theme.of(context).primaryTextTheme.caption.decorationColor,
+                      borderColor: Theme.of(context).primaryTextTheme.display4.decorationColor,
                     )
                   ),
                 ]),

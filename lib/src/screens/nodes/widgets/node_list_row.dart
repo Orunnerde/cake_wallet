@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class NodeListRow extends StatelessWidget {
@@ -29,25 +30,30 @@ class NodeListRow extends StatelessWidget {
           color: Theme.of(context).dividerColor,
         )
         : Offstage(),
-        Container(
-          width: double.infinity,
-          height: 56,
-          color: color,
-          child: ListTile(
-            contentPadding: EdgeInsets.only(
-              left: 24,
-              right: 24,
-            ),
-            title: Text(
-                title,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: textColor
+        GestureDetector(
+          onTap: onTap,
+          child: Container(
+            width: double.infinity,
+            height: 56,
+            color: color,
+            padding: EdgeInsets.only(left: 24, right: 24),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: textColor
+                  ),
+                  textAlign: TextAlign.left
                 ),
-                textAlign: TextAlign.left),
-            trailing: trailing,
-            onTap: onTap,
-          )
+                trailing
+              ],
+            )
+          ),
         ),
         isDrawBottom
         ? Container(
